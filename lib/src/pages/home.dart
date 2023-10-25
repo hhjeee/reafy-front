@@ -33,7 +33,7 @@ class Home extends StatelessWidget {
           ),
           GestureDetector(
               onTap: () {
-                Get.to(ItemShopPage()); // '/itemshop' 페이지로 이동
+                Get.to(ItemShop()); // '/itemshop' 페이지로 이동
               },
               child: ImageData(IconsPath.item, isSvg: true)),
         ]));
