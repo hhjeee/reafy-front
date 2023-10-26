@@ -40,6 +40,8 @@ class IconsPath {
   static String get play => 'assets/images/play.png';
   static String get pause => 'assets/svg/pause.svg';
   static String get stop => 'assets/svg/stop.svg';
+  static String get statistic => 'assets/svg/statistic.svg';
+  static String get star => 'assets/svg/star.svg';
 
   static String get character => 'assets/images/test_character.png';
 }

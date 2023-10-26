@@ -58,7 +58,7 @@ class MyPage extends StatelessWidget {
                         onTap: () {
                           Get.to(Statistics());
                         },
-                        child: ImageData(IconsPath.item, isSvg: true),
+                        child: ImageData(IconsPath.statistic, isSvg: true),
                       ),
                     ),
                   ),
@@ -86,20 +86,24 @@ class MyPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  margin: EdgeInsets.only(left: 31.0, bottom: 13.0),
+                  margin: EdgeInsets.only(left: 31.0, bottom: 12.26),
                   child: GestureDetector(
                     onTap: () {
                       Get.to(Statistics());
                     },
                     child: Row(
                       children: [
-                        ImageData(IconsPath.item, isSvg: true),
-                        const Text(
-                          "통계",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xff000000),
+                        ImageData(IconsPath.statistic,
+                            isSvg: true, width: 18.741),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 14.26),
+                          child: Text(
+                            "통계",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff000000),
+                            ),
                           ),
                         ),
                       ],
@@ -145,13 +149,17 @@ class MyPage extends StatelessWidget {
               },
               child: Row(
                 children: [
-                  ImageData(IconsPath.item, isSvg: true),
-                  const Text(
-                    "팀 소개",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xff000000),
+                  ImageData(IconsPath.statistic, isSvg: true, width: 18.741),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 14.26),
+                    child: Text(
+                      //padding left 14.26
+                      "팀 소개",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xff000000),
+                      ),
                     ),
                   ),
                 ],
@@ -160,7 +168,7 @@ class MyPage extends StatelessWidget {
           ),
 
           Container(
-            margin: EdgeInsets.only(top: 21.0, bottom: 5.0),
+            margin: EdgeInsets.only(top: 20.26, bottom: 15.0),
             height: 4.0,
             color: Color(0xfff5f5f5),
           ),
@@ -172,13 +180,16 @@ class MyPage extends StatelessWidget {
               },
               child: Row(
                 children: [
-                  ImageData(IconsPath.item, isSvg: true),
-                  const Text(
-                    "평점 남기기",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xff000000),
+                  ImageData(IconsPath.star, isSvg: true, width: 20),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 14.26),
+                    child: Text(
+                      "평점 남기기",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xff000000),
+                      ),
                     ),
                   ),
                 ],
@@ -187,7 +198,7 @@ class MyPage extends StatelessWidget {
           ),
 
           Container(
-            margin: EdgeInsets.only(top: 5.0, bottom: 5.0),
+            margin: EdgeInsets.only(top: 19.0, bottom: 15.0),
             height: 4.0,
             color: Color(0xfff5f5f5),
           ),
@@ -200,13 +211,16 @@ class MyPage extends StatelessWidget {
               },
               child: Row(
                 children: [
-                  ImageData(IconsPath.item, isSvg: true),
-                  const Text(
-                    "로그아웃",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xff000000),
+                  ImageData(IconsPath.statistic, isSvg: true, width: 18.741),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 14.26),
+                    child: Text(
+                      "로그아웃",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xff000000),
+                      ),
                     ),
                   ),
                 ],
