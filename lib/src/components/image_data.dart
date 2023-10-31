@@ -35,13 +35,24 @@ class IconsPath {
   static String get bookOn => 'assets/svg/bottombar_book_on.svg';
   static String get mypageOff => 'assets/svg/bottombar_mypage_off.svg';
   static String get mypageOn => 'assets/svg/bottombar_mypage_on.svg';
-  static String get coin => 'assets/svg/appbar_coin.svg';
+  static String get bamboo => 'assets/svg/appbar_bamboo.svg';
   static String get item => 'assets/svg/appbar_item.svg';
-  static String get play => 'assets/images/play.png';
+  static String get play => 'assets/svg/play.svg';
   static String get pause => 'assets/svg/pause.svg';
   static String get stop => 'assets/svg/stop.svg';
   static String get statistic => 'assets/svg/statistic.svg';
   static String get star => 'assets/svg/star.svg';
+  static String get startbutton => 'assets/images/Button.png';
+  static String get runningbutton => 'assets/images/Runningbutton.png';
 
-  static String get character => 'assets/images/test_character.png';
+  static String get state_1 => 'assets/images/state_1.png';
+  static String get state_2 => 'assets/images/state_2.png';
+  static String get state_3 => 'assets/images/state_3.png';
+  static String get state_4 => 'assets/images/state_4.png';
+
+  static String get intro => 'assets/images/intro.png';
+
+  static String get bookshelf => 'assets/images/bookshelf.png';
+
+  static String get character => 'assets/images/poobao.png';
 }

@@ -1,58 +1,193 @@
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:reafy_front/src/binding/init_bindings.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/stop_dialog.dart';
+import 'package:reafy_front/src/controller/stopwatch_controller.dart';
+import 'package:reafy_front/src/root.dart';
 import 'dart:async';
-import 'package:flutter_svg/flutter_svg.dart';
 
-//import 'package:readit/src/pages/timer/custom_switch.dart';
+import 'package:reafy_front/src/utils/constants.dart';
+import 'package:reafy_front/src/utils/timeformat.dart';
 
-//
-class StopWatch extends StatefulWidget {
-  final bool value;
-  final ValueChanged<bool> onChanged;
-  const StopWatch({Key? key, required this.value, required this.onChanged})
-      : super(key: key);
+class SwitchButton extends StatelessWidget {
+  final SwitchController switchController = Get.put(SwitchController());
 
   @override
-  State<StopWatch> createState() => _StopWatchState();
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          SizedBox(height: 20),
+          /////////////////////////////////////////////////
+          GestureDetector(
+            onTap: () {
+              switchController.toggleSwitch();
+            },
+            child: Obx(() {
+              return Container(
+                width: 140,
+                height: 46,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withOpacity(0.1)),
+                    BoxShadow(
+                        color: Colors.white, blurRadius: 15, spreadRadius: 0),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      switchController.value.value
+                          ? Container(
+                              width: 100,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 15.0),
+                                child: Center(
+                                  child: Text(
+                                    TimeUtils.formatDuration(switchController
+                                        .stopwatchSeconds.value),
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xff333333),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(),
+                      Align(
+                        child: Container(
+                          width: 34,
+                          height: 34,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Color(0xffd9d9d9),
+                          ),
+                          child: switchController.value.value
+                              ? ImageData(IconsPath.runningbutton, isSvg: false)
+                              : ImageData(IconsPath.startbutton, isSvg: false),
+                        ),
+                      ),
+                      ///////////// 재생 시 /////////////
+                      switchController.value.value
+                          ? Container()
+                          : Container(
+                              width: 92,
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 10.0),
+                                child: Center(
+                                  child: Text(
+                                    '독서 시작하기',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xff666666),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+          SizedBox(height: 15),
+          Container(
+            width: 150,
+            height: 150,
+            child: ImageData(IconsPath.state_4, isSvg: false),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-class _StopWatchState extends State<StopWatch>
+
+
+/*
+class SwitchButton extends StatefulWidget {
+  const SwitchButton({Key? key}) : super(key: key);
+
+  @override
+  State<SwitchButton> createState() => _SwitchButtonState();
+}
+
+class _SwitchButtonState extends State<SwitchButton>
     with SingleTickerProviderStateMixin {
-  int initialTime = 0;
-  bool isRunning = false;
-  bool startRunning = false;
-  late Timer timer;
+  late final AnimationController _animationController = AnimationController(
+    duration: const Duration(milliseconds: 50),
+    vsync: this,
+  );
 
-  Animation? _circleAnimation;
-  AnimationController? _animationController;
+  late final Animation _circleAnimation =
+      AlignmentTween(begin: Alignment.centerLeft, end: Alignment.centerRight)
+          .animate(
+    CurvedAnimation(parent: _animationController, curve: Curves.linear),
+  );
 
-  void onTick(Timer timer) {
-    //타이머 바뀔때마다 실행할 함수
-    setState(() {
-      initialTime = initialTime + 1;
+  bool value = false;
+  int _stopwatchSeconds = 0;
+  late Timer _stopwatch;
+
+  void startStopwatch() {
+    _stopwatch = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _stopwatchSeconds++;
+      });
     });
   }
 
-  void onStartPressed() {
-    timer = Timer.periodic(
-      const Duration(seconds: 1), ////60초마다 실행
-      onTick,
-    );
+  void stopStopwatch() {
+    _stopwatch.cancel();
+  }
+
+  void resetStopwatch() {
+    _stopwatch.cancel();
     setState(() {
-      isRunning = true;
-    });
-    setState(() {
-      startRunning = true;
+      _stopwatchSeconds = 0;
     });
   }
 
-  void onPausePressed() {
-    timer.cancel();
-    setState(() {
-      isRunning = false;
+  void _showStopDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StopDialog(
+          totalTime: _stopwatchSeconds,
+          dropdownList: ["가", "나", "다"],
+          selectedBook: "가",
+        );
+      },
+    ).then((result) {
+      if (result != null && result is bool) {
+        if (result) {
+          _animationController.reverse();
+          stopStopwatch();
+        } else {
+          _animationController.reverse();
+          stopStopwatch();
+          resetStopwatch();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('스탑워치가 초기화되었습니다.')),
+          );
+        }
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _animationController.dispose();
+    _stopwatch.cancel();
   }
 
   String format(int seconds) {
@@ -64,7 +199,7 @@ class _StopWatchState extends State<StopWatch>
     if (hours > 0) {
       timeString += hours.toString();
       if (hours < 10) {
-        timeString = '$timeString'; // 시간이 1자리일 때 앞에 0을 붙임
+        timeString = '0$timeString'; // 시간이 1자리일 때 앞에 0을 붙임
       }
       timeString += ':';
     }
@@ -75,213 +210,137 @@ class _StopWatchState extends State<StopWatch>
   }
 
   @override
-  void initState() {
-    super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 60));
-    _circleAnimation = AlignmentTween(
-            begin: widget.value ? Alignment.centerRight : Alignment.centerLeft,
-            end: widget.value ? Alignment.centerLeft : Alignment.centerRight)
-        .animate(CurvedAnimation(
-            parent: _animationController!, curve: Curves.linear));
-  }
-
-  @override
   Widget build(BuildContext context) {
-    List<String> dropdownList = ['가', '나', '다'];
-    String selectedBook = '가';
-
     return Container(
-      //margin: EdgeInsets.only(top: 123.0),
-      child: Column(
-        children: [
-          Text(
-            isRunning ? '집중모드' : '독서 시작하기', // 아이콘 아래에 표시될 텍스트
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: 10),
-          ///////// 스탑워치 /////////
-          AnimatedBuilder(
-            animation: _animationController!,
-            builder: (context, child) {
-              return GestureDetector(
-                onTap: () {
-                  if (_animationController!.isCompleted) {
-                    _animationController!.reverse();
-                  } else {
-                    _animationController!.forward();
-                  }
-                  widget.value == false
-                      ? widget.onChanged(true)
-                      : widget.onChanged(false);
+        child: Column(children: [
+      SizedBox(height: 20),
 
-                  if (!widget.value) {
-                    widget.onChanged(true); // value를 true로 변경하고 onChanged 콜백 호출
-                  }
+      /////////////////////////////////////////////////
+      AnimatedBuilder(
+        animation: _animationController,
+        builder: (context, child) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                value = !value;
+                if (value) {
+                  _animationController.reset();
+                  _animationController.forward();
+                  startStopwatch();
+                } else {
+                  //_animationController.reverse();
+                  //stopStopwatch();
 
-                  if (widget.value) {
-                    setState(() {
-                      isRunning = true;
-                    });
-                  }
-                },
-                child: Container(
-                  width: 130,
-                  height: 60,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40.0),
-                      color: _circleAnimation!.value == Alignment.centerLeft
-                          ? Color(0xffEBEBEB)
-                          : Color(0xff63B865)),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 2.0, bottom: 2.0, right: 2.0, left: 2.0),
-                    child: Container(
-                      alignment: widget.value
-                          ? ((Directionality.of(context) == TextDirection.rtl)
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft)
-                          : ((Directionality.of(context) == TextDirection.rtl)
-                              ? Alignment.centerLeft
-                              : Alignment.centerRight),
-                      child: Stack(alignment: Alignment.center, children: [
-                        Text(
-                          isRunning ? format(initialTime) : '',
-                          style: TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.w700,
-                              color: Color.fromRGBO(255, 255, 255, 1)),
-                        ),
-                        Container(
-                          //alignment: _circleAnimation!.value, // 여기서 _circleAnimation의 값 적용
-                          width: 50.0,
-                          height: 50.0,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle, color: Colors.white),
-                          child: Center(
-                            child: SvgPicture.asset('assets/svg/face.svg',
-                                width: 10,
-                                height: 10,
-                                color: Color(0xff000000)),
-                          ),
-                        ),
-                      ]),
-                    ),
-                  ),
-                ),
-              );
+                  _showStopDialog();
+                }
+              });
             },
-          ),
-          SizedBox(height: 15),
-          //////////// 버튼 /////////////
-          Container(
-              alignment: Alignment.center,
-              //width: 100,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center, // 아이템을 수평으로 가운데 정렬
-                children: [
-                  Container(
-                    child: Column(
-                      children: [
-                        IconButton(
-                          //iconSize: 40,
-                          onPressed:
-                              isRunning ? onPausePressed : onStartPressed,
-                          icon: isRunning
-                              ? ImageData(IconsPath.pause, isSvg: true)
-                              : ImageData(IconsPath.play, isSvg: false),
-                          color: Color(0xffcccccc),
+            child: Container(
+              width: 140,
+              height: 46,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withOpacity(0.1)),
+                    BoxShadow(color: white, blurRadius: 15, spreadRadius: 0)
+                  ]),
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    _circleAnimation.value == Alignment.centerRight
+                        ? Container(
+                            width: 100,
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 15.0),
+                                child: Center(
+                                  child: Text(
+                                    format(_stopwatchSeconds),
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xff333333)),
+                                  ),
+                                )))
+                        : Container(),
+                    Align(
+                      child: Container(
+                        width: 34,
+                        height: 34,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(0xffd9d9d9),
                         ),
-                        //SizedBox(height: 2), // 아이콘과 텍스트 사이의 간격
-                        Text(
-                          isRunning ? '일시정지' : '시작', // 아이콘 아래에 표시될 텍스트
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xff333333),
-                          ),
-                        ),
-                      ],
+                        child: _circleAnimation.value == Alignment.centerLeft
+                            ? ImageData(IconsPath.startbutton, isSvg: false)
+                            : ImageData(IconsPath.runningbutton, isSvg: false),
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 20),
-                  Container(
-                    child: Column(
-                      children: [
-                        IconButton(
-                          //iconSize: 40,
-                          onPressed: () {
-                            onPausePressed();
-                            //StopDialog(
-                            //  totalTime: format(initialTime),
-                            //  dropdownList: dropdownList,
-                            //  selectedBook: selectedBook,
-                            //);
-                          },
-                          icon: ImageData(
-                            IconsPath.stop,
-                            isSvg: true,
-                          ),
-                          color: Color(0xffcccccc),
-                        ),
-                        //SizedBox(height: 2), // 아이콘과 텍스트 사이의 간격
-                        Text(
-                          '중단',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ))
-        ],
+
+                    ///////////// 재생 시 /////////////
+                    _circleAnimation.value == Alignment.centerLeft
+                        ? Container(
+                            width: 92,
+                            child: Padding(
+                                padding: EdgeInsets.only(right: 10.0),
+                                child: Center(
+                                    child: Text('독서 시작하기',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700,
+                                            color: Color(0xff666666))))))
+                        : Container(),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
-    );
+      SizedBox(height: 15),
+      ////TODO 수정하기
+      /*
+      _circleAnimation.value == Alignment.centerRight
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      if (value) {
+                        _animationController.reverse();
+                        stopStopwatch();
+                      }
+                    });
+                  },
+                  child: Text('일시정지'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      if (value) {
+                        _animationController.reverse();
+                        stopStopwatch();
+                      }
+                      resetStopwatch();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('스탑워치가 초기화되었습니다.')));
+                    });
+                  },
+                  child: Text('종료'),
+                ),
+              ],
+            )
+          : Container(),
+          */
+
+      Container(
+        width: 150,
+        height: 150,
+        child: ImageData(IconsPath.state_4, isSvg: false),
+      )
+    ]));
   }
 }
-
-/*Flexible(
-                child: IconButton(
-                  padding: EdgeInsets.only(right: 34.0),
-                  alignment: Alignment.center,
-                  iconSize: 30,
-                  onPressed: isRunning ? onPausePressed : onStartPressed,
-                  icon: Icon(isRunning ? Icons.pause : Icons.play_arrow),
-                  color: Color(0xffcccccc),
-                ),
-              ),
-
-              Flexible(
-                child: IconButton(
-                  padding: EdgeInsets.only(left: 34.0),
-                  alignment: Alignment.center,
-                  iconSize: 30,
-                  onPressed: () {
-                    onPausePressed();
-                    FlutterDialog();
-                  },
-                  icon: Icon(Icons.stop),
-                  color: Color(0xffcccccc),
-                ),
-              ),
-              
-              
-              
-              
-              
-              
-              
-              
-              
-           
-                            boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  spreadRadius: 7,
-                  blurRadius: 10,
-                  offset: Offset(0, 3), // changes position of shadow
-                ),
-              ],   */
+*/

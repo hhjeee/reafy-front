@@ -10,6 +10,9 @@ class Wishlist extends StatefulWidget {
 class _WishlistState extends State<Wishlist> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Container(
+        child: Center(
+      child: Text("위시리스트"),
+    ));
   }
 }

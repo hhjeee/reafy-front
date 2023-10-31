@@ -5,7 +5,6 @@ import 'package:reafy_front/src/pages/book/bookshelf.dart';
 import 'package:reafy_front/src/pages/home.dart';
 import 'package:reafy_front/src/pages/mypage.dart';
 import 'package:get/get.dart';
-import 'package:reafy_front/src/utils/constants.dart';
 
 class App extends GetView<BottomNavController> {
   const App({Key? key}) : super(key: key);
@@ -20,7 +19,8 @@ class App extends GetView<BottomNavController> {
             children: [
               BookShelf(),
               Home(), //Container(child: Center(child: Text('홈'))),
-              MyPage()
+              MyPage(),
+              //IntroPage()
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(
