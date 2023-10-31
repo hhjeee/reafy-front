@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 class StopDialog extends StatelessWidget {
-  final String totalTime;
+  final int totalTime;
   final List<String> dropdownList;
   final String selectedBook;
 
@@ -12,6 +11,25 @@ class StopDialog extends StatelessWidget {
     required this.selectedBook,
   });
 
+  String format(int seconds) {
+    var duration = Duration(seconds: seconds);
+    int hours = duration.inHours;
+    int minutes = duration.inMinutes.remainder(60);
+    int remainingSeconds = duration.inSeconds.remainder(60);
+    String timeString = '';
+    if (hours > 0) {
+      timeString += hours.toString();
+      if (hours < 10) {
+        timeString = '0$timeString'; // 시간이 1자리일 때 앞에 0을 붙임
+      }
+      timeString += ':';
+    }
+    timeString += minutes.toString().padLeft(2, '0'); // 두 자리수로 표시된 분
+    timeString += ':';
+    timeString += remainingSeconds.toString().padLeft(2, '0'); // 두 자리수로 표시된 초
+    return timeString; // 시:분:초 형식으로 반환
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -20,7 +38,7 @@ class StopDialog extends StatelessWidget {
       ),
       title: Center(
         child: Text(
-          totalTime,
+          format(totalTime),
           style: const TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w800,
@@ -58,7 +76,7 @@ class StopDialog extends StatelessWidget {
                         );
                       }).toList(),
                       onChanged: (dynamic item) {
-                        /////TODO : 
+                        /////TODO :
                         ///  setState(() {selectedBook = item;}
                       }),
                 ],

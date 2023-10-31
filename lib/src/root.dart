@@ -1,11 +1,7 @@
 //import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/app.dart';
-import 'package:reafy_front/src/controller/auth_controller.dart';
-import 'package:reafy_front/src/controller/books_controller.dart';
-import 'package:reafy_front/src/pages/login.dart';
-import 'package:reafy_front/src/pages/mypage.dart';
-import 'package:reafy_front/src/pages/signup_page.dart';
+import 'package:reafy_front/src/pages/intro.dart';
 
 import 'package:get/get.dart';
 
@@ -18,7 +14,10 @@ class Root extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const App();
+    return IntroPage();
+    //return GetMaterialApp(
+    //  home: IntroPage(),
+    //);
   }
 }
 
