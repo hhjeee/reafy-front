@@ -5,6 +5,7 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/pages/profile/statistics.dart';
 import 'package:reafy_front/src/pages/profile/team.dart';
 import 'package:reafy_front/src/pages/profile/rating.dart';
+import 'package:reafy_front/src/components/profile_name.dart';
 
 class MyPage extends StatelessWidget {
   const MyPage({super.key});
@@ -28,65 +29,14 @@ class MyPage extends StatelessWidget {
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-              //프로필사진
-              child: Column(
-            children: [
-              Stack(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: 84.0, bottom: 21.53),
-                    width: 148.47,
-                    height: 148.47,
-                    decoration: const BoxDecoration(
-                      color: Color(0xfff0f0f0),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  Positioned(
-                    top: 180, //231,
-                    left: 105, //191.46,
-                    child: Container(
-                      padding: EdgeInsets.all(10.0),
-                      width: 40,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        color: Color(0xffd9d9d9),
-                        shape: BoxShape.circle,
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          Get.to(Statistics());
-                        },
-                        child: ImageData(IconsPath.statistic, isSvg: true),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const Text(
-                "꼬물이",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xff000000),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 34.0, bottom: 23.0),
-                height: 4.0,
-                color: Color(0xfff5f5f5),
-              ),
-            ],
-          )), //프로필사진
-
+          ProfileName(),
           Container(
             //통계
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  margin: EdgeInsets.only(left: 31.0, bottom: 12.26),
+                  margin: EdgeInsets.only(top: 39.0, left: 31.0, bottom: 12.26),
                   child: GestureDetector(
                     onTap: () {
                       Get.to(Statistics());
@@ -142,16 +92,16 @@ class MyPage extends StatelessWidget {
           ), //통계
 
           Container(
-            margin: EdgeInsets.only(left: 31.0),
+            margin: EdgeInsets.only(left: 29.0),
             child: GestureDetector(
               onTap: () {
                 Get.to(Team());
               },
               child: Row(
                 children: [
-                  ImageData(IconsPath.statistic, isSvg: true, width: 18.741),
+                  ImageData(IconsPath.Team, isSvg: true, width: 18),
                   const Padding(
-                    padding: EdgeInsets.only(left: 14.26),
+                    padding: EdgeInsets.only(left: 17),
                     child: Text(
                       //padding left 14.26
                       "팀 소개",
@@ -168,12 +118,12 @@ class MyPage extends StatelessWidget {
           ),
 
           Container(
-            margin: EdgeInsets.only(top: 20.26, bottom: 15.0),
+            margin: EdgeInsets.only(top: 21, bottom: 17.0),
             height: 4.0,
             color: Color(0xfff5f5f5),
           ),
           Container(
-            margin: EdgeInsets.only(left: 31.0),
+            margin: EdgeInsets.only(left: 27.0), //25
             child: GestureDetector(
               onTap: () {
                 Get.to(Rating());
@@ -182,7 +132,7 @@ class MyPage extends StatelessWidget {
                 children: [
                   ImageData(IconsPath.star, isSvg: true, width: 20),
                   const Padding(
-                    padding: EdgeInsets.only(left: 14.26),
+                    padding: EdgeInsets.only(left: 15), //13
                     child: Text(
                       "평점 남기기",
                       style: TextStyle(
@@ -198,22 +148,22 @@ class MyPage extends StatelessWidget {
           ),
 
           Container(
-            margin: EdgeInsets.only(top: 19.0, bottom: 15.0),
+            margin: EdgeInsets.only(top: 23.0, bottom: 15.0),
             height: 4.0,
             color: Color(0xfff5f5f5),
           ),
 
           Container(
-            margin: EdgeInsets.only(left: 31.0),
+            margin: EdgeInsets.only(left: 29.0),
             child: GestureDetector(
               onTap: () {
                 showAlertDialog(context);
               },
               child: Row(
                 children: [
-                  ImageData(IconsPath.statistic, isSvg: true, width: 18.741),
+                  ImageData(IconsPath.Logout, isSvg: true, width: 19.995),
                   const Padding(
-                    padding: EdgeInsets.only(left: 14.26),
+                    padding: EdgeInsets.only(left: 15),
                     child: Text(
                       "로그아웃",
                       style: TextStyle(
