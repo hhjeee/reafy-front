@@ -1,243 +1,129 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/controller/books_controller.dart';
+import 'package:reafy_front/src/components/shelfwidget.dart';
 import 'package:reafy_front/src/pages/book/addbook.dart';
-import 'package:reafy_front/src/pages/book/lib_done.dart';
-import 'package:reafy_front/src/pages/book/lib_reading.dart';
-import 'package:reafy_front/src/pages/book/lib_wishlist.dart';
 
-/// TODO
-/// 3개 페이지 만들어서 스와이프로 연결
+final List<String> bookList = [
+  'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+  'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
+];
 
-class BookShelf extends GetView<BookshelfController> {
-  const BookShelf({Key? key}) : super(key: key);
-
-  Widget _header() {
-    return Padding(
-        padding: const EdgeInsets.only(top: 45.0, left: 16.0, right: 16.0),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          GestureDetector(
-              onTap: () {
-                Get.to(Addbook()); // '/itemshop' 페이지로 이동
-              },
-              child: ImageData(IconsPath.item, isSvg: true)),
-          GestureDetector(
-              onTap: () {
-                //Get.to(ItemShop()); // '/itemshop' 페이지로 이동
-              },
-              child: ImageData(IconsPath.item, isSvg: true)),
-        ]));
-  }
-
-  Widget _tabMenu() {
-    return SliverToBoxAdapter(
-      child: TabBar(
-        controller: controller.tabController,
-        indicatorColor: Colors.black,
-        indicatorWeight: 1,
-        tabs: [
-          Container(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: ImageData(
-                IconsPath.bookshelf,
-                isSvg: false,
-              )),
-          Container(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: ImageData(
-                IconsPath.bookshelf,
-                isSvg: false,
-              )),
-          Container(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: ImageData(
-                IconsPath.bookshelf,
-                isSvg: false,
-              )),
-        ],
-      ),
-    );
-  }
-
-  Widget _tabView() {
-    return TabBarView(controller: controller.tabController, children: [
-      GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        //shrinkWrap: true,
-        itemCount: 100,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          childAspectRatio: 1,
-          mainAxisSpacing: 1,
-          crossAxisSpacing: 1,
-        ),
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
-            width: 20,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 3), // changes position of shadow
-                ),
+final List<Widget> shelfSliders = bookList
+    .map((item) => Container(
+          child: Container(
+            margin: EdgeInsets.all(5.0),
+            child: ClipRRect(
+                child: Stack(
+              children: <Widget>[
+                BookShelfWidget(),
               ],
-            ),
-          );
-        },
-      ),
-      GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: 100,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          childAspectRatio: 1,
-          mainAxisSpacing: 1,
-          crossAxisSpacing: 1,
-        ),
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
-            width: 20,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: Offset(0, 3), // changes position of shadow
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    ]);
+            )),
+          ),
+        ))
+    .toList();
+
+Widget _header() {
+  return Padding(
+      padding: const EdgeInsets.only(top: 50.0, left: 24.0, right: 24.0),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        GestureDetector(
+            onTap: () {
+              Get.to(Addbook()); // '/itemshop' 페이지로 이동
+            },
+            child: ImageData(
+              IconsPath.add,
+              isSvg: true,
+              width: 20,
+            )),
+        GestureDetector(
+            onTap: () {
+              //////Get.to(Addbook()); // '/itemshop' 페이지로 이동
+            },
+            child: ImageData(
+              IconsPath.delete,
+              isSvg: true,
+              width: 20,
+            )),
+      ]));
+}
+
+class BookShelf extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _BookShelfState();
   }
+}
+
+class _BookShelfState extends State<BookShelf> {
+  int _current = 1;
+  final CarouselController _controller = CarouselController();
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      child: Obx(
-        () => Scaffold(
-          body: IndexedStack(
-            index: controller.pageIndex.value,
-            children: [
-              Wishlist(),
-              Reading(), //Container(child: Center(child: Text('홈'))),
-              Done(),
-              //IntroPage()
-            ],
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            currentIndex: controller.pageIndex.value,
-            elevation: 0,
-            selectedLabelStyle: TextStyle(
-                fontSize: 12, height: 2 // 선택된 페이지 라벨의 색상을 검정색(#000000)으로 지정
-                ),
-            unselectedLabelStyle: TextStyle(
-                fontSize: 12, height: 2 // 선택된 페이지 라벨의 색상을 검정색(#000000)으로 지정
-                ),
-            selectedItemColor: Color(0xff808080),
-            onTap: controller.changeLibrary,
-            items: [
-              BottomNavigationBarItem(
-                icon: ImageData(IconsPath.bookOff, isSvg: true),
-                activeIcon: ImageData(IconsPath.bookOn, isSvg: true),
-                label: '서재',
-              ),
-              BottomNavigationBarItem(
-                icon: ImageData(IconsPath.homeOff, isSvg: true),
-                activeIcon: ImageData(IconsPath.homeOn, isSvg: true),
-                label: '홈',
-              ),
-              BottomNavigationBarItem(
-                icon: ImageData(IconsPath.mypageOff, isSvg: true),
-                activeIcon: ImageData(IconsPath.mypageOn, isSvg: true),
-                label: '프로필',
-              ),
-            ],
-          ),
-        ),
-      ),
-      onWillPop: controller.willPopAction, // 뒤로가기 눌렀을 때 이벤트 실행되도록
-    );
-  }
-
-  /*
-    return Padding(
-      padding: EdgeInsets.all(2),
-      child: Column(
-        children: <Widget>[
-          //child: SingleChildScrollView(
-          _header(),
-          _tabMenu(),
-          SizedBox(
-            height: 20,
-          )
-        ],
-      ),
-    );*/
-
-  /*
-    return Scaffold(
-      //appBar: AppBar(),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, value) {
-          return [
-            _tabMenu(),
-          ];
-        },
-        body: Container(
-          child: TabBarView(
-            controller: controller.tabController,
-            children: [
-              // / Each content from each tab will have a dynamic height
-              GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 100,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 1,
-                  mainAxisSpacing: 1,
-                  crossAxisSpacing: 5,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    width: 10,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
+    return Container(
+        decoration: BoxDecoration(
+            color: Color(0xffFFF7DA),
+            gradient: LinearGradient(
+                colors: [Color(0xffFFF7DA), Color(0xffFCFCFA)],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter)),
+        child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  _header(),
+                  const Spacer(),
+                  Container(
+                      child: Column(children: [
+                    Text('읽는 중',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color(0xff333333),
+                          fontWeight: FontWeight.w800,
+                        )),
+                    SizedBox(
+                      height: 10,
                     ),
-                  );
-                },
-              ),
-              // Container(),
-              Container()
-            ],
-          ),
-        ),
-      ),
-    );
-  }*/
+                    CarouselSlider(
+                      items: shelfSliders,
+                      carouselController: _controller,
+                      options: CarouselOptions(
+                          autoPlay: false,
+                          enlargeCenterPage: true,
+                          aspectRatio: 0.75,
+                          enlargeStrategy: CenterPageEnlargeStrategy.zoom,
+                          enlargeFactor: 0.4,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              _current = index;
+                            });
+                          }),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: shelfSliders.asMap().entries.map((entry) {
+                        return GestureDetector(
+                            onTap: () => _controller.animateToPage(entry.key),
+                            child: Container(
+                              width: 15.0,
+                              height: 9.0,
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 20.0, horizontal: 4.0),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: _current == entry.key
+                                      ? Color(0xff969696)
+                                      : Color(0xffD9D9D9)),
+                            ));
+                      }).toList(),
+                    ),
+                    //const Spacer(),
+                  ])),
+                ])));
+  }
 }

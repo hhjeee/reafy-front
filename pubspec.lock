@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  carousel_slider:
+    dependency: "direct main"
+    description:
+      name: carousel_slider
+      sha256: "9c695cc963bf1d04a47bd6021f68befce8970bcd61d24938e1fb0918cf5d9c42"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.1"
   characters:
     dependency: transitive
     description:
@@ -41,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.2"
+  cube_transition_plus:
+    dependency: "direct main"
+    description:
+      name: cube_transition_plus
+      sha256: "30b2119d20f0337f5dd297ebae00df102723085ec02e7257ac97600a837315d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   dots_indicator:
     dependency: transitive
     description:
