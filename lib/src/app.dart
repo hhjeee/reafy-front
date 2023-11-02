@@ -20,7 +20,6 @@ class App extends GetView<BottomNavController> {
               BookShelf(),
               Home(), //Container(child: Center(child: Text('홈'))),
               MyPage(),
-              //IntroPage()
             ],
           ),
           bottomNavigationBar: BottomNavigationBar(

@@ -44,7 +44,9 @@ class IconsPath {
   static String get star => 'assets/svg/star.svg';
   static String get startbutton => 'assets/images/Button.png';
   static String get runningbutton => 'assets/images/Runningbutton.png';
-
+  static String get nextarrow => 'assets/svg/nextarrow.svg';
+  static String get add => 'assets/svg/add.svg';
+  static String get delete => 'assets/svg/delete.svg';
   static String get state_1 => 'assets/images/state_1.png';
   static String get state_2 => 'assets/images/state_2.png';
   static String get state_3 => 'assets/images/state_3.png';
@@ -52,7 +54,7 @@ class IconsPath {
 
   static String get intro => 'assets/images/intro.png';
 
-  static String get bookshelf => 'assets/images/bookshelf.png';
+  static String get bookshelf => 'assets/svg/bookshelf.svg';
 
   static String get character => 'assets/images/poobao.png';
 }
