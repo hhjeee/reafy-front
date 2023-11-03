@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:reafy_front/src/components/items.dart';
 import 'package:get/get.dart';
 import 'dart:async';
 
@@ -33,6 +34,10 @@ class _ItemShopState extends State<ItemShop> {
       }
     });
   }
+
+  /*String getImageUrl(int index) {
+    return 'url or filepath';
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -190,6 +195,7 @@ class _ItemShopState extends State<ItemShop> {
                 ),
               ],
             ),
+            Items(),
           ])),
     );
   }
