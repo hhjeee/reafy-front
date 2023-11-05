@@ -1,15 +1,152 @@
 import 'package:flutter/material.dart';
+import 'package:reafy_front/src/components/book_card.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/models/book.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
-class Addbook extends StatefulWidget {
-  const Addbook({super.key});
+class SearchBook extends StatefulWidget {
+  const SearchBook({super.key});
 
   @override
-  State<Addbook> createState() => _AddbookState();
+  State<SearchBook> createState() => _SearchBookState();
 }
 
-class _AddbookState extends State<Addbook> {
+class _SearchBookState extends State<SearchBook> {
+  List<Book> displayList = List.from(mockSearchResults);
+  TextEditingController _searchController = TextEditingController();
+
+  bool isSearching = false;
+
+  void _performSearch(String query) {
+    setState(() {
+      isSearching = true;
+    });
+
+    fetchSearchResults(query).then((searchResults) {
+      setState(() {
+        isSearching = false;
+        displayList = List.from(searchResults);
+      });
+    });
+/*
+    FutureBuilder<List<Book>>(
+        future: fetchSearchResults(query), // 검색 결과를 가져오는 비동기 함수
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+                child: CircularProgressIndicator()); // 로딩 중이면 로딩 이미지를 가운데에 표시
+          } else if (snapshot.hasError) {
+            return Center(
+                child: Text(
+                    'Error: ${snapshot.error}')); // 에러가 발생하면 에러 메시지를 가운데에 표시
+          } else if (snapshot.hasData && snapshot.data!.isEmpty) {
+            return Center(
+                child: Text('일치하는 도서가 없어요.')); // 결과가 없으면 해당 메시지를 가운데에 표시
+          } else if (snapshot.hasData) {
+            List<Book> searchResults = snapshot.data!;
+          }
+        });*/
+  }
+
+  Widget _search() {
+    return Container(
+      child: TextField(
+        controller: _searchController,
+        onSubmitted: (query) {
+          _performSearch(query);
+        },
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Color(0xffFFF7DA),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide(color: Color(0xffFFF7DA)),
+          ),
+          hintText: "도서명를 입력해주세요",
+          hintStyle: TextStyle(
+              color: Color(0xff6A6A6A),
+              fontSize: 14,
+              fontWeight: FontWeight.w400),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Color(0xffFFCA0E),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _character() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Container(
+        width: 390,
+        height: 392, // 적절한 높이 설정
+        decoration: BoxDecoration(
+            gradient: RadialGradient(
+          radius: 1.1086, // 110.86%의 크기
+          colors: [
+            Color(0xFFE2EEE0), // 시작 색상
+            bgColor // 끝 색상 (투명)
+          ],
+          stops: [0.2197, 0.5], // 각 색상의 정지점 (0.2197는 21.97%의 위치)
+        )),
+        child: ImageData(IconsPath.character),
+      ),
+    );
+  }
+
+/*
+  Widget _searchresult(String query) {
+    return FutureBuilder<List<Book>>(
+      future: fetchSearchResults(query), // 검색 결과를 가져오는 비동기 함수
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+              child: CircularProgressIndicator()); // 로딩 중이면 로딩 이미지를 가운데에 표시
+        } else if (snapshot.hasError) {
+          return Center(
+              child:
+                  Text('Error: ${snapshot.error}')); // 에러가 발생하면 에러 메시지를 가운데에 표시
+        } else if (snapshot.hasData && snapshot.data!.isEmpty) {
+          return Center(
+              child: Text('일치하는 도서가 없어요.')); // 결과가 없으면 해당 메시지를 가운데에 표시
+        } else if (snapshot.hasData) {
+          List<Book> searchResults = snapshot.data!;
+          return Expanded(
+            child: ListView.builder(
+              itemCount: searchResults.length,
+              itemBuilder: (context, index) {
+                Book book = searchResults[index];
+                return ListTile(
+                  title: Text(book.title),
+                  subtitle: Text(book.author),
+                  // 기타 책 정보를 표시할 수 있는 위젯 추가
+                  // 예: 이미지, 출판사, 출판일 등
+                );
+              },
+            ),
+          );
+        }
+        return Container(); // 아무것도 표시하지 않을 경우 빈 컨테이너 반환
+      },
+    );
+  }
+  */
+  Widget _renderResults() {
+    return Expanded(
+        child: isSearching
+            ? ListView.builder(
+                itemCount: displayList.length,
+                itemBuilder: (context, index) =>
+                    BookCard(book: displayList[index]))
+            : _character());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,61 +164,19 @@ class _AddbookState extends State<Addbook> {
         ),
         body: SafeArea(
             child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 _search(),
-                const Spacer(flex: 3),
-                _character(),
-                const Spacer(flex: 1),
+                SizedBox(
+                  height: 10,
+                ),
+                _renderResults(),
+
+                //const Spacer(flex: 1),
               ]),
         )));
   }
-}
-
-Widget _search() {
-  return Container(
-      child: TextField(
-    decoration: InputDecoration(
-      filled: true,
-      fillColor: Color(0xffFFF7DA),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        borderSide: BorderSide.none,
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        borderSide: BorderSide(color: Color(0xffFFF7DA)),
-      ),
-      hintText: "도서명를 입력해주세요",
-      hintStyle: TextStyle(
-          color: Color(0xff6A6A6A), fontSize: 14, fontWeight: FontWeight.w400),
-      prefixIcon: Icon(
-        Icons.search,
-        color: Color(0xffFFCA0E),
-      ),
-    ),
-  ));
-}
-
-Widget _character() {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-    child: Container(
-      width: 390,
-      height: 392, // 적절한 높이 설정
-      decoration: BoxDecoration(
-          gradient: RadialGradient(
-        radius: 1.1086, // 110.86%의 크기
-        colors: [
-          Color(0xFFE2EEE0), // 시작 색상
-          bgColor // 끝 색상 (투명)
-        ],
-        stops: [0.2197, 0.5], // 각 색상의 정지점 (0.2197는 21.97%의 위치)
-      )),
-      child: ImageData(IconsPath.character),
-    ),
-  );
 }

@@ -36,7 +36,7 @@ class _ModifyDialogState extends State<ModifyDialog> {
           ),
           SizedBox(height: 41.0),
           Text(
-            "정보를 수정해 주세요!",
+            "정보를 수정할까요?",
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w800,

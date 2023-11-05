@@ -25,31 +25,6 @@ final List<Widget> shelfSliders = bookList
         ))
     .toList();
 
-Widget _header() {
-  return Padding(
-      padding: const EdgeInsets.only(top: 50.0, left: 24.0, right: 24.0),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        GestureDetector(
-            onTap: () {
-              Get.to(Addbook()); // '/itemshop' 페이지로 이동
-            },
-            child: ImageData(
-              IconsPath.add,
-              isSvg: true,
-              width: 20,
-            )),
-        GestureDetector(
-            onTap: () {
-              //////Get.to(Addbook()); // '/itemshop' 페이지로 이동
-            },
-            child: ImageData(
-              IconsPath.delete,
-              isSvg: true,
-              width: 20,
-            )),
-      ]));
-}
-
 class BookShelf extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -63,67 +38,87 @@ class _BookShelfState extends State<BookShelf> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-            color: Color(0xffFFF7DA),
-            gradient: LinearGradient(
-                colors: [Color(0xffFFF7DA), Color(0xffFCFCFA)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter)),
-        child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  _header(),
-                  const Spacer(),
-                  Container(
-                      child: Column(children: [
-                    Text('읽는 중',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Color(0xff333333),
-                          fontWeight: FontWeight.w800,
-                        )),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    CarouselSlider(
-                      items: shelfSliders,
-                      carouselController: _controller,
-                      options: CarouselOptions(
-                          autoPlay: false,
-                          enlargeCenterPage: true,
-                          aspectRatio: 0.75,
-                          enlargeStrategy: CenterPageEnlargeStrategy.zoom,
-                          enlargeFactor: 0.4,
-                          onPageChanged: (index, reason) {
-                            setState(() {
-                              _current = index;
-                            });
-                          }),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: shelfSliders.asMap().entries.map((entry) {
-                        return GestureDetector(
-                            onTap: () => _controller.animateToPage(entry.key),
-                            child: Container(
-                              width: 15.0,
-                              height: 9.0,
-                              margin: EdgeInsets.symmetric(
-                                  vertical: 20.0, horizontal: 4.0),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: _current == entry.key
-                                      ? Color(0xff969696)
-                                      : Color(0xffD9D9D9)),
-                            ));
-                      }).toList(),
-                    ),
-                    //const Spacer(),
-                  ])),
-                ])));
+    final size = MediaQuery.of(context).size;
+
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xffFFFCF3),
+          elevation: 0,
+          leading: IconButton(
+            padding: EdgeInsets.all(0),
+            icon: ImageData(IconsPath.add, isSvg: true, width: 20),
+            onPressed: () {
+              Get.to(SearchBook());
+            },
+          ),
+          actions: [
+            IconButton(
+              padding: EdgeInsets.only(right: 21),
+              icon: ImageData(IconsPath.trash_can, isSvg: true, width: 20),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        body: Center(
+            child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: Color(0xffFFF7DA),
+                    gradient: LinearGradient(
+                        colors: [Color(0xffFFFCF3), Color(0xffFCFCFA)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter)),
+                //child: Padding(
+                //    padding: EdgeInsets.symmetric(vertical: 16),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Container(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                            CarouselSlider(
+                              items: shelfSliders,
+                              carouselController: _controller,
+                              options: CarouselOptions(
+                                  viewportFraction: 0.5,
+                                  height: size.height * 0.7,
+                                  autoPlay: false,
+                                  enlargeCenterPage: true,
+                                  aspectRatio: 1.0, //0.75,
+                                  enlargeStrategy:
+                                      CenterPageEnlargeStrategy.zoom,
+                                  enlargeFactor: 0.5,
+                                  scrollDirection: Axis.vertical,
+                                  onPageChanged: (index, reason) {
+                                    setState(() {
+                                      _current = index;
+                                    });
+                                  }),
+                            ),
+                            //const Spacer(), //izedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children:
+                                  shelfSliders.asMap().entries.map((entry) {
+                                return GestureDetector(
+                                    onTap: () =>
+                                        _controller.animateToPage(entry.key),
+                                    child: Container(
+                                      width: 15.0,
+                                      height: 9.0,
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 20.0, horizontal: 4.0),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: _current == entry.key
+                                              ? Color(0xff969696)
+                                              : Color(0xffD9D9D9)),
+                                    ));
+                              }).toList(),
+                            ),
+                          ]))
+                    ]))));
   }
 }

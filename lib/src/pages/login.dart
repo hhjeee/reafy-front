@@ -1,45 +1,43 @@
-//import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-//import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
-class Login extends StatelessWidget {
-  const Login({Key? key}) : super(key: key);
-  /*
-  Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+abstract class SocialLogin {
+  Future<bool> login(); //성공여부
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+  Future<bool> logout(); //성공여부
+}
 
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+class KakaoLogin implements SocialLogin {
+  @override
+  Future<bool> login() async {
+    try {
+      bool isInstalled = await isKakaoTalkInstalled();
+      if (isInstalled) {
+        try {
+          await UserApi.instance.loginWithKakaoTalk();
+          return true;
+        } catch (e) {
+          return false;
+        }
+      } else {
+        try {
+          await UserApi.instance.loginWithKakaoAccount();
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+    } catch (e) {
+      return false;
+    }
   }
-  */
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          '로그인',
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
-      body: Center(
-        child: Text('구글 로그인'), //ElevatedButton(
-        //onPressed: signInWithGoogle,
-        //child: const Text('구글 로그인'),
-      ),
-    );
+  Future<bool> logout() async {
+    try {
+      await UserApi.instance.unlink();
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }

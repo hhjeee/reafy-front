@@ -36,6 +36,7 @@ class IconsPath {
   static String get mypageOff => 'assets/svg/bottombar_mypage_off.svg';
   static String get mypageOn => 'assets/svg/bottombar_mypage_on.svg';
   static String get bamboo => 'assets/svg/appbar_bamboo.svg';
+
   static String get item => 'assets/svg/appbar_item.svg';
   static String get play => 'assets/svg/play.svg';
   static String get pause => 'assets/svg/pause.svg';

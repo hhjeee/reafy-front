@@ -12,8 +12,10 @@ dependencies:
   get: ^4.6.6
   flutter_svg: ^0.22.0
   introduction_screen: ^3.1.12
-  cube_transition_plus: ^2.0.1
   carousel_slider: ^4.2.1
+  bubble: ^1.2.1
+  kakao_flutter_sdk_user: ^1.6.1
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
