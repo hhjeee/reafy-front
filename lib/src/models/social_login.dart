@@ -1,7 +1,12 @@
 // 로그인 확인
 
+abstract class SocialLogin {
+  Future<bool> login(); //성공여부
 
-import 'dart:io';
+  Future<bool> logout(); //성공여부
+}
+
+
 /*
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:readit/src/binding/init_bindings.dart';

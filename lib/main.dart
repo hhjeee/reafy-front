@@ -1,11 +1,11 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:reafy_front/src/binding/init_bindings.dart';
 import 'package:reafy_front/src/root.dart';
 
 void main() {
+  KakaoSdk.init(nativeAppKey: 'd6d001e8c5435fb63e0ab033f4cac481');
   runApp(MyApp());
 }
 

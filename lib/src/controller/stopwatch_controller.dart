@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'dart:async';
 
-class SwitchController extends GetxController {
+class StopWatchController extends GetxController {
   var value = false.obs;
   var stopwatchSeconds = 0.obs;
 
   void startStopwatch() {
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    Timer.periodic(Duration(milliseconds: 1000), (timer) {
       stopwatchSeconds.value++;
     });
   }

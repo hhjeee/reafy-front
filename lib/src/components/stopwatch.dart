@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:reafy_front/src/binding/init_bindings.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/components/stop_dialog.dart';
 import 'package:reafy_front/src/controller/stopwatch_controller.dart';
-import 'package:reafy_front/src/root.dart';
-import 'dart:async';
-
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/utils/timeformat.dart';
 
-class SwitchButton extends StatelessWidget {
-  final SwitchController switchController = Get.put(SwitchController());
+class StopWatch extends StatelessWidget {
+  final StopWatchController stopwatchController =
+      Get.put(StopWatchController());
 
   @override
   Widget build(BuildContext context) {
@@ -22,38 +18,35 @@ class SwitchButton extends StatelessWidget {
           /////////////////////////////////////////////////
           GestureDetector(
             onTap: () {
-              switchController.toggleSwitch();
+              stopwatchController.toggleSwitch();
             },
             child: Obx(() {
               return Container(
-                width: 140,
-                height: 46,
+                width: stopwatchController.value.value ? 220 : 66,
+                height: 32,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30.0),
-                  boxShadow: [
-                    BoxShadow(color: Colors.black.withOpacity(0.1)),
-                    BoxShadow(
-                        color: Colors.white, blurRadius: 15, spreadRadius: 0),
-                  ],
+                  color: Color(0xfffaf9f7),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(2.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      switchController.value.value
+                      stopwatchController.value.value
                           ? Container(
-                              width: 100,
+                              width: 188,
                               child: Padding(
                                 padding: EdgeInsets.only(left: 15.0),
                                 child: Center(
                                   child: Text(
-                                    TimeUtils.formatDuration(switchController
+                                    TimeUtils.formatDuration(stopwatchController
                                         .stopwatchSeconds.value),
                                     style: TextStyle(
                                       fontSize: 18,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color(0xff333333),
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: 3,
+                                      color: green,
                                     ),
                                   ),
                                 ),
@@ -62,27 +55,28 @@ class SwitchButton extends StatelessWidget {
                           : Container(),
                       Align(
                         child: Container(
-                          width: 34,
-                          height: 34,
+                          width: 26,
+                          height: 26,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Color(0xffd9d9d9),
                           ),
-                          child: switchController.value.value
+                          child: stopwatchController.value.value
                               ? ImageData(IconsPath.runningbutton, isSvg: false)
                               : ImageData(IconsPath.startbutton, isSvg: false),
                         ),
                       ),
                       ///////////// 재생 시 /////////////
-                      switchController.value.value
+                      stopwatchController.value.value
                           ? Container()
                           : Container(
-                              width: 92,
+                              width: 32,
+                              /*
                               child: Padding(
                                 padding: EdgeInsets.only(right: 10.0),
                                 child: Center(
                                   child: Text(
-                                    '독서 시작하기',
+                                    '',
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w700,
@@ -90,7 +84,7 @@ class SwitchButton extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                              ),
+                              ),*/
                             ),
                     ],
                   ),
@@ -99,11 +93,11 @@ class SwitchButton extends StatelessWidget {
             }),
           ),
           SizedBox(height: 15),
-          Container(
-            width: 150,
-            height: 150,
-            child: ImageData(IconsPath.state_4, isSvg: false),
-          ),
+          //Container(
+          //  width: 150,
+          //  height: 150,
+          //  child: ImageData(IconsPath.state_4, isSvg: false),
+          //),
         ],
       ),
     );

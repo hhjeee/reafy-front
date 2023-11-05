@@ -4,6 +4,7 @@ import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/pages/intro.dart';
 
 import 'package:get/get.dart';
+import 'package:reafy_front/src/pages/login.dart';
 
 /// TODO
 /// home , login 화면 연결
