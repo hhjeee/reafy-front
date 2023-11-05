@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:reafy_front/src/components/items.dart';
+import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/components/purchase_dialog.dart';
+//import 'package:reafy_front/src/components/items.dart';
+
 import 'package:get/get.dart';
 import 'dart:async';
+
+import 'package:reafy_front/src/components/items/background.dart';
+import 'package:reafy_front/src/components/items/rug.dart';
+import 'package:reafy_front/src/components/items/sofa.dart';
+import 'package:reafy_front/src/components/items/clock.dart';
+import 'package:reafy_front/src/components/items/window.dart';
+import 'package:reafy_front/src/components/items/showroom.dart';
 
 class ItemShop extends StatefulWidget {
   const ItemShop({super.key});
@@ -35,9 +45,26 @@ class _ItemShopState extends State<ItemShop> {
     });
   }
 
-  /*String getImageUrl(int index) {
-    return 'url or filepath';
-  }*/
+  int selectedCategory = 0;
+
+  Widget getSelectedWidget() {
+    switch (selectedCategory) {
+      case 0:
+        return ItemBackGround();
+      case 1:
+        return ItemRug();
+      case 2:
+        return ItemSofa();
+      case 3:
+        return ItemClock();
+      case 4:
+        return ItemWindow();
+      case 5:
+        return ItemShowRoom();
+      default:
+        return Container(); // 선택된 버튼이 없을 경우 아무것도 표시하지 않음
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +73,54 @@ class _ItemShopState extends State<ItemShop> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black54),
+          icon: Icon(Icons.arrow_back_ios, color: Color(0xff333333)),
           onPressed: () {
             Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
           },
         ),
+        title: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "대나무가 ",
+                style: TextStyle(
+                    color: Color(0xffff333333),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400),
+              ),
+              Text(
+                "42개 ",
+                style: TextStyle(
+                    color: Color(0xffff333333),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800),
+              ),
+              Text(
+                "남았어요!",
+                style: TextStyle(
+                    color: Color(0xffff333333),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          IconButton(
+            padding: EdgeInsets.all(0),
+            icon: ImageData(IconsPath.check, isSvg: true, width: 24),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return PurchaseDialog();
+                },
+              );
+            },
+          ),
+          SizedBox(width: 8),
+        ],
       ),
       body: Container(
           alignment: Alignment.center,
@@ -73,6 +143,9 @@ class _ItemShopState extends State<ItemShop> {
                   child: TextButton(
                     onPressed: () {
                       handleButtonPress(0);
+                      setState(() {
+                        selectedCategory = 0;
+                      });
                     },
                     child: Text(
                       '배경',
@@ -95,6 +168,9 @@ class _ItemShopState extends State<ItemShop> {
                   child: TextButton(
                     onPressed: () {
                       handleButtonPress(1);
+                      setState(() {
+                        selectedCategory = 1;
+                      });
                     },
                     child: Text(
                       '러그',
@@ -115,6 +191,9 @@ class _ItemShopState extends State<ItemShop> {
                   child: TextButton(
                     onPressed: () {
                       handleButtonPress(2);
+                      setState(() {
+                        selectedCategory = 2;
+                      });
                     },
                     child: Text(
                       '소파',
@@ -135,6 +214,9 @@ class _ItemShopState extends State<ItemShop> {
                   child: TextButton(
                     onPressed: () {
                       handleButtonPress(3);
+                      setState(() {
+                        selectedCategory = 3;
+                      });
                     },
                     child: Text(
                       '시계',
@@ -155,6 +237,9 @@ class _ItemShopState extends State<ItemShop> {
                   child: TextButton(
                     onPressed: () {
                       handleButtonPress(4);
+                      setState(() {
+                        selectedCategory = 4;
+                      });
                     },
                     child: Text(
                       '창문',
@@ -175,6 +260,9 @@ class _ItemShopState extends State<ItemShop> {
                   child: TextButton(
                     onPressed: () {
                       handleButtonPress(5);
+                      setState(() {
+                        selectedCategory = 5;
+                      });
                     },
                     child: Text(
                       '쇼룸',
@@ -195,7 +283,8 @@ class _ItemShopState extends State<ItemShop> {
                 ),
               ],
             ),
-            Items(),
+            getSelectedWidget(),
+            //Items(),
           ])),
     );
   }

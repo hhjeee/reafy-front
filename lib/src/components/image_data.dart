@@ -56,6 +56,9 @@ class IconsPath {
   static String get delete => 'assets/svg/delete.svg';
   static String get x => 'assets/svg/x.svg';
   static String get team_link => 'assets/svg/team_link.svg';
+  static String get select_nothing => 'assets/svg/select_nothing.svg';
+  static String get dropdown => 'assets/svg/dropdown_button.svg';
+  static String get check => 'assets/svg/check.svg';
   static String get state_1 => 'assets/images/state_1.png';
   static String get state_2 => 'assets/images/state_2.png';
   static String get state_3 => 'assets/images/state_3.png';
@@ -74,4 +77,7 @@ class IconsPath {
   static String get poobao_shadow => 'assets/svg/poobao_shadow.svg';
 
   static String get family => 'assets/images/team.png';
+
+  static String get sofa1 => 'assets/images/items/sofa/purple_sofa.png';
+  static String get sofa2 => 'assets/images/items/sofa/gray_sofa.png';
 }

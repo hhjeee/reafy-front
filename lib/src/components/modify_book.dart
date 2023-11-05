@@ -11,7 +11,6 @@ class _ModifyDialogState extends State<ModifyDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      //alert말고 다른 dialog
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
@@ -19,9 +18,9 @@ class _ModifyDialogState extends State<ModifyDialog> {
       //title:
       content: Container(
         width: 248,
-        height: 322,
+        height: 210,
         child: Column(children: [
-          SizedBox(height: 15.0),
+          SizedBox(height: 16.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -34,23 +33,22 @@ class _ModifyDialogState extends State<ModifyDialog> {
               SizedBox(width: 19.0),
             ],
           ),
-          SizedBox(height: 41.0),
+          SizedBox(height: 28.0),
           Text(
-            "정보를 수정할까요?",
+            "책의 상태를 선택해 주세요!",
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w800,
             ),
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 11),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //SizedBox(width: 17),
               BookStatusButtonGroup(),
             ],
           ),
-          SizedBox(height: 78),
+          SizedBox(height: 44),
           ElevatedButton(
             onPressed: () {
               //Navigator.pop(context);
@@ -91,36 +89,47 @@ class _BookStatusButtonGroupState extends State<BookStatusButtonGroup> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Stack(
       children: [
-        BookStatusButton(
-          status: '읽은 책',
-          isSelected: selectedButtonIndex == 0,
-          onPressed: () {
-            setState(() {
-              selectedButtonIndex = 0;
-            });
-          },
+        Container(
+          width: 208,
+          height: 28,
+          decoration: BoxDecoration(
+              color: Color(0xfffff7da),
+              borderRadius: BorderRadius.circular(100)),
         ),
-        BookStatusButton(
-          status: '읽는 중',
-          isSelected: selectedButtonIndex == 1,
-          onPressed: () {
-            setState(() {
-              selectedButtonIndex = 1;
-            });
-          },
-        ),
-        BookStatusButton(
-          status: '읽을 책',
-          isSelected: selectedButtonIndex == 2,
-          onPressed: () {
-            setState(() {
-              selectedButtonIndex = 2;
-            });
-          },
-        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            BookStatusButton(
+              status: '읽은 책',
+              isSelected: selectedButtonIndex == 0,
+              onPressed: () {
+                setState(() {
+                  selectedButtonIndex = 0;
+                });
+              },
+            ),
+            BookStatusButton(
+              status: '읽는 중',
+              isSelected: selectedButtonIndex == 1,
+              onPressed: () {
+                setState(() {
+                  selectedButtonIndex = 1;
+                });
+              },
+            ),
+            BookStatusButton(
+              status: '읽을 책',
+              isSelected: selectedButtonIndex == 2,
+              onPressed: () {
+                setState(() {
+                  selectedButtonIndex = 2;
+                });
+              },
+            ),
+          ],
+        )
       ],
     );
   }
@@ -139,31 +148,33 @@ class BookStatusButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 71,
-      height: 28,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          primary: isSelected ? Color(0xffFFECA6) : Color(0xFFFFF7DA),
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            side: BorderSide(
-              color: isSelected ? Color(0xFFffd747) : Colors.transparent,
-              width: 2.0,
+    return Stack(children: <Widget>[
+      Container(
+        width: 71,
+        height: 28,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            primary: isSelected ? Color(0xffFFECA6) : Color(0xFFFFF7DA),
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+              side: BorderSide(
+                color: isSelected ? Color(0xFFffd747) : Colors.transparent,
+                width: 1.0,
+              ),
+            ),
+          ),
+          child: Text(
+            status,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 12,
+              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
             ),
           ),
         ),
-        child: Text(
-          status,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 12,
-            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w400,
-          ),
-        ),
-      ),
-    );
+      )
+    ]);
   }
 }
