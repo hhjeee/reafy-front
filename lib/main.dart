@@ -5,6 +5,7 @@ import 'package:reafy_front/src/binding/init_bindings.dart';
 import 'package:reafy_front/src/root.dart';
 
 void main() {
+  //KakaoContext.clientId = 'YOUR_KAKAO_CLIENT_ID';
   KakaoSdk.init(nativeAppKey: 'd6d001e8c5435fb63e0ab033f4cac481');
   runApp(MyApp());
 }

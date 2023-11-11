@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'dart:async';
 
+import 'package:reafy_front/src/components/stop_dialog.dart';
+
 class StopWatchController extends GetxController {
   var value = false.obs;
   var stopwatchSeconds = 0.obs;
@@ -22,6 +24,7 @@ class StopWatchController extends GetxController {
       startStopwatch();
     } else {
       stopStopwatch();
+      
     }
   }
 }

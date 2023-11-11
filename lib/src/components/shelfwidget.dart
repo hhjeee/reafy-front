@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:reafy_front/src/components/3dbook.dart';
+import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/models/book.dart';
 import 'package:reafy_front/src/pages/book/bookdetail.dart';
+import 'package:reafy_front/src/utils/constants.dart';
 
 class BookShelfWidget extends StatefulWidget {
   const BookShelfWidget({super.key});
@@ -19,20 +20,34 @@ class _BookShelfWidgetState extends State<BookShelfWidget> {
 
     return books.map((book) {
       return Padding(
-        padding: const EdgeInsets.only(right: 20.0),
+        padding: const EdgeInsets.only(right: 20.0, top: 7),
         child: GestureDetector(
-            onTap: () {
-              Get.to(() => BookDetailPage(book: book));
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                //color: Color(0xffd9d9d9),
-                borderRadius: BorderRadius.circular(30),
+          onTap: () {
+            Get.to(() => BookDetailPage(book: book));
+          },
+          child: Container(
+            width: 66,
+            height: 96,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black26,
+                  offset: Offset(0, 15.0),
+                  blurRadius: 8.0,
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.network(
+                book.coverImageUrl,
+                fit: BoxFit.fitWidth,
               ),
-              width: 80,
-              height: 120,
-              child: BookCover3D(imageUrl: book.coverImageUrl),
-            )),
+            ),
+          ),
+          //child: BookCover3D(imageUrl: book.coverImageUrl),
+        ),
       );
     }).toList();
   }
@@ -67,63 +82,44 @@ class _BookShelfWidgetState extends State<BookShelfWidget> {
           ),
           SizedBox(height: 10),
           Container(
-              width: size.width,
-              height: 180,
-              decoration: BoxDecoration(
-                color: Color(0xffFFFCF3),
-                image: DecorationImage(
-                    image: AssetImage('assets/images/shelf_bg3.png'),
-                    alignment: Alignment.bottomCenter,
-                    fit: BoxFit.fitWidth),
-              ),
-              child: Padding(
-                  padding:
-                      EdgeInsets.only(top: 18, left: 16, right: 0, bottom: 10),
-                  child: Column(
-                    children: [
-                      /*
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          // 등록순 정렬 로직 추가
-                        },
-                        child: Text(
-                          "등록순  |  ",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
+            width: double.maxFinite,
+            height: 140,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/images/shelf.png'),
+                  alignment: Alignment.bottomCenter,
+                  fit: BoxFit.fitWidth),
+            ),
+            child: Column(
+              children: [
+                SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(children: [
+                      SizedBox(width: 16),
+                      ImageData(
+                        IconsPath.left,
+                        isSvg: true,
+                        width: 10,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          // 이름순 정렬 로직 추가
-                        },
-                        child: Text(
-                          "이름순",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
+                      SizedBox(
+                        width: 16,
                       ),
-                      //SizedBox(width: 8),
-                    ],
-                  ),
-                  */
-                      //SizedBox(height: 25),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: _buildBookList(context),
-                        ),
-                      )
-                    ],
-                  )))
+                      Row(
+                        children: _buildBookList(context),
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      ImageData(
+                        IconsPath.right,
+                        width: 10,
+                        isSvg: true,
+                      ),
+                      SizedBox(width: 16),
+                    ])),
+              ],
+            ),
+          )
         ]));
   }
 }

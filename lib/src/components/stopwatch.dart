@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/components/stop_dialog.dart';
 import 'package:reafy_front/src/controller/stopwatch_controller.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/utils/timeformat.dart';
@@ -8,6 +9,23 @@ import 'package:reafy_front/src/utils/timeformat.dart';
 class StopWatch extends StatelessWidget {
   final StopWatchController stopwatchController =
       Get.put(StopWatchController());
+
+  void _showStopDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StopDialog();
+      },
+    ).then((result) {
+      if (result != null && result is bool && result) {
+        // Handle the stop action, e.g., stop the stopwatch
+        stopwatchController.toggleSwitch();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Stop button pressed')),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +37,12 @@ class StopWatch extends StatelessWidget {
           GestureDetector(
             onTap: () {
               stopwatchController.toggleSwitch();
+
+              _showStopDialog(context);
+              //StopDialog(
+              //    totalTime: 123, //totalTime,
+              //    dropdownList: ["가", "나", "다"],
+              //    selectedBook: "가");
             },
             child: Obx(() {
               return Container(
