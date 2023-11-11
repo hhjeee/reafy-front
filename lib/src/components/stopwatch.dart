@@ -32,7 +32,7 @@ class StopWatch extends StatelessWidget {
     return Container(
       child: Column(
         children: [
-          SizedBox(height: 20),
+          SizedBox(height: 10),
           /////////////////////////////////////////////////
           GestureDetector(
             onTap: () {
@@ -46,11 +46,18 @@ class StopWatch extends StatelessWidget {
             },
             child: Obx(() {
               return Container(
-                width: stopwatchController.value.value ? 220 : 66,
-                height: 32,
+                width: 338, //stopwatchController.value.value ? 220 : 66,
+                height: 50,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30.0),
+                  borderRadius: BorderRadius.circular(25.0),
                   color: Color(0xfffaf9f7),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 0),
+                      blurRadius: 10.0,
+                      color: Color.fromRGBO(0, 0, 0, 0.10),
+                    ),
+                  ],
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(2.0),
@@ -362,3 +369,4 @@ class _SwitchButtonState extends State<SwitchButton>
   }
 }
 */
+

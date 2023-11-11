@@ -88,4 +88,9 @@ class IconsPath {
 
   static String get sofa1 => 'assets/images/items/sofa/purple_sofa.png';
   static String get sofa2 => 'assets/images/items/sofa/gray_sofa.png';
+
+  static String get home_graffic => 'assets/images/home_graffic.png';
+  static String get map => 'assets/images/map.png';
+  static String get today => 'assets/svg/today_time.svg';
+  static String get total => 'assets/svg/total_time.svg';
 }
