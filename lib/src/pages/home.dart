@@ -101,13 +101,13 @@ class Home extends StatelessWidget {
               //SizedBox(height: 60.0), //70
               Stack(
                 children: [
-                  Container(
+                  /*Container(
                     width: size.width,
                     height: 334,
                     decoration: BoxDecoration(
                       color: Color(0xffd9d9d9),
                     ),
-                  ),
+                  ),*/
                   Container(
                     width: size.width,
                     height: 332,
