@@ -8,10 +8,14 @@ const headerHeight = 85.0;
 
 const bgColor = Color(0xFFFCFCFA);
 
-const primaryColor = Color(0xFFFFD747);
+const yellow = Color(0xFFFFD747);
 const gray = Color(0xFF808080);
 const green = Color(0xFF63B865);
 const white = Color(0xFFffffff);
+const yellow_light = Color(0xFFFFECA6);
+const black = Color(0xff333333);
+const bg_gray = Color(0xfffaf9f7);
+
 const panelTransition = Duration(milliseconds: 500);
 
 const double baseHeight = 650.0;
@@ -19,9 +23,6 @@ const double baseHeight = 650.0;
 double screenAwareSize(double size, BuildContext context) {
   return size * MediaQuery.of(context).size.height / baseHeight;
 }
-
-//const mediaHeight = MediaQuery.of(context).size.height;
-//const mediaWidth =  MediaQuery.of(context).size.width;
 
 class SizeConfig {
   static late MediaQueryData _mediaQueryData;

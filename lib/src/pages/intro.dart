@@ -55,7 +55,7 @@ class OnBoardingPage extends StatelessWidget {
       //back: const Icon(Icons.arrow_back),
       dotsDecorator: DotsDecorator(
           color: Color(0xFFD9D9D9),
-          activeColor: primaryColor,
+          activeColor: yellow,
           size: const Size(12, 12),
           activeSize: const Size(25, 15),
           activeShape:

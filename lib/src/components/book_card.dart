@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:reafy_front/src/components/add_book.dart';
 import 'package:reafy_front/src/models/book.dart';
-import 'package:reafy_front/src/pages/book/bookdetail.dart';
+
 
 class BookCard extends StatelessWidget {
   final Book book;
@@ -12,11 +13,17 @@ class BookCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.to(() => BookDetailPage(book: book));
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AddDialog(); // 수정된 부분
+          },
+        );
+
+        //Get.to(() => BookDetailPage(book: book));
       },
       child: Card(
-          color: Color(0xffF4F4F4),
-          shadowColor: Color(0xffe6e6e6),
+          color: Color(0xffFAF9F7),
           elevation: 0,
           margin: EdgeInsets.symmetric(vertical: 10),
           child: Padding(
@@ -25,14 +32,14 @@ class BookCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 60,
-                  height: 88,
+                  width: 70,
+                  height: 98,
                   decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(book.coverImageUrl!),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                      image: DecorationImage(
+                        image: NetworkImage(book.coverImageUrl!),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(8)),
                 ),
                 SizedBox(width: 16),
                 Expanded(
@@ -43,21 +50,21 @@ class BookCard extends StatelessWidget {
                       Text(
                         book.title,
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 16,
                           color: Color(0xff333333),
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        book.author!.length > 20
-                            ? '${book.author!.substring(0, 20)}...' // 최대 20자로 제한
-                            : book.author!,
+                        book.author.length > 20
+                            ? '${book.author.substring(0, 20)}...' // 최대 20자로 제한
+                            : book.author,
                         overflow: TextOverflow.ellipsis, // 길이 초과 시 '...'로 표시
 
                         style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xff6A6A6A),
+                          fontSize: 12,
+                          color: Color(0xff333333),
                           fontWeight: FontWeight.w400,
                         ),
                       ),

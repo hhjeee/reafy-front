@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:reafy_front/src/components/book_card.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/models/book.dart';
@@ -15,7 +16,7 @@ class _SearchBookState extends State<SearchBook> {
   List<Book> displayList = List.from(mockSearchResults);
   TextEditingController _searchController = TextEditingController();
 
-  bool isSearching = false;
+  bool isSearching = true;
 
   void _performSearch(String query) {
     setState(() {
@@ -24,7 +25,7 @@ class _SearchBookState extends State<SearchBook> {
 
     fetchSearchResults(query).then((searchResults) {
       setState(() {
-        isSearching = false;
+        isSearching = true;
         displayList = List.from(searchResults);
       });
     });
@@ -50,6 +51,7 @@ class _SearchBookState extends State<SearchBook> {
 
   Widget _search() {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16),
       child: TextField(
         controller: _searchController,
         onSubmitted: (query) {
@@ -139,12 +141,25 @@ class _SearchBookState extends State<SearchBook> {
   */
   Widget _renderResults() {
     return Expanded(
-        child: isSearching
-            ? ListView.builder(
-                itemCount: displayList.length,
-                itemBuilder: (context, index) =>
-                    BookCard(book: displayList[index]))
-            : _character());
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+          colors: [
+            Color(0xFFFAF9F7),
+            Color(0xFFEBEBEB),
+            Color(0xFFEBEBEB),
+            Color(0xFFFAF9F7)
+          ],
+          stops: [0, 0.1, 0.9, 1],
+          transform: GradientRotation(1.5708),
+        )),
+        // 검색 결과의 배경색 설정 (회색: #EBEBEB)
+        child: ListView.builder(
+          itemCount: displayList.length,
+          itemBuilder: (context, index) => BookCard(book: displayList[index]),
+        ),
+      ),
+    );
   }
 
   @override
@@ -155,16 +170,21 @@ class _SearchBookState extends State<SearchBook> {
             "책을 추가해주세요!",
             style: TextStyle(
                 color: Color(0xff333333),
-                fontWeight: FontWeight.w800,
-                fontSize: 20),
+                fontWeight: FontWeight.w700,
+                fontSize: 18),
           ),
-          foregroundColor: Color(0xff333333),
+          foregroundColor: Color.fromARGB(255, 22, 20, 20),
           backgroundColor: Colors.transparent,
           elevation: 0,
+          //leading: IconButton(
+          //  icon: Icon(Icons.arrow_back_ios, color: Color(0xff333333)),
+          //  onPressed: () {
+          //    Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
+          //  },
         ),
         body: SafeArea(
             child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          padding: EdgeInsets.symmetric(vertical: 16),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -174,7 +194,6 @@ class _SearchBookState extends State<SearchBook> {
                   height: 10,
                 ),
                 _renderResults(),
-
                 //const Spacer(flex: 1),
               ]),
         )));

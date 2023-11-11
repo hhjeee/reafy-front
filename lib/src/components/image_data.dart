@@ -29,6 +29,11 @@ class ImageData extends StatelessWidget {
 }
 
 class IconsPath {
+  static String get bubble => 'assets/images/bubble.png';
+  static String get title_logo => 'assets/images/title_logo.png';
+  static String get login_character => 'assets/images/login_character.png';
+  static String get login_button => 'assets/images/kakao_login.png';
+
   static String get homeOff => 'assets/svg/bottombar_home_off.svg';
   static String get homeOn => 'assets/svg/bottombar_home_on.svg';
   static String get bookOff => 'assets/svg/bottombar_book_off.svg';
@@ -45,12 +50,14 @@ class IconsPath {
   static String get star => 'assets/svg/star.svg';
   static String get Logout => 'assets/svg/logout.svg';
   static String get Team => 'assets/svg/team.svg';
-  static String get Pencil => 'assets/svg/pencil.svg';
-  static String get pencil_black => 'assets/svg/pencil_black.svg';
+  static String get pencil => 'assets/svg/pencil.svg';
+  static String get pencil_green => 'assets/svg/pencil_green.svg';
   static String get trash_can => 'assets/svg/trash_can.svg';
   static String get line => 'assets/svg/line.svg';
   static String get startbutton => 'assets/images/Button.png';
   static String get runningbutton => 'assets/images/Runningbutton.png';
+  static String get left => 'assets/svg/left.svg';
+  static String get right => 'assets/svg/right.svg';
   static String get nextarrow => 'assets/svg/nextarrow.svg';
   static String get add => 'assets/svg/add.svg';
   static String get delete => 'assets/svg/delete.svg';
@@ -59,6 +66,7 @@ class IconsPath {
   static String get select_nothing => 'assets/svg/select_nothing.svg';
   static String get dropdown => 'assets/svg/dropdown_button.svg';
   static String get check => 'assets/svg/check.svg';
+  static String get done => 'assets/svg/done.svg';
   static String get state_1 => 'assets/images/state_1.png';
   static String get state_2 => 'assets/images/state_2.png';
   static String get state_3 => 'assets/images/state_3.png';

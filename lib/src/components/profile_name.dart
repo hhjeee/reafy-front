@@ -83,7 +83,7 @@ class _ProfileNameState extends State<ProfileName> {
                         _textEditingController.text = _displayText;
                       });
                     },
-                    child: ImageData(IconsPath.Pencil, isSvg: true),
+                    child: ImageData(IconsPath.pencil, isSvg: true),
                   ),
                 ),
               ),
