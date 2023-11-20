@@ -12,24 +12,24 @@ class ItemData {
 
 List<ItemData> itemDataList = [
   ItemData(imagePath: 'assets/images/nothing.png', text: '선택 안함'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그1'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그2'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그3'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그4'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그5'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그6'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그7'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그8'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그9'),
+  ItemData(imagePath: 'assets/images/others1.png', text: '소품1'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '소품2'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '소품3'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '소품4'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '소품5'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '소품6'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '소품7'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '소품8'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '소품9'),
   // ...
 ];
 
-class ItemRug extends StatefulWidget {
+class ItemOthers extends StatefulWidget {
   @override
-  _ItemRugState createState() => _ItemRugState();
+  _ItemOthersState createState() => _ItemOthersState();
 }
 
-class _ItemRugState extends State<ItemRug> {
+class _ItemOthersState extends State<ItemOthers> {
   int selectedGridIndex = 0;
   String selectedImagePath = '';
 
@@ -52,9 +52,6 @@ class _ItemRugState extends State<ItemRug> {
             ),
             itemCount: itemDataList.length,
             itemBuilder: (context, index) {
-              // 각 사각형에 들어갈 이미지 URL
-              //String imageUrl = getImageUrl(index);
-
               bool isSelected = selectedGridIndex == index;
               ItemData itemIndex = itemDataList[index];
 
@@ -64,13 +61,17 @@ class _ItemRugState extends State<ItemRug> {
                     selectedGridIndex = index;
                     selectedImagePath = itemIndex.imagePath;
 
-                    poobaoHome.updateRugImagePath(itemIndex.imagePath);
+                    poobaoHome.updateOthersImagePath(itemIndex.imagePath);
                     poobaoHome.updateSelectedImagePath(itemIndex.imagePath);
                     poobaoHome.updateSelectedItemName(itemIndex.text);
                   });
                 },
-                child:
-                    GridItem(index, itemIndex, isSelected, selectedImagePath),
+                child: GridItem(
+                  index,
+                  itemIndex,
+                  isSelected,
+                  selectedImagePath,
+                ),
               );
             },
           ),
@@ -81,7 +82,11 @@ class _ItemRugState extends State<ItemRug> {
 }
 
 Widget GridItem(
-    int index, ItemData itemIndex, bool isSelected, String selectedImagePath) {
+  int index,
+  ItemData itemIndex,
+  bool isSelected,
+  String selectedImagePath,
+) {
   bool isButtonEnabled = index < 8; //사용자가 가지고 있는 아이템일 경우
 
   return Flexible(

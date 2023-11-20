@@ -5,6 +5,8 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/pages/itemshop.dart';
 import 'package:reafy_front/src/components/stopwatch.dart';
 import 'package:reafy_front/src/utils/constants.dart';
+import 'package:reafy_front/src/components/poobao_home.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
   //const Home({super.key});
@@ -99,21 +101,74 @@ class Home extends StatelessWidget {
                 ),
               ),
               //SizedBox(height: 60.0), //70
-              Stack(
-                children: [
-                  /*Container(
+              /*Container(
+                width: size.width,
+                height: 332,
+                child: ImageData(IconsPath.home_graffic),
+              ),*/
+              Consumer<PoobaoHome>(
+                builder: (context, poobaoHome, child) {
+                  return Container(
                     width: size.width,
                     height: 334,
-                    decoration: BoxDecoration(
-                      color: Color(0xffd9d9d9),
+                    //decoration: BoxDecoration(color: Color(0xffd9d9d9)),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: 31,
+                          child: Container(
+                              //bookshelf
+                              width: 110,
+                              height: 240,
+                              //decoration: BoxDecoration(color: Colors.orange),
+                              child: ImageData(poobaoHome.bookshelf_imagePath)),
+                        ),
+                        Positioned(
+                          //clock
+                          left: 160,
+                          child: Container(
+                              width: 70,
+                              height: 70,
+                              //decoration: BoxDecoration(color: Colors.yellow),
+                              child: ImageData(poobaoHome.clock_imagePath)),
+                        ),
+                        Positioned(
+                          left: 274,
+                          top: 18,
+                          child: Container(
+                            //window
+                            width: 110,
+                            height: 110,
+                            //decoration: BoxDecoration(color: Colors.blue),
+                            child: ImageData(poobaoHome.window_imagePath),
+                          ),
+                        ),
+                        Positioned(
+                          left: 274,
+                          top: 151,
+                          child: Container(
+                            //others
+                            width: 100,
+                            height: 120,
+                            //decoration: BoxDecoration(color: Colors.pink),
+                            child: ImageData(poobaoHome.others_imagePath),
+                          ),
+                        ),
+                        Positioned(
+                          top: 279,
+                          left: 95,
+                          child: Container(
+                            //rug
+                            width: 200,
+                            height: 40,
+                            //decoration: BoxDecoration(color: Colors.red),
+                            child: ImageData(poobaoHome.rug_imagePath),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),*/
-                  Container(
-                    width: size.width,
-                    height: 332,
-                    child: ImageData(IconsPath.home_graffic),
-                  ),
-                ],
+                  );
+                },
               ),
               _time(),
               Center(

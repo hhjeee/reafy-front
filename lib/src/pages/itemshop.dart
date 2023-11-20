@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/purchase_dialog.dart';
 //import 'package:reafy_front/src/components/items.dart';
+import 'package:reafy_front/src/components/poobao_home.dart';
+import 'package:provider/provider.dart';
 
 import 'package:get/get.dart';
 import 'dart:async';
 
-import 'package:reafy_front/src/components/items/background.dart';
+import 'package:reafy_front/src/components/items/bookshelf_item.dart';
 import 'package:reafy_front/src/components/items/rug.dart';
-import 'package:reafy_front/src/components/items/sofa.dart';
+import 'package:reafy_front/src/components/items/otheritems.dart';
 import 'package:reafy_front/src/components/items/clock.dart';
 import 'package:reafy_front/src/components/items/window.dart';
-import 'package:reafy_front/src/components/items/showroom.dart';
 
 class ItemShop extends StatefulWidget {
   const ItemShop({super.key});
@@ -23,13 +24,17 @@ class ItemShop extends StatefulWidget {
 
 class _ItemShopState extends State<ItemShop> {
   late List<Color> buttonColors;
+  late List<FontWeight> buttonWeight;
   late int selectedIndex;
 
   void initState() {
     super.initState(); // 초기값 설정
-    buttonColors = List.filled(6, Color(0xff808080));
+    buttonColors = List.filled(5, Color(0xff808080));
     selectedIndex = 0;
     buttonColors[selectedIndex] = Color(0xff63d865);
+
+    buttonWeight = List.filled(5, FontWeight.w400);
+    buttonWeight[selectedIndex] = FontWeight.w700;
   }
 
   void handleButtonPress(int index) {
@@ -37,8 +42,10 @@ class _ItemShopState extends State<ItemShop> {
       for (int i = 0; i < buttonColors.length; i++) {
         if (i == index) {
           buttonColors[i] = Color(0xff63d865);
+          buttonWeight[i] = FontWeight.w700;
         } else {
           buttonColors[i] = Color(0xff808080);
+          buttonWeight[i] = FontWeight.w400;
         }
         selectedIndex = index;
       }
@@ -50,17 +57,15 @@ class _ItemShopState extends State<ItemShop> {
   Widget getSelectedWidget() {
     switch (selectedCategory) {
       case 0:
-        return ItemBackGround();
+        return ItemBookshelf();
       case 1:
         return ItemRug();
       case 2:
-        return ItemSofa();
+        return ItemWindow();
       case 3:
         return ItemClock();
       case 4:
-        return ItemWindow();
-      case 5:
-        return ItemShowRoom();
+        return ItemOthers();
       default:
         return Container(); // 선택된 버튼이 없을 경우 아무것도 표시하지 않음
     }
@@ -68,6 +73,7 @@ class _ItemShopState extends State<ItemShop> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -125,163 +131,202 @@ class _ItemShopState extends State<ItemShop> {
       body: Container(
           alignment: Alignment.center,
           child: Column(children: [
-            Container(
-              margin: EdgeInsets.only(bottom: 20.0),
-              width: 280,
-              height: 255,
-              color: Color(0xffd9d9d9),
+            Consumer<PoobaoHome>(
+              builder: (context, poobaoHome, child) {
+                return Container(
+                  width: 296,
+                  height: 255,
+                  //decoration: BoxDecoration(color: Color(0xffd9d9d9)),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: 23,
+                        child: Container(
+                            //bookshelf
+                            width: 84,
+                            height: 182,
+                            //decoration: BoxDecoration(color: Colors.orange),
+                            child: ImageData(poobaoHome.bookshelf_imagePath)),
+                      ),
+                      Positioned(
+                        //clock
+                        left: 121,
+                        child: Container(
+                            width: 53,
+                            height: 53,
+                            //decoration: BoxDecoration(color: Colors.yellow),
+                            child: ImageData(poobaoHome.clock_imagePath)),
+                      ),
+                      Positioned(
+                        left: 208,
+                        top: 14,
+                        child: Container(
+                          //window
+                          width: 83,
+                          height: 83,
+                          //decoration: BoxDecoration(color: Colors.blue),
+                          child: ImageData(poobaoHome.window_imagePath),
+                        ),
+                      ),
+                      Positioned(
+                        left: 208,
+                        top: 115,
+                        child: Container(
+                          //others
+                          width: 76,
+                          height: 91,
+                          //decoration: BoxDecoration(color: Colors.pink),
+                          child: ImageData(poobaoHome.others_imagePath),
+                        ),
+                      ),
+                      Positioned(
+                        top: 212,
+                        left: 72,
+                        child: Container(
+                          //rug
+                          width: 152,
+                          height: 30,
+                          //decoration: BoxDecoration(color: Colors.red),
+                          child: ImageData(poobaoHome.rug_imagePath),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
+            SizedBox(height: 20),
             Container(
               margin: EdgeInsets.only(bottom: 20.0),
               height: 1.0,
               color: Color(0xffd9d9d9),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: TextButton(
-                    onPressed: () {
-                      handleButtonPress(0);
-                      setState(() {
-                        selectedCategory = 0;
-                      });
-                    },
-                    child: Text(
-                      '배경',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: buttonColors[0],
+            Container(
+              width: 390,
+              padding: EdgeInsets.symmetric(horizontal: 26),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  //SizedBox(width: 26.0),
+                  Flexible(
+                    child: TextButton(
+                      onPressed: () {
+                        handleButtonPress(0);
+                        setState(() {
+                          selectedCategory = 0;
+                        });
+                      },
+                      child: Text(
+                        '책장',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: buttonWeight[0],
+                          color: buttonColors[0],
+                        ),
                       ),
-                    ),
-                    style: TextButton.styleFrom(
-                      minimumSize: Size.zero,
-                      padding: EdgeInsets.only(
-                        left: 30.0,
+                      style: TextButton.styleFrom(
+                        minimumSize: Size.zero,
+                        padding: EdgeInsets.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                   ),
-                ),
-                Flexible(
-                  child: TextButton(
-                    onPressed: () {
-                      handleButtonPress(1);
-                      setState(() {
-                        selectedCategory = 1;
-                      });
-                    },
-                    child: Text(
-                      '러그',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: buttonColors[1],
+                  Flexible(
+                    child: TextButton(
+                      onPressed: () {
+                        handleButtonPress(1);
+                        setState(() {
+                          selectedCategory = 1;
+                        });
+                      },
+                      child: Text(
+                        '러그',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: buttonWeight[1],
+                          color: buttonColors[1],
+                        ),
                       ),
-                    ),
-                    style: TextButton.styleFrom(
-                      minimumSize: Size.zero,
-                      padding: EdgeInsets.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      style: TextButton.styleFrom(
+                        minimumSize: Size.zero,
+                        padding: EdgeInsets.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
                     ),
                   ),
-                ),
-                Flexible(
-                  child: TextButton(
-                    onPressed: () {
-                      handleButtonPress(2);
-                      setState(() {
-                        selectedCategory = 2;
-                      });
-                    },
-                    child: Text(
-                      '소파',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: buttonColors[2],
+                  Flexible(
+                    child: TextButton(
+                      onPressed: () {
+                        handleButtonPress(2);
+                        setState(() {
+                          selectedCategory = 2;
+                        });
+                      },
+                      child: Text(
+                        '창문',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: buttonWeight[2],
+                          color: buttonColors[2],
+                        ),
                       ),
-                    ),
-                    style: TextButton.styleFrom(
-                      minimumSize: Size.zero,
-                      padding: EdgeInsets.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      style: TextButton.styleFrom(
+                        minimumSize: Size.zero,
+                        padding: EdgeInsets.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
                     ),
                   ),
-                ),
-                Flexible(
-                  child: TextButton(
-                    onPressed: () {
-                      handleButtonPress(3);
-                      setState(() {
-                        selectedCategory = 3;
-                      });
-                    },
-                    child: Text(
-                      '시계',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: buttonColors[3],
+                  Flexible(
+                    child: TextButton(
+                      onPressed: () {
+                        handleButtonPress(3);
+                        setState(() {
+                          selectedCategory = 3;
+                        });
+                      },
+                      child: Text(
+                        '시계',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: buttonWeight[3],
+                          color: buttonColors[3],
+                        ),
                       ),
-                    ),
-                    style: TextButton.styleFrom(
-                      minimumSize: Size.zero,
-                      padding: EdgeInsets.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      style: TextButton.styleFrom(
+                        minimumSize: Size.zero,
+                        padding: EdgeInsets.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
                     ),
                   ),
-                ),
-                Flexible(
-                  child: TextButton(
-                    onPressed: () {
-                      handleButtonPress(4);
-                      setState(() {
-                        selectedCategory = 4;
-                      });
-                    },
-                    child: Text(
-                      '창문',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: buttonColors[4],
+                  Flexible(
+                    child: TextButton(
+                      onPressed: () {
+                        handleButtonPress(4);
+                        setState(() {
+                          selectedCategory = 4;
+                        });
+                      },
+                      child: Text(
+                        '소품',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: buttonWeight[4],
+                          color: buttonColors[4],
+                        ),
                       ),
-                    ),
-                    style: TextButton.styleFrom(
-                      minimumSize: Size.zero,
-                      padding: EdgeInsets.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      style: TextButton.styleFrom(
+                        minimumSize: Size.zero,
+                        padding: EdgeInsets.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
                     ),
                   ),
-                ),
-                Flexible(
-                  child: TextButton(
-                    onPressed: () {
-                      handleButtonPress(5);
-                      setState(() {
-                        selectedCategory = 5;
-                      });
-                    },
-                    child: Text(
-                      '쇼룸',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: buttonColors[5],
-                      ),
-                    ),
-                    style: TextButton.styleFrom(
-                      minimumSize: Size.zero,
-                      padding: EdgeInsets.only(
-                        right: 30.0,
-                      ),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                  ),
-                ),
-              ],
+                  //SizedBox(width: 26.0),
+                ],
+              ),
             ),
             getSelectedWidget(),
             //Items(),

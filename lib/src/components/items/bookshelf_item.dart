@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/poobao_home.dart';
+import 'package:reafy_front/src/pages/itemshop.dart';
 
 class ItemData {
   final String imagePath;
@@ -12,30 +13,31 @@ class ItemData {
 
 List<ItemData> itemDataList = [
   ItemData(imagePath: 'assets/images/nothing.png', text: '선택 안함'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그1'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그2'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그3'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그4'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그5'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그6'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그7'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그8'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그9'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '베이직 책장'),
+  ItemData(imagePath: 'assets/images/bookshelf1.png', text: '사다리 책장'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '수집가 책장'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '책장4'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '책장5'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '책장6'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '책장7'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '책장8'),
+  ItemData(imagePath: 'assets/images/nothing.png', text: '책장9'),
   // ...
 ];
 
-class ItemRug extends StatefulWidget {
+class ItemBookshelf extends StatefulWidget {
   @override
-  _ItemRugState createState() => _ItemRugState();
+  _ItemBookshelfState createState() => _ItemBookshelfState();
 }
 
-class _ItemRugState extends State<ItemRug> {
+class _ItemBookshelfState extends State<ItemBookshelf> {
   int selectedGridIndex = 0;
   String selectedImagePath = '';
 
   @override
   Widget build(BuildContext context) {
     final poobaoHome = Provider.of<PoobaoHome>(context, listen: true);
+
     return Container(
       child: SingleChildScrollView(
         //physics: AlwaysScrollableScrollPhysics(),
@@ -52,9 +54,6 @@ class _ItemRugState extends State<ItemRug> {
             ),
             itemCount: itemDataList.length,
             itemBuilder: (context, index) {
-              // 각 사각형에 들어갈 이미지 URL
-              //String imageUrl = getImageUrl(index);
-
               bool isSelected = selectedGridIndex == index;
               ItemData itemIndex = itemDataList[index];
 
@@ -64,13 +63,17 @@ class _ItemRugState extends State<ItemRug> {
                     selectedGridIndex = index;
                     selectedImagePath = itemIndex.imagePath;
 
-                    poobaoHome.updateRugImagePath(itemIndex.imagePath);
+                    poobaoHome.updateBookshelfImagePath(itemIndex.imagePath);
                     poobaoHome.updateSelectedImagePath(itemIndex.imagePath);
                     poobaoHome.updateSelectedItemName(itemIndex.text);
                   });
                 },
-                child:
-                    GridItem(index, itemIndex, isSelected, selectedImagePath),
+                child: GridItem(
+                  index,
+                  itemIndex,
+                  isSelected,
+                  poobaoHome.selectedImagePath,
+                ),
               );
             },
           ),
@@ -81,7 +84,11 @@ class _ItemRugState extends State<ItemRug> {
 }
 
 Widget GridItem(
-    int index, ItemData itemIndex, bool isSelected, String selectedImagePath) {
+  int index,
+  ItemData itemIndex,
+  bool isSelected,
+  String selectedImagePath,
+) {
   bool isButtonEnabled = index < 8; //사용자가 가지고 있는 아이템일 경우
 
   return Flexible(
