@@ -6,7 +6,11 @@ import 'package:reafy_front/src/pages/book/bookdetail.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
 class BookShelfWidget extends StatefulWidget {
-  const BookShelfWidget({super.key});
+  final String title;
+  final List<Book> books;
+
+  const BookShelfWidget({required this.title, required this.books, Key? key})
+      : super(key: key);
 
   @override
   State<BookShelfWidget> createState() => _BookShelfWidgetState();
@@ -16,9 +20,9 @@ class _BookShelfWidgetState extends State<BookShelfWidget> {
   bool isExpanded = false;
 
   List<Widget> _buildBookList(BuildContext context) {
-    List<Book> books = getMockBooks();
+    //List<Book>  = getMockBooks();
 
-    return books.map((book) {
+    return widget.books.map((book) {
       return Padding(
         padding: const EdgeInsets.only(right: 20.0, top: 7),
         child: GestureDetector(
@@ -56,11 +60,16 @@ class _BookShelfWidgetState extends State<BookShelfWidget> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Center(
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+    return //GestureDetector(
+        //onTap: () {
+        //Get.to(() = ShelfDetailPage(status: book));
+        //},
+        //child:
+        Center(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
           Container(
             width: 100,
             height: 45,
@@ -71,7 +80,7 @@ class _BookShelfWidgetState extends State<BookShelfWidget> {
                   fit: BoxFit.cover),
             ),
             child: Center(
-              child: Text('읽는 중',
+              child: Text(widget.title,
                   style: TextStyle(
                     fontSize: 16,
                     color: Color(0xff333333),
