@@ -15,22 +15,22 @@ class OnBoardingPage extends StatelessWidget {
         PageViewModel(
             title: '나만의 책장을 \n만들어봐요',
             body: '',
-            image: Image.asset("assets/images/intro.png"),
+            image: Image.asset("assets/images/onboarding_1.png"),
             decoration: getPageDecoration()),
         PageViewModel(
             title: '독서 시간을\n측정할 수 있어요',
             body: '',
-            image: Image.asset("assets/images/intro.png"),
+            image: Image.asset("assets/images/onboarding_2.png"),
             decoration: getPageDecoration()),
         PageViewModel(
             title: '내 서재를\n마음대로 꾸며봐요',
             body: '',
-            image: Image.asset("assets/images/intro.png"),
+            image: Image.asset("assets/images/onboarding_3.png"),
             decoration: getPageDecoration()),
         PageViewModel(
             title: '만나서 반가워요! \n지금부터 Reafy를 \n시작해볼까요?',
             body: '',
-            image: Image.asset("assets/images/intro.png"),
+            image: Image.asset("assets/images/onboarding_4.png"),
             decoration: getPageDecoration())
       ],
       done: ImageData(
