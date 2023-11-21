@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/shelfwidget.dart';
+import 'package:reafy_front/src/models/book.dart';
 import 'package:reafy_front/src/pages/book/addbook.dart';
 
 class BookShelf extends StatefulWidget {
@@ -13,13 +14,16 @@ class BookShelf extends StatefulWidget {
 }
 
 class _BookShelfState extends State<BookShelf> {
+  List<Book> recentBooks = getrecentBooks();
+  List<Book> wishlistBooks = getwishlistBooks();
+  List<Book> finishedBooks = getfinishedBooks();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Color(0xfff5f7e9),
           elevation: 0,
           leading: IconButton(
             padding: EdgeInsets.all(0),
@@ -49,11 +53,20 @@ class _BookShelfState extends State<BookShelf> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      BookShelfWidget(),
+                      BookShelfWidget(
+                        title: '최근 읽은 책',
+                        books: recentBooks, // recentBooks는 최근 읽은 책 목록
+                      ),
                       SizedBox(height: 20),
-                      BookShelfWidget(),
+                      BookShelfWidget(
+                        title: '위시 리스트',
+                        books: wishlistBooks, // recommendedBooks는 추천 도서 목록
+                      ),
                       SizedBox(height: 20),
-                      BookShelfWidget(),
+                      BookShelfWidget(
+                        title: '완독한 도서',
+                        books: finishedBooks, // recommendedBooks는 추천 도서 목록
+                      ),
                       /*
                       Container(
                           child: Column(
