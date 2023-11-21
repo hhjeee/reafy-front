@@ -63,7 +63,6 @@ class IconsPath {
   static String get delete => 'assets/svg/delete.svg';
   static String get x => 'assets/svg/x.svg';
   static String get team_link => 'assets/svg/team_link.svg';
-  static String get select_nothing => 'assets/svg/select_nothing.svg';
   static String get dropdown => 'assets/svg/dropdown_button.svg';
   static String get check => 'assets/svg/check.svg';
   static String get done => 'assets/svg/done.svg';
@@ -84,10 +83,10 @@ class IconsPath {
   //static String get poobao_shadow => 'assets/images/poobao_shadow.png';
   static String get poobao_shadow => 'assets/svg/poobao_shadow.svg';
 
-  static String get family => 'assets/images/team.png';
+  static String get team_img => 'assets/images/team_poobao.png';
 
-  static String get sofa1 => 'assets/images/items/sofa/purple_sofa.png';
-  static String get sofa2 => 'assets/images/items/sofa/gray_sofa.png';
+  static String get lock => 'assets/images/lock.png';
+  static String get select_nothing => 'assets/images/select_nothing.png';
 
   static String get home_graffic => 'assets/images/home_graffic.png';
   static String get map => 'assets/images/map.png';

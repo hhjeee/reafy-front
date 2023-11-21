@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:reafy_front/src/utils/constants.dart';
 
 class Rating extends StatelessWidget {
   const Rating({super.key});

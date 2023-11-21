@@ -126,8 +126,7 @@ class MyPage extends StatelessWidget {
             margin: EdgeInsets.only(left: 27.0), //25
             child: GestureDetector(
               onTap: () {
-                //Get.to(Rating());
-                Get.to(Map());
+                Get.to(Rating());
               },
               child: Row(
                 children: [
