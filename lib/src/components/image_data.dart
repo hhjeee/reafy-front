@@ -5,6 +5,7 @@ class ImageData extends StatelessWidget {
   String icon;
   final double? width;
   final bool isSvg;
+
   ImageData(
     this.icon, {
     Key? key,

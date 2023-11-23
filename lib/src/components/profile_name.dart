@@ -46,10 +46,10 @@ class _ProfileNameState extends State<ProfileName> {
               Container(
                 alignment: Alignment.center,
                 margin: EdgeInsets.only(top: 92.0, left: 119.0, bottom: 21.53),
-                width: 148.47,
-                height: 148.47,
+                width: 153.47,
+                height: 153.47,
                 decoration: BoxDecoration(
-                  color: Color(0xfff0f0f0),
+                  color: Color(0xffffffff),
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: Color(0xfffcfcfc),
@@ -64,6 +64,28 @@ class _ProfileNameState extends State<ProfileName> {
                     ),
                   ],
                 ),
+                child: ClipOval(
+                  child: Container(
+                    width: 148.47,
+                    height: 148.47,
+                    decoration: BoxDecoration(
+                      color: Color(0xffe2eee0),
+                    ),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: 24,
+                          child: Container(
+                              width: 147.62,
+                              height: 167.27,
+                              child: ImageData(
+                                IconsPath.character2,
+                              )),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
               Positioned(
                 top: 199, //231,
@@ -73,7 +95,7 @@ class _ProfileNameState extends State<ProfileName> {
                   width: 40,
                   height: 40,
                   decoration: const BoxDecoration(
-                    color: Color(0xffffc700),
+                    color: Color(0xffffd747),
                     shape: BoxShape.circle,
                   ),
                   child: GestureDetector(
