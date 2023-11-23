@@ -34,6 +34,15 @@ class _ItemClockState extends State<ItemClock> {
   String selectedImagePath = '';
 
   @override
+  void initState() {
+    super.initState();
+
+    // 이전에 선택한 값으로 초기화
+    selectedGridIndex =
+        Provider.of<PoobaoHome>(context, listen: false).getSelectedClockIndex();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final poobaoHome = Provider.of<PoobaoHome>(context, listen: true);
     return Container(
@@ -62,6 +71,7 @@ class _ItemClockState extends State<ItemClock> {
                     selectedImagePath = itemIndex.imagePath;
 
                     poobaoHome.updateClockImagePath(itemIndex.imagePath);
+                    poobaoHome.updateSelectedClockIndex(index);
                     poobaoHome.updateSelectedImagePath(itemIndex.imagePath);
                     poobaoHome.updateSelectedItemName(itemIndex.text);
                   });

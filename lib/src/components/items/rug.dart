@@ -34,6 +34,15 @@ class _ItemRugState extends State<ItemRug> {
   String selectedImagePath = '';
 
   @override
+  void initState() {
+    super.initState();
+
+    // 이전에 선택한 값으로 초기화
+    selectedGridIndex =
+        Provider.of<PoobaoHome>(context, listen: false).getSelectedRugIndex();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final poobaoHome = Provider.of<PoobaoHome>(context, listen: true);
     return Container(
@@ -65,6 +74,7 @@ class _ItemRugState extends State<ItemRug> {
                     selectedImagePath = itemIndex.imagePath;
 
                     poobaoHome.updateRugImagePath(itemIndex.imagePath);
+                    poobaoHome.updateSelectedRugIndex(index);
                     poobaoHome.updateSelectedImagePath(itemIndex.imagePath);
                     poobaoHome.updateSelectedItemName(itemIndex.text);
                   });

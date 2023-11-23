@@ -34,6 +34,15 @@ class _ItemWindowState extends State<ItemWindow> {
   String selectedImagePath = '';
 
   @override
+  void initState() {
+    super.initState();
+
+    // 이전에 선택한 값으로 초기화
+    selectedGridIndex = Provider.of<PoobaoHome>(context, listen: false)
+        .getSelectedWindowIndex();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final poobaoHome = Provider.of<PoobaoHome>(context, listen: true);
     return Container(
@@ -62,6 +71,7 @@ class _ItemWindowState extends State<ItemWindow> {
                     selectedImagePath = itemIndex.imagePath;
 
                     poobaoHome.updateWindowImagePath(itemIndex.imagePath);
+                    poobaoHome.updateSelectedWindowIndex(index);
                     poobaoHome.updateSelectedImagePath(itemIndex.imagePath);
                     poobaoHome.updateSelectedItemName(itemIndex.text);
                   });

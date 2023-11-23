@@ -5,30 +5,34 @@ import 'package:reafy_front/src/components/image_data.dart';
 class PoobaoHome extends ChangeNotifier {
   double width;
   double height;
+
   String bookshelf_imagePath;
   String clock_imagePath;
   String window_imagePath;
   String others_imagePath;
   String rug_imagePath;
+
   String selectedImagePath;
   String selectedItemName;
 
-  /*PoobaoHome({
-    required this.width,
-    required this.height,
-    required this.bookshelf_imagePath,
-  });*/
+  int selectedBookshelfIndex = 0;
+  int selectedClockIndex = 0;
+  int selectedWindowIndex = 0;
+  int selectedOthersIndex = 0;
+  int selectedRugIndex = 0;
+
   PoobaoHome({
     //default 값 설정
     this.width = 296,
     this.height = 255,
-    this.bookshelf_imagePath = "assets/images/nothing.png",
+    //db에서 받아온 사용자별 아이템 경로
+    this.bookshelf_imagePath = "assets/images/bookshelf1.png",
     this.clock_imagePath = "assets/images/nothing.png",
     this.window_imagePath = "assets/images/nothing.png",
     this.others_imagePath = "assets/images/nothing.png",
     this.rug_imagePath = "assets/images/nothing.png",
     this.selectedImagePath = "assets/images/nothing.png",
-    this.selectedItemName = "아이템",
+    this.selectedItemName = "",
   });
 
   void updateBookshelfImagePath(String newPath) {
@@ -65,21 +69,51 @@ class PoobaoHome extends ChangeNotifier {
     selectedItemName = imageName;
     notifyListeners();
   }
-  /*void updateProps(
-      //{required double width,
-      //required double height,}
-      ) {
-    this.width = width;
-    this.height = height;
-    this.bookshelf_imagePath = bookshelf_imagePath;
-    this.clock_imagePath = clock_imagePath;
-    this.window_imagePath = window_imagePath;
-    this.others_imagePath = others_imagePath;
-    // this.rug_imagePath = rug_imagePath;
 
-    // 상태가 변경되었음을 리스너에게 알립니다.
-    notifyListeners();
-  }*/
+  int getSelectedBookshelfIndex() {
+    return selectedBookshelfIndex;
+  }
+
+  void updateSelectedBookshelfIndex(int newIndex) {
+    selectedBookshelfIndex = newIndex;
+    notifyListeners(); // 변경 사항을 리스너에 알립니다.
+  }
+
+  int getSelectedClockIndex() {
+    return selectedClockIndex;
+  }
+
+  void updateSelectedClockIndex(int newIndex) {
+    selectedClockIndex = newIndex;
+    notifyListeners(); // 변경 사항을 리스너에 알립니다.
+  }
+
+  int getSelectedWindowIndex() {
+    return selectedWindowIndex;
+  }
+
+  void updateSelectedWindowIndex(int newIndex) {
+    selectedWindowIndex = newIndex;
+    notifyListeners(); // 변경 사항을 리스너에 알립니다.
+  }
+
+  int getSelectedOthersIndex() {
+    return selectedOthersIndex;
+  }
+
+  void updateSelectedOthersIndex(int newIndex) {
+    selectedOthersIndex = newIndex;
+    notifyListeners(); // 변경 사항을 리스너에 알립니다.
+  }
+
+  int getSelectedRugIndex() {
+    return selectedRugIndex;
+  }
+
+  void updateSelectedRugIndex(int newIndex) {
+    selectedRugIndex = newIndex;
+    notifyListeners(); // 변경 사항을 리스너에 알립니다.
+  }
 
   @override
   Widget build(BuildContext context) {
