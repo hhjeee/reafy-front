@@ -31,8 +31,17 @@ class ItemBookshelf extends StatefulWidget {
 }
 
 class _ItemBookshelfState extends State<ItemBookshelf> {
-  int selectedGridIndex = 0;
+  late int selectedGridIndex;
   String selectedImagePath = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 이전에 선택한 값으로 초기화
+    selectedGridIndex = Provider.of<PoobaoHome>(context, listen: false)
+        .getSelectedBookshelfIndex();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +73,7 @@ class _ItemBookshelfState extends State<ItemBookshelf> {
                     selectedImagePath = itemIndex.imagePath;
 
                     poobaoHome.updateBookshelfImagePath(itemIndex.imagePath);
+                    poobaoHome.updateSelectedBookshelfIndex(index);
                     poobaoHome.updateSelectedImagePath(itemIndex.imagePath);
                     poobaoHome.updateSelectedItemName(itemIndex.text);
                   });

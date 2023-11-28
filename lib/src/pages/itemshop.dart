@@ -140,6 +140,15 @@ class _ItemShopState extends State<ItemShop> {
                   child: Stack(
                     children: [
                       Positioned(
+                        top: 75,
+                        left: 90,
+                        child: Container(
+                          width: 127,
+                          height: 150,
+                          child: ImageData(IconsPath.character2),
+                        ),
+                      ),
+                      Positioned(
                         top: 23,
                         child: Container(
                             //bookshelf

@@ -76,6 +76,7 @@ class IconsPath {
   static String get bookshelf => 'assets/svg/bookshelf.svg';
 
   static String get character => 'assets/images/poobao.png';
+  static String get character2 => 'assets/images/poobao_temp.png';
 
   static String get book => 'assets/images/book.png';
   static String get hill => 'assets/images/hill.png';

@@ -115,6 +115,15 @@ class Home extends StatelessWidget {
                     child: Stack(
                       children: [
                         Positioned(
+                          top: 87,
+                          left: 121,
+                          child: Container(
+                            width: 148,
+                            height: 208,
+                            child: ImageData(IconsPath.character2),
+                          ),
+                        ),
+                        Positioned(
                           top: 31,
                           child: Container(
                               //bookshelf
