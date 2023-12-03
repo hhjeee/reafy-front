@@ -5,6 +5,7 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/shelfwidget.dart';
 import 'package:reafy_front/src/models/book.dart';
 import 'package:reafy_front/src/pages/book/addbook.dart';
+import 'package:reafy_front/src/components/delete_book2.dart';
 
 class BookShelf extends StatefulWidget {
   @override
@@ -17,6 +18,9 @@ class _BookShelfState extends State<BookShelf> {
   List<Book> recentBooks = getrecentBooks();
   List<Book> wishlistBooks = getwishlistBooks();
   List<Book> finishedBooks = getfinishedBooks();
+
+  bool isEditMode = false;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -35,8 +39,22 @@ class _BookShelfState extends State<BookShelf> {
           actions: [
             IconButton(
               padding: EdgeInsets.only(right: 21),
-              icon: ImageData(IconsPath.trash_can, isSvg: true, width: 20),
-              onPressed: () {},
+              icon: isEditMode
+                  ? ImageData(IconsPath.check, isSvg: true, width: 20) //색상 변경하기
+                  : ImageData(IconsPath.trash_can, isSvg: true, width: 20),
+              onPressed: () {
+                setState(() {
+                  isEditMode = !isEditMode;
+                });
+                if (!isEditMode) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return DeleteDialog();
+                    },
+                  );
+                }
+              },
             ),
           ],
         ),
@@ -55,17 +73,20 @@ class _BookShelfState extends State<BookShelf> {
                     children: <Widget>[
                       BookShelfWidget(
                         title: '최근 읽은 책',
-                        books: recentBooks, // recentBooks는 최근 읽은 책 목록
+                        books: recentBooks,
+                        isEditMode: isEditMode,
                       ),
                       SizedBox(height: 20),
                       BookShelfWidget(
                         title: '위시 리스트',
-                        books: wishlistBooks, // recommendedBooks는 추천 도서 목록
+                        books: wishlistBooks,
+                        isEditMode: isEditMode,
                       ),
                       SizedBox(height: 20),
                       BookShelfWidget(
                         title: '완독한 도서',
-                        books: finishedBooks, // recommendedBooks는 추천 도서 목록
+                        books: finishedBooks,
+                        isEditMode: isEditMode,
                       ),
                       /*
                       Container(

@@ -4,31 +4,55 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/models/book.dart';
 import 'package:reafy_front/src/pages/book/bookdetail.dart';
 import 'package:reafy_front/src/utils/constants.dart';
+import 'package:reafy_front/src/models/bookcount.dart';
+import 'package:provider/provider.dart';
 
 class BookShelfWidget extends StatefulWidget {
   final String title;
   final List<Book> books;
+  final bool isEditMode;
 
-  const BookShelfWidget({required this.title, required this.books, Key? key})
+  const BookShelfWidget(
+      {required this.title,
+      required this.books,
+      required this.isEditMode,
+      Key? key})
       : super(key: key);
 
   @override
   State<BookShelfWidget> createState() => _BookShelfWidgetState();
 }
 
-class _BookShelfWidgetState extends State<BookShelfWidget> {
-  bool isExpanded = false;
+class _BookShelfWidgetState extends State<BookShelfWidget>
+    with TickerProviderStateMixin {
+  late AnimationController _shakeController;
+  late Tween<double> _shakeTween = Tween<double>(begin: -0.005, end: 0.005);
 
-  List<Widget> _buildBookList(BuildContext context) {
-    //List<Book>  = getMockBooks();
+  @override
+  void initState() {
+    super.initState();
+    _shakeController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 250),
+    );
+    _shakeController.repeat(reverse: true);
+  }
 
-    return widget.books.map((book) {
-      return Padding(
-        padding: const EdgeInsets.only(right: 20.0, top: 7),
-        child: GestureDetector(
-          onTap: () {
-            Get.to(() => BookDetailPage(book: book));
-          },
+  @override
+  void dispose() {
+    _shakeController.dispose();
+    super.dispose();
+  }
+
+  //bool isExpanded = false;
+
+  Set<Book> selectedBooks = {};
+
+  Widget _buildShakeAnimation(Book book, isSelected) {
+    return Stack(
+      children: [
+        RotationTransition(
+          turns: _shakeTween.animate(_shakeController),
           child: Container(
             width: 66,
             height: 96,
@@ -41,6 +65,10 @@ class _BookShelfWidgetState extends State<BookShelfWidget> {
                   blurRadius: 8.0,
                 ),
               ],
+              border: Border.all(
+                color: isSelected ? Color(0xffffd747) : Colors.transparent,
+                width: 3.0,
+              ),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
@@ -50,6 +78,72 @@ class _BookShelfWidgetState extends State<BookShelfWidget> {
               ),
             ),
           ),
+        ),
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? Color(0xffffd747).withOpacity(0.5) //0.7
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _buildBookList(BuildContext context) {
+    //List<Book>  = getMockBooks();
+    //final bookModel = context.read<BookModel>();
+    //final bookModel = Provider.of<BookModel>(context, listen: false);
+
+    if (!widget.isEditMode) {
+      selectedBooks.clear();
+    }
+
+    return widget.books.map((book) {
+      bool isSelected = selectedBooks.contains(book);
+      return Padding(
+        padding: const EdgeInsets.only(right: 20.0, top: 7),
+        child: GestureDetector(
+          onTap: () {
+            if (widget.isEditMode) {
+              setState(() {
+                if (isSelected) {
+                  selectedBooks.remove(book);
+                } else {
+                  selectedBooks.add(book);
+                }
+              });
+              //bookModel.toggleBookSelection(book.title);
+            } else {
+              Get.to(() => BookDetailPage(book: book));
+            }
+          },
+          child: widget.isEditMode
+              ? _buildShakeAnimation(book, isSelected)
+              : Container(
+                  width: 66,
+                  height: 96,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(0, 15.0),
+                        blurRadius: 8.0,
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.network(
+                      book.coverImageUrl,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                ),
           //child: BookCover3D(imageUrl: book.coverImageUrl),
         ),
       );

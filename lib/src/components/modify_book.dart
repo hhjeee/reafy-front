@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/components/done.dart';
 
 class ModifyDialog extends StatefulWidget {
   @override
@@ -17,10 +18,10 @@ class _ModifyDialogState extends State<ModifyDialog> {
       contentPadding: EdgeInsets.zero,
       //title:
       content: Container(
-        width: 248,
-        height: 210,
+        width: 320,
+        height: 190,
         child: Column(children: [
-          SizedBox(height: 16.0),
+          /*SizedBox(height: 16.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -32,43 +33,76 @@ class _ModifyDialogState extends State<ModifyDialog> {
               ),
               SizedBox(width: 19.0),
             ],
-          ),
-          SizedBox(height: 28.0),
+          ),*/
+          SizedBox(height: 40.0),
           Text(
-            "책의 상태를 선택해 주세요!",
+            "상태를 변경해 주세요!",
             style: const TextStyle(
+              color: Color(0xff333333),
               fontSize: 14,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w700,
             ),
           ),
-          SizedBox(height: 11),
+          SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               BookStatusButtonGroup(),
             ],
           ),
-          SizedBox(height: 44),
-          ElevatedButton(
-            onPressed: () {
-              //Navigator.pop(context);
-            },
-            style: ElevatedButton.styleFrom(
-              primary: Color(0xffffd747),
-              minimumSize: Size(212, 42),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(22),
+          SizedBox(height: 40),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xffebebeb),
+                  minimumSize: Size(140, 48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  elevation: 0,
+                ),
+                child: Text(
+                  '취소',
+                  style: const TextStyle(
+                    color: Color(0xff333333),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
-              elevation: 0,
-            ),
-            child: Text(
-              '확인',
-              style: const TextStyle(
-                color: Color(0xff000000),
-                fontSize: 15,
-                fontWeight: FontWeight.w800,
+              SizedBox(width: 8),
+              ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return DoneDialog();
+                    },
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xffffd747),
+                  minimumSize: Size(140, 48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  elevation: 0,
+                ),
+                child: Text(
+                  '확인',
+                  style: const TextStyle(
+                    color: Color(0xff333333),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ]),
       ),
@@ -92,14 +126,15 @@ class _BookStatusButtonGroupState extends State<BookStatusButtonGroup> {
     return Stack(
       children: [
         Container(
-          width: 208,
-          height: 28,
+          width: 266,
+          height: 30,
           decoration: BoxDecoration(
-              color: Color(0xfffff7da),
+              color: Color(0xfffaf9f7),
               borderRadius: BorderRadius.circular(100)),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             BookStatusButton(
               status: '읽은 책',
@@ -150,25 +185,21 @@ class BookStatusButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: <Widget>[
       Container(
-        width: 71,
-        height: 28,
+        width: 89,
+        height: 30,
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
-            primary: isSelected ? Color(0xffFFECA6) : Color(0xFFFFF7DA),
+            primary: isSelected ? Color(0xffFFECA6) : Color(0xFFfaf9f7),
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100),
-              side: BorderSide(
-                color: isSelected ? Color(0xFFffd747) : Colors.transparent,
-                width: 1.0,
-              ),
             ),
           ),
           child: Text(
             status,
             style: TextStyle(
-              color: Colors.black,
+              color: Color(0xff333333),
               fontSize: 12,
               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
             ),
