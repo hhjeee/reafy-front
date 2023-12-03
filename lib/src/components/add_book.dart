@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/pages/book/bookshelf.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
 class AddDialog extends StatefulWidget {
@@ -36,7 +35,7 @@ class _AddDialogState extends State<AddDialog> {
               SizedBox(width: 19.0),
             ],
           ),
-          SizedBox(height: 28.0),
+          SizedBox(height: 24.0),
           Text(
             "어디에 등록하시겠어요?",
             style: const TextStyle(
@@ -51,7 +50,7 @@ class _AddDialogState extends State<AddDialog> {
               BookStatusButtonGroup(),
             ],
           ),
-          SizedBox(height: 44),
+          SizedBox(height: 40),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             ElevatedButton(
               onPressed: () {

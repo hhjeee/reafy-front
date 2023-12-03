@@ -1,3 +1,4 @@
+import 'package:reafy_front/src/controller/board_controller.dart';
 import 'package:reafy_front/src/controller/books_controller.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:get/get.dart';
@@ -10,9 +11,8 @@ class InitBinding extends Bindings {
     Get.put(BottomNavController(), permanent: true); // 앱 종료 전까지 true
     Get.lazyPut(() => BookshelfController());
     Get.put(IntroController(), permanent: true);
-    //Get.lazyPut(() => IntroController());
+    Get.put(BoardController());
     //Get.put(BottomNavController(), permanent: true); // 앱 종료 전까지 true
-
     //Get.put(AuthController(), permanent: true);
   }
 }

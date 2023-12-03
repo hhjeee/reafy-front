@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:reafy_front/src/models/indicator_options.dart';
 
 class IndicatorWidget extends StatefulWidget {
@@ -115,3 +115,4 @@ class IndicatorBoxPainter extends CustomPainter {
     return true;
   }
 }
+*/

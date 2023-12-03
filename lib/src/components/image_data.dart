@@ -4,12 +4,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 class ImageData extends StatelessWidget {
   String icon;
   final double? width;
+  final double? height;
   final bool isSvg;
 
   ImageData(
     this.icon, {
     Key? key,
     this.width = 26,
+    this.height = 26,
     this.isSvg = false,
   }) : super(key: key);
 
@@ -19,12 +21,12 @@ class ImageData extends StatelessWidget {
       return SvgPicture.asset(
         icon, // SVG 파일 경로
         width: width,
+        height: height,
       );
     } else {
-      return Image.asset(
-        icon, // 이미지 파일 경로
-        width: width,
-      );
+      return Image.asset(icon, // 이미지 파일 경로
+          width: width,
+          height: height);
     }
   }
 }
@@ -55,8 +57,12 @@ class IconsPath {
   static String get pencil_green => 'assets/svg/pencil_green.svg';
   static String get trash_can => 'assets/svg/trash_can.svg';
   static String get line => 'assets/svg/line.svg';
-  static String get startbutton => 'assets/images/Button.png';
-  static String get runningbutton => 'assets/images/Runningbutton.png';
+
+  static String get startbutton => 'assets/images/startbutton.png';
+  static String get runningbutton => 'assets/images/runningbutton.png';
+  //static String get startbutton => 'assets/svg/startbutton.svg';
+  //static String get runningbutton => 'assets/svg/runningbutton.svg';
+
   static String get left => 'assets/svg/left.svg';
   static String get right => 'assets/svg/right.svg';
   static String get nextarrow => 'assets/svg/nextarrow.svg';

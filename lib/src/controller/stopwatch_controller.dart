@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+/*import 'package:get/get.dart';
 import 'dart:async';
 
 import 'package:reafy_front/src/components/stop_dialog.dart';
@@ -28,3 +28,4 @@ class StopWatchController extends GetxController {
     }
   }
 }
+*/
