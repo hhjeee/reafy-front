@@ -72,7 +72,7 @@ class IconsPath {
   static String get team_link => 'assets/svg/team_link.svg';
   static String get dropdown => 'assets/svg/dropdown_button.svg';
   static String get check => 'assets/svg/check.svg';
-  static String get done => 'assets/svg/done.svg';
+  static String get done => 'assets/svg/done_button.svg';
   static String get state_1 => 'assets/images/state_1.png';
   static String get state_2 => 'assets/images/state_2.png';
   static String get state_3 => 'assets/images/state_3.png';
@@ -90,6 +90,7 @@ class IconsPath {
   static String get bamboo_bar => 'assets/images/bamboo_bar.png';
   //static String get poobao_shadow => 'assets/images/poobao_shadow.png';
   static String get poobao_shadow => 'assets/svg/poobao_shadow.svg';
+  static String get book_leaves => 'assets/images/book_leaves.png';
 
   static String get team_img => 'assets/images/team_poobao.png';
 
@@ -100,4 +101,6 @@ class IconsPath {
   static String get map => 'assets/images/map.png';
   static String get today => 'assets/svg/today_time.svg';
   static String get total => 'assets/svg/total_time.svg';
+
+  static String get add_back => 'assets/images/addbook_background.png';
 }

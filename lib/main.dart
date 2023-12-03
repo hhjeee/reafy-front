@@ -5,6 +5,9 @@ import 'package:reafy_front/src/binding/init_bindings.dart';
 import 'package:reafy_front/src/root.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/poobao_home.dart';
+import 'package:reafy_front/src/models/bookCount.dart';
+
+import 'package:reafy_front/src/app.dart';
 
 void main() {
   //KakaoContext.clientId = 'YOUR_KAKAO_CLIENT_ID';
@@ -17,11 +20,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          // 여러 개의 Provider를 선언할 수 있습니다.
+          ChangeNotifierProvider<BookModel>(
+            create: (context) => BookModel(),
+          ),
           ChangeNotifierProvider<PoobaoHome>(
             create: (context) => PoobaoHome(),
           ),
-          // 다른 Provider들도 필요에 따라 추가 가능합니다.
         ],
         child: GetMaterialApp(
           title: 'reafy',

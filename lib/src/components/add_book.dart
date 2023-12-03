@@ -19,10 +19,10 @@ class _AddDialogState extends State<AddDialog> {
       contentPadding: EdgeInsets.zero,
       //title:
       content: Container(
-        width: 322,
-        height: 210,
+        width: 320,
+        height: 190,
         child: Column(children: [
-          SizedBox(height: 16.0),
+          /*SizedBox(height: 16.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -34,16 +34,17 @@ class _AddDialogState extends State<AddDialog> {
               ),
               SizedBox(width: 19.0),
             ],
-          ),
-          SizedBox(height: 24.0),
+
+          SizedBox(height: 40.0),
+
           Text(
-            "어디에 등록하시겠어요?",
+            "어디에 등록하시겠습니까?",
             style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
                 color: Color(0xff333333)),
           ),
-          SizedBox(height: 11),
+          SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -58,7 +59,7 @@ class _AddDialogState extends State<AddDialog> {
               },
               style: ElevatedButton.styleFrom(
                 primary: Color(0xffEBEBEB),
-                minimumSize: Size(120, 48),
+                minimumSize: Size(140, 48),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -73,20 +74,20 @@ class _AddDialogState extends State<AddDialog> {
                 ),
               ),
             ),
-            SizedBox(width: 10),
+            SizedBox(width: 6),
             ElevatedButton(
               onPressed: () {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return DoneDialog(); // 수정된 부분
+                    return DoneDialog();
                   },
                 );
                 //Get.to(BookShelf());
               },
               style: ElevatedButton.styleFrom(
                 primary: Color(0xffffd747),
-                minimumSize: Size(120, 48),
+                minimumSize: Size(140, 48),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -124,8 +125,8 @@ class _BookStatusButtonGroupState extends State<BookStatusButtonGroup> {
     return Stack(
       children: [
         Container(
-          width: 240,
-          height: 28,
+          width: 266,
+          height: 30,
           decoration: BoxDecoration(
             color: bg_gray,
             borderRadius: BorderRadius.circular(100),
@@ -189,8 +190,8 @@ class BookStatusButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: <Widget>[
       Container(
-        width: isSelected ? 100 : 70,
-        height: 28,
+        width: 89,
+        height: 30,
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
@@ -198,10 +199,6 @@ class BookStatusButton extends StatelessWidget {
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100),
-              side: BorderSide(
-                color: isSelected ? yellow_light : Colors.transparent,
-                width: 1.0,
-              ),
             ),
           ),
           child: Text(

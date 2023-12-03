@@ -28,10 +28,12 @@ class KakaoLogin implements SocialLogin {
           await UserApi.instance.loginWithKakaoAccount();
           return true;
         } catch (e) {
+          print("$e");
           return false;
         }
       }
     } catch (e) {
+      print("e");
       return false;
     }
   }

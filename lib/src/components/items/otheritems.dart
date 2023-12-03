@@ -111,25 +111,21 @@ Widget GridItem(
               width: 79,
               height: 79,
               decoration: BoxDecoration(
-                color: isSelected && isButtonEnabled
-                    ? Color(0xfffffd747).withOpacity(0.1)
-                    : Color(0xffd9d9d9),
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 3,
-                    blurRadius: 10,
-                    offset: Offset(0, 1),
-                  ),
-                ],
-                border: isSelected && isButtonEnabled
-                    ? Border.all(color: Color(0xffffd747), width: 2)
-                    : Border.all(
-                        color: Color(0xffffffff),
-                        width: 9.5,
-                      ),
-              ),
+                  color: isSelected && isButtonEnabled
+                      ? Color(0xfffffd747).withOpacity(0.1)
+                      : Color(0xffffffff),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 3,
+                      blurRadius: 10,
+                      offset: Offset(0, 1),
+                    ),
+                  ],
+                  border: isSelected && isButtonEnabled
+                      ? Border.all(color: Color(0xffffd747), width: 2)
+                      : Border.all(color: Color(0xffffffff), width: 2)),
               child: itemIndex.imagePath.isNotEmpty
                   ? Container(
                       width: 40,

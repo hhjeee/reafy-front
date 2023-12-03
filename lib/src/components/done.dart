@@ -18,11 +18,16 @@ class _DoneDialogState extends State<DoneDialog> {
       contentPadding: EdgeInsets.zero,
       //title:
       content: Container(
-        width: 248,
-        height: 210,
-        child: ImageData(
-          IconsPath.done,
-          isSvg: true,
+        width: 196, //설정안됨
+        height: 218,
+        child: Center(
+          child: Container(
+            child: ImageData(
+              IconsPath.done,
+              isSvg: true,
+              width: 116,
+            ),
+          ),
         ),
       ),
       actions: <Widget>[],

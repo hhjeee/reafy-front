@@ -12,6 +12,7 @@ class ItemData {
 }
 
 List<ItemData> itemDataList = [
+  //대나무 수 추가
   ItemData(imagePath: 'assets/images/nothing.png', text: '선택 안함'),
   ItemData(imagePath: 'assets/images/nothing.png', text: '베이직 책장'),
   ItemData(imagePath: 'assets/images/bookshelf1.png', text: '사다리 책장'),
@@ -113,29 +114,25 @@ Widget GridItem(
               width: 79,
               height: 79,
               decoration: BoxDecoration(
-                color: isSelected && isButtonEnabled
-                    ? Color(0xfffffd747).withOpacity(0.1)
-                    : Color(0xffd9d9d9),
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 3,
-                    blurRadius: 10,
-                    offset: Offset(0, 1),
-                  ),
-                ],
-                border: isSelected && isButtonEnabled
-                    ? Border.all(color: Color(0xffffd747), width: 2)
-                    : Border.all(
-                        color: Color(0xffffffff),
-                        width: 9.5,
-                      ),
-              ),
+                  color: isSelected && isButtonEnabled
+                      ? Color(0xfffffd747).withOpacity(0.1)
+                      : Color(0xffffffff),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 3,
+                      blurRadius: 10,
+                      offset: Offset(0, 1),
+                    ),
+                  ],
+                  border: isSelected && isButtonEnabled
+                      ? Border.all(color: Color(0xffffd747), width: 2)
+                      : Border.all(color: Color(0xffffffff), width: 2)),
               child: itemIndex.imagePath.isNotEmpty
                   ? Container(
                       width: 40,
-                      height: 40,
+                      height: 60,
                       child: ImageData(itemIndex.imagePath),
                     )
                   : null,
