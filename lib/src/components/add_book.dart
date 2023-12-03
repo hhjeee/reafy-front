@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/pages/book/bookshelf.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
 class AddDialog extends StatefulWidget {
@@ -35,8 +34,9 @@ class _AddDialogState extends State<AddDialog> {
               ),
               SizedBox(width: 19.0),
             ],
-          ),*/
+
           SizedBox(height: 40.0),
+
           Text(
             "어디에 등록하시겠습니까?",
             style: const TextStyle(

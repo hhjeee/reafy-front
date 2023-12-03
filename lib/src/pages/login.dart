@@ -8,7 +8,6 @@ import 'package:reafy_front/src/utils/constants.dart';
 
 abstract class SocialLogin {
   Future<bool> login(); //성공여부
-
   Future<bool> logout(); //성공여부
 }
 
@@ -63,7 +62,9 @@ class _LoginState extends State<Login> {
 
   // 카카오 로그인 수행 함수
   Future<void> _performKakaoLogin() async {
+    // await : 대기하고 싶은 비동기 함수 앞
     bool success = await _kakaoLogin.login();
+
     if (success) {
       Get.offAll(OnBoardingPage()); // GetX를 사용하여 모든 이전 경로를 지우고 홈 화면으로 이동
     } else {

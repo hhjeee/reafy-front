@@ -15,6 +15,7 @@ const white = Color(0xFFffffff);
 const yellow_light = Color(0xFFFFECA6);
 const black = Color(0xff333333);
 const bg_gray = Color(0xfffaf9f7);
+const disabled_box = Color(0xffebebeb);
 
 const panelTransition = Duration(milliseconds: 500);
 

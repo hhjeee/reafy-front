@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/pages/board/board.dart';
 //import 'package:reafy_front/src/components/switch.dart';
 import 'package:reafy_front/src/pages/itemshop.dart';
 import 'package:reafy_front/src/components/stopwatch.dart';
@@ -10,26 +11,6 @@ import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
   //const Home({super.key});
-
-  /*Widget _character() {
-    //final size = MediaQuery.of(context).size;
-    return Padding(
-        padding: const EdgeInsets.all(5),
-        child: Container(
-          width: double.infinity,
-          height: 350, // 적절한 높이 설정
-          decoration: BoxDecoration(
-              gradient: RadialGradient(
-            radius: 1.1086, // 110.86%의 크기
-            colors: [
-              Color(0xFFE2EEE0), // 시작 색상
-              //bgColor // 끝 색상 (투명)
-            ],
-            stops: [0.2197, 0.5], // 각 색상의 정지점 (0.2197는 21.97%의 위치)
-          )),
-          child: ImageData(IconsPath.character),
-        ));
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -88,24 +69,11 @@ class Home extends StatelessWidget {
             ),
           ),
           child: Column(
+            //mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _title_text(),
-              ElevatedButton(
-                onPressed: () {
-                  Map(context);
-                },
-                child: const Icon(
-                  Icons.arrow_upward,
-                  color: Colors.white,
-                ),
-              ),
-              //SizedBox(height: 60.0), //70
-              /*Container(
-                width: size.width,
-                height: 332,
-                child: ImageData(IconsPath.home_graffic),
-              ),*/
+              const SizedBox(height: 40),
               Consumer<PoobaoHome>(
                 builder: (context, poobaoHome, child) {
                   return Container(
@@ -180,8 +148,9 @@ class Home extends StatelessWidget {
                 },
               ),
               _time(),
+              const SizedBox(height: 15),
               Center(
-                child: StopWatch(),
+                child: StopwatchWidget(),
               ),
             ],
           ),
@@ -197,7 +166,7 @@ Widget _title_text() {
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       SizedBox(height: 20.0),
       Text(
-        "반가워요!\n오늘도 같이 책읽을까요?",
+        "반가워요!\n오늘도 같이 책읽을까요? ",
         style: TextStyle(
           fontSize: 22,
           height: 1.36364,
@@ -206,12 +175,17 @@ Widget _title_text() {
         ),
       ),
       SizedBox(height: 12.0),
-      Text(
-        "요즘은 '별들이 겹치는 순간'을 읽고있어요 :)",
-        style: TextStyle(
-          fontSize: 14,
-          color: Color(0xff666666),
-          fontWeight: FontWeight.w400,
+      GestureDetector(
+        onTap: () {
+          Get.to(Board());
+        },
+        child: Text(
+          "메모보드 자리 클릭!",
+          style: TextStyle(
+            fontSize: 14,
+            color: Color(0xff666666),
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ),
     ]),
@@ -320,23 +294,35 @@ void Map(context) {
       context: context,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(40.0),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(40.0),
+          topRight: Radius.circular(40.0),
+        ),
       ),
       builder: (BuildContext bc) {
         return Container(
-          height: 660,
+          height: 720,
+          decoration: BoxDecoration(),
           child: Column(
             children: [
               Stack(
                 children: [
                   Container(
                     width: 390,
-                    height: 660,
-                    child: ImageData(IconsPath.map),
+                    height: 720,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(IconsPath.map),
+                          fit: BoxFit.fitWidth),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40.0),
+                        topRight: Radius.circular(40.0),
+                      ),
+                    ),
                   ),
                   Container(
                     width: 390,
-                    height: 660,
+                    height: 720,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(40.0),
@@ -360,7 +346,6 @@ void Map(context) {
                       ],
                     ),
                     child: Column(
-                        //mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 42.0),
@@ -368,10 +353,14 @@ void Map(context) {
                           SizedBox(height: 24.8),
                           _character(),
                           SizedBox(height: 260),
-                          _time2(),
+                          //_time2(),
+                          Spacer(),
+                          _stopbutton(),
+                          SizedBox(height: 24.8),
                           Center(
-                            child: StopWatch(),
+                            child: StopwatchWidget(),
                           ),
+                          SizedBox(height: 80),
                         ]),
                   ),
                 ],
@@ -420,15 +409,46 @@ Widget _progress() {
   );
 }
 
+Widget _stopbutton() {
+  return Center(
+      child: Container(
+          width: 338,
+          height: 50,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25.0),
+            color: yellow,
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0, 0),
+                blurRadius: 10.0,
+                color: Color.fromRGBO(0, 0, 0, 0.10),
+              ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              "이제 그만 읽을래요",
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: black,
+              ),
+            ),
+          )));
+}
+
 Widget _character() {
+  late AnimationController _animationController;
+
   return Container(
-    margin: EdgeInsets.only(left: 41.0),
+    margin: EdgeInsets.only(left: 180.0, top: 20),
     width: 69,
     height: 97, // 적절한 높이 설정
-    child: ImageData(IconsPath.character),
+    child: ImageData(IconsPath.character2),
   );
 }
 
+/*
 Widget _time2() {
   return Container(
     padding: EdgeInsets.only(top: 8.0, left: 26.0),
@@ -525,3 +545,4 @@ Widget _time2() {
     ),
   );
 }
+*/

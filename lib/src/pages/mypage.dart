@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reafy_front/src/models/social_login.dart';
+
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/pages/profile/statistics.dart';

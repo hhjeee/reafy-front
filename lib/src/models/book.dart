@@ -66,7 +66,10 @@ class Book {
     required this.author,
     required this.coverImageUrl,
   });
+
+
 }
+
 
 List<Book> getrecentBooks() {
   return [
