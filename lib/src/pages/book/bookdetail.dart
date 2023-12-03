@@ -32,6 +32,14 @@ class BookDetailPage extends StatelessWidget {
         ));
   }
 
+  Widget _leaf_img() {
+    return Container(
+      width: 332.355,
+      height: 181.455,
+      child: ImageData(IconsPath.book_leaves),
+    );
+  }
+
   Widget _hill_img() {
     return Container(
       width: 400, //389
@@ -42,9 +50,9 @@ class BookDetailPage extends StatelessWidget {
 
   Widget _poobao_img() {
     return Container(
-      width: 114,
-      height: 156,
-      child: ImageData(IconsPath.character),
+      width: 110.551,
+      height: 125.268,
+      child: ImageData(IconsPath.character2),
     );
   }
 
@@ -203,6 +211,7 @@ class BookDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -247,8 +256,8 @@ class BookDetailPage extends StatelessWidget {
             Stack(
               children: <Widget>[
                 Container(
-                  width: 400, //390
-                  height: 390, //442
+                  width: size.width,
+                  height: 400, //442
                   color: Color(0xfffff7da),
                 ),
                 Positioned(
@@ -256,12 +265,17 @@ class BookDetailPage extends StatelessWidget {
                   child: _hill_img(),
                 ),
                 Positioned(
+                  top: 116,
+                  left: 28,
+                  child: _leaf_img(),
+                ),
+                Positioned(
                   top: 95, //84
                   left: 82,
                   child: _book_img(),
                 ),
                 Positioned(
-                  top: 237,
+                  top: 258,
                   left: 232,
                   child: _poobao_img(),
                 ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/done.dart';
+import 'package:reafy_front/src/models/bookcount.dart';
+import 'package:provider/provider.dart';
 
 class DeleteDialog extends StatefulWidget {
   @override
@@ -10,6 +12,8 @@ class DeleteDialog extends StatefulWidget {
 class _DeleteDialogState extends State<DeleteDialog> {
   @override
   Widget build(BuildContext context) {
+    //final bookModel = context.watch<BookModel>();
+
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -34,7 +38,9 @@ class _DeleteDialogState extends State<DeleteDialog> {
           ),*/
           SizedBox(height: 40.0),
           Text(
-            "정말 삭제하시겠어요? \n 등록한 책이 영구적으로 사라져요!",
+            //${bookModel.selectedBooks.length}
+
+            "총 2권을 정말 삭제하시겠어요? \n 등록한 책이 영구적으로 사라져요!",
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Color(0xff333333),

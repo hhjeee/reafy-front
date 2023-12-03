@@ -1,3 +1,61 @@
+import 'package:reafy_front/src/repository/bookshelf_repository.dart';
+
+class BookService {
+  Future<List<BookshelfBookDto>> getRecentBooks() async {
+    try {
+      return await fetchBookshelfBooksByState(0);
+      /*
+      List<BookshelfBookDto> bookshelfBooks =
+      await fetchBookshelfBooksByState(0);
+      return convertToBookList(bookshelfBooks);
+      */
+    } catch (error) {
+      throw Exception('Failed to load recent books: $error');
+    }
+  }
+
+  Future<List<BookshelfBookDto>> getWishlistBooks() async {
+    try {
+      return await fetchBookshelfBooksByState(1);
+    } catch (error) {
+      throw Exception('Failed to load wishlist books: $error');
+    }
+  }
+
+  Future<List<BookshelfBookDto>> getFinishedBooks() async {
+    try {
+      return await fetchBookshelfBooksByState(2);
+    } catch (error) {
+      throw Exception('Failed to load finished books: $error');
+    }
+  }
+}
+
+// BookshelfBookDto를 Book으로 변환하는 함수
+/*List<Book> convertToBookList(List<BookshelfBookDto> bookshelfBooks) {
+    return bookshelfBooks.map((dto) {
+      return Book(
+        id: dto.bookshelfBookId,
+        title: dto.title,
+        coverImageUrl: dto.thumbnailURL,
+        // 다른 필요한 속성들을 추가할 수 있습니다.
+      );
+    }).toList();
+  }*/
+
+/*class Book {
+  final int id;
+  final String title;
+  final String coverImageUrl;
+
+  Book({
+    required this.id,
+    required this.title,
+    required this.coverImageUrl,
+    // 다른 필요한 속성들을 추가할 수 있습니다.
+  });
+}*/
+
 class Book {
   final String title;
   final String author;
