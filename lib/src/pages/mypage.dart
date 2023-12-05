@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/login_page.dart';
 import 'package:reafy_front/src/pages/profile/statistics.dart';
 import 'package:reafy_front/src/pages/profile/team.dart';
 import 'package:reafy_front/src/pages/profile/rating.dart';
 import 'package:reafy_front/src/components/profile_name.dart';
+import 'package:reafy_front/src/provider/user_provider.dart';
 
 class MyPage extends StatelessWidget {
   const MyPage({super.key});
@@ -160,8 +163,25 @@ class MyPage extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(left: 29.0),
                 child: GestureDetector(
-                  onTap: () {
-                    showAlertDialog(context);
+                  onTap: () async {
+                    var user = context.read<UserProvider>();
+
+                    if (user.isLogined) {
+                      user.logout();
+                      print('로그아웃 완료');
+                    }
+                    Get.off(() => LoginPage());
+                    /*
+                    //showAlertDialog();
+                    var user = context.read<UserProvider>();
+                    if (await user.isLogined) {
+                      await user.logout();
+
+                      Get.to(LoginPage());
+                    } else {
+                      showAlertDialog(context);
+  
+                    }*/
                   },
                   child: Row(
                     children: [

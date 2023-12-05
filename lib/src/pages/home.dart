@@ -5,6 +5,7 @@ import 'package:reafy_front/src/pages/board/board.dart';
 //import 'package:reafy_front/src/components/switch.dart';
 import 'package:reafy_front/src/pages/itemshop.dart';
 import 'package:reafy_front/src/components/stopwatch.dart';
+import 'package:reafy_front/src/pages/map.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/components/poobao_home.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +50,13 @@ class Home extends StatelessWidget {
             padding: EdgeInsets.only(right: 16),
             icon: ImageData(IconsPath.item, isSvg: true),
             onPressed: () {
+              Get.to(BambooMap());
+            },
+          ),
+          IconButton(
+            padding: EdgeInsets.only(right: 16),
+            icon: ImageData(IconsPath.item, isSvg: true),
+            onPressed: () {
               Get.to(ItemShop());
             },
           ),
@@ -69,7 +77,6 @@ class Home extends StatelessWidget {
             ),
           ),
           child: Column(
-            //mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _title_text(),
@@ -289,6 +296,7 @@ Widget _time() {
   );
 }
 
+/*
 void Map(context) {
   showModalBottomSheet(
       context: context,
@@ -370,7 +378,7 @@ void Map(context) {
         );
       });
 }
-
+*/
 Widget _progress() {
   return Container(
     padding: EdgeInsets.only(left: 26.0),
