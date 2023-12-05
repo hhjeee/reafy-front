@@ -2,28 +2,43 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/pages/intro.dart';
-
 import 'package:get/get.dart';
-import 'package:reafy_front/src/pages/login.dart';
+import 'package:reafy_front/src/login_page.dart';
+/*
+class Root extends StatefulWidget {
+  const Root({Key? key}) : super(key: key);
+  @override
+  _RootState createState() => _RootState();
+}
 
-/// TODO
-/// home , login 화면 연결
-///
-
-class Root extends StatelessWidget {
-  const Root({super.key});
-
+class _RootState extends State<Root> {
   @override
   Widget build(BuildContext context) {
-
-    return App(); //Login();
-
-
-    ///return GetMaterialApp(home: Login());
+    return Center(
+        child: Container(
+            width: 300,
+            height: 300,
+            child: Column(children: [
+              Text('islogined: ${viewModel.isLogined}'),
+              ElevatedButton(
+                  onPressed: () async {
+                    await viewModel.login();
+                    setState(() {});
+                  },
+                  child: const Text("Login")),
+              ElevatedButton(
+                  onPressed: () async {
+                    await viewModel.logout();
+                    setState(() {});
+                  },
+                  child: const Text("Logout"))
+            ])));
   }
 }
 
 
+
+*/
 /*
 class Root extends GetView<AuthController> {
   const Root({Key? key}) : super(key: key);
@@ -51,11 +66,12 @@ class Root extends GetView<AuthController> {
             },
           );
         } else {
-          return const Login();
+          return const LoginPage();
         }
       },
     );
   }
 }
+
 
 */

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:reafy_front/src/components/add_book.dart';
 import 'package:reafy_front/src/models/book.dart';
 
-
 class BookCard extends StatelessWidget {
   final Book book;
 
@@ -19,8 +18,6 @@ class BookCard extends StatelessWidget {
             return AddDialog(); // 수정된 부분
           },
         );
-
-        //Get.to(() => BookDetailPage(book: book));
       },
       child: Card(
           color: Color(0xffFAF9F7),
@@ -61,7 +58,6 @@ class BookCard extends StatelessWidget {
                             ? '${book.author.substring(0, 20)}...' // 최대 20자로 제한
                             : book.author,
                         overflow: TextOverflow.ellipsis, // 길이 초과 시 '...'로 표시
-
                         style: TextStyle(
                           fontSize: 12,
                           color: Color(0xff333333),

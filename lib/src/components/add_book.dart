@@ -22,7 +22,7 @@ class _AddDialogState extends State<AddDialog> {
         width: 320,
         height: 190,
         child: Column(children: [
-          /*SizedBox(height: 16.0),
+          SizedBox(height: 16.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -34,9 +34,8 @@ class _AddDialogState extends State<AddDialog> {
               ),
               SizedBox(width: 19.0),
             ],
-
+          ),
           SizedBox(height: 40.0),
-
           Text(
             "어디에 등록하시겠습니까?",
             style: const TextStyle(
