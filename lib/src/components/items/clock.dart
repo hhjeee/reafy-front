@@ -12,15 +12,12 @@ class ItemData {
 
 List<ItemData> itemDataList = [
   ItemData(imagePath: 'assets/images/nothing.png', text: '선택 안함'),
-  ItemData(imagePath: 'assets/images/clock1.png', text: '시계1'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '시계2'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '시계3'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '시계4'),
+  ItemData(imagePath: 'assets/images/items/clock_clover.png', text: '클로버 시계'),
+  ItemData(imagePath: 'assets/images/items/clock_star.png', text: '별 시계'),
+  ItemData(imagePath: 'assets/images/items/clock_simple.png', text: '심플 시계'),
+  ItemData(imagePath: 'assets/images/items/clock_panda.png', text: '판다 시계'),
   ItemData(imagePath: 'assets/images/nothing.png', text: '시계5'),
   ItemData(imagePath: 'assets/images/nothing.png', text: '시계6'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '시계7'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '시계8'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '시계9'),
   // ...
 ];
 
@@ -97,7 +94,7 @@ Widget GridItem(
   bool isSelected,
   String selectedImagePath,
 ) {
-  bool isButtonEnabled = index < 8; //사용자가 가지고 있는 아이템일 경우
+  bool isButtonEnabled = index < 5; //사용자가 가지고 있는 아이템일 경우
 
   return Flexible(
     child: Column(

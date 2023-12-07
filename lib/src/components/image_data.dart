@@ -105,5 +105,16 @@ class IconsPath {
   static String get total => 'assets/svg/total_time.svg';
 
   static String get add_back => 'assets/images/addbook_background.png';
+
   static String get bamboomap => 'assets/images/bamboomap.png';
+
+
+  static String get memo_ex => 'assets/images/memo_example.png';
+  static String get add_memo => 'assets/svg/add_memo.svg';
+  static String get memo_date => 'assets/svg/memo_date.svg';
+  static String get memo_tag => 'assets/svg/memo_tag.svg';
+  static String get add_tag => 'assets/svg/add_tag.svg';
+  static String get memo_pic => 'assets/svg/memo_picture.svg';
+  static String get shelf_right => 'assets/svg/shelf_right.svg';
+
 }
