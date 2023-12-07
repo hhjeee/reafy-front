@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   get: ^4.6.6
-  flutter_svg: ^0.22.0
+  flutter_svg: ^2.0.9
   introduction_screen: ^3.1.12
   carousel_slider: ^4.2.1
   bubble: ^1.2.1
@@ -18,16 +18,24 @@ dependencies:
   http: ^1.1.0
   provider: ^5.0.0
   flutter_slidable: ^3.0.1
+  intl: ^0.18.1
+  flutter_native_splash: ^2.3.6
 
   expandable_text: ^2.2.0
   timeago: ^3.2.2
   cached_network_image: ^3.2.0
   image_picker: ^0.8.7
 
+
+  flutter_dotenv: ^5.0.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+
+flutter_native_splash:
+  color: "40C4FF"
 
 flutter:
   uses-material-design: true

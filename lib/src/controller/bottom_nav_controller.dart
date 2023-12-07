@@ -5,14 +5,11 @@ enum PageName { LIBRARY, HOME, MYPAGE }
 
 class BottomNavController extends GetxController {
   static BottomNavController get to => Get.find();
-
   RxInt pageIndex = 1.obs;
   //TabController? tabController;
-
   GlobalKey<NavigatorState> searchPageNaviationKey =
       GlobalKey<NavigatorState>();
   List<int> bottomHistory = [1];
-
   void changeBottomNav(int value, {bool hasGesture = true}) {
     var page = PageName.values[value];
     switch (page) {
@@ -33,7 +30,6 @@ class BottomNavController extends GetxController {
   }
 
   Future<bool> willPopAction() async {
-    // 뒤로가기 버튼 시 실행
     var page = PageName.values[bottomHistory.last];
     if (page == PageName.HOME) {
       print("exit");

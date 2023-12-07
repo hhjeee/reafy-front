@@ -18,7 +18,7 @@ class App extends GetView<BottomNavController> {
             index: controller.pageIndex.value,
             children: [
               BookShelf(),
-              Home(), //Container(child: Center(child: Text('홈'))),
+              Home(),
               MyPage(),
             ],
           ),
@@ -26,12 +26,8 @@ class App extends GetView<BottomNavController> {
             type: BottomNavigationBarType.fixed,
             currentIndex: controller.pageIndex.value,
             elevation: 0,
-            selectedLabelStyle: TextStyle(
-                fontSize: 12, height: 2 // 선택된 페이지 라벨의 색상을 검정색(#000000)으로 지정
-                ),
-            unselectedLabelStyle: TextStyle(
-                fontSize: 12, height: 2 // 선택된 페이지 라벨의 색상을 검정색(#000000)으로 지정
-                ),
+            selectedLabelStyle: TextStyle(fontSize: 12, height: 2),
+            unselectedLabelStyle: TextStyle(fontSize: 12, height: 2),
             selectedItemColor: Color(0xff808080),
             onTap: controller.changeBottomNav,
             items: [

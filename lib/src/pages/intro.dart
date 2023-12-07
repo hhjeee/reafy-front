@@ -33,26 +33,25 @@ class OnBoardingPage extends StatelessWidget {
             image: Image.asset("assets/images/onboarding_4.png"),
             decoration: getPageDecoration())
       ],
-      done: ImageData(
-        IconsPath.nextarrow,
-        isSvg: true,
-        width: 15,
-      ),
+      done: const Text("시작",
+          style: TextStyle(
+              fontSize: 18, fontWeight: FontWeight.w700, color: yellow)),
       onDone: () {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const App()),
-        );
+        Get.off(App());
       },
       //showBackButton: true,
       showDoneButton: true,
       showNextButton: true,
-      // showSkipButton: true,
+      showSkipButton: true,
       next: ImageData(
         IconsPath.nextarrow,
         isSvg: true,
         width: 15,
       ),
-      //back: const Icon(Icons.arrow_back),
+
+      skip: const Text("SKIP",
+          style: TextStyle(
+              fontSize: 18, fontWeight: FontWeight.w700, color: yellow)),
       dotsDecorator: DotsDecorator(
           color: Color(0xFFD9D9D9),
           activeColor: yellow,
@@ -68,13 +67,9 @@ class OnBoardingPage extends StatelessWidget {
     return const PageDecoration(
         titleTextStyle:
             TextStyle(fontSize: 30, fontWeight: FontWeight.w800, height: 1.5),
-        //imagePadding: EdgeInsets.only(top: 100),
         imageFlex: 3,
         bodyFlex: 1,
         pageColor: Color(0xffFAF9F7),
-        //pageMargin: EdgeInsets.symmetric(vertical: .0),
-        ///bodyAlignment: Alignment.topCenter,
-        //imageAlignment: Alignment.bottomCenter,
         imagePadding: EdgeInsets.only(bottom: 30.0),
         contentMargin: const EdgeInsets.only(bottom: 20.0),
         safeArea: 70);

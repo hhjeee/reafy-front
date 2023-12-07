@@ -31,31 +31,6 @@ class BookService {
   }
 }
 
-// BookshelfBookDto를 Book으로 변환하는 함수
-/*List<Book> convertToBookList(List<BookshelfBookDto> bookshelfBooks) {
-    return bookshelfBooks.map((dto) {
-      return Book(
-        id: dto.bookshelfBookId,
-        title: dto.title,
-        coverImageUrl: dto.thumbnailURL,
-        // 다른 필요한 속성들을 추가할 수 있습니다.
-      );
-    }).toList();
-  }*/
-
-/*class Book {
-  final int id;
-  final String title;
-  final String coverImageUrl;
-
-  Book({
-    required this.id,
-    required this.title,
-    required this.coverImageUrl,
-    // 다른 필요한 속성들을 추가할 수 있습니다.
-  });
-}*/
-
 class Book {
   final String title;
   final String author;
@@ -66,10 +41,7 @@ class Book {
     required this.author,
     required this.coverImageUrl,
   });
-
-
 }
-
 
 List<Book> getrecentBooks() {
   return [
