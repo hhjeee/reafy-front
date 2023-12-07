@@ -96,12 +96,16 @@ class UserProvider extends ChangeNotifier {
       print("========stattuscode============");
       print(req.statusCode);
 
-      print("========req.body============");
-      print(req.body);
+      //print("========req.body============");
+      //print(req.body);
 
       if (req.statusCode == 200 || req.statusCode == 201) {
         print("========req.body============");
+        print("========현지얌 ============");
+        print("======== 토큰 날아간다 ============");
+        print("======== 받아아아아아아 ============");
         print(req.body);
+        print("===============================");
         //print(body);
       }
       ;
