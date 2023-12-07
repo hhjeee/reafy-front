@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:lottie/lottie.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/pages/board/board.dart';
-//import 'package:reafy_front/src/components/switch.dart';
 import 'package:reafy_front/src/pages/itemshop.dart';
 import 'package:reafy_front/src/components/stopwatch.dart';
 import 'package:reafy_front/src/pages/map.dart';
@@ -11,29 +11,41 @@ import 'package:reafy_front/src/components/poobao_home.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
-  //const Home({super.key});
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
+    Widget _memo() {
+      return Container(
+        width: size.width,
+        padding: EdgeInsets.symmetric(horizontal: size.width * 0.4),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          SizedBox(height: 80),
+          GestureDetector(
+            onTap: () {
+              Get.to(Board());
+            },
+            child: Lottie.asset('assets/lottie/note_lottie.json', width: 90),
+          ),
+        ]),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xfffaf9f7),
         elevation: 0,
-        leadingWidth: 76, //90,
+        leadingWidth: 90,
         toolbarHeight: 30,
-        titleSpacing: 0,
-
         leading: Transform.translate(
             offset: Offset(16, 0),
             child: Container(
                 padding: EdgeInsets.only(right: 16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  //mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(width: 6),
-                    ImageData(IconsPath.bamboo, isSvg: true),
+                    ImageData(IconsPath.bamboo, isSvg: true, height: 26),
                     SizedBox(width: 4), // 코인 아이콘과 텍스트 사이의 간격 조절
                     Text(
                       '25',
@@ -48,14 +60,17 @@ class Home extends StatelessWidget {
         actions: [
           IconButton(
             padding: EdgeInsets.only(right: 16),
-            icon: ImageData(IconsPath.item, isSvg: true),
+            icon: ImageData(IconsPath.map_icon, isSvg: true),
             onPressed: () {
               Get.to(BambooMap());
             },
           ),
           IconButton(
             padding: EdgeInsets.only(right: 16),
-            icon: ImageData(IconsPath.item, isSvg: true),
+            icon: ImageData(
+              IconsPath.item,
+              isSvg: true,
+            ),
             onPressed: () {
               Get.to(ItemShop());
             },
@@ -79,8 +94,9 @@ class Home extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _title_text(),
-              const SizedBox(height: 40),
+              //_title_text(),
+              _memo(),
+              //const SizedBox(height: ),
               Consumer<PoobaoHome>(
                 builder: (context, poobaoHome, child) {
                   return Container(

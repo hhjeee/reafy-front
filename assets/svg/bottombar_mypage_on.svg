@@ -1,4 +1,6 @@
-<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M17 27H6C4.89543 27 3.98099 26.0966 4.17953 25.0101C5.11601 19.8848 9.60433 16 15 16C20.3957 16 24.884 19.8848 25.8205 25.0101C26.019 26.0966 25.1046 27 24 27H22" stroke="#FFD747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="6" cy="6" r="6" transform="matrix(4.37114e-08 1 1 -4.37114e-08 9 4)" fill="#FFD747" stroke="#FFD747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="44" height="44" fill="#FAF9F7"/>
+<rect width="933" height="342" transform="translate(-310 -110)" fill="white"/>
+<path d="M24 33H13C11.8954 33 10.981 32.0966 11.1795 31.0101C12.116 25.8848 16.6043 22 22 22C27.3957 22 31.884 25.8848 32.8205 31.0101C33.019 32.0966 32.1046 33 31 33H29" stroke="#FFD747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="6" cy="6" r="6" transform="matrix(4.37114e-08 1 1 -4.37114e-08 16 10)" fill="#FFD747" stroke="#FFD747" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

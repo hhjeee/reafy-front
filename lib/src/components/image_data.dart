@@ -10,8 +10,8 @@ class ImageData extends StatelessWidget {
   ImageData(
     this.icon, {
     Key? key,
-    this.width = 26,
-    this.height = 26,
+    this.width = 24,
+    this.height = 24,
     this.isSvg = false,
   }) : super(key: key);
 
@@ -43,9 +43,11 @@ class IconsPath {
   static String get bookOn => 'assets/svg/bottombar_book_on.svg';
   static String get mypageOff => 'assets/svg/bottombar_mypage_off.svg';
   static String get mypageOn => 'assets/svg/bottombar_mypage_on.svg';
-  static String get bamboo => 'assets/svg/appbar_bamboo.svg';
 
-  static String get item => 'assets/svg/appbar_item.svg';
+  static String get bamboo => 'assets/svg/bamboo.svg';
+  static String get map_icon => 'assets/svg/map.svg';
+  static String get item => 'assets/svg/item.svg';
+
   static String get play => 'assets/svg/play.svg';
   static String get pause => 'assets/svg/pause.svg';
   static String get stop => 'assets/svg/stop.svg';
@@ -104,6 +106,9 @@ class IconsPath {
 
   static String get add_back => 'assets/images/addbook_background.png';
 
+  static String get bamboomap => 'assets/images/bamboomap.png';
+
+
   static String get memo_ex => 'assets/images/memo_example.png';
   static String get add_memo => 'assets/svg/add_memo.svg';
   static String get memo_date => 'assets/svg/memo_date.svg';
@@ -111,4 +116,5 @@ class IconsPath {
   static String get add_tag => 'assets/svg/add_tag.svg';
   static String get memo_pic => 'assets/svg/memo_picture.svg';
   static String get shelf_right => 'assets/svg/shelf_right.svg';
+
 }
