@@ -1,7 +1,5 @@
-<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="&#236;&#182;&#148;&#234;&#176;&#128; &#236;&#149;&#132;&#236;&#157;&#180;&#236;&#189;&#152;">
-<circle id="Ellipse 70" cx="11" cy="11" r="10.1" stroke="#63B865" stroke-width="1.8"/>
-<path id="Line 47" d="M11 4L11 18" stroke="#63B865" stroke-width="1.8" stroke-linecap="round"/>
-<path id="Line 48" d="M18 11L4 11" stroke="#63B865" stroke-width="1.8" stroke-linecap="round"/>
-</g>
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="22" cy="22" r="10" stroke="#63B865" stroke-width="2"/>
+<path d="M22 16L22 28" stroke="#63B865" stroke-width="2" stroke-linecap="round"/>
+<path d="M28 22H16" stroke="#63B865" stroke-width="2" stroke-linecap="round"/>
 </svg>

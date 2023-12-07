@@ -10,8 +10,8 @@ class ImageData extends StatelessWidget {
   ImageData(
     this.icon, {
     Key? key,
-    this.width = 24,
-    this.height = 24,
+    this.width = 44,
+    this.height = 44,
     this.isSvg = false,
   }) : super(key: key);
 
@@ -32,11 +32,13 @@ class ImageData extends StatelessWidget {
 }
 
 class IconsPath {
+  // login 화면
   static String get bubble => 'assets/images/bubble.png';
   static String get title_logo => 'assets/images/title_logo.png';
   static String get login_character => 'assets/images/login_character.png';
   static String get login_button => 'assets/images/kakao_login.png';
 
+  // 하단 바
   static String get homeOff => 'assets/svg/bottombar_home_off.svg';
   static String get homeOn => 'assets/svg/bottombar_home_on.svg';
   static String get bookOff => 'assets/svg/bottombar_book_off.svg';
@@ -44,26 +46,31 @@ class IconsPath {
   static String get mypageOff => 'assets/svg/bottombar_mypage_off.svg';
   static String get mypageOn => 'assets/svg/bottombar_mypage_on.svg';
 
+  // 상단 바
   static String get bamboo => 'assets/svg/bamboo.svg';
   static String get map_icon => 'assets/svg/map.svg';
   static String get item => 'assets/svg/item.svg';
 
+  // 스탑워치
   static String get play => 'assets/svg/play.svg';
   static String get pause => 'assets/svg/pause.svg';
   static String get stop => 'assets/svg/stop.svg';
+  static String get startbutton => 'assets/images/startbutton.png';
+  static String get runningbutton => 'assets/images/runningbutton.png';
+// 홈화면
+  static String get home_bubble => 'assets/images/home_bubble.png';
+
+  //프로필
   static String get statistic => 'assets/svg/statistic.svg';
   static String get star => 'assets/svg/star.svg';
   static String get Logout => 'assets/svg/logout.svg';
   static String get Team => 'assets/svg/team.svg';
   static String get pencil => 'assets/svg/pencil.svg';
+
+  //책 상세
   static String get pencil_green => 'assets/svg/pencil_green.svg';
   static String get trash_can => 'assets/svg/trash_can.svg';
   static String get line => 'assets/svg/line.svg';
-
-  static String get startbutton => 'assets/images/startbutton.png';
-  static String get runningbutton => 'assets/images/runningbutton.png';
-  //static String get startbutton => 'assets/svg/startbutton.svg';
-  //static String get runningbutton => 'assets/svg/runningbutton.svg';
 
   static String get left => 'assets/svg/left.svg';
   static String get right => 'assets/svg/right.svg';
@@ -75,12 +82,13 @@ class IconsPath {
   static String get dropdown => 'assets/svg/dropdown_button.svg';
   static String get check => 'assets/svg/check.svg';
   static String get done => 'assets/svg/done_button.svg';
+
+  // 온보딩
   static String get state_1 => 'assets/images/state_1.png';
   static String get state_2 => 'assets/images/state_2.png';
   static String get state_3 => 'assets/images/state_3.png';
   static String get state_4 => 'assets/images/state_4.png';
-
-  static String get intro => 'assets/images/intro.png';
+  //static String get intro => 'assets/images/intro.png';
 
   static String get bookshelf => 'assets/svg/bookshelf.svg';
 
@@ -93,7 +101,6 @@ class IconsPath {
   //static String get poobao_shadow => 'assets/images/poobao_shadow.png';
   static String get poobao_shadow => 'assets/svg/poobao_shadow.svg';
   static String get book_leaves => 'assets/images/book_leaves.png';
-
   static String get team_img => 'assets/images/team_poobao.png';
 
   static String get lock => 'assets/images/lock.png';
@@ -105,10 +112,9 @@ class IconsPath {
   static String get total => 'assets/svg/total_time.svg';
 
   static String get add_back => 'assets/images/addbook_background.png';
-
+// 대나무 줍줍 맵
   static String get bamboomap => 'assets/images/bamboomap.png';
-
-
+// 메모
   static String get memo_ex => 'assets/images/memo_example.png';
   static String get add_memo => 'assets/svg/add_memo.svg';
   static String get memo_date => 'assets/svg/memo_date.svg';
@@ -116,5 +122,4 @@ class IconsPath {
   static String get add_tag => 'assets/svg/add_tag.svg';
   static String get memo_pic => 'assets/svg/memo_picture.svg';
   static String get shelf_right => 'assets/svg/shelf_right.svg';
-
 }

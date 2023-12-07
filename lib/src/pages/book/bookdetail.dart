@@ -376,6 +376,7 @@ class BookDetailPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
+          iconSize: 24,
           icon: Icon(Icons.arrow_back_ios, color: Color(0xff63B865)),
           onPressed: () {
             Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
@@ -383,8 +384,10 @@ class BookDetailPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            padding: EdgeInsets.all(0),
-            icon: ImageData(IconsPath.pencil_green, isSvg: true, width: 20),
+            padding: EdgeInsets.only(left: 16),
+            iconSize: 44,
+            icon: ImageData(IconsPath.pencil_green,
+                isSvg: true, width: 44, height: 44),
             onPressed: () {
               showDialog(
                 context: context,
@@ -395,8 +398,10 @@ class BookDetailPage extends StatelessWidget {
             },
           ),
           IconButton(
-            padding: EdgeInsets.only(right: 21),
-            icon: ImageData(IconsPath.trash_can, isSvg: true, width: 20),
+            iconSize: 44,
+            padding: EdgeInsets.only(right: 16),
+            icon: ImageData(IconsPath.trash_can,
+                isSvg: true, width: 44, height: 44),
             onPressed: () {
               showDialog(
                 context: context,
