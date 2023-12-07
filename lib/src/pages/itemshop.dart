@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:reafy_front/src/utils/constants.dart';
-import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/purchase_dialog.dart';
-//import 'package:reafy_front/src/components/items.dart';
 import 'package:reafy_front/src/components/poobao_home.dart';
 import 'package:provider/provider.dart';
-
 import 'package:get/get.dart';
-import 'dart:async';
-
 import 'package:reafy_front/src/components/items/bookshelf_item.dart';
 import 'package:reafy_front/src/components/items/rug.dart';
 import 'package:reafy_front/src/components/items/otheritems.dart';
@@ -115,7 +109,8 @@ class _ItemShopState extends State<ItemShop> {
         actions: [
           IconButton(
             padding: EdgeInsets.all(0),
-            icon: ImageData(IconsPath.check, isSvg: true, width: 24),
+            icon:
+                ImageData(IconsPath.check, isSvg: true, width: 24, height: 24),
             onPressed: () {
               showDialog(
                 context: context,

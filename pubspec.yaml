@@ -20,6 +20,7 @@ dependencies:
   flutter_slidable: ^3.0.1
   intl: ^0.18.1
   flutter_native_splash: ^2.3.6
+  lottie: ^2.2.0
 
   expandable_text: ^2.2.0
   timeago: ^3.2.2
@@ -44,6 +45,8 @@ flutter:
     - assets/images/items/
     - assets/svg/
     - assets/fonts/
+    - .env
+    - assets/lottie/
 
   fonts:
     - family: NanumSquareRound

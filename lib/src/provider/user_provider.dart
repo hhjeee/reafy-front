@@ -1,10 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:reafy_front/src/utils/url.dart';
+import 'package:http/http.dart' as http;
 
 class UserProvider extends ChangeNotifier {
   late User _userInfo;
   bool _loginStat = false;
   String _token = "";
+
+  final reqBaseUrl = AppUrl.baseurl;
 
   User get userInfo => _userInfo;
   bool get isLogined => _loginStat;
@@ -38,6 +45,9 @@ class UserProvider extends ChangeNotifier {
 
   @override
   Future<void> login() async {
+    String url = "$reqBaseUrl/authentication/login";
+    final body; //= {"accessToken": _token, "vendor": "kakao"};
+
     try {
       bool isInstalled = await isKakaoTalkInstalled();
       if (isInstalled) {
@@ -45,15 +55,11 @@ class UserProvider extends ChangeNotifier {
           OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
           print('카카오톡으로 로그인 성공 ${token.accessToken} ');
           _loginStat = true;
-          _token = token.accessToken;
-
-          getUserInfo();
+          //getUserInfo();
           print('[user.dart]_loginStat = ${_loginStat}');
-          //return {'result': true,'data': token.accessToken }; //token.accessToken;
         } catch (e) {
           _loginStat = false;
           print('카카오톡으로 로그인 실패 $e');
-          //return {'result': false, 'data': e};
         }
       } else {
         try {
@@ -73,9 +79,38 @@ class UserProvider extends ChangeNotifier {
     } catch (e) {
       _loginStat = false;
       print('로그인 실패 $e');
-      //return {'result': false, 'data': e};
     }
     notifyListeners();
+
+    body = {"accessToken": _token, "vendor": "kakao"};
+
+    try {
+      http.Response req = await http.post(Uri.parse(url),
+          headers: {"Content-Type": "application/json"},
+          body: json.encode(body));
+      print("========url============");
+      print(Uri.parse(url));
+      print("========body============");
+      print(json.encode(body));
+
+      print("========stattuscode============");
+      print(req.statusCode);
+
+      print("========req.body============");
+      print(req.body);
+
+      if (req.statusCode == 200 || req.statusCode == 201) {
+        print("========req.body============");
+        print(req.body);
+        //print(body);
+      }
+      ;
+      print(req.body);
+    } on SocketException catch (e) {
+      print("Internet connection error");
+    } catch (e) {
+      print("Try Again");
+    }
   }
 
   @override

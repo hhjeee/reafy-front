@@ -10,8 +10,8 @@ class ImageData extends StatelessWidget {
   ImageData(
     this.icon, {
     Key? key,
-    this.width = 26,
-    this.height = 26,
+    this.width = 24,
+    this.height = 24,
     this.isSvg = false,
   }) : super(key: key);
 
@@ -43,9 +43,11 @@ class IconsPath {
   static String get bookOn => 'assets/svg/bottombar_book_on.svg';
   static String get mypageOff => 'assets/svg/bottombar_mypage_off.svg';
   static String get mypageOn => 'assets/svg/bottombar_mypage_on.svg';
-  static String get bamboo => 'assets/svg/appbar_bamboo.svg';
 
-  static String get item => 'assets/svg/appbar_item.svg';
+  static String get bamboo => 'assets/svg/bamboo.svg';
+  static String get map_icon => 'assets/svg/map.svg';
+  static String get item => 'assets/svg/item.svg';
+
   static String get play => 'assets/svg/play.svg';
   static String get pause => 'assets/svg/pause.svg';
   static String get stop => 'assets/svg/stop.svg';
@@ -103,4 +105,5 @@ class IconsPath {
   static String get total => 'assets/svg/total_time.svg';
 
   static String get add_back => 'assets/images/addbook_background.png';
+  static String get bamboomap => 'assets/images/bamboomap.png';
 }

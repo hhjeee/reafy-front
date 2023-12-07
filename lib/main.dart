@@ -20,6 +20,7 @@ Future main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   initializeDateFormatting('ko_KR', null);
+  print(dotenv.env['KAKAO_NATIVE_APP_KEY']);
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
 
   runApp(ChangeNotifierProvider<UserProvider>(

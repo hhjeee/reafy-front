@@ -83,22 +83,26 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
                 width: 200,
                 margin: EdgeInsets.only(left: 40.0),
                 child: Text(
-                  _elapsedTime,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 3,
-                    color: green,
-                  ),
+                  isrunning ? _elapsedTime : "독서 시작하기",
+                  style: isrunning
+                      ? TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 2.5,
+                          color: green,
+                        )
+                      : TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: black,
+                        ),
                 ),
               ),
               GestureDetector(
                 onTap: () {
                   if (isrunning) {
                     _stopStopwatch();
-                    Navigator.pop(context);
                   } else {
-                    Map(context);
                     _startStopwatch();
                   }
                 },
@@ -139,6 +143,35 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
   }
 }
 
+Widget _stopbutton() {
+  return Center(
+      child: Container(
+          width: 338,
+          height: 50,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25.0),
+            color: yellow,
+            boxShadow: [
+              BoxShadow(
+                offset: Offset(0, 0),
+                blurRadius: 10.0,
+                color: Color.fromRGBO(0, 0, 0, 0.10),
+              ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              "이제 그만 읽을래요",
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: black,
+              ),
+            ),
+          )));
+}
+
+/*
 void Map(context) {
   showModalBottomSheet(
       context: context,
@@ -259,36 +292,9 @@ Widget _progress() {
   );
 }
 
-Widget _stopbutton() {
-  return Center(
-      child: Container(
-          width: 338,
-          height: 50,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25.0),
-            color: yellow,
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 0),
-                blurRadius: 10.0,
-                color: Color.fromRGBO(0, 0, 0, 0.10),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Text(
-              "이제 그만 읽을래요",
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-                color: black,
-              ),
-            ),
-          )));
-}
 
 Widget _character() {
-  late AnimationController _animationController;
+  //late AnimationController _animationController;
 
   return Container(
     margin: EdgeInsets.only(left: 180.0, top: 20),
@@ -297,3 +303,4 @@ Widget _character() {
     child: ImageData(IconsPath.character2),
   );
 }
+*/
