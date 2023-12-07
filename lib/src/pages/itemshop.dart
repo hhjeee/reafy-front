@@ -126,71 +126,67 @@ class _ItemShopState extends State<ItemShop> {
       body: Container(
           alignment: Alignment.center,
           child: Column(children: [
+            SizedBox(height: 20),
             Consumer<PoobaoHome>(
               builder: (context, poobaoHome, child) {
                 return Container(
-                  width: 296,
-                  height: 255,
+                  width: 281.7,
+                  height: 241,
                   //decoration: BoxDecoration(color: Color(0xffd9d9d9)),
                   child: Stack(
                     children: [
                       Positioned(
-                        top: 75,
-                        left: 90,
+                        top: 37.67,
+                        left: 84.98,
                         child: Container(
-                          width: 127,
-                          height: 150,
+                          width: 114.32,
+                          height: 160.666,
                           child: ImageData(IconsPath.character2),
                         ),
                       ),
                       Positioned(
-                        top: 23,
+                        top: 21.63,
                         child: Container(
                             //bookshelf
-                            width: 84,
-                            height: 182,
-                            //decoration: BoxDecoration(color: Colors.orange),
+                            width: 77.243,
+                            height: 177.66,
                             child: ImageData(poobaoHome.bookshelf_imagePath)),
                       ),
                       Positioned(
                         //clock
-                        left: 121,
+                        left: 117.42,
                         child: Container(
-                            width: 53,
-                            height: 53,
-                            //decoration: BoxDecoration(color: Colors.yellow),
+                            width: 49.436,
+                            height: 49.436,
                             child: ImageData(poobaoHome.clock_imagePath)),
                       ),
                       Positioned(
-                        left: 208,
-                        top: 14,
+                        left: 203.93,
+                        top: 26.26,
                         child: Container(
                           //window
-                          width: 83,
-                          height: 83,
-                          //decoration: BoxDecoration(color: Colors.blue),
+                          width: 77.243,
+                          height: 77.243,
                           child: ImageData(poobaoHome.window_imagePath),
                         ),
                       ),
                       Positioned(
-                        left: 208,
-                        top: 115,
+                        left: 203.93,
+                        top: 114.32,
                         child: Container(
                           //others
-                          width: 76,
-                          height: 91,
-                          //decoration: BoxDecoration(color: Colors.pink),
+                          width: 69.519,
+                          height: 84.968,
                           child: ImageData(poobaoHome.others_imagePath),
                         ),
                       ),
                       Positioned(
-                        top: 212,
-                        left: 72,
+                        top: 114.32,
+                        left: 89.26,
                         child: Container(
                           //rug
-                          width: 152,
-                          height: 30,
-                          //decoration: BoxDecoration(color: Colors.red),
+                          width: 143.637,
+                          height: 27.808,
                           child: ImageData(poobaoHome.rug_imagePath),
                         ),
                       ),
@@ -199,7 +195,6 @@ class _ItemShopState extends State<ItemShop> {
                 );
               },
             ),
-            SizedBox(height: 20),
             Container(
               margin: EdgeInsets.only(bottom: 20.0),
               height: 1.0,

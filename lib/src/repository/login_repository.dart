@@ -1,8 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
-/*
-Future getAuthHeader() async {
+
+/*Future getAuthHeader() async {
   final preferences = await SharedPreferences.getInstance();
   var accessToken = preferences.getString('access_token');
 
