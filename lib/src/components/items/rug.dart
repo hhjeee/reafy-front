@@ -18,9 +18,6 @@ List<ItemData> itemDataList = [
   ItemData(imagePath: 'assets/images/nothing.png', text: '러그4'),
   ItemData(imagePath: 'assets/images/nothing.png', text: '러그5'),
   ItemData(imagePath: 'assets/images/nothing.png', text: '러그6'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그7'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그8'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그9'),
   // ...
 ];
 
@@ -92,7 +89,7 @@ class _ItemRugState extends State<ItemRug> {
 
 Widget GridItem(
     int index, ItemData itemIndex, bool isSelected, String selectedImagePath) {
-  bool isButtonEnabled = index < 8; //사용자가 가지고 있는 아이템일 경우
+  bool isButtonEnabled = index < 4; //사용자가 가지고 있는 아이템일 경우
 
   return Flexible(
     child: Column(

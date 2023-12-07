@@ -11,6 +11,7 @@ import 'package:reafy_front/src/components/poobao_home.dart';
 import 'package:reafy_front/src/models/bookCount.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:reafy_front/src/provider/user_provider.dart';
+import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'dart:async';
 
 Future main() async {
@@ -32,6 +33,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
+          ChangeNotifierProvider(
+            create: (context) => BookShelfProvider(),
+          ),
           ChangeNotifierProvider<BookModel>(
             create: (context) => BookModel(),
           ),

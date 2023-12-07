@@ -20,9 +20,6 @@ List<ItemData> itemDataList = [
   ItemData(imagePath: 'assets/images/nothing.png', text: '책장4'),
   ItemData(imagePath: 'assets/images/nothing.png', text: '책장5'),
   ItemData(imagePath: 'assets/images/nothing.png', text: '책장6'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '책장7'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '책장8'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '책장9'),
   // ...
 ];
 
@@ -100,7 +97,7 @@ Widget GridItem(
   bool isSelected,
   String selectedImagePath,
 ) {
-  bool isButtonEnabled = index < 8; //사용자가 가지고 있는 아이템일 경우
+  bool isButtonEnabled = index < 4; //사용자가 가지고 있는 아이템일 경우
 
   return Flexible(
     child: Column(
