@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:reafy_front/src/components/book_card.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/models/book.dart';
@@ -7,6 +8,7 @@ import 'package:reafy_front/src/utils/constants.dart';
 import 'dart:math';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:dio/dio.dart';
+import 'package:reafy_front/src/models/user.dart';
 
 class Quote {
   final String author;
@@ -26,17 +28,11 @@ class SearchBook extends StatefulWidget {
 }
 
 class _SearchBookState extends State<SearchBook> {
-  List<Book> displayList = List.from(mockSearchResults);
+  List<Book> displayList = [];
   TextEditingController _searchController = TextEditingController();
   final Random _random = Random();
 
-  /*late SearchBook searchBook;
-
-  @override
-  void initState() {
-    super.initState();
-    searchBook = SearchBook(dio: Dio());
-  }*/
+  Dio dio = Dio();
 
   final List<Quote> quotes = [
     Quote(text: "책 없는 방은 영혼 없는 육체와도 같다.", author: "키케로"),
@@ -50,14 +46,48 @@ class _SearchBookState extends State<SearchBook> {
 
   bool isSearching = true;
 
+  Future<List<SearchBookResDto>> searchBooks(String query, int page) async {
+    try {
+      //final userToken = await UserToken();
+      //print(userToken.accessToken);
+      final userToken =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvYXV0aElkIjoiMzE1ODUyNjkwMiIsImlhdCI6MTcwMTk1MTc0NSwiZXhwIjoxNzAxOTU1MzQ1LCJzdWIiOiJBQ0NFU1MifQ.lEMt-1ZuGgPx2KfJKMj9rLNqF8Tg1ogktjZTlFS7Pho";
+      final response = await dio.get('http://13.125.145.165:3000/book/search',
+          queryParameters: {'query': query, 'page': page},
+          options: Options(headers: {
+            'Authorization': 'Bearer ${userToken}',
+            'Content-Type': "application/json"
+          }));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data;
+        final List<dynamic> responseList = responseData['response'];
+        final List<SearchBookResDto> searchResults = responseList
+            .map((item) => SearchBookResDto.fromJson(item))
+            .toList();
+        return searchResults;
+      } else {
+        throw Exception('Failed to load search results');
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
   void _performSearch(String query) {
     setState(() {
       isSearching = true;
     });
-    fetchSearchResults(query).then((searchResults) {
+    /*fetchSearchResults(query).then((searchResults) {
       setState(() {
         isSearching = false;
         displayList = List.from(searchResults);
+      });
+    });*/
+    searchBooks(query, 1).then((searchResults) {
+      setState(() {
+        isSearching = false;
+        displayList = searchResults.map(convertToBook).toList();
       });
     });
   }
@@ -189,13 +219,15 @@ class _SearchBookState extends State<SearchBook> {
         )),
         child: ListView.builder(
           itemCount: displayList.length,
-          itemBuilder: (context, index) => BookCard(book: displayList[index]),
+          itemBuilder: (context, index) => BookCard(
+            book: displayList[index],
+            isbn13: displayList[index].isbn13,
+          ),
         ),
 
         /*child: FutureBuilder<List<SearchBookResDto>>(
           // 검색 결과를 가져오는 비동기 함수
-          future: searchBook.searchBooks(
-              _searchController.text, 1), // 예시로 페이지를 1로 고정
+          future: searchBooks(_searchController.text, 1), // 예시로 페이지를 1로 고정
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -273,7 +305,6 @@ class _SearchBookState extends State<SearchBook> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         _search(),
-
                         _searchController.text.isEmpty
                             ? ListView(
                                 shrinkWrap: true,
@@ -287,68 +318,7 @@ class _SearchBookState extends State<SearchBook> {
                                 ],
                               )
                             : _renderResults(),
-
-                        //const Spacer(flex: 1),
                       ]),
                 ))));
   }
 }
-
-/*
-    FutureBuilder<List<Book>>(
-        future: fetchSearchResults(query), // 검색 결과를 가져오는 비동기 함수
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-                child: CircularProgressIndicator()); // 로딩 중이면 로딩 이미지를 가운데에 표시
-          } else if (snapshot.hasError) {
-            return Center(
-                child: Text(
-                    'Error: ${snapshot.error}')); // 에러가 발생하면 에러 메시지를 가운데에 표시
-          } else if (snapshot.hasData && snapshot.data!.isEmpty) {
-            return Center(
-                child: Text('일치하는 도서가 없어요.')); // 결과가 없으면 해당 메시지를 가운데에 표시
-          } else if (snapshot.hasData) {
-            List<Book> searchResults = snapshot.data!;
-          }
-        });*/
-
-
-
-/*
-  Widget _searchresult(String query) {
-    return FutureBuilder<List<Book>>(
-      future: fetchSearchResults(query), // 검색 결과를 가져오는 비동기 함수
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-              child: CircularProgressIndicator()); // 로딩 중이면 로딩 이미지를 가운데에 표시
-        } else if (snapshot.hasError) {
-          return Center(
-              child:
-                  Text('Error: ${snapshot.error}')); // 에러가 발생하면 에러 메시지를 가운데에 표시
-        } else if (snapshot.hasData && snapshot.data!.isEmpty) {
-          return Center(
-              child: Text('일치하는 도서가 없어요.')); // 결과가 없으면 해당 메시지를 가운데에 표시
-        } else if (snapshot.hasData) {
-          List<Book> searchResults = snapshot.data!;
-          return Expanded(
-            child: ListView.builder(
-              itemCount: searchResults.length,
-              itemBuilder: (context, index) {
-                Book book = searchResults[index];
-                return ListTile(
-                  title: Text(book.title),
-                  subtitle: Text(book.author),
-                  // 기타 책 정보를 표시할 수 있는 위젯 추가
-                  // 예: 이미지, 출판사, 출판일 등
-                );
-              },
-            ),
-          );
-        }
-        return Container(); // 아무것도 표시하지 않을 경우 빈 컨테이너 반환
-      },
-    );
-  }
-  */

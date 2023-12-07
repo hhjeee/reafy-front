@@ -3,13 +3,29 @@ import 'package:get/get.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/utils/constants.dart';
+import 'package:reafy_front/src/repository/bookshelf_repository.dart';
+import 'package:reafy_front/src/provider/state_book_provider.dart';
+import 'package:provider/provider.dart';
 
 class AddDialog extends StatefulWidget {
+  final String isbn13;
+
+  AddDialog({required this.isbn13});
+
   @override
   _AddDialogState createState() => _AddDialogState();
 }
 
 class _AddDialogState extends State<AddDialog> {
+  late String isbn13;
+  int progressState = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    isbn13 = widget.isbn13;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -20,21 +36,8 @@ class _AddDialogState extends State<AddDialog> {
       //title:
       content: Container(
         width: 320,
-        height: 190,
+        height: 201,
         child: Column(children: [
-          SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context); // Dialog를 닫음
-                },
-                child: ImageData(IconsPath.x, isSvg: true, width: 10),
-              ),
-              SizedBox(width: 19.0),
-            ],
-          ),
           SizedBox(height: 40.0),
           Text(
             "어디에 등록하시겠습니까?",
@@ -47,7 +50,13 @@ class _AddDialogState extends State<AddDialog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              BookStatusButtonGroup(),
+              BookStatusButtonGroup(
+                onStatusSelected: (selectedButtonIndex) {
+                  setState(() {
+                    progressState = selectedButtonIndex == 0 ? 1 : 2;
+                  });
+                },
+              ),
             ],
           ),
           SizedBox(height: 40),
@@ -75,7 +84,7 @@ class _AddDialogState extends State<AddDialog> {
             ),
             SizedBox(width: 6),
             ElevatedButton(
-              onPressed: () {
+              /*onPressed: () {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -83,6 +92,28 @@ class _AddDialogState extends State<AddDialog> {
                   },
                 );
                 //Get.to(BookShelf());
+              },*/
+              onPressed: () async {
+                try {
+                  // post 성공시 DoneDialog
+                  bool apiSuccess = await postBookInfo(isbn13, progressState);
+
+                  if (apiSuccess) {
+                    Provider.of<BookShelfProvider>(context, listen: false)
+                        .fetchData();
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return DoneDialog();
+                      },
+                    );
+                  } else {
+                    print("POST 성공, 하지만 서버로부터 응답이 예상과 다릅니다.");
+                  }
+                } catch (e) {
+                  print("POST 실패: $e");
+                }
               },
               style: ElevatedButton.styleFrom(
                 primary: Color(0xffffd747),
@@ -112,6 +143,10 @@ class _AddDialogState extends State<AddDialog> {
 /////
 
 class BookStatusButtonGroup extends StatefulWidget {
+  final Function(int) onStatusSelected;
+
+  BookStatusButtonGroup({required this.onStatusSelected});
+
   @override
   _BookStatusButtonGroupState createState() => _BookStatusButtonGroupState();
 }
@@ -129,10 +164,12 @@ class _BookStatusButtonGroupState extends State<BookStatusButtonGroup> {
           decoration: BoxDecoration(
             color: bg_gray,
             borderRadius: BorderRadius.circular(100),
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
-                color: Colors.black12,
-                blurRadius: 6.0,
+                color: Colors.black.withOpacity(0.1),
+                spreadRadius: 0,
+                blurRadius: 20,
+                offset: Offset(0, 0),
               ),
             ],
           ),
@@ -141,29 +178,22 @@ class _BookStatusButtonGroupState extends State<BookStatusButtonGroup> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             BookStatusButton(
-              status: '읽은 책',
+              status: '읽고 있는 책',
               isSelected: selectedButtonIndex == 0,
               onPressed: () {
                 setState(() {
                   selectedButtonIndex = 0;
+                  widget.onStatusSelected(selectedButtonIndex);
                 });
               },
             ),
             BookStatusButton(
-              status: '읽는 중',
+              status: '완독한 책',
               isSelected: selectedButtonIndex == 1,
               onPressed: () {
                 setState(() {
                   selectedButtonIndex = 1;
-                });
-              },
-            ),
-            BookStatusButton(
-              status: '읽을 책',
-              isSelected: selectedButtonIndex == 2,
-              onPressed: () {
-                setState(() {
-                  selectedButtonIndex = 2;
+                  widget.onStatusSelected(selectedButtonIndex);
                 });
               },
             ),
@@ -189,7 +219,7 @@ class BookStatusButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: <Widget>[
       Container(
-        width: 89,
+        width: 133,
         height: 30,
         child: ElevatedButton(
           onPressed: onPressed,

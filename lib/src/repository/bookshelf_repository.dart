@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'dart:convert';
+import 'package:reafy_front/src/models/user.dart';
 
 import 'package:reafy_front/src/models/book.dart';
 
@@ -24,31 +25,6 @@ class SearchBookResDto {
       title: json['title'],
       author: json['author'],
     );
-  }
-}
-
-class SearchBook {
-  final Dio dio;
-  SearchBook({required this.dio});
-
-  Future<List<SearchBookResDto>> searchBooks(String query, int page) async {
-    try {
-      final response = await dio.get(
-        'http://13.125.145.165:3000/book/search',
-        queryParameters: {'query': query, 'page': page},
-      );
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
-        final List<SearchBookResDto> searchResults =
-            data.map((item) => SearchBookResDto.fromJson(item)).toList();
-        return searchResults;
-      } else {
-        throw Exception('Failed to load search results');
-      }
-    } catch (e) {
-      throw e;
-    }
   }
 }
 
@@ -81,26 +57,76 @@ class BookshelfBookDto {
   }
 }
 
-Future<List<BookshelfBookDto>> fetchBookshelfBooksByState(
-    int progressState) async {
+Future<List<String>> fetchBookshelfThumbnailsByState(int progressState) async {
   final Dio dio = Dio();
 
   try {
-    final response = await dio.get(
-      'http://13.125.145.165:3000/book/bookshelf',
-      queryParameters: {'progressState': progressState},
-    );
+    //final userToken = await UserToken();
+    //print(userToken.accessToken);
+    final userToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvYXV0aElkIjoiMzE1ODUyNjkwMiIsImlhdCI6MTcwMTk1MTc0NSwiZXhwIjoxNzAxOTU1MzQ1LCJzdWIiOiJBQ0NFU1MifQ.lEMt-1ZuGgPx2KfJKMj9rLNqF8Tg1ogktjZTlFS7Pho";
+
+    final response = await dio.get('http://13.125.145.165:3000/book/bookshelf',
+        queryParameters: {'progressState': progressState},
+        options: Options(headers: {
+          'Authorization': 'Bearer ${userToken}',
+          'Content-Type': "application/json"
+        }));
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = response.data;
-      final List<BookshelfBookDto> bookshelfBooks =
-          data.map((item) => BookshelfBookDto.fromJson(item)).toList();
-      return bookshelfBooks;
+      final List<dynamic> responseData = response.data['response'];
+
+      final List<String> thumbnails = responseData
+          .map<String>((item) => item['thumbnail_url'] as String)
+          .toList();
+
+      return thumbnails;
     } else {
-      throw Exception('Failed to load bookshelf books');
+      throw Exception('Failed to load bookshelf thumbnails');
     }
   } catch (e) {
     throw e;
+  }
+}
+
+//책 등록
+Future<bool> postBookInfo(String isbn13, int progressState) async {
+  final dio = Dio();
+  final url = 'http://13.125.145.165:3000/book/bookshelf';
+
+  try {
+    //final userToken = await UserToken();
+    //print(userToken.accessToken);
+    final userToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvYXV0aElkIjoiMzE1ODUyNjkwMiIsImlhdCI6MTcwMTk1MTc0NSwiZXhwIjoxNzAxOTU1MzQ1LCJzdWIiOiJBQ0NFU1MifQ.lEMt-1ZuGgPx2KfJKMj9rLNqF8Tg1ogktjZTlFS7Pho";
+
+    final response = await dio.post(url,
+        data: {'isbn13': isbn13, 'progressState': progressState},
+        options: Options(headers: {
+          'Authorization': 'Bearer ${userToken}',
+          'Content-Type': "application/json"
+        }));
+
+    // 서버 응답 코드 확인
+    print('Response Code: ${response.statusCode}');
+
+    // 성공 여부 반환
+    return response.statusCode == 200 || response.statusCode == 201;
+  } catch (e) {
+    // DioError 처리
+    if (e is DioError) {
+      print('DioError: ${e.message}');
+      if (e.response != null) {
+        print('Response Data: ${e.response?.data}');
+        print('Response Headers: ${e.response?.headers}');
+        // 추가로 필요한 정보 출력 가능
+      }
+    } else {
+      print('Error: $e');
+    }
+
+    // 실패
+    return false;
   }
 }
 
@@ -186,7 +212,6 @@ class BookshelfRepository {
   }
 }
 
-
 /*Future<List<Map<String, String>>> fetchProfileData() async {
   var dio = Dio();
   var url = 'https://hello-t2pqd7uv4q-uc.a.run.app/group/members';
@@ -221,9 +246,9 @@ class BookshelfRepository {
     }
     rethrow;
   }
-}
+}*/
 
-Future<Map<String, dynamic>> updateStatusText(text) async {
+/*Future<Map<String, dynamic>> updateStatusText(text) async {
   var dio = Dio();
   var url = 'https://hello-t2pqd7uv4q-uc.a.run.app/user';
 

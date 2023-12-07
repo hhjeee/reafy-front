@@ -6,6 +6,10 @@ import 'package:reafy_front/src/components/shelfwidget.dart';
 import 'package:reafy_front/src/models/book.dart';
 import 'package:reafy_front/src/pages/book/addbook.dart';
 import 'package:reafy_front/src/components/delete_book2.dart';
+import 'package:reafy_front/src/repository/bookshelf_repository.dart';
+import 'package:reafy_front/src/components/state_BookList.dart';
+import 'package:reafy_front/src/provider/state_book_provider.dart';
+import 'package:provider/provider.dart';
 
 class BookShelf extends StatefulWidget {
   @override
@@ -15,11 +19,40 @@ class BookShelf extends StatefulWidget {
 }
 
 class _BookShelfState extends State<BookShelf> {
-  List<Book> recentBooks = getrecentBooks();
-  List<Book> wishlistBooks = getwishlistBooks();
+  //List<Book> recentBooks = getrecentBooks();
+  //List<Book> wishlistBooks = getwishlistBooks();
   List<Book> finishedBooks = getfinishedBooks();
 
   bool isEditMode = false;
+
+  List<String> thumbnailsForProgressState1 = [];
+  List<String> thumbnailsForProgressState2 = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  void fetchData() async {
+    try {
+      /*List<String> newThumbnailsForProgressState1 =
+          await fetchBookshelfThumbnailsByState(1);
+      List<String> newThumbnailsForProgressState2 =
+          await fetchBookshelfThumbnailsByState(2);
+
+      setState(() {
+        thumbnailsForProgressState1 = newThumbnailsForProgressState1;
+        thumbnailsForProgressState2 = newThumbnailsForProgressState2;
+      });
+
+      print(thumbnailsForProgressState1);
+      print(thumbnailsForProgressState2);*/
+      await Provider.of<BookShelfProvider>(context, listen: false).fetchData();
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +70,7 @@ class _BookShelfState extends State<BookShelf> {
               Get.to(SearchBook());
             },
           ),
-          actions: [
+          /*actions: [
             IconButton(
               iconSize: 44,
               padding: EdgeInsets.only(right: 21),
@@ -58,7 +91,7 @@ class _BookShelfState extends State<BookShelf> {
                 }
               },
             ),
-          ],
+          ],*/
         ),
         body: SingleChildScrollView(
             child: Container(
@@ -74,17 +107,30 @@ class _BookShelfState extends State<BookShelf> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       SizedBox(height: 10),
-                      BookShelfWidget(
-                        title: '읽고 있는 책',
+                      Consumer<BookShelfProvider>(
+                        builder: (context, bookShelfProvider, child) {
+                          return State_BookShelfWidget(
+                            title: '읽고 있는 책',
+                            thumbnailList:
+                                bookShelfProvider.thumbnailsForProgressState1,
+                          );
+                        },
+                      ),
+                      Consumer<BookShelfProvider>(
+                        builder: (context, bookShelfProvider, child) {
+                          return State_BookShelfWidget(
+                            title: '완독한 책',
+                            thumbnailList:
+                                bookShelfProvider.thumbnailsForProgressState2,
+                          );
+                        },
+                      ),
+
+                      /*BookShelfWidget(
+                        title: '완독한 책',
                         books: recentBooks,
                         isEditMode: isEditMode,
-                      ),
-                      SizedBox(height: 20),
-                      BookShelfWidget(
-                        title: '완독한 책',
-                        books: wishlistBooks,
-                        isEditMode: isEditMode,
-                      ),
+                      ),*/
                       SizedBox(height: 20),
                       BookShelfWidget(
                         title: 'My Favorite',
