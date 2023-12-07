@@ -15,7 +15,7 @@ class PoobaoHome extends ChangeNotifier {
   String selectedImagePath;
   String selectedItemName;
 
-  int selectedBookshelfIndex = 0;
+  int selectedBookshelfIndex = 2;
   int selectedClockIndex = 0;
   int selectedWindowIndex = 0;
   int selectedOthersIndex = 0;

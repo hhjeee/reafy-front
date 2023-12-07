@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/stop_dialog.dart';
+import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -14,33 +16,31 @@ class StopwatchWidget extends StatefulWidget {
 
 class _StopwatchWidgetState extends State<StopwatchWidget> {
   Stopwatch _stopwatch = Stopwatch();
-  bool isrunning = false;
+  //bool isrunning = false;
   Timer? _timer;
   String _elapsedTime = '00:00:00';
 
   void _startStopwatch() {
+    context.read<StopwatchProvider>().updateIsRunning(true);
     _stopwatch.start();
     _timer = Timer.periodic(Duration(milliseconds: 100), (Timer timer) {
       setState(() {
         _elapsedTime = _formatTime(_stopwatch.elapsedMilliseconds);
-        isrunning = true;
+        // isrunning is already being updated via provider, no need to set it here
       });
     });
   }
 
   void _stopStopwatch() {
+    context.read<StopwatchProvider>().updateIsRunning(false);
     _stopwatch.stop();
-    setState(() {
-      isrunning = false;
-    });
     _timer?.cancel();
   }
 
   void _resetStopwatch() {
+    context.read<StopwatchProvider>().updateIsRunning(false);
     _stopwatch.reset();
-
     setState(() {
-      isrunning = false;
       _elapsedTime = '00:00:00';
     });
   }
@@ -49,7 +49,6 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
     int seconds = (milliseconds / 1000).truncate();
     int minutes = (seconds / 60).truncate();
     int hours = (minutes / 60).truncate();
-
     String hoursStr = (hours % 60).toString().padLeft(2, '0');
     String minutesStr = (minutes % 60).toString().padLeft(2, '0');
     String secondsStr = (seconds % 60).toString().padLeft(2, '0');
@@ -59,90 +58,97 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Container(
-      width: 338,
-      height: 50,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: Color(0xfffaf9f7),
-        boxShadow: [
-          BoxShadow(
-            offset: Offset(0, 0),
-            blurRadius: 10.0,
-            color: Color.fromRGBO(0, 0, 0, 0.10),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(2.0),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                width: 200,
-                margin: EdgeInsets.only(left: 40.0),
-                child: Text(
-                  isrunning ? _elapsedTime : "독서 시작하기",
-                  style: isrunning
-                      ? TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 2.5,
-                          color: green,
-                        )
-                      : TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: black,
-                        ),
+    return Consumer<StopwatchProvider>(builder: (context, stopwatch, child) {
+      //String _elapsedTime = stopwatch.elapsedTime;
+      bool isrunning = stopwatch.isRunning;
+
+      return Container(
+          child: Container(
+        width: 338,
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: Color(0xfffaf9f7),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 0),
+              blurRadius: 10.0,
+              color: Color.fromRGBO(0, 0, 0, 0.10),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: 200,
+                  margin: EdgeInsets.only(left: 40.0),
+                  child: Text(
+                    stopwatch.isRunning ? _elapsedTime : "독서 시작하기",
+                    style: stopwatch.isRunning
+                        ? TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 2.5,
+                            color: green,
+                          )
+                        : TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: black,
+                          ),
+                  ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  if (isrunning) {
-                    _stopStopwatch();
-                  } else {
-                    _startStopwatch();
-                  }
-                },
-                child: Container(
-                  width: 78,
-                  height: 50,
-                  margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                  child: Stack(children: [
-                    Center(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(21),
-                        child: Container(
-                          width: 68,
-                          height: 26,
-                          color: disabled_box,
+                GestureDetector(
+                  onTap: () {
+                    if (isrunning) {
+                      _stopStopwatch();
+                    } else {
+                      _startStopwatch();
+                    }
+                  },
+                  child: Container(
+                    width: 78,
+                    height: 50,
+                    margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                    child: Stack(children: [
+                      Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(21),
+                          child: Container(
+                            width: 68,
+                            height: 26,
+                            color: disabled_box,
+                          ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                        left: isrunning ? 32 : -6,
-                        top: -4,
-                        child: Container(
-                          child: Center(
-                              child: isrunning
-                                  ? Image.asset(
-                                      'assets/images/runningbutton.png',
-                                      width: 54,
-                                      height: 54)
-                                  : Image.asset('assets/images/startbutton.png',
-                                      width: 54, height: 54)),
-                        ))
-                  ]),
-                ),
-              )
-            ]),
-      ),
-    ));
+                      Positioned(
+                          left: isrunning ? 32 : -6,
+                          top: -4,
+                          child: Container(
+                            child: Center(
+                                child: isrunning
+                                    ? Image.asset(
+                                        'assets/images/runningbutton.png',
+                                        width: 54,
+                                        height: 54)
+                                    : Image.asset(
+                                        'assets/images/startbutton.png',
+                                        width: 54,
+                                        height: 54)),
+                          ))
+                    ]),
+                  ),
+                )
+              ]),
+        ),
+      ));
+    });
   }
 }
-
+/*
 Widget _stopbutton() {
   return Center(
       child: Container(
@@ -171,7 +177,7 @@ Widget _stopbutton() {
           )));
 }
 
-/*
+
 void Map(context) {
   showModalBottomSheet(
       context: context,

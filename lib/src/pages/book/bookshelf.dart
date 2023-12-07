@@ -30,18 +30,20 @@ class _BookShelfState extends State<BookShelf> {
           backgroundColor: Color(0xfff5f7e9),
           elevation: 0,
           leading: IconButton(
+            iconSize: 44,
             padding: EdgeInsets.all(0),
-            icon: ImageData(IconsPath.add, isSvg: true, width: 20),
+            icon: ImageData(IconsPath.add, isSvg: true),
             onPressed: () {
               Get.to(SearchBook());
             },
           ),
           actions: [
             IconButton(
+              iconSize: 44,
               padding: EdgeInsets.only(right: 21),
               icon: isEditMode
-                  ? ImageData(IconsPath.check, isSvg: true, width: 20) //색상 변경하기
-                  : ImageData(IconsPath.trash_can, isSvg: true, width: 20),
+                  ? ImageData(IconsPath.check, isSvg: true) //색상 변경하기
+                  : ImageData(IconsPath.trash_can, isSvg: true),
               onPressed: () {
                 setState(() {
                   isEditMode = !isEditMode;
@@ -71,20 +73,21 @@ class _BookShelfState extends State<BookShelf> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
+                      SizedBox(height: 10),
                       BookShelfWidget(
-                        title: '최근 읽은 책',
+                        title: '읽고 있는 책',
                         books: recentBooks,
                         isEditMode: isEditMode,
                       ),
                       SizedBox(height: 20),
                       BookShelfWidget(
-                        title: '위시 리스트',
+                        title: '완독한 책',
                         books: wishlistBooks,
                         isEditMode: isEditMode,
                       ),
                       SizedBox(height: 20),
                       BookShelfWidget(
-                        title: '완독한 도서',
+                        title: 'My Favorite',
                         books: finishedBooks,
                         isEditMode: isEditMode,
                       ),

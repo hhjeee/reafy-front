@@ -12,11 +12,11 @@ class ItemData {
 
 List<ItemData> itemDataList = [
   ItemData(imagePath: 'assets/images/nothing.png', text: '선택 안함'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '창문1'),
-  ItemData(imagePath: 'assets/images/window2.png', text: '창문2'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '창문3'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '창문4'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '창문5'),
+  ItemData(imagePath: 'assets/images/items/window1.png', text: '창문1'),
+  ItemData(imagePath: 'assets/images/items/window2.png', text: '창문2'),
+  ItemData(imagePath: 'assets/images/items/window3.png', text: '창문3'),
+  ItemData(imagePath: 'assets/images/items/window4.png', text: '창문4'),
+  ItemData(imagePath: 'assets/images/items/window5.png', text: '창문5'),
   ItemData(imagePath: 'assets/images/nothing.png', text: '창문6'),
   ItemData(imagePath: 'assets/images/nothing.png', text: '창문7'),
   ItemData(imagePath: 'assets/images/nothing.png', text: '창문8'),

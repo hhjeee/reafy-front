@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/pages/intro.dart';
-import 'package:reafy_front/src/provider/user_provider.dart';
+import 'package:reafy_front/src/provider/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -20,12 +20,12 @@ class _LoginPageState extends State<LoginPage> {
 
     Widget _bubble() {
       return Container(
-          width: 240,
+          width: 260,
           child: ImageData(
             IconsPath.bubble,
             isSvg: false,
-            width: 240,
-            height: 70,
+            width: 260,
+            height: 80,
           ));
     }
 
@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
     Widget _loginbutton() {
       return GestureDetector(
         onTap: () async {
-          var user = context.read<UserProvider>();
+          var user = context.read<AuthProvider>();
           user.loginCheck();
           if (!await user.isLogined) {
             await user.login();
@@ -78,7 +78,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     }
-
     return Center(
         child: Container(
       //color: bg_gray,
