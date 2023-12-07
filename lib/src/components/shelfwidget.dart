@@ -6,6 +6,7 @@ import 'package:reafy_front/src/pages/book/bookdetail.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/models/bookcount.dart';
 import 'package:provider/provider.dart';
+import 'package:reafy_front/src/pages/book/book1.dart';
 
 class BookShelfWidget extends StatefulWidget {
   final String title;
@@ -161,29 +162,61 @@ class _BookShelfWidgetState extends State<BookShelfWidget>
         //child:
         Center(
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-          Container(
-            width: 100,
-            height: 45,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/images/tag.png'),
-                  alignment: Alignment.bottomCenter,
-                  fit: BoxFit.cover),
-            ),
-            child: Center(
-              child: Text(widget.title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Color(0xff333333),
-                    //backgroundColor: Color(0xfffaf9f7),
-                    fontWeight: FontWeight.w800,
-                  )),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 25),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Book1()),
+                    );
+                  },
+                  child: Text(
+                    widget.title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xff333333),
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Book1()),
+                  );
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      "6", //count
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Color(0xff333333),
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    SizedBox(width: 7),
+                    Container(
+                      width: 10,
+                      height: 19,
+                      child: ImageData(IconsPath.shelf_right, isSvg: true),
+                    ),
+                    SizedBox(width: 24),
+                  ],
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 20),
           Container(
             width: double.maxFinite,
             height: 140,
@@ -198,31 +231,30 @@ class _BookShelfWidgetState extends State<BookShelfWidget>
                 SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(children: [
-                      SizedBox(width: 16),
-                      ImageData(
+                      /*ImageData(
                         IconsPath.left,
                         isSvg: true,
                         width: 10,
-                      ),
+                      ),*/
                       SizedBox(
-                        width: 16,
+                        width: 26.58,
                       ),
                       Row(
                         children: _buildBookList(context),
                       ),
                       SizedBox(
-                        width: 16,
+                        width: 25.43,
                       ),
-                      ImageData(
+                      /*ImageData(
                         IconsPath.right,
                         width: 10,
                         isSvg: true,
-                      ),
-                      SizedBox(width: 16),
+                      ),*/
                     ])),
               ],
             ),
-          )
+          ),
+          SizedBox(height: 15),
         ]));
   }
 }

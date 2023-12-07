@@ -71,20 +71,21 @@ class _BookShelfState extends State<BookShelf> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
+                      SizedBox(height: 10),
                       BookShelfWidget(
-                        title: '최근 읽은 책',
+                        title: '읽고 있는 책',
                         books: recentBooks,
                         isEditMode: isEditMode,
                       ),
                       SizedBox(height: 20),
                       BookShelfWidget(
-                        title: '위시 리스트',
+                        title: '완독한 책',
                         books: wishlistBooks,
                         isEditMode: isEditMode,
                       ),
                       SizedBox(height: 20),
                       BookShelfWidget(
-                        title: '완독한 도서',
+                        title: 'My Favorite',
                         books: finishedBooks,
                         isEditMode: isEditMode,
                       ),

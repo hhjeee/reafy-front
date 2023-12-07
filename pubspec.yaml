@@ -24,7 +24,6 @@ dependencies:
   cached_network_image: ^3.2.0
   image_picker: ^0.8.7
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -35,6 +34,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/items/
     - assets/svg/
     - assets/fonts/
 

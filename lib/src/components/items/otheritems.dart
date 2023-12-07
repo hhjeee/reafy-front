@@ -12,16 +12,12 @@ class ItemData {
 
 List<ItemData> itemDataList = [
   ItemData(imagePath: 'assets/images/nothing.png', text: '선택 안함'),
-  ItemData(imagePath: 'assets/images/others1.png', text: '소품1'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '소품2'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '소품3'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '소품4'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '소품5'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '소품6'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '소품7'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '소품8'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '소품9'),
-  // ...
+  ItemData(imagePath: 'assets/images/items/item_flower.png', text: '꽃 의자'),
+  ItemData(imagePath: 'assets/images/items/item_mushroom.png', text: '버섯 테이블'),
+  ItemData(imagePath: 'assets/images/items/item_bear.png', text: '곰 인형'),
+  ItemData(imagePath: 'assets/images/items/item_tree.png', text: '트리'),
+  ItemData(imagePath: 'assets/images/items/item_light.png', text: '달빛 전구'),
+  ItemData(imagePath: 'assets/images/items/item_bamboo.png', text: '선인장 화분'),
 ];
 
 class ItemOthers extends StatefulWidget {
@@ -97,7 +93,7 @@ Widget GridItem(
   bool isSelected,
   String selectedImagePath,
 ) {
-  bool isButtonEnabled = index < 8; //사용자가 가지고 있는 아이템일 경우
+  bool isButtonEnabled = index < 4; //사용자가 가지고 있는 아이템일 경우
 
   return Flexible(
     child: Column(
