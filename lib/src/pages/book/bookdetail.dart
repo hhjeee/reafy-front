@@ -17,8 +17,6 @@ class BookDetailPage extends StatefulWidget {
 }
 
 class _BookDetailPageState extends State<BookDetailPage> {
-  //late BookshelfBookDetailsDto bookDetails = BookshelfBookDetailsDto(bookshelfBookId: widget.bookshelfBookId);
-
   late Future<BookshelfBookDetailsDto> bookDetailsFuture;
 
   @override
