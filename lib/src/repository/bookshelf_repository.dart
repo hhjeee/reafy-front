@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'package:reafy_front/src/models/user.dart';
-
 import 'package:reafy_front/src/models/book.dart';
 
 //책 검색
