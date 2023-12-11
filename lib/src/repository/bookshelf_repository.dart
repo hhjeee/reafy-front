@@ -4,6 +4,9 @@ import 'package:reafy_front/src/models/user.dart';
 
 import 'package:reafy_front/src/models/book.dart';
 
+final tempUserToken =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvYXV0aElkIjoiMzE1ODUyNjkwMiIsImlhdCI6MTcwMjI5OTU1MiwiZXhwIjoxNzAyMzAzMTUyLCJzdWIiOiJBQ0NFU1MifQ.k5bgxZTxMdff7Q9GxSQnfxPWuJ3KOpe6vPEUcEW_0bc";
+
 //책 검색
 class SearchBookResDto {
   final String isbn13;
@@ -28,7 +31,7 @@ class SearchBookResDto {
   }
 }
 
-//상태별 책장 조회
+//책 리스트 정보
 class BookshelfBookDto {
   final int bookshelfBookId;
   final String title;
@@ -57,14 +60,14 @@ class BookshelfBookDto {
   }
 }
 
+//서재 메인에서 받아오는 카테고리별 썸네일 리스트
 Future<List<String>> fetchBookshelfThumbnailsByState(int progressState) async {
   final Dio dio = Dio();
 
   try {
     //final userToken = await UserToken();
     //print(userToken.accessToken);
-    final userToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvYXV0aElkIjoiMzE1ODUyNjkwMiIsImlhdCI6MTcwMTk1MTc0NSwiZXhwIjoxNzAxOTU1MzQ1LCJzdWIiOiJBQ0NFU1MifQ.lEMt-1ZuGgPx2KfJKMj9rLNqF8Tg1ogktjZTlFS7Pho";
+    final userToken = tempUserToken;
 
     final response = await dio.get('http://13.125.145.165:3000/book/bookshelf',
         queryParameters: {'progressState': progressState},
@@ -89,6 +92,153 @@ Future<List<String>> fetchBookshelfThumbnailsByState(int progressState) async {
   }
 }
 
+//myfavorite 책 썸네일 리스트
+Future<List<String>> fetchBookshelfThumbnailsByFavorite() async {
+  final Dio dio = Dio();
+
+  try {
+    //final userToken = await UserToken();
+    //print(userToken.accessToken);
+    final userToken = tempUserToken;
+
+    final response = await dio.get('http://13.125.145.165:3000/book/favorite',
+        options: Options(headers: {
+          'Authorization': 'Bearer ${userToken}',
+          'Content-Type': "application/json"
+        }));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = response.data['response'];
+
+      final List<String> thumbnails = responseData
+          .map<String>((item) => item['thumbnail_url'] as String)
+          .toList();
+
+      return thumbnails;
+    } else {
+      throw Exception('Failed to load bookshelf thumbnails');
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+//카테고리별 책 정보
+class BookshelfBookInfo {
+  final int bookshelfBookId;
+  final String title;
+  final String thumbnailURL;
+  final String author;
+
+  BookshelfBookInfo(
+      {required this.bookshelfBookId,
+      required this.title,
+      required this.thumbnailURL,
+      required this.author});
+
+  factory BookshelfBookInfo.fromJson(Map<String, dynamic> json) {
+    return BookshelfBookInfo(
+      bookshelfBookId: json['bookshelfBookId'] as int ?? 0,
+      title: json['title']?.toString() ?? "",
+      thumbnailURL: json['thumbnailURL']?.toString() ?? "",
+      author: json['author']?.toString() ?? "",
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BookshelfBookInfo &&
+          runtimeType == other.runtimeType &&
+          bookshelfBookId == other.bookshelfBookId &&
+          title == other.title &&
+          thumbnailURL == other.thumbnailURL &&
+          author == other.author;
+
+  @override
+  int get hashCode =>
+      bookshelfBookId.hashCode ^
+      title.hashCode ^
+      thumbnailURL.hashCode ^
+      author.hashCode;
+
+  @override
+  String toString() {
+    return 'BookshelfBookInfo{bookshelfBookId: $bookshelfBookId, title: $title, thumbnailURL: $thumbnailURL, author: $author}';
+  }
+}
+
+//상태(카테고리)별 책 정보 조회
+Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByState(
+    int progressState) async {
+  final Dio dio = Dio();
+
+  try {
+    final userToken = tempUserToken;
+
+    final response = await dio.get(
+      'http://13.125.145.165:3000/book/bookshelf',
+      queryParameters: {'progressState': progressState},
+      options: Options(headers: {
+        'Authorization': 'Bearer $userToken',
+        'Content-Type': 'application/json',
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = response.data['response'];
+      final List<BookshelfBookInfo> books = responseData
+          .map<BookshelfBookInfo>((item) => BookshelfBookInfo(
+                bookshelfBookId: item['bookshelf_book_id'] as int,
+                title: item['title'] as String,
+                thumbnailURL: item['thumbnail_url'] as String,
+                author: item['author'] as String,
+              ))
+          .toList();
+
+      return books;
+    } else {
+      return [];
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
+//페이보릿 책 정보 조회
+Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByFavorite() async {
+  final Dio dio = Dio();
+
+  try {
+    final userToken = tempUserToken;
+
+    final response = await dio.get(
+      'http://13.125.145.165:3000/book/favorite',
+      options: Options(headers: {
+        'Authorization': 'Bearer $userToken',
+        'Content-Type': 'application/json',
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = response.data['response'];
+      final List<BookshelfBookInfo> books = responseData
+          .map<BookshelfBookInfo>((item) => BookshelfBookInfo(
+                bookshelfBookId: item['bookshelf_book_id'] as int,
+                title: item['title'] as String,
+                thumbnailURL: item['thumbnail_url'] as String,
+                author: item['author'] as String,
+              ))
+          .toList();
+
+      return books;
+    } else {
+      return [];
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
 //책 등록
 Future<bool> postBookInfo(String isbn13, int progressState) async {
   final dio = Dio();
@@ -97,8 +247,7 @@ Future<bool> postBookInfo(String isbn13, int progressState) async {
   try {
     //final userToken = await UserToken();
     //print(userToken.accessToken);
-    final userToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvYXV0aElkIjoiMzE1ODUyNjkwMiIsImlhdCI6MTcwMTk1MTc0NSwiZXhwIjoxNzAxOTU1MzQ1LCJzdWIiOiJBQ0NFU1MifQ.lEMt-1ZuGgPx2KfJKMj9rLNqF8Tg1ogktjZTlFS7Pho";
+    final userToken = tempUserToken;
 
     final response = await dio.post(url,
         data: {'isbn13': isbn13, 'progressState': progressState},
@@ -130,10 +279,36 @@ Future<bool> postBookInfo(String isbn13, int progressState) async {
   }
 }
 
-//책 상세정보 조회
+//책 삭제
+Future<void> deleteBookshelfBook(int bookshelfBookId) async {
+  final dio = Dio();
+
+  try {
+    //final userToken = await UserToken();
+    //print(userToken.accessToken);
+    final userToken = tempUserToken;
+
+    String apiUrl =
+        'http://13.125.145.165:3000/book/bookshelf/$bookshelfBookId';
+
+    final response = await dio.delete(
+      apiUrl,
+      options: Options(headers: {
+        'Authorization': 'Bearer ${userToken}',
+        'Content-Type': 'application/json',
+      }),
+    );
+  } catch (error) {
+    // 오류 처리
+    throw Exception('Failed to delete book: $error');
+  }
+}
+
+//책 상세정보
 class BookshelfBookDetailsDto {
   final int bookshelfBookId;
   final int progressState;
+  final int isFavorite;
   final int bookId;
   final String title;
   final String author;
@@ -149,6 +324,7 @@ class BookshelfBookDetailsDto {
   BookshelfBookDetailsDto({
     required this.bookshelfBookId,
     required this.progressState,
+    required this.isFavorite,
     required this.bookId,
     required this.title,
     required this.author,
@@ -164,162 +340,55 @@ class BookshelfBookDetailsDto {
 
   factory BookshelfBookDetailsDto.fromJson(Map<String, dynamic> json) {
     return BookshelfBookDetailsDto(
-      bookshelfBookId: json['bookshelfbookId'],
-      progressState: json['progressState'],
-      bookId: json['bookId'],
-      title: json['title'],
-      author: json['author'],
-      content: json['content'],
-      publisher: json['publisher'],
-      thumbnailURL: json['thumbnailURL'],
-      link: json['link'],
-      category: json['category'],
-      pages: json['pages'],
-      startPage: json['startPage'],
-      endPage: json['endPage'],
+      bookshelfBookId: json['bookshelf_book_id'] as int? ?? 0,
+      progressState: json['progress_state'] as int? ?? 0,
+      isFavorite: json['is_favorite'] as int? ?? 0,
+      bookId: json['book_id'] as int? ?? 0,
+      title: json['title'] as String? ?? '',
+      author: json['author'] as String? ?? '',
+      content: json['content'] as String? ?? '',
+      publisher: json['publisher'] as String? ?? '',
+      thumbnailURL: json['thumbnail_url'],
+      link: json['link'] as String? ?? '',
+      category: json['category'] as String? ?? '',
+      pages: json['pages'] as int? ?? 0,
+      startPage: json['startPage'] as int? ?? 0,
+      endPage: json['endPage'] as int? ?? 0,
     );
   }
 
   @override
   String toString() {
-    return 'BookshelfBookDetailsDto{bookshelfBookId: $bookshelfBookId, progressState: $progressState, bookId: $bookId, title: $title, author: $author, content: $content, publisher: $publisher, thumbnailURL: $thumbnailURL, link: $link, category: $category, pages: $pages, startPage: $startPage, endPage: $endPage}';
+    return 'BookshelfBookDetailsDto{bookshelfBookId: $bookshelfBookId, progressState: $progressState, isFavorite: $isFavorite, bookId: $bookId, title: $title, author: $author, content: $content, publisher: $publisher, thumbnailURL: $thumbnailURL, link: $link, category: $category, pages: $pages, startPage: $startPage, endPage: $endPage}';
   }
 }
 
-class BookshelfRepository {
-  final Dio dio;
+//책 상세정보 조회
+Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
+    int bookshelfBookId) async {
+  final dio = Dio();
+  try {
+    //final userToken = await UserToken();
+    //print(userToken.accessToken);
+    final userToken = tempUserToken;
 
-  BookshelfRepository(this.dio);
-
-  Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
-      int bookshelfBookId) async {
-    try {
-      final response = await dio.get(
+    final response = await dio.get(
         'http://13.125.145.165:3000/book/bookshelf/$bookshelfBookId',
-      );
+        options: Options(headers: {
+          'Authorization': 'Bearer ${userToken}',
+          'Content-Type': "application/json"
+        }));
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = response.data;
-        final BookshelfBookDetailsDto bookshelfBookDetails =
-            BookshelfBookDetailsDto.fromJson(data);
-        return bookshelfBookDetails;
-      } else {
-        throw Exception('Failed to load bookshelf book details');
-      }
-    } catch (e) {
-      throw e;
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = response.data;
+      final BookshelfBookDetailsDto bookshelfBookDetails =
+          BookshelfBookDetailsDto.fromJson(data['response']);
+      return bookshelfBookDetails;
+    } else {
+      throw Exception('Failed to load bookshelf book details');
     }
+  } catch (e) {
+    print('getBookshelfBookDetails 함수에서 에러 발생: $e');
+    throw e;
   }
 }
-
-/*Future<List<Map<String, String>>> fetchProfileData() async {
-  var dio = Dio();
-  var url = 'https://hello-t2pqd7uv4q-uc.a.run.app/group/members';
-
-  try {
-    final authHeaders = await getAuthHeader();
-    // Response response = await _dio.post('/private-post',
-    //     data: data, options: Options(headers: authHeaders));
-
-    var response = await dio.get(url, options: Options(headers: authHeaders));
-
-    if (response.statusCode == 200) {
-      print("Response data: ${response.data}");
-      List<dynamic> data = response.data;
-      return data
-          .map((item) => {
-                'id': item['id'] as String,
-                'nickName': item['name'] as String,
-                'statusText': item['introduction'] as String,
-                'imagePath': item['profile_image'] as String,
-              })
-          .toList();
-    } else {
-      throw Exception('Failed to load profiles');
-    }
-  } catch (e) {
-    print('Request URL: $url');
-    if (e is DioError) {
-      print('DioError: ${e.response?.statusCode} ${e.response?.data}');
-    } else {
-      print('Error occurred: $e');
-    }
-    rethrow;
-  }
-}*/
-
-/*Future<Map<String, dynamic>> updateStatusText(text) async {
-  var dio = Dio();
-  var url = 'https://hello-t2pqd7uv4q-uc.a.run.app/user';
-
-  try {
-    final authHeaders = await getAuthHeader();
-    // Response response = await _dio.post('/private-post',
-    //     data: data, options: Options(headers: authHeaders));
-
-    var response = await dio.patch(
-      url,
-      data: {
-        'introduction': text,
-      },
-      options: Options(headers: authHeaders)
-    );
-
-    if (response.statusCode == 200) {
-      print("Response data: ${response.data}");
-      Map<String, dynamic> data = response.data;
-      return {
-        'nickName': data['name'] as String,
-        'statusText': data['introduction'] as String,
-        'imagePath': data['profile_image'] as String,
-      };
-    } else {
-      throw Exception('Failed to load profiles');
-    }
-  } catch (e) {
-    print('Request URL: $url');
-    if (e is DioError) {
-      print('DioError: ${e.response?.statusCode} ${e.response?.data}');
-    } else {
-      print('Error occurred: $e');
-    }
-    rethrow;
-  }
-}
-
-Future<Map<String, dynamic>> fetchMyProfile() async {
-  var dio = Dio();
-  var url = 'https://hello-t2pqd7uv4q-uc.a.run.app/user';
-
-  try {
-    final authHeaders = await getAuthHeader();
-    // Response response = await _dio.post('/private-post',
-    //     data: data, options: Options(headers: authHeaders));
-
-    var response = await dio.get(
-      url,
-      options: Options(headers: authHeaders)
-    );
-
-    if (response.statusCode == 200) {
-      print("Response data: ${response.data}");
-      Map<String, dynamic> data = response.data;
-      return ({
-        'id': data['id'] as String,
-        'nickName': data['name'] as String,
-        'statusText': data['introduction'] as String,
-        'imagePath': data['profile_image'] as String,
-      });
-    } else {
-      throw Exception('Failed to load profiles');
-    }
-  } catch (e) {
-    print('Request URL: $url');
-    if (e is DioError) {
-      print('DioError: ${e.response?.statusCode} ${e.response?.data}');
-    } else {
-      print('Error occurred: $e');
-    }
-    rethrow;
-  }
-}*/

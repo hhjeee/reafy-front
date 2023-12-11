@@ -70,6 +70,7 @@ class _DeleteDialogState extends State<DeleteDialog> {
               SizedBox(width: 6),
               ElevatedButton(
                 onPressed: () {
+                  Navigator.pop(context); // DeleteDialog 닫기
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {

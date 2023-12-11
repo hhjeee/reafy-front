@@ -124,11 +124,12 @@ Widget GridItem(
                       ? Border.all(color: Color(0xffffd747), width: 2)
                       : Border.all(color: Color(0xffffffff), width: 2)),
               child: itemIndex.imagePath.isNotEmpty
-                  ? Container(
-                      width: 40,
-                      height: 40,
+                  ? Center(
+                      child: Container(
+                      width: 60,
+                      height: 60,
                       child: ImageData(itemIndex.imagePath),
-                    )
+                    ))
                   : null,
             ),
             if (!isButtonEnabled)

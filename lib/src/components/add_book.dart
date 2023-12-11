@@ -102,6 +102,7 @@ class _AddDialogState extends State<AddDialog> {
                     Provider.of<BookShelfProvider>(context, listen: false)
                         .fetchData();
 
+                    Navigator.pop(context); // DeleteDialog 닫기
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {

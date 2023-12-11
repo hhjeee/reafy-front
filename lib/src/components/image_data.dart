@@ -74,6 +74,7 @@ class IconsPath {
   static String get team_link => 'assets/svg/team_link.svg';
   static String get dropdown => 'assets/svg/dropdown_button.svg';
   static String get check => 'assets/svg/check.svg';
+  static String get check_green => 'assets/svg/check_green.svg';
   static String get done => 'assets/svg/done_button.svg';
   static String get state_1 => 'assets/images/state_1.png';
   static String get state_2 => 'assets/images/state_2.png';
@@ -108,7 +109,6 @@ class IconsPath {
 
   static String get bamboomap => 'assets/images/bamboomap.png';
 
-
   static String get memo_ex => 'assets/images/memo_example.png';
   static String get add_memo => 'assets/svg/add_memo.svg';
   static String get memo_date => 'assets/svg/memo_date.svg';
@@ -116,5 +116,4 @@ class IconsPath {
   static String get add_tag => 'assets/svg/add_tag.svg';
   static String get memo_pic => 'assets/svg/memo_picture.svg';
   static String get shelf_right => 'assets/svg/shelf_right.svg';
-
 }
