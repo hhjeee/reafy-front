@@ -49,36 +49,12 @@ class _BookShelfState extends State<BookShelf> {
           backgroundColor: Color(0xfff5f7e9),
           elevation: 0,
           leading: IconButton(
-            iconSize: 44,
             padding: EdgeInsets.all(0),
-            icon: ImageData(IconsPath.add, isSvg: true),
+            icon: ImageData(IconsPath.add, isSvg: true, width: 20),
             onPressed: () {
               Get.to(SearchBook());
             },
           ),
-
-          /*actions: [
-            IconButton(
-              iconSize: 44,
-              padding: EdgeInsets.only(right: 21),
-              icon: isEditMode
-                  ? ImageData(IconsPath.check, isSvg: true) //색상 변경하기
-                  : ImageData(IconsPath.trash_can, isSvg: true),
-              onPressed: () {
-                setState(() {
-                  isEditMode = !isEditMode;
-                });
-                if (!isEditMode) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return DeleteDialog();
-                    },
-                  );
-                }
-              },
-            ),
-          ],*/
         ),
         body: SingleChildScrollView(
             child: Container(
