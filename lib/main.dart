@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/poobao_home.dart';
 import 'package:reafy_front/src/models/bookCount.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:reafy_front/src/provider/user_provider.dart';
+import 'package:reafy_front/src/provider/stopwatch_provider.dart';
+import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'dart:async';
@@ -22,11 +23,10 @@ Future main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   initializeDateFormatting('ko_KR', null);
-  print(dotenv.env['KAKAO_NATIVE_APP_KEY']);
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
 
-  runApp(ChangeNotifierProvider<UserProvider>(
-      create: (context) => UserProvider(), child: MyApp()));
+  runApp(ChangeNotifierProvider<AuthProvider>(
+      create: (context) => AuthProvider(), child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -46,6 +46,9 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<PoobaoHome>(
             create: (context) => PoobaoHome(),
           ),
+          ChangeNotifierProvider<StopwatchProvider>(
+            create: (context) => StopwatchProvider(),
+          ),
         ],
         child: GetMaterialApp(
             builder: (context, child) {
@@ -60,12 +63,11 @@ class MyApp extends StatelessWidget {
               fontFamily: 'NanumSquareRound',
             ),
             initialBinding: InitBinding(),
-            home: Consumer<UserProvider>(
+            home: Consumer<AuthProvider>(
                 builder: (context, user, child) =>
                     !user.isLogined ? App() : LoginPage())));
   }
 }
-
 
 /*FutureBuilder(
               future: Future.delayed(

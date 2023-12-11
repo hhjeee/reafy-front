@@ -2,32 +2,249 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:lottie/lottie.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/components/stop_dialog.dart';
 import 'package:reafy_front/src/pages/board/board.dart';
 import 'package:reafy_front/src/pages/itemshop.dart';
 import 'package:reafy_front/src/components/stopwatch.dart';
 import 'package:reafy_front/src/pages/map.dart';
+import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/components/poobao_home.dart';
 import 'package:provider/provider.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
+  const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    var stopwatch = context.read<StopwatchProvider>();
     final size = MediaQuery.of(context).size;
 
     Widget _memo() {
-      return Container(
-        width: size.width,
-        padding: EdgeInsets.symmetric(horizontal: size.width * 0.4),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          SizedBox(height: 80),
-          GestureDetector(
+      return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        GestureDetector(
             onTap: () {
               Get.to(Board());
             },
-            child: Lottie.asset('assets/lottie/note_lottie.json', width: 90),
-          ),
-        ]),
+            child: Stack(children: [
+              ImageData(
+                IconsPath.home_bubble,
+                width: 170,
+                height: 130,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 35, vertical: 8),
+                child:
+                    Lottie.asset('assets/lottie/note_lottie.json', width: 100),
+              )
+            ]))
+      ]);
+    }
+
+    Widget _stopbutton() {
+      return Center(
+          child: GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return StopDialog();
+                  },
+                );
+              },
+              child: Container(
+                  width: 338,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25.0),
+                    color: yellow,
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 0),
+                        blurRadius: 10.0,
+                        color: Color.fromRGBO(0, 0, 0, 0.10),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      "이제 그만 읽을래요",
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                        color: black,
+                      ),
+                    ),
+                  ))));
+    }
+
+    Widget _time() {
+      return Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 166,
+              height: 60,
+              padding: EdgeInsets.only(left: 10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                color: Color(0xfffaf9f7),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    offset: Offset(0, 0),
+                    blurRadius: 10,
+                    spreadRadius: 0,
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  ImageData(IconsPath.today,
+                      isSvg: true, width: 44, height: 44),
+                  SizedBox(width: 10.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Today",
+                        style: TextStyle(
+                            color: Color(0xff666666),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      Text(
+                        "28분 16초",
+                        style: TextStyle(
+                            color: Color(0xff333333),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 6),
+            Container(
+              width: 166,
+              height: 60,
+              padding: EdgeInsets.only(left: 10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                color: Color(0xfffaf9f7),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    offset: Offset(0, 0),
+                    blurRadius: 10,
+                    spreadRadius: 0,
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  ImageData(IconsPath.total,
+                      isSvg: true, width: 44, height: 44),
+                  SizedBox(width: 10.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Total",
+                        style: TextStyle(
+                            color: Color(0xff666666),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      Text(
+                        "37시간 20분",
+                        style: TextStyle(
+                            color: Color(0xff333333),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+/*
+    Widget _buildAnimatedTime(bool isRunning) {
+      final AnimationController controller = AnimationController(
+        duration: const Duration(milliseconds: 400),
+        vsync: Navigator.of(context),
+      );
+
+      final Animation<Offset> offsetAnimation =
+          Tween<Offset>(begin: Offset(0, -0.3), end: Offset(0, -0.3)).animate(
+        CurvedAnimation(
+          parent: controller,
+          //curve: FadeTransition(opacity: 1),
+        ),
+      );
+
+      controller.forward();
+
+      return SlideTransition(
+        position: offsetAnimation,
+        child: isRunning ? const SizedBox() : _time(),
+      );
+    }
+*/
+    Widget _buildAnimatedWatch(bool isRunning) {
+      final AnimationController controller = AnimationController(
+        duration: const Duration(milliseconds: 500),
+        vsync: Navigator.of(context),
+      );
+
+      final Animation<Offset> offsetAnimation = Tween<Offset>(
+              begin: isRunning ? Offset(0, 1) : Offset(0, 0),
+              end: isRunning ? Offset(0, -0.3) : Offset(0, 0))
+          .animate(CurvedAnimation(
+        parent: controller,
+        curve: Curves.fastOutSlowIn,
+      ));
+
+      controller.forward();
+
+      return SlideTransition(
+        position: offsetAnimation,
+        child: StopwatchWidget(),
+      );
+    }
+
+    Widget _buildAnimatedStopButton(bool isRunning) {
+      final AnimationController controller = AnimationController(
+        duration: const Duration(milliseconds: 500),
+        vsync: Navigator.of(context),
+      );
+
+      final Animation<Offset> offsetAnimation =
+          Tween<Offset>(begin: Offset(0, 0.3), end: Offset.zero).animate(
+        CurvedAnimation(
+          parent: controller,
+          curve: Curves.fastOutSlowIn,
+        ),
+      );
+      controller.forward();
+
+      return SlideTransition(
+        position: offsetAnimation,
+        child: isRunning ? const SizedBox() : _stopbutton(),
       );
     }
 
@@ -36,30 +253,27 @@ class Home extends StatelessWidget {
         backgroundColor: Color(0xfffaf9f7),
         elevation: 0,
         leadingWidth: 90,
-        toolbarHeight: 30,
-        leading: Transform.translate(
-            offset: Offset(16, 0),
-            child: Container(
-                padding: EdgeInsets.only(right: 16),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(width: 6),
-                    ImageData(IconsPath.bamboo, isSvg: true, height: 26),
-                    SizedBox(width: 4), // 코인 아이콘과 텍스트 사이의 간격 조절
-                    Text(
-                      '25',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xff63b865),
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ))),
+        toolbarHeight: 44,
+        leading: Container(
+            padding: EdgeInsets.only(left: 16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ImageData(IconsPath.bamboo, isSvg: true, width: 44, height: 44),
+                Text(
+                  '25',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: green,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            )),
         actions: [
           IconButton(
-            padding: EdgeInsets.only(right: 16),
+            iconSize: 44,
+            padding: EdgeInsets.only(right: 0),
             icon: ImageData(IconsPath.map_icon, isSvg: true),
             onPressed: () {
               Get.to(BambooMap());
@@ -67,10 +281,8 @@ class Home extends StatelessWidget {
           ),
           IconButton(
             padding: EdgeInsets.only(right: 16),
-            icon: ImageData(
-              IconsPath.item,
-              isSvg: true,
-            ),
+            iconSize: 44,
+            icon: ImageData(IconsPath.item, isSvg: true),
             onPressed: () {
               Get.to(ItemShop());
             },
@@ -94,75 +306,81 @@ class Home extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //_title_text(),
+              Spacer(),
               _memo(),
-              //const SizedBox(height: ),
               Consumer<PoobaoHome>(
                 builder: (context, poobaoHome, child) {
                   return Container(
+                    //color: gray,
                     width: size.width,
-                    height: 334,
-                    //decoration: BoxDecoration(color: Color(0xffd9d9d9)),
+                    height: 332,
                     child: Stack(
                       children: [
+                        //// Character
                         Positioned(
-                          top: 87,
-                          left: 121,
+                          top: 84,
+                          left: 123,
                           child: Container(
                             width: 148,
                             height: 208,
+                            //color: yellow,
                             child: ImageData(IconsPath.character2),
                           ),
                         ),
+                        //// BookShelf
                         Positioned(
-                          top: 31,
+                          top: 28,
+                          left: 13,
                           child: Container(
-                              //bookshelf
                               width: 110,
-                              height: 240,
-                              //decoration: BoxDecoration(color: Colors.orange),
-                              child: ImageData(poobaoHome.bookshelf_imagePath)),
+                              height: 230,
+                              child: ImageData(poobaoHome.bookshelf_imagePath,
+                                  width: 110, height: 230)),
                         ),
+                        //// Clock
                         Positioned(
-                          //clock
-                          left: 160,
+                          left: 165,
+                          top: 0,
                           child: Container(
-                              width: 70,
-                              height: 70,
-                              //decoration: BoxDecoration(color: Colors.yellow),
-                              child: ImageData(poobaoHome.clock_imagePath)),
+                              width: 64,
+                              height: 64,
+                              child: ImageData(poobaoHome.clock_imagePath,
+                                  width: 64, height: 64)),
                         ),
+                        //// Window
                         Positioned(
-                          left: 274,
-                          top: 18,
+                          top: 34,
+                          right: 13,
                           child: Container(
-                            //window
-                            width: 110,
-                            height: 110,
-                            //decoration: BoxDecoration(color: Colors.blue),
-                            child: ImageData(poobaoHome.window_imagePath),
-                          ),
-                        ),
-                        Positioned(
-                          left: 274,
-                          top: 151,
-                          child: Container(
-                            //others
                             width: 100,
-                            height: 120,
-                            //decoration: BoxDecoration(color: Colors.pink),
-                            child: ImageData(poobaoHome.others_imagePath),
+                            height: 100,
+                            child: ImageData(
+                              poobaoHome.window_imagePath,
+                              width: 100,
+                              height: 100,
+                            ),
                           ),
                         ),
+                        //// Others
                         Positioned(
-                          top: 279,
-                          left: 95,
+                          right: 23,
+                          top: 148,
                           child: Container(
-                            //rug
-                            width: 200,
-                            height: 40,
-                            //decoration: BoxDecoration(color: Colors.red),
-                            child: ImageData(poobaoHome.rug_imagePath),
+                            width: 90,
+                            height: 110,
+                            child: ImageData(poobaoHome.others_imagePath,
+                                width: 90, height: 110),
+                          ),
+                        ),
+                        //// Rug
+                        Positioned(
+                          top: 276,
+                          left: 104,
+                          child: Container(
+                            width: 186,
+                            height: 36,
+                            child: ImageData(poobaoHome.rug_imagePath,
+                                width: 186, height: 36),
                           ),
                         ),
                       ],
@@ -170,11 +388,54 @@ class Home extends StatelessWidget {
                   );
                 },
               ),
-              _time(),
-              const SizedBox(height: 15),
-              Center(
-                child: StopwatchWidget(),
+              /*Consumer<StopwatchProvider>(
+                builder: (context, stopwatch, child) {
+                  return Column(
+                    children: [
+                      stopwatch.isRunning ? const SizedBox() : _time(),
+                      stopwatch.isRunning
+                          ? const SizedBox()
+                          : const SizedBox(height: 15),
+                      Center(child: StopwatchWidget()),
+                      stopwatch.isRunning
+                          ? const SizedBox(height: 15)
+                          : const SizedBox(),
+                      stopwatch.isRunning ? _stopbutton() : const SizedBox(),
+                    ],
+                  );
+                },
+              ),*/
+
+              //Spacer(),
+              Consumer<StopwatchProvider>(
+                builder: (context, stopwatch, child) {
+                  return Container(
+                      height: 140,
+                      child: Column(
+                        children: [
+                          stopwatch.isRunning ? const SizedBox() : _time(),
+                          //_buildAnimatedTime(stopwatch.isRunning),
+                          stopwatch.isRunning
+                              ? const SizedBox()
+                              : const SizedBox(height: 15),
+                          Center(
+                              child: _buildAnimatedWatch(stopwatch.isRunning)),
+                          !stopwatch.isRunning
+                              ? const SizedBox(height: 15)
+                              : const SizedBox(),
+                          _buildAnimatedStopButton(!stopwatch.isRunning),
+                        ],
+                      ));
+                },
               ),
+              Spacer()
+              /*
+              stopwatch.isRunning ? const SizedBox() : _time(),
+              const SizedBox(height: 15),
+              Center(child: StopwatchWidget()),
+              const SizedBox(height: 15),
+              stopwatch.isRunning ? _stopbutton() : const SizedBox(),
+              Spacer()*/
             ],
           ),
         ),
@@ -183,6 +444,7 @@ class Home extends StatelessWidget {
   }
 }
 
+/*
 Widget _title_text() {
   return Container(
     padding: EdgeInsets.only(top: 20, left: 26),
@@ -212,103 +474,6 @@ Widget _title_text() {
         ),
       ),
     ]),
-  );
-}
-
-Widget _time() {
-  return Container(
-    padding: EdgeInsets.only(top: 8.0, left: 26.0),
-    child: Row(
-      children: [
-        Container(
-          width: 166,
-          height: 60,
-          padding: EdgeInsets.only(left: 10.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            color: Color(0xfffaf9f7),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                offset: Offset(0, 0),
-                blurRadius: 10,
-                spreadRadius: 0,
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              ImageData(IconsPath.today, isSvg: true, width: 44),
-              SizedBox(width: 10.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Today",
-                    style: TextStyle(
-                        color: Color(0xff666666),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  Text(
-                    "28분 16초",
-                    style: TextStyle(
-                        color: Color(0xff333333),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        SizedBox(width: 6),
-        Container(
-          width: 166,
-          height: 60,
-          padding: EdgeInsets.only(left: 10.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            color: Color(0xfffaf9f7),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                offset: Offset(0, 0),
-                blurRadius: 10,
-                spreadRadius: 0,
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              ImageData(IconsPath.total, isSvg: true, width: 44),
-              SizedBox(width: 10.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Total",
-                    style: TextStyle(
-                        color: Color(0xff666666),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  Text(
-                    "37시간 20분",
-                    style: TextStyle(
-                        color: Color(0xff333333),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
   );
 }
 
@@ -433,34 +598,6 @@ Widget _progress() {
   );
 }
 
-Widget _stopbutton() {
-  return Center(
-      child: Container(
-          width: 338,
-          height: 50,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25.0),
-            color: yellow,
-            boxShadow: [
-              BoxShadow(
-                offset: Offset(0, 0),
-                blurRadius: 10.0,
-                color: Color.fromRGBO(0, 0, 0, 0.10),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Text(
-              "이제 그만 읽을래요",
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-                color: black,
-              ),
-            ),
-          )));
-}
-
 Widget _character() {
   late AnimationController _animationController;
 
@@ -471,7 +608,7 @@ Widget _character() {
     child: ImageData(IconsPath.character2),
   );
 }
-
+*/
 /*
 Widget _time2() {
   return Container(

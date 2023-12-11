@@ -8,13 +8,14 @@ import 'package:reafy_front/src/pages/profile/statistics.dart';
 import 'package:reafy_front/src/pages/profile/team.dart';
 import 'package:reafy_front/src/pages/profile/rating.dart';
 import 'package:reafy_front/src/components/profile_name.dart';
-import 'package:reafy_front/src/provider/user_provider.dart';
+import 'package:reafy_front/src/provider/auth_provider.dart';
 
 class MyPage extends StatelessWidget {
   const MyPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     void showAlertDialog(BuildContext context) {
       showDialog(
         context: context,
@@ -43,7 +44,7 @@ class MyPage extends StatelessWidget {
                   children: [
                     Container(
                       margin:
-                          EdgeInsets.only(top: 39.0, left: 31.0, bottom: 12.26),
+                          EdgeInsets.only(top: 30.0, left: 31.0, bottom: 12.26),
                       child: GestureDetector(
                         onTap: () {
                           Get.to(Statistics());
@@ -51,7 +52,7 @@ class MyPage extends StatelessWidget {
                         child: Row(
                           children: [
                             ImageData(IconsPath.statistic,
-                                isSvg: true, width: 18.741),
+                                isSvg: true, width: 26, height: 26),
                             const Padding(
                               padding: EdgeInsets.only(left: 9.26),
                               child: Text(
@@ -72,7 +73,7 @@ class MyPage extends StatelessWidget {
                       children: [
                         Container(
                           margin: EdgeInsets.only(right: 16.77),
-                          width: 162.115,
+                          width: size.width * 0.4,
                           height: 167,
                           decoration: BoxDecoration(
                             color: Color(0xffffffff),
@@ -80,7 +81,7 @@ class MyPage extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          width: 162.115,
+                          width: size.width * 0.4,
                           height: 167,
                           decoration: BoxDecoration(
                             color: Color(0xffffffff),
@@ -90,7 +91,7 @@ class MyPage extends StatelessWidget {
                       ],
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 32.0, bottom: 19.0),
+                      margin: EdgeInsets.symmetric(vertical: 16),
                       height: 4.0,
                       color: Color(0xfff5f5f5),
                     ),
@@ -106,7 +107,8 @@ class MyPage extends StatelessWidget {
                   },
                   child: Row(
                     children: [
-                      ImageData(IconsPath.Team, isSvg: true, width: 18),
+                      ImageData(IconsPath.Team,
+                          isSvg: true, width: 26, height: 26),
                       const Padding(
                         padding: EdgeInsets.only(left: 17),
                         child: Text(
@@ -125,7 +127,7 @@ class MyPage extends StatelessWidget {
               ),
 
               Container(
-                margin: EdgeInsets.only(top: 21, bottom: 17.0),
+                margin: EdgeInsets.symmetric(vertical: 16),
                 height: 4.0,
                 color: Color(0xfff5f5f5),
               ),
@@ -137,7 +139,8 @@ class MyPage extends StatelessWidget {
                   },
                   child: Row(
                     children: [
-                      ImageData(IconsPath.star, isSvg: true, width: 20),
+                      ImageData(IconsPath.star,
+                          isSvg: true, width: 26, height: 26),
                       const Padding(
                         padding: EdgeInsets.only(left: 15), //13
                         child: Text(
@@ -155,7 +158,7 @@ class MyPage extends StatelessWidget {
               ),
 
               Container(
-                margin: EdgeInsets.only(top: 23.0, bottom: 15.0),
+                margin: EdgeInsets.symmetric(vertical: 16),
                 height: 4.0,
                 color: Color(0xfff5f5f5),
               ),
@@ -164,28 +167,18 @@ class MyPage extends StatelessWidget {
                 margin: EdgeInsets.only(left: 29.0),
                 child: GestureDetector(
                   onTap: () async {
-                    var user = context.read<UserProvider>();
+                    var user = context.read<AuthProvider>();
 
                     if (user.isLogined) {
                       user.logout();
                       print('로그아웃 완료');
                     }
                     Get.off(() => LoginPage());
-                    /*
-                    //showAlertDialog();
-                    var user = context.read<UserProvider>();
-                    if (await user.isLogined) {
-                      await user.logout();
-
-                      Get.to(LoginPage());
-                    } else {
-                      showAlertDialog(context);
-  
-                    }*/
                   },
                   child: Row(
                     children: [
-                      ImageData(IconsPath.Logout, isSvg: true, width: 19.995),
+                      ImageData(IconsPath.Logout,
+                          isSvg: true, width: 26, height: 26),
                       const Padding(
                         padding: EdgeInsets.only(left: 15),
                         child: Text(

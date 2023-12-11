@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/pages/home.dart';
+import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 
 class StopDialog extends StatefulWidget {
   @override
@@ -289,12 +294,18 @@ class _StopDialogState extends State<StopDialog> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    /*onPressed: () {
-                      //Navigator.pop(context);
-                    },*/
                     onPressed: isButtonEnabled
                         ? () {
-                            Navigator.pop(context);
+                            ////// 서버에 보내고 시간 업데이트
+                            ////// 스탑워치 멈추기, 초기화
+                            ///
+                            context
+                                .read<StopwatchProvider>()
+                                .updateIsRunning(false);
+                            context
+                                .read<StopwatchProvider>()
+                                .updateElapsedTime('00:00:00');
+                            Get.back();
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
