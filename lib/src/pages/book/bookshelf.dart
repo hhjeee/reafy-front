@@ -10,6 +10,7 @@ import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/components/state_BookList.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:reafy_front/src/components/favorite_BookList.dart';
 
 class BookShelf extends StatefulWidget {
   @override
@@ -19,14 +20,11 @@ class BookShelf extends StatefulWidget {
 }
 
 class _BookShelfState extends State<BookShelf> {
-  //List<Book> recentBooks = getrecentBooks();
-  //List<Book> wishlistBooks = getwishlistBooks();
-  List<Book> finishedBooks = getfinishedBooks();
-
   bool isEditMode = false;
 
   List<String> thumbnailsForProgressState1 = [];
   List<String> thumbnailsForProgressState2 = [];
+  List<String> thumbnailsForIsFavorite = [];
 
   @override
   void initState() {
@@ -36,18 +34,6 @@ class _BookShelfState extends State<BookShelf> {
 
   void fetchData() async {
     try {
-      /*List<String> newThumbnailsForProgressState1 =
-          await fetchBookshelfThumbnailsByState(1);
-      List<String> newThumbnailsForProgressState2 =
-          await fetchBookshelfThumbnailsByState(2);
-
-      setState(() {
-        thumbnailsForProgressState1 = newThumbnailsForProgressState1;
-        thumbnailsForProgressState2 = newThumbnailsForProgressState2;
-      });
-
-      print(thumbnailsForProgressState1);
-      print(thumbnailsForProgressState2);*/
       await Provider.of<BookShelfProvider>(context, listen: false).fetchData();
     } catch (e) {
       print('Error: $e');
@@ -70,6 +56,7 @@ class _BookShelfState extends State<BookShelf> {
               Get.to(SearchBook());
             },
           ),
+
           /*actions: [
             IconButton(
               iconSize: 44,
@@ -125,65 +112,16 @@ class _BookShelfState extends State<BookShelf> {
                           );
                         },
                       ),
-
-                      /*BookShelfWidget(
-                        title: '완독한 책',
-                        books: recentBooks,
-                        isEditMode: isEditMode,
-                      ),*/
                       SizedBox(height: 20),
-                      BookShelfWidget(
-                        title: 'My Favorite',
-                        books: finishedBooks,
-                        isEditMode: isEditMode,
+                      Consumer<BookShelfProvider>(
+                        builder: (context, bookShelfProvider, child) {
+                          return isFavorite_BookShelfWidget(
+                            title: 'My Favorite',
+                            thumbnailList:
+                                bookShelfProvider.thumbnailsForIsFavorite,
+                          );
+                        },
                       ),
-                      /*
-                      Container(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                            CarouselSlider(
-                              items: shelfSliders,
-                              carouselController: _controller,
-                              options: CarouselOptions(
-                                  viewportFraction: 0.5,
-                                  height: size.height * 0.7,
-                                  autoPlay: false,
-                                  enlargeCenterPage: true,
-                                  aspectRatio: 1.0, //0.75,
-                                  enlargeStrategy:
-                                      CenterPageEnlargeStrategy.zoom,
-                                  enlargeFactor: 0.5,
-                                  scrollDirection: Axis.vertical,
-                                  onPageChanged: (index, reason) {
-                                    setState(() {
-                                      _current = index;
-                                    });
-                                  }),
-                            ),
-                            //const Spacer(), //izedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children:
-                                  shelfSliders.asMap().entries.map((entry) {
-                                return GestureDetector(
-                                    onTap: () =>
-                                        _controller.animateToPage(entry.key),
-                                    child: Container(
-                                      width: 15.0,
-                                      height: 9.0,
-                                      margin: EdgeInsets.symmetric(
-                                          vertical: 20.0, horizontal: 4.0),
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: _current == entry.key
-                                              ? Color(0xff969696)
-                                              : Color(0xffD9D9D9)),
-                                    ));
-                              }).toList(),
-                            ),
-                          
-                          */
                     ]))));
   }
 }

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/models/book.dart';
@@ -6,7 +6,7 @@ import 'package:reafy_front/src/pages/book/bookdetail.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/models/bookcount.dart';
 import 'package:provider/provider.dart';
-import 'package:reafy_front/src/pages/book/book1.dart';
+import 'package:reafy_front/src/pages/book/category_bookshelf.dart';
 
 class BookShelfWidget extends StatefulWidget {
   final String title;
@@ -172,10 +172,10 @@ class _BookShelfWidgetState extends State<BookShelfWidget>
                 padding: EdgeInsets.only(left: 25),
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
+                    /*Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => Book1()),
-                    );
+                    );*/
                   },
                   child: Text(
                     widget.title,
@@ -189,10 +189,10 @@ class _BookShelfWidgetState extends State<BookShelfWidget>
               ),
               InkWell(
                 onTap: () {
-                  Navigator.push(
+                  /* Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Book1()),
-                  );
+                  );*/
                 },
                 child: Row(
                   children: [
@@ -258,3 +258,4 @@ class _BookShelfWidgetState extends State<BookShelfWidget>
         ]));
   }
 }
+*/

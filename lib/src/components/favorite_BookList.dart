@@ -4,24 +4,27 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/models/book.dart';
 import 'package:reafy_front/src/pages/book/bookdetail.dart';
 import 'package:reafy_front/src/pages/book/category_bookshelf.dart';
+import 'package:reafy_front/src/pages/book/favorite_bookshelf.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/models/bookcount.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/pages/book/category_bookshelf.dart';
 
-class State_BookShelfWidget extends StatefulWidget {
+class isFavorite_BookShelfWidget extends StatefulWidget {
   final String title;
   final List<String> thumbnailList;
 
-  const State_BookShelfWidget(
+  const isFavorite_BookShelfWidget(
       {required this.title, required this.thumbnailList, Key? key})
       : super(key: key);
 
   @override
-  State<State_BookShelfWidget> createState() => State_BookShelfWidgetState();
+  State<isFavorite_BookShelfWidget> createState() =>
+      isFavorite_BookShelfWidgetState();
 }
 
-class State_BookShelfWidgetState extends State<State_BookShelfWidget> {
+class isFavorite_BookShelfWidgetState
+    extends State<isFavorite_BookShelfWidget> {
   List<Widget> _buildBookList(BuildContext context) {
     return widget.thumbnailList.map((thumbnail) {
       return Padding(
@@ -31,13 +34,6 @@ class State_BookShelfWidgetState extends State<State_BookShelfWidget> {
           height: 96,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
-            /*boxShadow: const [
-              BoxShadow(
-                color: Colors.black26,
-                offset: Offset(0, 15.0),
-                blurRadius: 8.0,
-              ),
-            ],*/
             color: Color(0xffffffff),
           ),
           child: ClipRRect(
@@ -80,7 +76,7 @@ class State_BookShelfWidgetState extends State<State_BookShelfWidget> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Category_BookShelf(
+                          builder: (context) => Favorite_BookShelf(
                                 pageTitle: widget.title,
                                 thumbnailListLength:
                                     widget.thumbnailList.length,
@@ -102,7 +98,7 @@ class State_BookShelfWidgetState extends State<State_BookShelfWidget> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => Category_BookShelf(
+                        builder: (context) => Favorite_BookShelf(
                               pageTitle: widget.title,
                               thumbnailListLength: widget.thumbnailList.length,
                             )),
@@ -111,7 +107,7 @@ class State_BookShelfWidgetState extends State<State_BookShelfWidget> {
                 child: Row(
                   children: [
                     Text(
-                      widget.thumbnailList.length.toString(), //"6", //count
+                      widget.thumbnailList.length.toString(),
                       style: TextStyle(
                         fontSize: 16,
                         color: Color(0xff333333),

@@ -13,6 +13,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
+import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'dart:async';
 
 Future main() async {
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
+          ChangeNotifierProvider(
+            create: (context) => SelectedBooksProvider(),
+          ),
           ChangeNotifierProvider(
             create: (context) => BookShelfProvider(),
           ),

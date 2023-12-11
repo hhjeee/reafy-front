@@ -10,6 +10,15 @@ class DoneDialog extends StatefulWidget {
 
 class _DoneDialogState extends State<DoneDialog> {
   @override
+  void initState() {
+    super.initState();
+    // initState에서 일정 시간이 지난 후에 다이얼로그를 닫습니다.
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pop(context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
@@ -30,7 +39,6 @@ class _DoneDialogState extends State<DoneDialog> {
           ),
         ),
       ),
-      actions: <Widget>[],
     );
   }
 }

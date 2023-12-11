@@ -21,19 +21,6 @@ class _ModifyDialogState extends State<ModifyDialog> {
         width: 320,
         height: 190,
         child: Column(children: [
-          /*SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context); // Dialog를 닫음
-                },
-                child: ImageData(IconsPath.x, isSvg: true, width: 10),
-              ),
-              SizedBox(width: 19.0),
-            ],
-          ),*/
           SizedBox(height: 40.0),
           Text(
             "상태를 변경해 주세요!",
@@ -78,6 +65,7 @@ class _ModifyDialogState extends State<ModifyDialog> {
               SizedBox(width: 8),
               ElevatedButton(
                 onPressed: () {
+                  Navigator.pop(context); // DeleteDialog 닫기
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
