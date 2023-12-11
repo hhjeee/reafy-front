@@ -5,6 +5,7 @@ import 'package:reafy_front/src/pages/book/bookshelf.dart';
 import 'package:reafy_front/src/pages/home.dart';
 import 'package:reafy_front/src/pages/mypage.dart';
 import 'package:get/get.dart';
+import 'package:reafy_front/src/utils/constants.dart';
 
 class App extends GetView<BottomNavController> {
   const App({Key? key}) : super(key: key);
@@ -26,24 +27,30 @@ class App extends GetView<BottomNavController> {
             type: BottomNavigationBarType.fixed,
             currentIndex: controller.pageIndex.value,
             elevation: 0,
-            selectedLabelStyle: TextStyle(fontSize: 12, height: 2),
-            unselectedLabelStyle: TextStyle(fontSize: 12, height: 2),
-            selectedItemColor: Color(0xff808080),
+            selectedLabelStyle: TextStyle(fontSize: 12, color: black),
+            unselectedLabelStyle: TextStyle(fontSize: 12, color: gray),
+            selectedItemColor: black,
             onTap: controller.changeBottomNav,
             items: [
               BottomNavigationBarItem(
-                icon: ImageData(IconsPath.bookOff, isSvg: true),
-                activeIcon: ImageData(IconsPath.bookOn, isSvg: true),
+                icon: ImageData(IconsPath.bookOff,
+                    isSvg: true, width: 44, height: 44),
+                activeIcon: ImageData(IconsPath.bookOn,
+                    isSvg: true, width: 44, height: 44),
                 label: '서재',
               ),
               BottomNavigationBarItem(
-                icon: ImageData(IconsPath.homeOff, isSvg: true),
-                activeIcon: ImageData(IconsPath.homeOn, isSvg: true),
+                icon: ImageData(IconsPath.homeOff,
+                    isSvg: true, width: 44, height: 44),
+                activeIcon: ImageData(IconsPath.homeOn,
+                    isSvg: true, width: 44, height: 44),
                 label: '홈',
               ),
               BottomNavigationBarItem(
-                icon: ImageData(IconsPath.mypageOff, isSvg: true),
-                activeIcon: ImageData(IconsPath.mypageOn, isSvg: true),
+                icon: ImageData(IconsPath.mypageOff,
+                    isSvg: true, width: 44, height: 44),
+                activeIcon: ImageData(IconsPath.mypageOn,
+                    isSvg: true, width: 44, height: 44),
                 label: '프로필',
               ),
             ],

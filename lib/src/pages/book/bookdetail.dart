@@ -513,6 +513,117 @@ class _BookDetailPageState extends State<BookDetailPage> {
       ),
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          iconSize: 24,
+          icon: Icon(Icons.arrow_back_ios, color: Color(0xff63B865)),
+          onPressed: () {
+            Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
+          },
+        ),
+        actions: [
+          IconButton(
+            padding: EdgeInsets.only(left: 16),
+            iconSize: 44,
+            icon: ImageData(IconsPath.pencil_green,
+                isSvg: true, width: 44, height: 44),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return ModifyDialog(); // 수정된 부분
+                },
+              );
+            },
+          ),
+          IconButton(
+            iconSize: 44,
+            padding: EdgeInsets.only(right: 16),
+            icon: ImageData(IconsPath.trash_can,
+                isSvg: true, width: 44, height: 44),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return DeleteDialog(); // 수정된 부분
+                },
+              );
+            },
+          ),
+        ],
+      ),
+      extendBodyBehindAppBar: true, //appbar, body 겹치기
+      body: Container(
+        child: Column(
+          children: [
+            Stack(
+              children: <Widget>[
+                Container(
+                  width: size.width,
+                  height: 400, //442
+                  color: Color(0xfffff7da),
+                ),
+                Positioned(
+                  top: 309.36,
+                  child: _hill_img(),
+                ),
+                Positioned(
+                  top: 116,
+                  left: 28,
+                  child: _leaf_img(),
+                ),
+                Positioned(
+                  top: 95, //84
+                  left: 82,
+                  child: _book_img(),
+                ),
+                Positioned(
+                  top: 258,
+                  left: 232,
+                  child: _poobao_img(),
+                ),
+                /*Positioned(
+                  top: 366,
+                  left: 249,
+                  child: _poobao_shadow(),
+                ),*/ //블러 적용 안됨
+              ],
+            ),
+            SizedBox(height: 27.0),
+            _book_info(),
+            SizedBox(height: 27.0),
+            _progress(),
+            SizedBox(height: 21.0),
+            _memo(),
+            SizedBox(height: 9.0),
+            _add_memo(context),
+            SizedBox(height: 17.0),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                margin: EdgeInsets.only(right: 23),
+                child: Text(
+                  "도서 DB 제공: 알라딘",
+                  style: TextStyle(
+                    fontSize: 8,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xffb3b3b3),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 void _showAddMemoBottomSheet(BuildContext context) {
