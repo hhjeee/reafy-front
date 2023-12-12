@@ -22,7 +22,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    var stopwatch = context.read<StopwatchProvider>();
+    StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
+
+    //var stopwatch = context.read<StopwatchProvider>();
     final size = MediaQuery.of(context).size;
     Widget _memo() {
       return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -178,72 +180,6 @@ class _HomeState extends State<Home> {
             ),
           ],
         ),
-      );
-    }
-
-/*
-    Widget _buildAnimatedTime(bool isRunning) {
-      final AnimationController controller = AnimationController(
-        duration: const Duration(milliseconds: 400),
-        vsync: Navigator.of(context),
-      );
-
-      final Animation<Offset> offsetAnimation =
-          Tween<Offset>(begin: Offset(0, -0.3), end: Offset(0, -0.3)).animate(
-        CurvedAnimation(
-          parent: controller,
-          //curve: FadeTransition(opacity: 1),
-        ),
-      );
-
-      controller.forward();
-
-      return SlideTransition(
-        position: offsetAnimation,
-        child: isRunning ? const SizedBox() : _time(),
-      );
-    }
-*/
-    Widget _buildAnimatedWatch(bool isRunning) {
-      final AnimationController controller = AnimationController(
-        duration: const Duration(milliseconds: 500),
-        vsync: Navigator.of(context),
-      );
-
-      final Animation<Offset> offsetAnimation = Tween<Offset>(
-              begin: isRunning ? Offset(0, 1) : Offset(0, 0),
-              end: isRunning ? Offset(0, -0.3) : Offset(0, 0))
-          .animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.fastOutSlowIn,
-      ));
-
-      controller.forward();
-
-      return SlideTransition(
-        position: offsetAnimation,
-        child: StopwatchWidget(),
-      );
-    }
-
-    Widget _buildAnimatedStopButton(bool isRunning) {
-      final AnimationController controller = AnimationController(
-        duration: const Duration(milliseconds: 500),
-        vsync: Navigator.of(context),
-      );
-
-      final Animation<Offset> offsetAnimation =
-          Tween<Offset>(begin: Offset(0, 0.3), end: Offset.zero).animate(
-        CurvedAnimation(
-          parent: controller,
-          curve: Curves.fastOutSlowIn,
-        ),
-      );
-      controller.forward();
-
-      return SlideTransition(
-        position: offsetAnimation,
-        child: isRunning ? const SizedBox() : _stopbutton(),
       );
     }
 
@@ -404,37 +340,26 @@ class _HomeState extends State<Home> {
                   );
                 },
               ),*/
-
               //Spacer(),
-              Consumer<StopwatchProvider>(
-                builder: (context, stopwatch, child) {
-                  return Container(
-                      height: 140,
-                      child: Column(
-                        children: [
-                          stopwatch.isRunning ? const SizedBox() : _time(),
-                          //_buildAnimatedTime(stopwatch.isRunning),
-                          stopwatch.isRunning
-                              ? const SizedBox()
-                              : const SizedBox(height: 15),
-                          Center(
-                              child: _buildAnimatedWatch(stopwatch.isRunning)),
-                          !stopwatch.isRunning
-                              ? const SizedBox(height: 15)
-                              : const SizedBox(),
-                          _buildAnimatedStopButton(!stopwatch.isRunning),
-                        ],
-                      ));
-                },
-              ),
+              Container(
+                  height: 140,
+                  child: Column(
+                    children: [
+                      stopwatch.isRunning ? const SizedBox() : _time(),
+                      stopwatch.isRunning
+                          ? const SizedBox()
+                          : const SizedBox(height: 15),
+                      Center(child: StopwatchWidget()),
+                      //_buildAnimatedWatch(stopwatch.isRunning)),
+                      stopwatch.isRunning
+                          ? const SizedBox(height: 15)
+                          : const SizedBox(),
+                      stopwatch.isRunning ? _stopbutton() : const SizedBox()
+                      //_buildAnimatedStopButton(!stopwatch.isRunning)
+                    ],
+                  )),
+
               Spacer()
-              /*
-              stopwatch.isRunning ? const SizedBox() : _time(),
-              const SizedBox(height: 15),
-              Center(child: StopwatchWidget()),
-              const SizedBox(height: 15),
-              stopwatch.isRunning ? _stopbutton() : const SizedBox(),
-              Spacer()*/
             ],
           ),
         ),
@@ -706,3 +631,126 @@ Widget _time2() {
   );
 }
 */
+
+
+/*
+    Widget _buildAnimatedStopButton(bool isrunning) {
+      final AnimationController controller = AnimationController(
+        duration: const Duration(milliseconds: 500),
+        vsync: Navigator.of(context),
+      );
+      final Animation<Offset> offsetAnimation;
+
+      if (!stopwatch.animationApplied) {
+        offsetAnimation = isrunning
+            ? Tween<Offset>(
+                    begin: Offset(0, 0.3), //: Offset(0, 0),
+                    end: Offset.zero) //: Offset(0, 0))
+                .animate(CurvedAnimation(
+                parent: controller,
+                curve: Curves.fastOutSlowIn,
+              ))
+            : Tween<Offset>(begin: Offset(0, 0), end: Offset(0, 0))
+                .animate(CurvedAnimation(
+                parent: controller,
+                curve: Curves.fastOutSlowIn,
+              ));
+
+        controller.forward();
+        stopwatch.applyAnimation();
+      } else {
+        offsetAnimation = isrunning
+            ? Tween<Offset>(begin: Offset(0, 0), end: Offset(0, 0))
+                .animate(CurvedAnimation(
+                parent: controller,
+                curve: Curves.fastOutSlowIn,
+              ))
+            : Tween<Offset>(begin: Offset(0, 0), end: Offset(0, 0))
+                .animate(CurvedAnimation(
+                parent: controller,
+                curve: Curves.fastOutSlowIn,
+              ));
+        controller.forward();
+        //controller.reverse();
+        //stopwatch.applyAnimation();
+      }
+
+      controller.forward();
+
+      return SlideTransition(
+        position: offsetAnimation,
+        child: isrunning ? const SizedBox() : _stopbutton(),
+      );
+    }
+*/
+
+/*
+    Widget _buildAnimatedTime(bool isRunning) {
+      final AnimationController controller = AnimationController(
+        duration: const Duration(milliseconds: 400),
+        vsync: Navigator.of(context),
+      );
+
+      final Animation<Offset> offsetAnimation =
+          Tween<Offset>(begin: Offset(0, -0.3), end: Offset(0, -0.3)).animate(
+        CurvedAnimation(
+          parent: controller,
+          //curve: FadeTransition(opacity: 1),
+        ),
+      );
+
+      controller.forward();
+
+      return SlideTransition(
+        position: offsetAnimation,
+        child: isRunning ? const SizedBox() : _time(),
+      );
+    }
+*/
+   /*
+    Widget _buildAnimatedWatch(bool isrunning) {
+      final AnimationController controller = AnimationController(
+        duration: const Duration(milliseconds: 500),
+        vsync: Navigator.of(context),
+      );
+
+      final Animation<Offset> offsetAnimation = Tween<Offset>(
+              begin: isrunning ? Offset(0, 1) : Offset(0, 0),
+              end: isrunning ? Offset(0, -0.3) : Offset(0, 0))
+          .animate(CurvedAnimation(
+        parent: controller,
+        curve: Curves.fastOutSlowIn,
+      ));
+
+      stopwatch.applyAnimation();
+
+      controller.forward();
+
+      return SlideTransition(
+        position: offsetAnimation,
+        child: StopwatchWidget(),
+      );
+    }
+
+    Widget _buildAnimatedStopButton(bool start) {
+      final AnimationController controller = AnimationController(
+        duration: const Duration(milliseconds: 500),
+        vsync: Navigator.of(context),
+      );
+
+      final Animation<Offset> offsetAnimation =
+          Tween<Offset>(begin: Offset(0, 0.3), end: Offset.zero).animate(
+        CurvedAnimation(
+          parent: controller,
+          curve: Curves.fastOutSlowIn,
+        ),
+      );
+      controller.forward();
+
+      return SlideTransition(
+        position: offsetAnimation,
+        child: start ? const SizedBox() : _stopbutton(),
+      );
+    }
+*/
+    

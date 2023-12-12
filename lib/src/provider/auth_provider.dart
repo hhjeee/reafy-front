@@ -108,11 +108,6 @@ class AuthProvider extends ChangeNotifier {
     //////// now send it to our server ///////
 
     body = {"accessToken": _token, "vendor": "kakao"};
-
-    //print(reqBaseUrl);
-    //print(" == Access Token from kakao ==");
-    //print(body);
-    //print(" =================");
     try {
       http.Response req = await http.post(Uri.parse(url),
           headers: headers, body: json.encode(body));
@@ -123,13 +118,7 @@ class AuthProvider extends ChangeNotifier {
         var resBody = jsonDecode(utf8.decode(req.bodyBytes));
 
         /// 우리 서버용 커스텀 토큰
-        //print(" == Custom Token ==");
         //print(resBody["accessToken"]);
-        //print(req.body);
-        //print(" =================");
-        // 토큰 저장
-
-        //try {prefs.getString('token')};
 
         // if no token found = new user --> onboarding page
         if (prefs.getString('token') == null) {
@@ -139,12 +128,7 @@ class AuthProvider extends ChangeNotifier {
           notifyListeners();
         } else
           setToken(resBody["accessToken"]);
-        //prefs.setString('token', resBody["accessToken"]);
-
-        //String? token = prefs.getString('token');
-        //print(token);
-
-        //_loginStat = false;
+        
         notifyListeners();
       } else {
         final res = json.decode(req.body);

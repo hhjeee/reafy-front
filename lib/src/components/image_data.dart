@@ -116,7 +116,7 @@ class IconsPath {
 
   // 맵
   static String get bamboomap => 'assets/images/bamboo_map.png';
-  static String get bambooicon => 'assets/svg/bamboo_icon.svg';
+  static String get bambooicon => 'assets/images/bamboo_icon.png';
   static String get map_bubble => 'assets/svg/map_bubble.svg';
 
   static String get bamboomap_day => 'assets/images/bamboomap_day.png';

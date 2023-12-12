@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:reafy_front/src/components/image_data.dart';
@@ -7,61 +8,14 @@ import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class StopwatchWidget extends StatefulWidget {
+class StopwatchWidget extends StatelessWidget {
   const StopwatchWidget({super.key});
 
   @override
-  State<StopwatchWidget> createState() => _StopwatchWidgetState();
-}
-
-class _StopwatchWidgetState extends State<StopwatchWidget> {
-  Stopwatch _stopwatch = Stopwatch();
-  //bool isrunning = false;
-  Timer? _timer;
-  String _elapsedTime = '00:00:00';
-
-  void _startStopwatch() {
-    context.read<StopwatchProvider>().updateIsRunning(true);
-    _stopwatch.start();
-    _timer = Timer.periodic(Duration(milliseconds: 100), (Timer timer) {
-      setState(() {
-        _elapsedTime = _formatTime(_stopwatch.elapsedMilliseconds);
-        // isrunning is already being updated via provider, no need to set it here
-      });
-    });
-  }
-
-  void _stopStopwatch() {
-    context.read<StopwatchProvider>().updateIsRunning(false);
-    _stopwatch.stop();
-    _timer?.cancel();
-  }
-
-  void _resetStopwatch() {
-    context.read<StopwatchProvider>().updateIsRunning(false);
-    _stopwatch.reset();
-    setState(() {
-      _elapsedTime = '00:00:00';
-    });
-  }
-
-  String _formatTime(int milliseconds) {
-    int seconds = (milliseconds / 1000).truncate();
-    int minutes = (seconds / 60).truncate();
-    int hours = (minutes / 60).truncate();
-    String hoursStr = (hours % 60).toString().padLeft(2, '0');
-    String minutesStr = (minutes % 60).toString().padLeft(2, '0');
-    String secondsStr = (seconds % 60).toString().padLeft(2, '0');
-
-    return '$hoursStr:$minutesStr:$secondsStr';
-  }
-
-  @override
   Widget build(BuildContext context) {
+    StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
+    stopwatch.setTimer(10); ////// 카운트다운
     return Consumer<StopwatchProvider>(builder: (context, stopwatch, child) {
-      //String _elapsedTime = stopwatch.elapsedTime;
-      bool isrunning = stopwatch.isRunning;
-
       return Container(
           child: Container(
         width: 338,
@@ -86,7 +40,9 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
                   width: 200,
                   margin: EdgeInsets.only(left: 40.0),
                   child: Text(
-                    stopwatch.isRunning ? _elapsedTime : "독서 시작하기",
+                    stopwatch.isRunning
+                        ? stopwatch.elapsedTimeString
+                        : "독서 시작하기",
                     style: stopwatch.isRunning
                         ? TextStyle(
                             fontSize: 18,
@@ -103,10 +59,11 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    if (isrunning) {
-                      _stopStopwatch();
+                    if (stopwatch.isRunning) {
+                      stopwatch.pause();
                     } else {
-                      _startStopwatch();
+                      stopwatch.start();
+                      stopwatch.applyAnimation();
                     }
                   },
                   child: Container(
@@ -125,11 +82,11 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
                         ),
                       ),
                       Positioned(
-                          left: isrunning ? 32 : -6,
+                          left: stopwatch.isRunning ? 32 : -6,
                           top: -4,
                           child: Container(
                             child: Center(
-                                child: isrunning
+                                child: stopwatch.isRunning
                                     ? Image.asset(
                                         'assets/images/runningbutton.png',
                                         width: 54,
@@ -148,6 +105,53 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
     });
   }
 }
+
+
+/*
+class StopwatchProvider extends GetxController {
+  var _isRunning = false.obs;
+  var _elapsedTime = '00:00:00'.obs;
+  var _remainingTime = '10:00'.obs;
+
+  var _itemCnt = 0.obs;
+  var _isFull = false.obs;
+
+  bool get isRunning => _isRunning.value;
+  String get elapsedTime => _elapsedTime.value;
+  String get remainingTime => _remainingTime.value;
+
+  int get itemCnt => _itemCnt.value;
+  bool get isFull => _isFull.value;
+
+  void updateIsRunning(bool value) {
+    _isRunning.value = value;
+    print("_isRunning $_isRunning");
+  }
+
+  void updateElapsedTime(String value) {
+    _elapsedTime.value = value;
+  }
+
+  void incrementItemCount() {
+    if (_itemCnt.value < 6) {
+      _itemCnt.value += 1;
+    }
+    if (_itemCnt.value == 6) {
+      _isFull.value = true;
+    }
+  }
+
+  void decreaseItemCount() {
+    if (_itemCnt.value > 0) {
+      _itemCnt.value -= 1;
+      _isFull.value = false;
+    }
+  }
+}*/
+
+
+
+
 /*
 Widget _stopbutton() {
   return Center(
@@ -310,3 +314,303 @@ Widget _character() {
   );
 }
 */
+
+
+
+
+
+/*
+class StopWatchWidget extends StatelessWidget {
+  final StopwatchProvider stopwatchProvider = Get.find();
+
+  _startStopwatch() {
+    stopwatchProvider.updateIsRunning(true);
+    stopwatchProvider.incrementItemCount();
+
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      if (!stopwatchProvider.isRunning) {
+        timer.cancel();
+        return;
+      }
+
+      // Update elapsed time every second
+      stopwatchProvider.updateElapsedTime(
+          _formatTime(stopwatchProvider.itemCnt * 60000 - timer.tick * 1000));
+    });
+  }
+
+  _stopStopwatch() {
+    stopwatchProvider.updateIsRunning(false);
+  }
+
+  _resetStopwatch() {
+    stopwatchProvider.updateIsRunning(false);
+    stopwatchProvider.updateElapsedTime('00:00:00');
+  }
+
+  String _formatTime(int milliseconds) {
+    int seconds = (milliseconds / 1000).truncate();
+    int minutes = (seconds / 60).truncate();
+    int hours = (minutes / 60).truncate();
+    String hoursStr = (hours % 60).toString().padLeft(2, '0');
+    String minutesStr = (minutes % 60).toString().padLeft(2, '0');
+    String secondsStr = (seconds % 60).toString().padLeft(2, '0');
+
+    return '$hoursStr:$minutesStr:$secondsStr';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<StopwatchProvider>(builder: (context, stopwatch, child) {
+      //String _elapsedTime = stopwatch.elapsedTime;
+      //bool isrunning = stopwatch.isRunning;
+
+      return Container(
+          child: Container(
+        width: 338,
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: Color(0xfffaf9f7),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 0),
+              blurRadius: 10.0,
+              color: Color.fromRGBO(0, 0, 0, 0.10),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: 200,
+                  margin: EdgeInsets.only(left: 40.0),
+                  child: Text(
+                    stopwatch.isRunning ? stopwatch.elapsedTime : "독서 시작하기",
+                    style: stopwatch.isRunning
+                        ? TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 2.5,
+                            color: green,
+                          )
+                        : TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: black,
+                          ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    if (stopwatchProvider.isRunning) {
+                      _stopStopwatch();
+                    } else {
+                      _startStopwatch();
+                    }
+                  },
+                  child: Container(
+                    width: 78,
+                    height: 50,
+                    margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                    child: Stack(children: [
+                      Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(21),
+                          child: Container(
+                            width: 68,
+                            height: 26,
+                            color: disabled_box,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                          left: stopwatchProvider.isRunning ? 32 : -6,
+                          top: -4,
+                          child: Container(
+                            child: Center(
+                                child: stopwatchProvider.isRunning
+                                    ? Image.asset(
+                                        'assets/images/runningbutton.png',
+                                        width: 54,
+                                        height: 54)
+                                    : Image.asset(
+                                        'assets/images/startbutton.png',
+                                        width: 54,
+                                        height: 54)),
+                          ))
+                    ]),
+                  ),
+                )
+              ]),
+        ),
+      ));
+    });
+  }
+}*/
+/*
+class StopwatchWidget extends StatefulWidget {
+  const StopwatchWidget({super.key});
+  @override
+  State<StopwatchWidget> createState() => _StopwatchWidgetState();
+}
+
+class _StopwatchWidgetState extends State<StopwatchWidget> {
+  /*
+  Stopwatch _stopwatch = Stopwatch();
+  //bool isrunning = false;
+  Timer? _timer;
+  String _elapsedTime = '00:00:00';
+  late String _remainingTime;*/
+
+  @override
+  void initState() {
+    super.initState();
+    // Set initial remaining time to 10:00
+  }
+
+
+  void _updateRemainingTime() {
+    final remainingMilliseconds = 10000 - _stopwatch.elapsedMilliseconds;
+    setState(() {
+      _remainingTime = _formatTime(remainingMilliseconds);
+    });
+  }
+
+  void _startStopwatch() {
+    context.read<StopwatchProvider>().updateIsRunning(true);
+    _stopwatch.start();
+    _updateRemainingTime();
+    _timer = Timer.periodic(Duration(milliseconds: 100), (Timer timer) {
+      setState(() {
+        _elapsedTime = _formatTime(_stopwatch.elapsedMilliseconds);
+        // isrunning is already being updated via provider, no need to set it here
+      });
+    });
+  }
+
+  void _stopStopwatch() {
+    context.read<StopwatchProvider>().updateIsRunning(false);
+    _stopwatch.stop();
+    _updateRemainingTime();
+    if (_stopwatch.elapsed.inSeconds >= 600) {
+      context.read<StopwatchProvider>().incrementItemCount();
+    }
+    _timer?.cancel();
+  }
+
+  void _resetStopwatch() {
+    context.read<StopwatchProvider>().updateIsRunning(false);
+    _stopwatch.reset();
+    setState(() {
+      _elapsedTime = '00:00:00';
+      _remainingTime = _formatTime(10000);
+    });
+  }
+
+  String _formatTime(int milliseconds) {
+    int seconds = (milliseconds / 1000).truncate();
+    int minutes = (seconds / 60).truncate();
+    int hours = (minutes / 60).truncate();
+    String hoursStr = (hours % 60).toString().padLeft(2, '0');
+    String minutesStr = (minutes % 60).toString().padLeft(2, '0');
+    String secondsStr = (seconds % 60).toString().padLeft(2, '0');
+
+    return '$hoursStr:$minutesStr:$secondsStr';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<StopwatchProvider>(builder: (context, stopwatch, child) {
+      //String _elapsedTime = stopwatch.elapsedTime;
+      bool isrunning = stopwatch.isRunning;
+
+      return Container(
+          child: Container(
+        width: 338,
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: Color(0xfffaf9f7),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0, 0),
+              blurRadius: 10.0,
+              color: Color.fromRGBO(0, 0, 0, 0.10),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Container(
+                  width: 200,
+                  margin: EdgeInsets.only(left: 40.0),
+                  child: Text(
+                    stopwatch.isRunning ? _elapsedTime : "독서 시작하기",
+                    style: stopwatch.isRunning
+                        ? TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 2.5,
+                            color: green,
+                          )
+                        : TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: black,
+                          ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    if (isrunning) {
+                      _stopStopwatch();
+                    } else {
+                      _startStopwatch();
+                    }
+                  },
+                  child: Container(
+                    width: 78,
+                    height: 50,
+                    margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                    child: Stack(children: [
+                      Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(21),
+                          child: Container(
+                            width: 68,
+                            height: 26,
+                            color: disabled_box,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                          left: isrunning ? 32 : -6,
+                          top: -4,
+                          child: Container(
+                            child: Center(
+                                child: isrunning
+                                    ? Image.asset(
+                                        'assets/images/runningbutton.png',
+                                        width: 54,
+                                        height: 54)
+                                    : Image.asset(
+                                        'assets/images/startbutton.png',
+                                        width: 54,
+                                        height: 54)),
+                          ))
+                    ]),
+                  ),
+                )
+              ]),
+        ),
+      ));
+    });
+  }
+}*/

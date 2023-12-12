@@ -91,61 +91,6 @@ class MyApp extends StatelessWidget {
               fontFamily: 'NanumSquareRound',
             ),
             initialBinding: InitBinding(),
-            home:
-                //FlutterNativeSplash.remove();
-                Root()));
-
-    /*GetMaterialApp(
-            builder: (context, child) {
-              return MediaQuery(
-                child: child!,
-                data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-              );
-            },
-            title: 'reafy',
-            debugShowCheckedModeBanner: false,
-            theme: new ThemeData(
-              fontFamily: 'NanumSquareRound',
-            ),
-            initialBinding: InitBinding(),
-            home: 
-            
-            Consumer<AuthProvider>(
-                builder: (context, user, child) =>
-                    user.isLogined ? App() : LoginPage()))*/
+            home: Root()));
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-  //Future<void> getToken() async {
-  // ignore: await_only_futures
-
-  //User? tokenResult = ;///await //FirebaseAuth.instance.currentUser;
-  //log(tokenResult.toString());
-  //if (tokenResult == null) return true;
-  // ignore: unused_local_variable
-  //var idToken = await tokenResult.getIdToken();
-  //log(idToken.toString());
-
-  // ignore: avoid_print
-  //print("idToken : $idToken");
-  //if(idToken == null) return true;
-  //IdToken = idToken.toString();
-
-  //http.Response response = await http.get(Uri.parse("${baseUrl}users/login"),
-  //    headers: {'Authorization': 'bearer $IdToken'});
-  //var resBody = jsonDecode(utf8.decode(response.bodyBytes));
-  //UserId = resBody['data']['user_id'];
-
-  //bool userdata = await UpdateUserData();
-
-  //return IdToken == null || UserId == null || userdata == false;
