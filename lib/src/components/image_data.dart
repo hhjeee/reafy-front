@@ -114,7 +114,16 @@ class IconsPath {
 
   static String get add_back => 'assets/images/addbook_background.png';
 
-  static String get bamboomap => 'assets/images/bamboomap.png';
+  // 맵
+  static String get bamboomap => 'assets/images/bamboo_map.png';
+  static String get bambooicon => 'assets/svg/bamboo_icon.svg';
+  static String get map_bubble => 'assets/svg/map_bubble.svg';
+
+  static String get bamboomap_day => 'assets/images/bamboomap_day.png';
+  static String get bamboomap_night => 'assets/images/bamboomap_night.png';
+  static String get back_arrow => 'assets/svg/back_arrow.svg';
+
+  // 메모
 
   static String get memo_ex => 'assets/images/memo_example.png';
   static String get add_memo => 'assets/svg/add_memo.svg';

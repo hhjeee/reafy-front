@@ -24,7 +24,6 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     var stopwatch = context.read<StopwatchProvider>();
     final size = MediaQuery.of(context).size;
-
     Widget _memo() {
       return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         GestureDetector(
