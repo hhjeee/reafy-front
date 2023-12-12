@@ -37,7 +37,7 @@ class OnBoardingPage extends StatelessWidget {
           style: TextStyle(
               fontSize: 18, fontWeight: FontWeight.w700, color: yellow)),
       onDone: () {
-        Get.off(App());
+        Get.off(() => App());
       },
       //showBackButton: true,
       showDoneButton: true,

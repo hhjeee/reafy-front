@@ -168,11 +168,8 @@ class MyPage extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () async {
                     var user = context.read<AuthProvider>();
-
-                    if (user.isLogined) {
-                      user.logout();
-                      print('로그아웃 완료');
-                    }
+                    user.logout();
+                    print('로그아웃 완료욤');
                     Get.off(() => LoginPage());
                   },
                   child: Row(

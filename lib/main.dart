@@ -10,23 +10,60 @@ import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/poobao_home.dart';
 import 'package:reafy_front/src/models/bookCount.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:reafy_front/src/pages/splash.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:reafy_front/src/root.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'dart:async';
 
 Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  /*
+  void _autoLoginCheck() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
 
+    if (token != null) {
+      setState(() {
+        isToken = true;
+      });
+    }
+  }
+
+  bool isToken = false;
+  _autoLoginCheck();*/
+
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env"); // env 파일 초기화
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   initializeDateFormatting('ko_KR', null);
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
 
-  runApp(ChangeNotifierProvider<AuthProvider>(
-      create: (context) => AuthProvider(), child: MyApp()));
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  initializeDateFormatting().then((_) => runApp(MyApp()));
+  //runApp(
+  /*
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (ctx) => AuthProvider()),
+        ChangeNotifierProvider(create: (ctx) => SelectedBooksProvider()),
+        ChangeNotifierProvider(create: (ctx) => BookShelfProvider()),
+        ChangeNotifierProvider(create: (ctx) => BookModel()),
+        ChangeNotifierProvider(create: (ctx) => PoobaoHome()),
+        ChangeNotifierProvider(create: (ctx) => StopwatchProvider()),
+      ],
+      child: */
+  //    MyApp());
+
+/*
+  initializeDateFormatting().then((_) => runApp(
+      ChangeNotifierProvider<AuthProvider>(
+          create: (context) => AuthProvider(), child: MyApp())));*/
 }
 
 class MyApp extends StatelessWidget {
@@ -34,21 +71,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(
-            create: (context) => SelectedBooksProvider(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => BookShelfProvider(),
-          ),
-          ChangeNotifierProvider<BookModel>(
-            create: (context) => BookModel(),
-          ),
-          ChangeNotifierProvider<PoobaoHome>(
-            create: (context) => PoobaoHome(),
-          ),
-          ChangeNotifierProvider<StopwatchProvider>(
-            create: (context) => StopwatchProvider(),
-          ),
+          ChangeNotifierProvider(create: (c) => AuthProvider()),
+          ChangeNotifierProvider(create: (c) => SelectedBooksProvider()),
+          ChangeNotifierProvider(create: (c) => BookShelfProvider()),
+          ChangeNotifierProvider(create: (c) => BookModel()),
+          ChangeNotifierProvider(create: (c) => PoobaoHome()),
+          ChangeNotifierProvider(create: (c) => StopwatchProvider()),
         ],
         child: GetMaterialApp(
             builder: (context, child) {
@@ -63,29 +91,61 @@ class MyApp extends StatelessWidget {
               fontFamily: 'NanumSquareRound',
             ),
             initialBinding: InitBinding(),
-            home: Consumer<AuthProvider>(
+            home:
+                //FlutterNativeSplash.remove();
+                Root()));
+
+    /*GetMaterialApp(
+            builder: (context, child) {
+              return MediaQuery(
+                child: child!,
+                data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+              );
+            },
+            title: 'reafy',
+            debugShowCheckedModeBanner: false,
+            theme: new ThemeData(
+              fontFamily: 'NanumSquareRound',
+            ),
+            initialBinding: InitBinding(),
+            home: 
+            
+            Consumer<AuthProvider>(
                 builder: (context, user, child) =>
-                    !user.isLogined ? App() : LoginPage())));
+                    user.isLogined ? App() : LoginPage()))*/
   }
 }
 
-/*FutureBuilder(
-              future: Future.delayed(
-                  const Duration(seconds: 3), () => "Intro Completed."),
-              builder: (context, snapshot) {
-                return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 1000),
-                    child: _splashLoadingWidget(snapshot));
-              },
-            )*/
-/*
-Widget _splashLoadingWidget(AsyncSnapshot<Object?> snapshot) {
-  if (snapshot.hasError) {
-    return const Text("Error!!");
-  } else if (snapshot.hasData) {
-    return App();
-  } else {
-    return const OnBoardingPage();
-  }
-}
-*/
+
+
+
+
+
+
+
+
+
+
+  //Future<void> getToken() async {
+  // ignore: await_only_futures
+
+  //User? tokenResult = ;///await //FirebaseAuth.instance.currentUser;
+  //log(tokenResult.toString());
+  //if (tokenResult == null) return true;
+  // ignore: unused_local_variable
+  //var idToken = await tokenResult.getIdToken();
+  //log(idToken.toString());
+
+  // ignore: avoid_print
+  //print("idToken : $idToken");
+  //if(idToken == null) return true;
+  //IdToken = idToken.toString();
+
+  //http.Response response = await http.get(Uri.parse("${baseUrl}users/login"),
+  //    headers: {'Authorization': 'bearer $IdToken'});
+  //var resBody = jsonDecode(utf8.decode(response.bodyBytes));
+  //UserId = resBody['data']['user_id'];
+
+  //bool userdata = await UpdateUserData();
+
+  //return IdToken == null || UserId == null || userdata == false;

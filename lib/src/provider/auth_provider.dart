@@ -5,17 +5,31 @@ import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:reafy_front/src/utils/url.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider extends ChangeNotifier {
   late User _userInfo;
   bool _loginStat = false;
+  bool _newUser = false;
   String _token = "";
+  //String _token = "";
 
   final reqBaseUrl = AppUrl.baseurl;
 
   User get userInfo => _userInfo;
   bool get isLogined => _loginStat;
+  bool get isnewUser => _newUser;
   String get accessToken => _token;
+
+  Future setLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLogin', true);
+  }
+
+  Future setToken(token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', token);
+  }
 
   @override
   Future<void> loginCheck() async {
@@ -49,12 +63,16 @@ class AuthProvider extends ChangeNotifier {
     final headers = {"Content-Type": "application/json"};
     final body; //= {"accessToken": _token, "vendor": "kakao"};
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     try {
       bool isInstalled = await isKakaoTalkInstalled();
       if (isInstalled) {
         try {
           OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
-          print('카카오톡으로 로그인 성공 ${token.accessToken} ');
+          print('카카오톡으로 로그인 성공 '); //
+          setLogin();
+          //print('${token.accessToken}');
           _loginStat = true;
           //getUserInfo();
           print('[user.dart]_loginStat = ${_loginStat}');
@@ -65,37 +83,72 @@ class AuthProvider extends ChangeNotifier {
       } else {
         try {
           OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
-          print('카카오계정으로 로그인 성공 ${token.accessToken}');
-          _loginStat = true;
+          print('카카오계정으로 로그인 성공'); //
+          setLogin();
+          //print('${token.accessToken}');
+
+          //_loginStat = true;
           _token = token.accessToken;
-          getUserInfo();
-          print('[user.dart]_loginStat = ${_loginStat}');
+          //getUserInfo();
+          //print('[user.dart]_loginStat = ${_loginStat}');
           //return {'result': true, 'data': token.accessToken};
         } catch (e) {
-          _loginStat = false;
+          //_loginStat = false;
           print('카카오계정으로 로그인 실패 $e');
           //return {'result': false, 'data': e};
         }
       }
     } catch (e) {
-      _loginStat = false;
+      //_loginStat = false;
       print('로그인 실패 $e');
     }
     notifyListeners();
 
+    //////// got token from kakao ////////////
+    //////// now send it to our server ///////
+
     body = {"accessToken": _token, "vendor": "kakao"};
 
+    //print(reqBaseUrl);
+    //print(" == Access Token from kakao ==");
+    //print(body);
+    //print(" =================");
     try {
       http.Response req = await http.post(Uri.parse(url),
           headers: headers, body: json.encode(body));
 
+      //print(req.statusCode);
+
       if (req.statusCode == 200 || req.statusCode == 201) {
-        ////TODO : access Token parse 해서 저장하기
-        _loginStat = false;
+        var resBody = jsonDecode(utf8.decode(req.bodyBytes));
+
+        /// 우리 서버용 커스텀 토큰
+        //print(" == Custom Token ==");
+        //print(resBody["accessToken"]);
+        //print(req.body);
+        //print(" =================");
+        // 토큰 저장
+
+        //try {prefs.getString('token')};
+
+        // if no token found = new user --> onboarding page
+        if (prefs.getString('token') == null) {
+          setToken(resBody["accessToken"]);
+          //prefs.setString('token', resBody["accessToken"]);
+          _newUser = true;
+          notifyListeners();
+        } else
+          setToken(resBody["accessToken"]);
+        //prefs.setString('token', resBody["accessToken"]);
+
+        //String? token = prefs.getString('token');
+        //print(token);
+
+        //_loginStat = false;
         notifyListeners();
       } else {
         final res = json.decode(req.body);
-        _loginStat = false;
+        //_loginStat = false;
         notifyListeners();
       }
       ;
@@ -114,6 +167,8 @@ class AuthProvider extends ChangeNotifier {
   Future<void> logout() async {
     try {
       await UserApi.instance.logout();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove('token');
       print('로그아웃 성공 , SDK에서 토큰 삭제');
       print('로그아웃 완료');
 
@@ -124,6 +179,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /*
   @override
   Future<void> getUserInfo() async {
     try {
@@ -135,5 +191,5 @@ class AuthProvider extends ChangeNotifier {
       print('사용자 정보요청 실패 $e');
     }
     notifyListeners();
-  }
+  }*/
 }

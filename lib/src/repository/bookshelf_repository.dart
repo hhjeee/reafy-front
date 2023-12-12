@@ -2,9 +2,7 @@ import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'package:reafy_front/src/models/user.dart';
 import 'package:reafy_front/src/models/book.dart';
-
-final tempUserToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvYXV0aElkIjoiMzE1ODUyNjkwMiIsImlhdCI6MTcwMjI5OTU1MiwiZXhwIjoxNzAyMzAzMTUyLCJzdWIiOiJBQ0NFU1MifQ.k5bgxZTxMdff7Q9GxSQnfxPWuJ3KOpe6vPEUcEW_0bc";
+import 'package:shared_preferences/shared_preferences.dart';
 
 //책 검색
 class SearchBookResDto {
@@ -62,11 +60,17 @@ class BookshelfBookDto {
 //서재 메인에서 받아오는 카테고리별 썸네일 리스트
 Future<List<String>> fetchBookshelfThumbnailsByState(int progressState) async {
   final Dio dio = Dio();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? userToken = prefs.getString('token');
 
   try {
     //final userToken = await UserToken();
     //print(userToken.accessToken);
-    final userToken = tempUserToken;
+
+//final tempUserToken =
+//    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvYXV0aElkIjoiMzE1ODUyNjkwMiIsImlhdCI6MTcwMjI5OTU1MiwiZXhwIjoxNzAyMzAzMTUyLCJzdWIiOiJBQ0NFU1MifQ.k5bgxZTxMdff7Q9GxSQnfxPWuJ3KOpe6vPEUcEW_0bc";
+
+    ///final userToken = tempUserToken;
 
     final response = await dio.get('http://13.125.145.165:3000/book/bookshelf',
         queryParameters: {'progressState': progressState},
@@ -94,11 +98,13 @@ Future<List<String>> fetchBookshelfThumbnailsByState(int progressState) async {
 //myfavorite 책 썸네일 리스트
 Future<List<String>> fetchBookshelfThumbnailsByFavorite() async {
   final Dio dio = Dio();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? userToken = prefs.getString('token');
 
   try {
     //final userToken = await UserToken();
     //print(userToken.accessToken);
-    final userToken = tempUserToken;
+    //final userToken = tempUserToken;
 
     final response = await dio.get('http://13.125.145.165:3000/book/favorite',
         options: Options(headers: {
@@ -169,10 +175,13 @@ class BookshelfBookInfo {
 //상태(카테고리)별 책 정보 조회
 Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByState(
     int progressState) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? userToken = prefs.getString('token');
+
   final Dio dio = Dio();
 
   try {
-    final userToken = tempUserToken;
+    //final userToken = tempUserToken;
 
     final response = await dio.get(
       'http://13.125.145.165:3000/book/bookshelf',
@@ -206,9 +215,11 @@ Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByState(
 //페이보릿 책 정보 조회
 Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByFavorite() async {
   final Dio dio = Dio();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? userToken = prefs.getString('token');
 
   try {
-    final userToken = tempUserToken;
+    //final userToken = tempUserToken;
 
     final response = await dio.get(
       'http://13.125.145.165:3000/book/favorite',
@@ -242,11 +253,13 @@ Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByFavorite() async {
 Future<bool> postBookInfo(String isbn13, int progressState) async {
   final dio = Dio();
   final url = 'http://13.125.145.165:3000/book/bookshelf';
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? userToken = prefs.getString('token');
 
   try {
     //final userToken = await UserToken();
     //print(userToken.accessToken);
-    final userToken = tempUserToken;
+    //final userToken = tempUserToken;
 
     final response = await dio.post(url,
         data: {'isbn13': isbn13, 'progressState': progressState},
@@ -281,11 +294,13 @@ Future<bool> postBookInfo(String isbn13, int progressState) async {
 //책 삭제
 Future<void> deleteBookshelfBook(int bookshelfBookId) async {
   final dio = Dio();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? userToken = prefs.getString('token');
 
   try {
     //final userToken = await UserToken();
     //print(userToken.accessToken);
-    final userToken = tempUserToken;
+    //final userToken = tempUserToken;
 
     String apiUrl =
         'http://13.125.145.165:3000/book/bookshelf/$bookshelfBookId';
@@ -366,10 +381,13 @@ class BookshelfBookDetailsDto {
 Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
     int bookshelfBookId) async {
   final dio = Dio();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? userToken = prefs.getString('token');
+
   try {
     //final userToken = await UserToken();
     //print(userToken.accessToken);
-    final userToken = tempUserToken;
+    //final userToken = tempUserToken;
 
     final response = await dio.get(
         'http://13.125.145.165:3000/book/bookshelf/$bookshelfBookId',

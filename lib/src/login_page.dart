@@ -5,6 +5,7 @@ import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/pages/intro.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -14,9 +15,22 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool isToken = false;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
+    void _autoLoginCheck() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+
+      if (token != null) {
+        setState(() {
+          isToken = true;
+        });
+      }
+    }
 
     Widget _bubble() {
       return Container(
@@ -55,10 +69,20 @@ class _LoginPageState extends State<LoginPage> {
       return GestureDetector(
         onTap: () async {
           var user = context.read<AuthProvider>();
+          //_autoLoginCheck();
           user.loginCheck();
+          print("터치 했는데");
+
+          // if user is not logined,
           if (!await user.isLogined) {
             await user.login();
             await user.loginCheck();
+            user.isnewUser ? Get.to(OnBoardingPage()) : Get.to(App());
+            //await user.loginCheck();
+          } else {
+            Get.to(App());
+          }
+          /*
             if (await user.isLogined) {
               Get.to(OnBoardingPage());
             } else {
@@ -66,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
             }
           } else {
             Get.to(App());
-          }
+          }*/
         },
         child: Container(
           child: ImageData(
@@ -78,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     }
+
     return Center(
         child: Container(
       //color: bg_gray,

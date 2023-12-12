@@ -14,6 +14,7 @@ const green = Color(0xFF63B865);
 const white = Color(0xFFffffff);
 const yellow_light = Color(0xFFFFECA6);
 const black = Color(0xff333333);
+const dark_gray = Color(0xff666666);
 const bg_gray = Color(0xfffaf9f7);
 const disabled_box = Color(0xffebebeb);
 
