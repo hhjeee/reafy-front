@@ -9,6 +9,7 @@ import 'dart:math';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:reafy_front/src/models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Quote {
   final String author;
@@ -50,14 +51,19 @@ class _SearchBookState extends State<SearchBook> {
     try {
       //final userToken = await UserToken();
       //print(userToken.accessToken);
-      final userToken =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvYXV0aElkIjoiMzE1ODUyNjkwMiIsImlhdCI6MTcwMjEyMzUxMiwiZXhwIjoxNzAyMTI3MTEyLCJzdWIiOiJBQ0NFU1MifQ.5nEAEVhQOed1UZbk_LFj3NgHA6l7bRLgoac24TwDSfM";
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? userToken = prefs.getString('token');
+
+      //print(userToken);
+
       final response = await dio.get('http://13.125.145.165:3000/book/search',
           queryParameters: {'query': query, 'page': page},
           options: Options(headers: {
             'Authorization': 'Bearer ${userToken}',
             'Content-Type': "application/json"
           }));
+
+      //print(response);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = response.data;

@@ -97,6 +97,7 @@ Future<List<String>> fetchBookshelfThumbnailsByState(int progressState) async {
 
 //myfavorite 책 썸네일 리스트
 Future<List<String>> fetchBookshelfThumbnailsByFavorite() async {
+  
   final Dio dio = Dio();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userToken = prefs.getString('token');
@@ -383,6 +384,7 @@ Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
   final dio = Dio();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userToken = prefs.getString('token');
+  
 
   try {
     //final userToken = await UserToken();
