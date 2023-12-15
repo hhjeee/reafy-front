@@ -35,14 +35,16 @@ class IconsPath {
   // login 화면
   static String get bubble => 'assets/images/bubble.png';
   static String get title_logo => 'assets/images/title_logo.png';
-  static String get login_character => 'assets/images/login_character.png';
+  static String get login_character => 'assets/images/poobao_login.png';
   static String get login_button => 'assets/images/kakao_login.png';
 
   // 하단 바
   static String get homeOff => 'assets/svg/bottombar_home_off.svg';
   static String get homeOn => 'assets/svg/bottombar_home_on.svg';
+
   static String get bookOff => 'assets/svg/bottombar_book_off.svg';
   static String get bookOn => 'assets/svg/bottombar_book_on.svg';
+
   static String get mypageOff => 'assets/svg/bottombar_mypage_off.svg';
   static String get mypageOn => 'assets/svg/bottombar_mypage_on.svg';
 
@@ -75,6 +77,7 @@ class IconsPath {
   static String get left => 'assets/svg/left.svg';
   static String get right => 'assets/svg/right.svg';
   static String get nextarrow => 'assets/svg/nextarrow.svg';
+  static String get backarrow => 'assets/svg/backarrow.svg';
   static String get add => 'assets/svg/add.svg';
   static String get delete => 'assets/svg/delete.svg';
   static String get x => 'assets/svg/x.svg';
@@ -94,6 +97,9 @@ class IconsPath {
   static String get bookshelf => 'assets/svg/bookshelf.svg';
 
   static String get character => 'assets/images/poobao.png';
+  static String get character_book => 'assets/images/poobao_book.png';
+  static String get character_empty => 'assets/images/poobao_empty.png';
+
   static String get character2 => 'assets/images/poobao_temp.png';
 
   static String get book => 'assets/images/book.png';
@@ -103,6 +109,7 @@ class IconsPath {
   static String get poobao_shadow => 'assets/svg/poobao_shadow.svg';
   static String get book_leaves => 'assets/images/book_leaves.png';
   static String get team_img => 'assets/images/team_poobao.png';
+  static String get profile => 'assets/images/profile.png';
 
   static String get lock => 'assets/images/lock.png';
   static String get select_nothing => 'assets/images/select_nothing.png';
@@ -132,4 +139,58 @@ class IconsPath {
   static String get add_tag => 'assets/svg/add_tag.svg';
   static String get memo_pic => 'assets/svg/memo_picture.svg';
   static String get shelf_right => 'assets/svg/shelf_right.svg';
+}
+
+class FloatingSVG extends StatefulWidget {
+  final String svgAssetPath;
+  final Duration duration;
+  final double verticalRange;
+
+  const FloatingSVG({
+    Key? key,
+    required this.svgAssetPath,
+    this.duration = const Duration(seconds: 2),
+    this.verticalRange = 20.0,
+  }) : super(key: key);
+
+  @override
+  _FloatingSVGState createState() => _FloatingSVGState();
+}
+
+class _FloatingSVGState extends State<FloatingSVG>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: widget.duration,
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _animation =
+        Tween<double>(begin: 0, end: widget.verticalRange).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, _animation.value),
+          child: child,
+        );
+      },
+      child: SvgPicture.asset(widget.svgAssetPath), // Load SVG
+    );
+  }
 }

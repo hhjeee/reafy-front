@@ -70,20 +70,25 @@ class _ProfileNameState extends State<ProfileName> {
                     height: 148.47,
                     decoration: BoxDecoration(
                       color: Color(0xffe2eee0),
+
+                      //image: DecorationImage(image:  )
                     ),
-                    child: Stack(
+                    child: FittedBox(
+                      child: ImageData(IconsPath.profile),
+                      fit: BoxFit.fill,
+                    ), /*Stack(
                       children: [
                         Positioned(
-                          top: 24,
+                          top: 10,
                           child: Container(
                               width: 147.62,
                               height: 167.27,
                               child: ImageData(
-                                IconsPath.character2,
+                                IconsPath.character,
                               )),
                         ),
                       ],
-                    ),
+                    ),*/
                   ),
                 ),
               ),

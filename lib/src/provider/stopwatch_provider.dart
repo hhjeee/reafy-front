@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 class StopwatchProvider extends ChangeNotifier {
@@ -24,6 +23,9 @@ class StopwatchProvider extends ChangeNotifier {
 
   String get elapsedTimeString => _elapsedTime;
   String get remainTimeString => _remainingTime;
+
+  //final GiftProvider giftProvider;
+  //StopwatchProvider(this.giftProvider);
 
   @override
   void dispose() {
@@ -81,10 +83,14 @@ class StopwatchProvider extends ChangeNotifier {
   }
 
   void updateRemainingTime() {
-    _remainingsec = _countdownsec - _seconds;
-    if (_remainingsec == 0) {
-      incrementItemCount();
-      _remainingsec = _countdownsec;
+    if (_isRunning) {
+      _remainingsec = _countdownsec - _seconds % _countdownsec;
+      //print("$_remainingsec");
+      if (_remainingsec == 1) {
+        incrementItemCount();
+        _remainingsec = _countdownsec;
+        //print("$_remainingsec  updated");
+      }
     }
 
     _remainingTime = formatTime(_remainingsec, true);
@@ -102,14 +108,20 @@ class StopwatchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void incrementItemCount() {
+  bool incrementItemCount() {
     if (_itemCnt < 6) {
       _itemCnt += 1;
+
+      if (_itemCnt < 6) {
+        return true;
+        //giftProvider.addGift();
+      } else {
+        _isfull = true;
+      }
+      notifyListeners();
+      return false;
     }
-    if (_itemCnt == 6) {
-      _isfull = true;
-    }
-    notifyListeners();
+    return false;
   }
 
   void decreaseItemCount() {
@@ -121,6 +133,26 @@ class StopwatchProvider extends ChangeNotifier {
   }
 }
 
+class GiftProvider extends ChangeNotifier {
+  List<bool> giftVisibility = [false, false, false, false, false, false];
+
+  void addGift() {
+    for (int i = 0; i < giftVisibility.length; i++) {
+      if (!giftVisibility[i]) {
+        giftVisibility[i] = true;
+        notifyListeners();
+        break;
+      }
+    }
+  }
+
+  void removeGift(int index) {
+    if (index >= 0 && index < giftVisibility.length) {
+      giftVisibility[index] = false;
+      notifyListeners();
+    }
+  }
+}
 
 
 

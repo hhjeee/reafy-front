@@ -19,6 +19,39 @@ class AddDialog extends StatefulWidget {
 class _AddDialogState extends State<AddDialog> {
   late String isbn13;
   int progressState = 1;
+  bool isLoading = false;
+  bool showCheckAnimation = false;
+
+  Future<void> onConfirmPressed() async {
+    setState(() {
+      isLoading = true; // Start loading
+    });
+
+    try {
+      // post 성공시 DoneDialog
+      bool apiSuccess = await postBookInfo(isbn13, progressState);
+
+      if (apiSuccess) {
+        Provider.of<BookShelfProvider>(context, listen: false).fetchData();
+        Navigator.pop(context); // DeleteDialog 닫기
+
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return DoneDialog();
+          },
+        );
+      } else {
+        print("POST 성공, 하지만 서버로부터 응답이 예상과 다릅니다.");
+      }
+    } catch (e) {
+      print("POST 실패: $e");
+    } finally {
+      setState(() {
+        isLoading = false; // Stop loading
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -36,7 +69,7 @@ class _AddDialogState extends State<AddDialog> {
       //title:
       content: Container(
         width: 320,
-        height: 201,
+        height: 185,
         child: Column(children: [
           SizedBox(height: 40.0),
           Text(
@@ -84,38 +117,7 @@ class _AddDialogState extends State<AddDialog> {
             ),
             SizedBox(width: 6),
             ElevatedButton(
-              /*onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return DoneDialog();
-                  },
-                );
-                //Get.to(BookShelf());
-              },*/
-              onPressed: () async {
-                try {
-                  // post 성공시 DoneDialog
-                  bool apiSuccess = await postBookInfo(isbn13, progressState);
-
-                  if (apiSuccess) {
-                    Provider.of<BookShelfProvider>(context, listen: false)
-                        .fetchData();
-
-                    Navigator.pop(context); // DeleteDialog 닫기
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return DoneDialog();
-                      },
-                    );
-                  } else {
-                    print("POST 성공, 하지만 서버로부터 응답이 예상과 다릅니다.");
-                  }
-                } catch (e) {
-                  print("POST 실패: $e");
-                }
-              },
+              onPressed: isLoading ? null : onConfirmPressed,
               style: ElevatedButton.styleFrom(
                 primary: Color(0xffffd747),
                 minimumSize: Size(140, 48),
@@ -124,14 +126,16 @@ class _AddDialogState extends State<AddDialog> {
                 ),
                 elevation: 0,
               ),
-              child: Text(
-                '확인',
-                style: const TextStyle(
-                  color: Color(0xff333333),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+              child: isLoading
+                  ? CircularProgressIndicator(color: yellow)
+                  : Text(
+                      '확인',
+                      style: const TextStyle(
+                        color: Color(0xff333333),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
             ),
           ])
         ]),

@@ -6,7 +6,7 @@ import 'package:reafy_front/src/components/poobao_home.dart';
 import 'package:reafy_front/src/models/bookCount.dart';
 import 'package:reafy_front/src/pages/intro.dart';
 import 'package:get/get.dart';
-import 'package:reafy_front/src/login_page.dart';
+import 'package:reafy_front/src/pages/login_page.dart';
 import 'package:reafy_front/src/pages/mypage.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
@@ -33,6 +33,9 @@ class _RootState extends State<Root> {
   }
 
   Future<void> _autoLoginCheck() async {
+    var auth = context.read<AuthProvider>();
+    //await auth.performAuthenticatedAction();
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
 

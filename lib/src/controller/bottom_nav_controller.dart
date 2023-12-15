@@ -7,8 +7,10 @@ class BottomNavController extends GetxController {
   static BottomNavController get to => Get.find();
   RxInt pageIndex = 1.obs;
   //TabController? tabController;
-  GlobalKey<NavigatorState> searchPageNaviationKey =
-      GlobalKey<NavigatorState>();
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  //lobalKey<NavigatorState> searchPageNaviationKey =
+  //    GlobalKey<NavigatorState>();
   List<int> bottomHistory = [1];
   void changeBottomNav(int value, {bool hasGesture = true}) {
     var page = PageName.values[value];
