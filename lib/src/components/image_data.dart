@@ -97,6 +97,7 @@ class IconsPath {
   static String get bookshelf => 'assets/svg/bookshelf.svg';
 
   static String get character => 'assets/images/poobao.png';
+  static String get character_reading => 'assets/images/poobao_reading.png';
   static String get character_book => 'assets/images/poobao_book.png';
   static String get character_empty => 'assets/images/poobao_empty.png';
 
@@ -139,6 +140,7 @@ class IconsPath {
   static String get add_tag => 'assets/svg/add_tag.svg';
   static String get memo_pic => 'assets/svg/memo_picture.svg';
   static String get shelf_right => 'assets/svg/shelf_right.svg';
+  static String get menu => 'assets/svg/dots.svg';
 }
 
 class FloatingSVG extends StatefulWidget {

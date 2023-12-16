@@ -24,7 +24,6 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
 
-    //var stopwatch = context.read<StopwatchProvider>();
     final size = MediaQuery.of(context).size;
     Widget _memo() {
       return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -271,7 +270,10 @@ class _HomeState extends State<Home> {
                             width: 186,
                             height: 248,
                             //color: yellow,
-                            child: ImageData(IconsPath.character),
+
+                            child: ImageData(stopwatch.isRunning
+                                ? IconsPath.character_reading
+                                : IconsPath.character),
                           ),
                         ),
                         //// BookShelf

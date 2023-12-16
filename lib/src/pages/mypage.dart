@@ -16,6 +16,9 @@ class MyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
+    var auth = context.read<AuthProvider>();
+
     void showAlertDialog(BuildContext context) {
       showDialog(
         context: context,
@@ -37,6 +40,8 @@ class MyPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ProfileName(),
+
+              Text(auth.nickname),
               Container(
                 //통계
                 child: Column(

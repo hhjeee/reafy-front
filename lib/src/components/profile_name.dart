@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/provider/auth_provider.dart';
 
 class ProfileName extends StatefulWidget {
   @override
@@ -10,16 +11,18 @@ class ProfileName extends StatefulWidget {
 class _ProfileNameState extends State<ProfileName> {
   bool isEditing = false;
   TextEditingController _textEditingController = TextEditingController();
-  String _displayText = "푸바오";
+
+  String _displayText = "Reafy";
 
   @override
   Widget build(BuildContext context) {
+    var auth = context.read<AuthProvider>();
     return GestureDetector(
       onTap: () {
         if (isEditing) {
           setState(() {
             isEditing = false;
-            _displayText = _textEditingController.text;
+            _displayText = auth.nickname; //_textEditingController.text;
           });
         }
       },
@@ -124,7 +127,8 @@ class _ProfileNameState extends State<ProfileName> {
                       onEditingComplete: () {
                         setState(() {
                           isEditing = false;
-                          _displayText = _textEditingController.text;
+                          _displayText =
+                              auth.nickname; //_textEditingController.text;
                         });
                       },
                       textAlign: TextAlign.center,

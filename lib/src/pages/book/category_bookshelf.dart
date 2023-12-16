@@ -71,10 +71,11 @@ class _C_BookShelfState extends State<Category_BookShelf>
         ),
         actions: [
           IconButton(
-            padding: EdgeInsets.only(right: 21),
+            padding: EdgeInsets.only(right: 10),
+            iconSize: 44,
             icon: isEditMode
-                ? ImageData(IconsPath.check_green, isSvg: true, width: 44)
-                : ImageData(IconsPath.trash_can, isSvg: true, width: 20),
+                ? ImageData(IconsPath.check_green, isSvg: true)
+                : ImageData(IconsPath.trash_can, isSvg: true),
             onPressed: () {
               setState(() {
                 isEditMode = !isEditMode;

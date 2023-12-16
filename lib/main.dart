@@ -16,7 +16,7 @@ import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/provider/bamboo_provider.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:reafy_front/src/root.dart';
+import 'package:reafy_front/src/pages/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:async';
@@ -39,18 +39,11 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (c) => AuthProvider()),
+          // 나중에 옮길거 안쪽으로 옮기기
           ChangeNotifierProvider(create: (c) => SelectedBooksProvider()),
           ChangeNotifierProvider(create: (c) => BookShelfProvider()),
           ChangeNotifierProvider(create: (c) => BookModel()),
           ChangeNotifierProvider(create: (c) => PoobaoHome()),
-/*
-          ChangeNotifierProvider(create: (_) => GiftProvider()),
-          ChangeNotifierProxyProvider<GiftProvider, StopwatchProvider>(
-            create: (_) => StopwatchProvider(),
-            update: (_, giftProvider, stopwatchProvider) =>
-                stopwatchProvider!..giftProvider = giftProvider,
-          ),*/
-
           ChangeNotifierProvider(create: (c) => StopwatchProvider()),
           ChangeNotifierProvider(create: (c) => BambooProvider()),
         ],
@@ -67,61 +60,6 @@ class MyApp extends StatelessWidget {
               fontFamily: 'NanumSquareRound',
             ),
             initialBinding: InitBinding(),
-            home: Root()));
+            home: SplashScreen()));
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  /*
-  void _autoLoginCheck() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString('token');
-
-    if (token != null) {
-      setState(() {
-        isToken = true;
-      });
-    }
-  }
-
-  bool isToken = false;
-  _autoLoginCheck();*/
-
-
-
-
-
-
-
-
-  
-  //runApp(
-  /*
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (ctx) => AuthProvider()),
-        ChangeNotifierProvider(create: (ctx) => SelectedBooksProvider()),
-        ChangeNotifierProvider(create: (ctx) => BookShelfProvider()),
-        ChangeNotifierProvider(create: (ctx) => BookModel()),
-        ChangeNotifierProvider(create: (ctx) => PoobaoHome()),
-        ChangeNotifierProvider(create: (ctx) => StopwatchProvider()),
-      ],
-      child: */
-  //    MyApp());
-
-/*
-  initializeDateFormatting().then((_) => runApp(
-      ChangeNotifierProvider<AuthProvider>(
-          create: (context) => AuthProvider(), child: MyApp())));*/
