@@ -91,11 +91,22 @@ class OnBoardingPage extends StatelessWidget {
         Get.off(() => App());
       },
 
-      next: ImageData(
-        IconsPath.nextarrow,
-        isSvg: true,
-      ),
-      back: ImageData(IconsPath.backarrow, isSvg: true),
+      next: Container(
+          child: Row(children: [
+        Spacer(),
+        ImageData(
+          IconsPath.nextarrow,
+          isSvg: true,
+        )
+      ])),
+      back: Container(
+          child: Row(children: [
+        ImageData(
+          IconsPath.backarrow,
+          isSvg: true,
+        ),
+        Spacer()
+      ])),
       dotsDecorator: DotsDecorator(
           color: Color(0xFFD9D9D9),
           activeColor: yellow,
