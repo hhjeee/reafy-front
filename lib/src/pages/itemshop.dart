@@ -10,7 +10,7 @@ import 'package:reafy_front/src/components/items/otheritems.dart';
 import 'package:reafy_front/src/components/items/clock.dart';
 import 'package:reafy_front/src/components/items/window.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
-import 'package:reafy_front/src/components/done.dart';
+import 'package:reafy_front/src/components/donetohome.dart';
 
 class ItemShop extends StatefulWidget {
   const ItemShop({super.key});
@@ -135,7 +135,7 @@ class _ItemShopState extends State<ItemShop> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return DoneDialog();
+                  return DoneDialog2();
                 },
               );
             },
