@@ -77,20 +77,11 @@ class _LoginPageState extends State<LoginPage> {
           if (!await user.isLogined) {
             await user.login();
             await user.loginCheck();
-            user.isnewUser ? Get.to(OnBoardingPage()) : Get.to(App());
+            Get.to(() => user.isnewUser ? OnBoardingPage() : App());
             //await user.loginCheck();
           } else {
-            Get.to(App());
+            Get.to(() => App());
           }
-          /*
-            if (await user.isLogined) {
-              Get.to(OnBoardingPage());
-            } else {
-              Get.to(LoginPage());
-            }
-          } else {
-            Get.to(App());
-          }*/
         },
         child: Container(
           child: ImageData(

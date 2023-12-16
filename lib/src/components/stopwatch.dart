@@ -107,6 +107,8 @@ class StopwatchWidget extends StatelessWidget {
 }
 
 
+
+
 /*
 class StopwatchProvider extends GetxController {
   var _isRunning = false.obs;

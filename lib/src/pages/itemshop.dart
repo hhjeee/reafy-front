@@ -110,7 +110,7 @@ class _ItemShopState extends State<ItemShop> {
           IconButton(
             padding: EdgeInsets.all(0),
             icon:
-                ImageData(IconsPath.check, isSvg: true, width: 24, height: 24),
+                ImageData(IconsPath.check, isSvg: true, width: 44, height: 44),
             onPressed: () {
               showDialog(
                 context: context,
@@ -141,7 +141,7 @@ class _ItemShopState extends State<ItemShop> {
                         child: Container(
                           width: 114.32,
                           height: 160.666,
-                          child: ImageData(IconsPath.character2),
+                          child: ImageData(IconsPath.character),
                         ),
                       ),
                       Positioned(

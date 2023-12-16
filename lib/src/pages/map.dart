@@ -3,7 +3,11 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
+import 'package:reafy_front/src/provider/bamboo_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
+
+////////// TODO
+/// 터치하면 대나무 사라지게
 
 class BambooMap extends StatefulWidget {
   const BambooMap({super.key});
@@ -11,7 +15,30 @@ class BambooMap extends StatefulWidget {
   State<BambooMap> createState() => _BambooMapState();
 }
 
-class _BambooMapState extends State<BambooMap> {
+class _BambooMapState extends State<BambooMap>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _bambooController;
+  late Animation<double> _bambooAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _bambooController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _bambooAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+      CurvedAnimation(
+        parent: _bambooController,
+        curve: Curves.easeOut,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _bambooController.dispose();
+    super.dispose();
+  }
+
   List<Offset> giftPositions = [
     Offset(157, 133),
     Offset(13, 163),
@@ -20,10 +47,10 @@ class _BambooMapState extends State<BambooMap> {
     Offset(263, 259),
     Offset(228, 157),
   ];
-
+/*
   Widget bamboo_collect(context) {
     StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
-    print(stopwatch.itemCnt);
+    //(stopwatch.itemCnt);
 
     List<bool> generateVisibilityList(int i) {
       return List.generate(6, (index) => index < i);
@@ -42,26 +69,60 @@ class _BambooMapState extends State<BambooMap> {
           height: giftVisibility[index] ? 115 : 0,
           child: GestureDetector(
               onTap: () {
+                _bambooController.forward();
+                /*.whenComplete(() {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return _dialog(context);
+                      });
+                  //giftVisibility[index] = false;
+                });*/
                 // 대나무 증가 요청 보내기
                 setState(() {
                   giftVisibility[index] = false;
                 });
+/*
                 Future.delayed(Duration(milliseconds: 1000))
                     .then((onValue) => showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return _dialog();
-                        }));
+                          return _dialog(context);
+                        }));*/
               },
               child: ImageData(IconsPath.bambooicon, width: 115, height: 115)),
         );
       }),
     );
-  } /*
-Visibility(
-                  //maintainAnimation: ,
-                  visible: giftVisibility[index],
-                  child:*/
+  }
+*/
+
+  Widget bamboo_collect(BuildContext context) {
+    StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
+    BambooProvider bambooGifts = Provider.of<BambooProvider>(context);
+    return Stack(
+      children: List.generate(giftPositions.length, (index) {
+        return AnimatedPositioned(
+          duration: Duration(milliseconds: 1000),
+          curve: Curves.bounceOut,
+          left:
+              bambooGifts.giftVisibility[index] ? giftPositions[index].dx : 212,
+          bottom:
+              bambooGifts.giftVisibility[index] ? giftPositions[index].dy : 450,
+          width: bambooGifts.giftVisibility[index] ? 115 : 0,
+          height: bambooGifts.giftVisibility[index] ? 115 : 0,
+          child: GestureDetector(
+            onTap: () {
+              _bambooController.forward();
+              bambooGifts.collectGift(index);
+              // Other actions...
+            },
+            child: ImageData(IconsPath.bambooicon, width: 115, height: 115),
+          ),
+        );
+      }),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,9 +136,7 @@ Visibility(
           height: size.height,
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage(IconsPath.bamboomap),
-                //isNight ? IconsPath.bamboomap_night : IconsPath.bamboomap_day)
-                fit: BoxFit.cover),
+                image: AssetImage(IconsPath.bamboomap), fit: BoxFit.cover),
           ),
         ),
         _bubble(),
@@ -117,11 +176,11 @@ Widget _bubble() {
                     return Container(
                         child: Center(
                             child: Text(
-                      " . . . ",
+                      "omg", //쉬고 있어요 :)",
                       style: TextStyle(
                         color: black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
                       ),
                     )));
                   } else if (stopwatch.isRunning && !stopwatch.isFull) {
@@ -150,14 +209,15 @@ Widget _bubble() {
                         ]);
                   } else {
                     return Container(
-                        child: Text(
-                      "선물 받기!",
+                        child: Center(
+                            child: Text(
+                      "하암 ~",
                       style: TextStyle(
                         color: black,
-                        fontSize: 12,
+                        fontSize: 16,
                         fontWeight: FontWeight.w700,
                       ),
-                    ));
+                    )));
                   }
                 }))
           ])));
@@ -258,7 +318,7 @@ Widget _bottombar() {
   );
 }
 
-Widget _dialog() {
+Widget _dialog(context) {
   return AlertDialog(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(18),
@@ -313,7 +373,7 @@ Widget _dialog() {
         ElevatedButton(
           onPressed: () {
             /// TODO
-            Get.back();
+            Navigator.of(context).pop();
           },
           style: ElevatedButton.styleFrom(
             primary: Color(0xffffd747),

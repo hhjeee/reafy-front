@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:reafy_front/src/components/book_card.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/models/book.dart';
-import 'package:reafy_front/src/utils/constants.dart';
 import 'dart:math';
+import 'package:lottie/lottie.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
-import 'package:dio/dio.dart';
-import 'package:reafy_front/src/models/user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reafy_front/src/utils/url.dart';
+import 'package:reafy_front/src/provider/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 class Quote {
   final String author;
@@ -32,38 +30,17 @@ class _SearchBookState extends State<SearchBook> {
   List<Book> displayList = [];
   TextEditingController _searchController = TextEditingController();
   final Random _random = Random();
-
-  Dio dio = Dio();
-
-  final List<Quote> quotes = [
-    Quote(text: "책 없는 방은 영혼 없는 육체와도 같다.", author: "키케로"),
-    Quote(text: "좋은 책은 좋은 친구와 같다.", author: "생피에르"),
-    Quote(text: "독서는 정신의 음악이다.", author: "소크라테스"),
-    Quote(text: "독서는 하나의 창조 과정이다.", author: "에렌부르그"),
-    Quote(text: "그저 생각하고, 생활을 위해 독서하라.", author: "베이컨"),
-    Quote(text: "좋은 책은 인류에게 불멸의 정신이다.", author: "J.밀턴"),
-    Quote(text: "내가 세계를 알게 된 것은 책에 의해서였다.", author: "사르트르"),
-  ];
+  final ApiClient apiClient = ApiClient();
 
   bool isSearching = true;
 
   Future<List<SearchBookResDto>> searchBooks(String query, int page) async {
+    var auth = context.read<AuthProvider>();
+    //await auth.performAuthenticatedAction();
+
     try {
-      //final userToken = await UserToken();
-      //print(userToken.accessToken);
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? userToken = prefs.getString('token');
-
-      //print(userToken);
-
-      final response = await dio.get('http://13.125.145.165:3000/book/search',
-          queryParameters: {'query': query, 'page': page},
-          options: Options(headers: {
-            'Authorization': 'Bearer ${userToken}',
-            'Content-Type': "application/json"
-          }));
-
-      //print(response);
+      final response = await apiClient.dio
+          .get('/book/search', queryParameters: {'query': query, 'page': page});
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = response.data;
@@ -134,104 +111,122 @@ class _SearchBookState extends State<SearchBook> {
   }
 
   Widget _character() {
-    return Expanded(
-        child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Container(
-        width: 206,
-        height: 233.955, // 적절한 높이 설정
-        child: ImageData(IconsPath.character2),
-      ),
-    ));
+    return Container(
+      width: 228,
+      height: 303, // Adjust height as needed
+      child: ImageData(IconsPath.character_book),
+    );
   }
 
   Widget _quotes() {
+    final List<Quote> quotes = [
+      Quote(text: "책 없는 방은 영혼 없는 육체와도 같다.", author: "키케로"),
+      Quote(text: "좋은 책은 좋은 친구와 같다.", author: "생피에르"),
+      Quote(text: "독서는 정신의 음악이다.", author: "소크라테스"),
+      Quote(text: "독서는 하나의 창조 과정이다.", author: "에렌부르그"),
+      Quote(text: "그저 생각하고, 생활을 위해 독서하라.", author: "베이컨"),
+      Quote(text: "좋은 책은 인류에게 불멸의 정신이다.", author: "J.밀턴"),
+      Quote(text: "내가 세계를 알게 된 것은 책에 의해서였다.", author: "사르트르"),
+    ];
+
     final int randomIndex = _random.nextInt(quotes.length);
-    return Center(
+    return Positioned(
+        bottom: 15,
         child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          margin: EdgeInsets.only(left: 11),
-          width: 63,
-          height: 14,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(4),
-              topRight: Radius.circular(4),
-            ),
-            color: Color(0xffFFF7D9),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                spreadRadius: 0,
-                blurRadius: 20,
-                offset: Offset(0, 0),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: EdgeInsets.only(left: 11),
+              width: 63,
+              height: 14,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(4),
+                  topRight: Radius.circular(4),
+                ),
+                color: Color(0xffFFF7D9),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    spreadRadius: 0,
+                    blurRadius: 20,
+                    offset: Offset(0, 0),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Center(
-            child: Text(
-              quotes[randomIndex].author,
-              style: TextStyle(
-                  color: Color(0xff333333),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400),
-            ),
-          ),
-        ),
-        Container(
-          width: 245,
-          height: 43,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Color(0xFFFAF9F7),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                spreadRadius: 0,
-                blurRadius: 20,
-                offset: Offset(0, 0),
+              child: Center(
+                child: Text(
+                  quotes[randomIndex].author,
+                  style: TextStyle(
+                      color: Color(0xff333333),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
-            ],
-          ),
-          child: Center(
-            child: Text(
-              quotes[randomIndex].text,
-              style: TextStyle(
-                  color: Color(0xff333333),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700),
             ),
-          ),
-        )
-      ],
-    ));
+            Container(
+              width: 245,
+              height: 43,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Color(0xFFFAF9F7),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    spreadRadius: 0,
+                    blurRadius: 20,
+                    offset: Offset(0, 0),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Text(
+                  quotes[randomIndex].text,
+                  style: TextStyle(
+                      color: Color(0xff333333),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+            )
+          ],
+        ));
   }
 
   Widget _renderResults() {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-          colors: [
-            Color(0xFFFAF9F7),
-            Color(0xFFEBEBEB),
-            Color(0xFFEBEBEB),
-            Color(0xFFFAF9F7)
-          ],
-          stops: [0, 0.1, 0.9, 1],
-          transform: GradientRotation(1.5708),
-        )),
-        child: ListView.builder(
-          itemCount: displayList.length,
-          itemBuilder: (context, index) => BookCard(
-            book: displayList[index],
-            isbn13: displayList[index].isbn13,
+    if (isSearching) {
+      // Show Lottie animation while searching
+      return Expanded(
+          child: Transform.scale(
+        origin: Offset(0, 100),
+        scale: 1.5, // Adjust scale factor as needed
+        child: Lottie.asset(
+          'assets/lottie/searching.json',
+        ), // Replace with your Lottie file path
+      ));
+    } else {
+      return Expanded(
+        child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+            colors: [
+              Color(0xFFFAF9F7),
+              Color(0xFFEBEBEB),
+              Color(0xFFEBEBEB),
+              Color(0xFFFAF9F7)
+            ],
+            stops: [0, 0.1, 0.9, 1],
+            transform: GradientRotation(1.5708),
+          )),
+          child: ListView.builder(
+            itemCount: displayList.length,
+            itemBuilder: (context, index) => BookCard(
+              book: displayList[index],
+              isbn13: displayList[index].isbn13,
+            ),
           ),
-        ),
 
-        /*child: FutureBuilder<List<SearchBookResDto>>(
+          /*child: FutureBuilder<List<SearchBookResDto>>(
           // 검색 결과를 가져오는 비동기 함수
           future: searchBooks(_searchController.text, 1), // 예시로 페이지를 1로 고정
           builder: (context, snapshot) {
@@ -259,8 +254,9 @@ class _SearchBookState extends State<SearchBook> {
             return Container(); // 아무것도 표시하지 않을 경우 빈 컨테이너 반환
           },
         ),*/
-      ),
-    );
+        ),
+      );
+    }
   }
 
   @override
@@ -278,11 +274,6 @@ class _SearchBookState extends State<SearchBook> {
           foregroundColor: Color.fromARGB(255, 22, 20, 20),
           backgroundColor: Colors.transparent,
           elevation: 0,
-          //leading: IconButton(
-          //  icon: Icon(Icons.arrow_back_ios, color: Color(0xff333333)),
-          //  onPressed: () {
-          //    Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
-          //  },
         ),
         body: Container(
             decoration: BoxDecoration(
@@ -309,22 +300,20 @@ class _SearchBookState extends State<SearchBook> {
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        _search(),
-                        _searchController.text.isEmpty
-                            ? ListView(
-                                shrinkWrap: true,
+                      children: _searchController.text.isEmpty
+                          ? <Widget>[
+                              _search(),
+                              Spacer(),
+                              Stack(
+                                alignment: Alignment.center,
                                 children: <Widget>[
-                                  SizedBox(
-                                    height: 290,
-                                  ),
                                   _character(),
                                   _quotes(),
-                                  SizedBox(height: 44.73),
                                 ],
-                              )
-                            : _renderResults(),
-                      ]),
+                              ),
+                              const SizedBox(height: 21)
+                            ]
+                          : <Widget>[_search(), _renderResults()]),
                 ))));
   }
 }

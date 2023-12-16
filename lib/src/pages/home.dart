@@ -30,7 +30,7 @@ class _HomeState extends State<Home> {
       return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         GestureDetector(
             onTap: () {
-              Get.to(Board());
+              Get.to(() => Board());
             },
             child: Stack(children: [
               ImageData(
@@ -38,10 +38,10 @@ class _HomeState extends State<Home> {
                 width: 170,
                 height: 130,
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 35, vertical: 8),
-                child:
-                    Lottie.asset('assets/lottie/note_lottie.json', width: 100),
+              Transform.scale(
+                scale: 1.0, // Adjust scale factor as needed
+                child: Lottie.asset('assets/lottie/loadingdot.json',
+                    width: 170, height: 130),
               )
             ]))
       ]);
@@ -211,7 +211,7 @@ class _HomeState extends State<Home> {
             padding: EdgeInsets.only(right: 0),
             icon: ImageData(IconsPath.map_icon, isSvg: true),
             onPressed: () {
-              Get.to(BambooMap());
+              Get.to(() => BambooMap());
             },
           ),
           IconButton(
@@ -219,7 +219,7 @@ class _HomeState extends State<Home> {
             iconSize: 44,
             icon: ImageData(IconsPath.item, isSvg: true),
             onPressed: () {
-              Get.to(ItemShop());
+              Get.to(() => ItemShop());
             },
           ),
         ],
@@ -251,15 +251,27 @@ class _HomeState extends State<Home> {
                     height: 332,
                     child: Stack(
                       children: [
+                        //// Rug
+                        Positioned(
+                          top: 276,
+                          left: 104,
+                          child: Container(
+                            width: 186,
+                            height: 36,
+                            child: ImageData(poobaoHome.rug_imagePath,
+                                width: 186, height: 36),
+                          ),
+                        ),
+
                         //// Character
                         Positioned(
-                          top: 84,
-                          left: 123,
+                          top: 64,
+                          left: 102,
                           child: Container(
-                            width: 148,
-                            height: 208,
+                            width: 186,
+                            height: 248,
                             //color: yellow,
-                            child: ImageData(IconsPath.character2),
+                            child: ImageData(IconsPath.character),
                           ),
                         ),
                         //// BookShelf
@@ -305,17 +317,6 @@ class _HomeState extends State<Home> {
                             height: 110,
                             child: ImageData(poobaoHome.others_imagePath,
                                 width: 90, height: 110),
-                          ),
-                        ),
-                        //// Rug
-                        Positioned(
-                          top: 276,
-                          left: 104,
-                          child: Container(
-                            width: 186,
-                            height: 36,
-                            child: ImageData(poobaoHome.rug_imagePath,
-                                width: 186, height: 36),
                           ),
                         ),
                       ],
