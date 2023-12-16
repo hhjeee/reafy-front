@@ -18,6 +18,7 @@ class BookDetailPage extends StatefulWidget {
 
 class _BookDetailPageState extends State<BookDetailPage> {
   late Future<BookshelfBookDetailsDto> bookDetailsFuture;
+  bool isFavorite = false;
 
   @override
   void initState() {
@@ -213,29 +214,40 @@ class _BookDetailPageState extends State<BookDetailPage> {
     );
   }
 
-  /*Widget _poobao_shadow() {
-    return Container(
-      width: 74,
-      height: 15,
-      child: ImageData(IconsPath.poobao_shadow, isSvg: true),
-    );
-  }*/
-
   Widget _book_info(BookshelfBookDetailsDto bookDetails) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 26.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          IconButton(
+            icon: isFavorite
+                ? ImageData(IconsPath.nonFavorite, isSvg: true, width: 21)
+                : ImageData(IconsPath.favorite, isSvg: true, width: 21),
+            onPressed: () async {
+              try {
+                await updateBookshelfBookFavorite(bookDetails.bookshelfBookId);
+                setState(() {
+                  isFavorite = !isFavorite;
+                });
+              } catch (e) {
+                print('에러 발생: $e');
+              }
+            },
+          ),
           Text(
-            '${bookDetails.title}',
+            (bookDetails?.title?.length ?? 0) > 20
+                ? '${bookDetails.title!.substring(0, 20)}\n${bookDetails.title!.substring(
+                    21,
+                  )}'
+                : '${bookDetails?.title ?? ''}',
             overflow: TextOverflow.clip,
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w800,
               color: Color(0xff333333),
             ),
-          ), // title - 변경
+          ),
           SizedBox(height: 11),
           Row(
             children: [
@@ -252,7 +264,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                 (bookDetails?.author?.length ?? 0) > 25
                     ? '${bookDetails.author!.substring(0, 25)}\n${bookDetails.author!.substring(
                         26,
-                      )}' // 최대 20자로 제한
+                      )}'
                     : '${bookDetails?.author ?? ''}',
                 overflow: TextOverflow.clip, // 길이 초과 시 '...'로 표시
                 style: TextStyle(

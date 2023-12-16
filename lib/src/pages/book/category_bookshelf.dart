@@ -74,7 +74,8 @@ class _C_BookShelfState extends State<Category_BookShelf>
             padding: EdgeInsets.only(right: 21),
             icon: isEditMode
                 ? ImageData(IconsPath.check_green, isSvg: true, width: 44)
-                : ImageData(IconsPath.trash_can, isSvg: true, width: 20),
+                : ImageData(IconsPath.trash_can,
+                    isSvg: true, width: 44, height: 44),
             onPressed: () {
               setState(() {
                 isEditMode = !isEditMode;
@@ -191,7 +192,7 @@ class _C_BookShelfState extends State<Category_BookShelf>
             margin: EdgeInsets.only(top: 22),
             child: SingleChildScrollView(
               child: Container(
-                height: 650,
+                height: 560,
                 child: GridView.builder(
                   padding: EdgeInsets.all(8.0),
                   shrinkWrap: true,

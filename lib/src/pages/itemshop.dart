@@ -9,6 +9,8 @@ import 'package:reafy_front/src/components/items/rug.dart';
 import 'package:reafy_front/src/components/items/otheritems.dart';
 import 'package:reafy_front/src/components/items/clock.dart';
 import 'package:reafy_front/src/components/items/window.dart';
+import 'package:reafy_front/src/provider/item_placement_provider.dart';
+import 'package:reafy_front/src/components/done.dart';
 
 class ItemShop extends StatefulWidget {
   const ItemShop({super.key});
@@ -68,6 +70,9 @@ class _ItemShopState extends State<ItemShop> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final itemPlacementProvider =
+        Provider.of<ItemPlacementProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -75,7 +80,10 @@ class _ItemShopState extends State<ItemShop> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Color(0xff333333)),
           onPressed: () {
-            Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
+            Provider.of<ItemPlacementProvider>(context, listen: false)
+                .restoreInitialValues();
+
+            Get.back();
           },
         ),
         title: Center(
@@ -112,10 +120,14 @@ class _ItemShopState extends State<ItemShop> {
             icon:
                 ImageData(IconsPath.check, isSvg: true, width: 44, height: 44),
             onPressed: () {
+              itemPlacementProvider.updateInitialValues(
+                itemPlacementProvider.clockImagePath,
+                itemPlacementProvider.selectedClockIndex,
+              );
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return PurchaseDialog();
+                  return DoneDialog();
                 },
               );
             },
@@ -127,16 +139,43 @@ class _ItemShopState extends State<ItemShop> {
           alignment: Alignment.center,
           child: Column(children: [
             SizedBox(height: 20),
-            Consumer<PoobaoHome>(
+            Consumer<ItemPlacementProvider>(
+                builder: (context, itemPlacementProvider, child) {
+              return Container(
+                width: 281.17,
+                height: 241,
+                //decoration: BoxDecoration(color: Color(0xffd9d9d9)),
+                child: Stack(children: [
+                  Positioned(
+                    top: 64.89,
+                    left: 84.98,
+                    child: Container(
+                      width: 114.32,
+                      height: 160.666,
+                      child: ImageData(IconsPath.character),
+                    ),
+                  ),
+                  Positioned(
+                    //clock
+                    left: 117.42,
+                    child: Container(
+                        width: 49.436,
+                        height: 49.436,
+                        child: ImageData(itemPlacementProvider.clockImagePath)),
+                  ),
+                ]),
+              );
+            }),
+            /*Consumer<PoobaoHome>(
               builder: (context, poobaoHome, child) {
                 return Container(
-                  width: 281.7,
+                  width: 281.17,
                   height: 241,
                   //decoration: BoxDecoration(color: Color(0xffd9d9d9)),
                   child: Stack(
                     children: [
                       Positioned(
-                        top: 37.67,
+                        top: 64.89,
                         left: 84.98,
                         child: Container(
                           width: 114.32,
@@ -181,8 +220,8 @@ class _ItemShopState extends State<ItemShop> {
                         ),
                       ),
                       Positioned(
-                        top: 114.32,
-                        left: 89.26,
+                        top: 213.19,
+                        left: 70.29,
                         child: Container(
                           //rug
                           width: 143.637,
@@ -194,9 +233,9 @@ class _ItemShopState extends State<ItemShop> {
                   ),
                 );
               },
-            ),
+            ),*/
             Container(
-              margin: EdgeInsets.only(bottom: 20.0),
+              margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
               height: 1.0,
               color: Color(0xffd9d9d9),
             ),
@@ -328,7 +367,6 @@ class _ItemShopState extends State<ItemShop> {
               ),
             ),
             getSelectedWidget(),
-            //Items(),
           ])),
     );
   }

@@ -86,6 +86,8 @@ class IconsPath {
   static String get check => 'assets/svg/check.svg';
   static String get check_green => 'assets/svg/check_green.svg';
   static String get done => 'assets/svg/done_button.svg';
+  static String get favorite => 'assets/svg/book_favorite.svg';
+  static String get nonFavorite => 'assets/svg/book_nonFavorite.svg';
 
   // 온보딩
   static String get state_1 => 'assets/images/state_1.png';

@@ -1,23 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:provider/provider.dart';
-import 'package:reafy_front/src/components/poobao_home.dart';
+import 'package:reafy_front/src/components/purchase_dialog.dart';
+import 'package:reafy_front/src/provider/item_provider.dart';
+import 'package:reafy_front/src/provider/item_placement_provider.dart';
 
 class ItemData {
+  final int itemId;
   final String imagePath;
   final String text;
 
-  ItemData({required this.imagePath, required this.text});
+  ItemData({required this.itemId, required this.imagePath, required this.text});
 }
 
 List<ItemData> itemDataList = [
-  ItemData(imagePath: 'assets/images/nothing.png', text: '선택 안함'),
-  ItemData(imagePath: 'assets/images/items/clock_clover.png', text: '클로버 시계'),
-  ItemData(imagePath: 'assets/images/items/clock_star.png', text: '별 시계'),
-  ItemData(imagePath: 'assets/images/items/clock_simple.png', text: '심플 시계'),
-  ItemData(imagePath: 'assets/images/items/clock_panda.png', text: '판다 시계'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '시계5'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '시계6'),
+  //clock 20 ~ 39
+  ItemData(itemId: 20, imagePath: 'assets/images/nothing.png', text: '선택 안함'),
+  ItemData(
+      itemId: 21,
+      imagePath: 'assets/images/items/clock_clover.png',
+      text: '클로버 시계'),
+  ItemData(
+      itemId: 22,
+      imagePath: 'assets/images/items/clock_star.png',
+      text: '별 시계'),
+  ItemData(
+      itemId: 23,
+      imagePath: 'assets/images/items/clock_simple.png',
+      text: '심플 시계'),
+  ItemData(
+      itemId: 24,
+      imagePath: 'assets/images/items/clock_panda.png',
+      text: '판다 시계'),
+  ItemData(
+      itemId: 25,
+      imagePath: 'assets/images/items/clock_socks.png',
+      text: '양말 시계'),
   // ...
 ];
 
@@ -36,12 +54,15 @@ class _ItemClockState extends State<ItemClock> {
 
     // 이전에 선택한 값으로 초기화
     selectedGridIndex =
-        Provider.of<PoobaoHome>(context, listen: false).getSelectedClockIndex();
+        Provider.of<ItemPlacementProvider>(context, listen: false)
+            .getSelectedClockIndex();
   }
 
   @override
   Widget build(BuildContext context) {
-    final poobaoHome = Provider.of<PoobaoHome>(context, listen: true);
+    final itemPlacementProvider =
+        Provider.of<ItemPlacementProvider>(context, listen: false);
+
     return Container(
       child: SingleChildScrollView(
         //physics: AlwaysScrollableScrollPhysics(),
@@ -60,24 +81,43 @@ class _ItemClockState extends State<ItemClock> {
             itemBuilder: (context, index) {
               bool isSelected = selectedGridIndex == index;
               ItemData itemIndex = itemDataList[index];
+              /*bool isButtonEnabled = Provider.of<ItemProvider>(context)
+                      .ownedItemIds
+                      .contains(itemIndex.itemId) ||
+                  index == 0;*/
+              bool isButtonEnabled = index < 5;
 
               return InkWell(
                 onTap: () {
                   setState(() {
                     selectedGridIndex = index;
                     selectedImagePath = itemIndex.imagePath;
-
-                    poobaoHome.updateClockImagePath(itemIndex.imagePath);
-                    poobaoHome.updateSelectedClockIndex(index);
-                    poobaoHome.updateSelectedImagePath(itemIndex.imagePath);
-                    poobaoHome.updateSelectedItemName(itemIndex.text);
+                    if (isButtonEnabled) {
+                      itemPlacementProvider.updateSelectedClockIndex(index);
+                      itemPlacementProvider
+                          .updateClockImagePath(itemIndex.imagePath);
+                    }
                   });
+                  if (index > 4) {
+                    //!isButtonEnabled
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return PurchaseDialog(
+                          itemId: itemIndex.itemId,
+                          itemName: itemIndex.text,
+                          itemImagePath: itemIndex.imagePath,
+                        );
+                      },
+                    );
+                  }
                 },
                 child: GridItem(
                   index,
                   itemIndex,
                   isSelected,
                   selectedImagePath,
+                  isButtonEnabled: isButtonEnabled,
                 ),
               );
             },
@@ -92,10 +132,10 @@ Widget GridItem(
   int index,
   ItemData itemIndex,
   bool isSelected,
-  String selectedImagePath,
-) {
-  bool isButtonEnabled = index < 5; //사용자가 가지고 있는 아이템일 경우
-
+  String selectedImagePath, {
+  required bool isButtonEnabled,
+}) {
+  final isButtonEnabled = index <= 4;
   return Flexible(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -132,7 +172,7 @@ Widget GridItem(
                     ))
                   : null,
             ),
-            if (!isButtonEnabled)
+            if (index > 4) //(!isButtonEnabled)
               Container(
                 width: 79,
                 height: 79,

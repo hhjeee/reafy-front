@@ -35,7 +35,7 @@ class StopwatchProvider extends ChangeNotifier {
 
   void setTimer(int sec) {
     _countdownsec = sec;
-    notifyListeners();
+    //notifyListeners();
   }
 
   void start() {

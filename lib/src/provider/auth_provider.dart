@@ -149,11 +149,11 @@ class AuthProvider extends ChangeNotifier {
         var response = await apiClient.dio.post(url, data: body);
         if (response.statusCode == 200 || response.statusCode == 201) {
           var resBody = response.data;
-
           if (resBody['token'] == null) {
             _newUser = true;
           }
           setToken(resBody["accessToken"]);
+
           notifyListeners();
         } else {
           // Handle errors

@@ -18,6 +18,8 @@ import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:reafy_front/src/root.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reafy_front/src/provider/item_provider.dart';
+import 'package:reafy_front/src/provider/item_placement_provider.dart';
 
 import 'dart:async';
 
@@ -42,7 +44,9 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (c) => SelectedBooksProvider()),
           ChangeNotifierProvider(create: (c) => BookShelfProvider()),
           ChangeNotifierProvider(create: (c) => BookModel()),
-          ChangeNotifierProvider(create: (c) => PoobaoHome()),
+          //ChangeNotifierProvider(create: (c) => PoobaoHome()),
+          ChangeNotifierProvider(create: (c) => ItemProvider()),
+          ChangeNotifierProvider(create: (c) => ItemPlacementProvider()),
 /*
           ChangeNotifierProvider(create: (_) => GiftProvider()),
           ChangeNotifierProxyProvider<GiftProvider, StopwatchProvider>(

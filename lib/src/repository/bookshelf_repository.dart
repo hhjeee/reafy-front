@@ -397,3 +397,55 @@ Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
     throw e;
   }
 }
+
+//favorite 등록
+Future<BookshelfBookDetailsDto> updateBookshelfBookFavorite(
+  int bookshelfBookId,
+) async {
+  final dio = Dio();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? userToken = prefs.getString('token');
+
+  try {
+    final response = await dio.get(
+      'http://13.125.145.165:3000/book/bookshelf/$bookshelfBookId',
+      options: Options(headers: {
+        'Authorization': 'Bearer $userToken',
+        'Content-Type': 'application/json',
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = response.data;
+      final bool isCurrentlyFavorite =
+          data['response']['isFavorite'] == 1 ? true : false;
+
+      final Map<String, dynamic> requestBody = {
+        'isFavorite': isCurrentlyFavorite ? 0 : 1,
+      };
+
+      final updateResponse = await dio.put(
+        'http://13.125.145.165:3000/book/bookshelf/$bookshelfBookId',
+        data: requestBody,
+        options: Options(headers: {
+          'Authorization': 'Bearer $userToken',
+          'Content-Type': 'application/json',
+        }),
+      );
+
+      if (updateResponse.statusCode == 200) {
+        final Map<String, dynamic> updatedData = updateResponse.data;
+        final BookshelfBookDetailsDto bookshelfBookDetails =
+            BookshelfBookDetailsDto.fromJson(updatedData['response']);
+        return bookshelfBookDetails;
+      } else {
+        throw Exception('Failed to update bookshelf book favorite status');
+      }
+    } else {
+      throw Exception('Failed to fetch current bookshelf book details');
+    }
+  } catch (e) {
+    print('updateBookshelfBookFavorite 함수에서 에러 발생: $e');
+    throw e;
+  }
+}

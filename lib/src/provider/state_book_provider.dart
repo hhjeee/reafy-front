@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
+import 'package:reafy_front/src/utils/url.dart';
 
 class BookShelfProvider extends ChangeNotifier {
   List<String> thumbnailsForProgressState1 = [];
