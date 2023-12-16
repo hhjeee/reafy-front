@@ -1,10 +1,21 @@
 //import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/app.dart';
+import 'package:reafy_front/src/binding/init_bindings.dart';
+import 'package:reafy_front/src/components/poobao_home.dart';
+import 'package:reafy_front/src/models/bookCount.dart';
 import 'package:reafy_front/src/pages/intro.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/login_page.dart';
-/*
+import 'package:reafy_front/src/pages/mypage.dart';
+import 'package:reafy_front/src/provider/auth_provider.dart';
+import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
+import 'package:reafy_front/src/provider/state_book_provider.dart';
+import 'package:reafy_front/src/provider/stopwatch_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+
 class Root extends StatefulWidget {
   const Root({Key? key}) : super(key: key);
   @override
@@ -12,33 +23,44 @@ class Root extends StatefulWidget {
 }
 
 class _RootState extends State<Root> {
+  bool isLoading = true;
+  bool isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _autoLoginCheck();
+  }
+
+  Future<void> _autoLoginCheck() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+
+    setState(() {
+      isLoading = false;
+      isLoggedIn = token != null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Container(
-            width: 300,
-            height: 300,
-            child: Column(children: [
-              Text('islogined: ${viewModel.isLogined}'),
-              ElevatedButton(
-                  onPressed: () async {
-                    await viewModel.login();
-                    setState(() {});
-                  },
-                  child: const Text("Login")),
-              ElevatedButton(
-                  onPressed: () async {
-                    await viewModel.logout();
-                    setState(() {});
-                  },
-                  child: const Text("Logout"))
-            ])));
+    if (isLoading) {
+      print("Loading...");
+      return CircularProgressIndicator();
+    } else {
+      FlutterNativeSplash.remove();
+      if (isLoggedIn) {
+        print("Logged In");
+        return App();
+      } else {
+        // User is not logged in
+        return LoginPage();
+      }
+    }
   }
 }
 
 
-
-*/
 /*
 class Root extends GetView<AuthController> {
   const Root({Key? key}) : super(key: key);

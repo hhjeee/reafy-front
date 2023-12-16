@@ -12,6 +12,7 @@ class App extends GetView<BottomNavController> {
 
   @override
   Widget build(BuildContext context) {
+    print("This is App");
     return WillPopScope(
       child: Obx(
         () => Scaffold(
