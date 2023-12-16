@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/pages/book/bookshelf.dart';
-import 'package:reafy_front/src/pages/home.dart';
+import 'package:reafy_front/src/app.dart';
 
 class DoneDialog2 extends StatefulWidget {
   @override
@@ -16,7 +16,12 @@ class _DoneDialogState extends State<DoneDialog2> {
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
       if (mounted) {
-        Get.to(Home());
+        Navigator.pop(context);
+        //Get.to(() => App());
+        /* Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => App()),
+        );*/
       }
     });
   }
