@@ -10,15 +10,30 @@ class MemoWidget extends StatelessWidget {
   final Memo memo;
   const MemoWidget({Key? key, required this.memo}) : super(key: key);
 
+  Widget _title() {
+    return Container(
+        //height: 36,
+        padding: const EdgeInsets.symmetric(horizontal: 6.0),
+        margin: EdgeInsets.only(bottom: 9),
+        child: Row(children: [
+          Text(
+            memo.title ?? '',
+            style: const TextStyle(
+                fontWeight: FontWeight.w800, color: black, fontSize: 12),
+          ),
+          Spacer(),
+          ImageData(IconsPath.menu, isSvg: true, width: 13, height: 3)
+        ]));
+  }
+
   Widget _image() {
     return Card(
       color: Color(0xffFAF9F7),
       elevation: 0,
-      margin: EdgeInsets.all(16),
       child: Container(
         width: 319,
         height: 270,
-        padding: EdgeInsets.all(16),
+        //padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(memo.imageUrl!),
@@ -41,10 +56,13 @@ class MemoWidget extends StatelessWidget {
           ExpandableText(
             memo.content ?? '',
             prefixStyle: const TextStyle(
-                fontWeight: FontWeight.bold, color: black, fontSize: 12),
+                fontWeight: FontWeight.w400,
+                color: black,
+                fontSize: 12,
+                height: 1.5),
             expandText: '더보기',
             collapseText: '접기',
-            maxLines: 3,
+            maxLines: 5,
             expandOnTextTap: true,
             collapseOnTextTap: true,
             linkColor: Colors.grey,
@@ -56,19 +74,25 @@ class MemoWidget extends StatelessWidget {
 
   Widget _dateAgo() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      child: Text(
-        "2023년 12월 23일",
-        //timeago.format(//memo.createdAt!),
-        style: const TextStyle(color: Colors.grey, fontSize: 9),
-      ),
-    );
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: Row(children: [
+          hashtag(),
+          hashtag(),
+          hashtag(),
+          Spacer(),
+          Text(
+            "2023년 12월 23일",
+            //timeago.format(//memo.createdAt!),
+            style: const TextStyle(color: Colors.grey, fontSize: 9),
+          ),
+        ]));
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
       //color:
       decoration: BoxDecoration(
         color: Color(0xFFfbfbfb),
@@ -84,20 +108,43 @@ class MemoWidget extends StatelessWidget {
       ),
 
       width: 343,
-      height: 426, //143
+      height: 450, //143
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        //crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 15),
+          _title(),
+          //const SizedBox(height: 15),
           _image(),
-          const SizedBox(height: 5),
+          const SizedBox(height: 6),
           _infoDescription(),
-          const SizedBox(height: 5),
+          Spacer(),
           _dateAgo(),
         ],
       ),
     );
   }
+}
+
+Widget hashtag() {
+  return Container(
+    margin: EdgeInsets.only(left: 4),
+    width: 46,
+    height: 13,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(100),
+      color: Color(0xffFFECA6),
+    ),
+    child: Center(
+      child: Text(
+        "#경영",
+        style: TextStyle(
+          fontSize: 8,
+          fontWeight: FontWeight.w400,
+          color: Color(0xff666666),
+        ),
+      ),
+    ),
+  );
 }
 
 Widget _memo() {

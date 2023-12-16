@@ -5,6 +5,7 @@ import 'package:reafy_front/src/components/delete_book.dart';
 import 'package:reafy_front/src/components/modify_book.dart';
 import 'package:reafy_front/src/models/book.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
+import 'package:reafy_front/src/utils/constants.dart';
 
 class BookDetailPage extends StatefulWidget {
   final int bookshelfBookId;
@@ -41,8 +42,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
           ),
           actions: [
             IconButton(
+              iconSize: 44,
               padding: EdgeInsets.all(0),
-              icon: ImageData(IconsPath.pencil_green, isSvg: true, width: 20),
+              icon: ImageData(IconsPath.pencil_green, isSvg: true),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -53,8 +55,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
               },
             ),
             IconButton(
-              padding: EdgeInsets.only(right: 21),
-              icon: ImageData(IconsPath.trash_can, isSvg: true, width: 20),
+              iconSize: 44,
+              padding: EdgeInsets.only(right: 10),
+              icon: ImageData(IconsPath.trash_can, isSvg: true),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -130,15 +133,22 @@ class _BookDetailPageState extends State<BookDetailPage> {
                       SizedBox(height: 11),
                       Container(
                         height: 120,
+                        //color: yellow,
                         child: Center(
-                          child: Text(
-                            "앗, 아직 메모가 없어요!",
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                              ImageData(IconsPath.character_empty,
+                                  width: 104, height: 94),
+                              Text(
+                                "앗, 아직 메모가 없어요!",
+                                style: TextStyle(
+                                  color: gray,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ])),
                       ),
                       _memo(),
                       SizedBox(height: 9.0),

@@ -39,6 +39,7 @@ class StopwatchProvider extends ChangeNotifier {
   }
 
   void start() {
+    if (_isRunning) return;
     _isRunning = true;
     _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
       _seconds++;
@@ -114,7 +115,7 @@ class StopwatchProvider extends ChangeNotifier {
 
       if (_itemCnt < 6) {
         return true;
-        //giftProvider.addGift();
+        //
       } else {
         _isfull = true;
       }

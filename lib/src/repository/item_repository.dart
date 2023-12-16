@@ -16,8 +16,8 @@ class ItemDto {
 
   factory ItemDto.fromJson(Map<String, dynamic> json) {
     return ItemDto(
-      itemId: json['itemId'],
-      activation: json['activation'],
+      itemId: json['itemId'] as int,
+      activation: json['activation'] as bool,
     );
   }
 }
@@ -26,11 +26,10 @@ class ItemDto {
 Future<bool> postBookInfo(int itemId, bool activation) async {
   final dio = Dio();
   final url = 'http://13.125.145.165:3000/item';
-  /*SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');*/
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? userToken = prefs.getString('token');
 
   try {
-    final userToken = tempUserToken;
     final response = await dio.post(url,
         data: {'itemId': itemId, 'activation': activation},
         options: Options(headers: {
@@ -55,17 +54,16 @@ Future<bool> postBookInfo(int itemId, bool activation) async {
   }
 }
 
-//소유 아이템 리스트 반환
-Future<List<ItemDto>> getItemList() async {
-  //SharedPreferences prefs = await SharedPreferences.getInstance();
-  //final String? userToken = prefs.getString('token');
-
+// 소유 아이템 아이디 리스트 반환
+Future<List<int>> getOwnedItemIds() async {
   final Dio dio = Dio();
+  final url = 'http://13.125.145.165:3000/item/userItemList';
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? userToken = prefs.getString('token');
 
   try {
-    final userToken = tempUserToken;
     final response = await dio.get(
-      'http://13.125.145.165:3000/item/userItemList',
+      url,
       options: Options(headers: {
         'Authorization': 'Bearer $userToken',
         'Content-Type': 'application/json',
@@ -73,19 +71,28 @@ Future<List<ItemDto>> getItemList() async {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> responseData = response.data['response'];
-      final List<ItemDto> items = responseData
-          .map<ItemDto>((item) => ItemDto(
-                itemId: item['itemId'] as int,
-                activation: item['activation'] as bool,
-              ))
-          .toList();
+      List<int> ownedItemIds = [];
+      for (var data in response.data) {
+        ownedItemIds.add(data['itemId']);
+      }
 
-      return items;
+      return ownedItemIds;
     } else {
       return [];
     }
   } catch (e) {
+    print('Error during item id retrieval: $e');
+
     throw e;
   }
 }
+
+
+/*       /*for (var data in responseData) {
+        ownedItemIds.add(data['itemId'] is String
+            ? int.tryParse(data['itemId']) ?? 0
+            : data['itemId'] as int);
+      }*/
+      /* final List<int> ownedItemIds = responseData
+          .map<int>((item) => int.parse(item['itemId'] as String))
+          .toList();*/*/

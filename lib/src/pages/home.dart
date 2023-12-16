@@ -24,7 +24,6 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
 
-    //var stopwatch = context.read<StopwatchProvider>();
     final size = MediaQuery.of(context).size;
     Widget _memo() {
       return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -243,7 +242,9 @@ class _HomeState extends State<Home> {
             children: [
               Spacer(),
               _memo(),
+
               Container(width: 364, height: 312),
+
               /*Consumer<StopwatchProvider>(
                 builder: (context, stopwatch, child) {
                   return Column(

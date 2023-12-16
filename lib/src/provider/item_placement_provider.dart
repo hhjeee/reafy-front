@@ -127,8 +127,25 @@ class ItemPlacementProvider extends ChangeNotifier {
 
   // 아이템 배치 저장 -> 값 업데이트
   void updateInitialValues(
-      String newInitialClockImagePath, int newInitialSelectedClockIndex) {
+      String newInitialBookshelfImagePath,
+      int newInitialSelectedBookshelfIndex,
+      String newInitialClockImagePath,
+      int newInitialSelectedClockIndex,
+      String newInitialOthersImagePath,
+      int newInitialSelectedOthersIndex,
+      String newInitialRugImagePath,
+      int newInitialSelectedRugIndex,
+      String newInitialWindowImagePath,
+      int newInitialSelectedWindowIndex) {
+    initialBookshelfImagePath = newInitialBookshelfImagePath;
+    initialSelectedBookshelfIndex = newInitialSelectedBookshelfIndex;
     initialClockImagePath = newInitialClockImagePath;
     initialSelectedClockIndex = newInitialSelectedClockIndex;
+    initialOthersImagePath = newInitialOthersImagePath;
+    initialSelectedOthersIndex = newInitialSelectedOthersIndex;
+    initialClockImagePath = newInitialClockImagePath;
+    initialSelectedClockIndex = newInitialSelectedClockIndex;
+    initialWindowImagePath = newInitialWindowImagePath;
+    initialSelectedWindowIndex = newInitialSelectedWindowIndex;
   }
 }

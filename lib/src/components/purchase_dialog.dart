@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/repository/item_repository.dart';
-import 'package:reafy_front/src/components/done.dart';
+import 'package:reafy_front/src/components/donetohome.dart';
 
 class PurchaseDialog extends StatefulWidget {
   final int itemId;
@@ -105,12 +105,13 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
                 //확인 버튼 누르는게 보유한 대나무 수가 해당 아이템 가격보다 많을때 가능하도록 하기
                 onPressed: () async {
                   bool success = await postBookInfo(widget.itemId, true);
+                  Navigator.pop(context);
 
                   if (success) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return DoneDialog();
+                        return DoneDialog2();
                       },
                     );
                   } else {}

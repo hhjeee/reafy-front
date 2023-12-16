@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/purchase_dialog.dart';
 import 'package:reafy_front/src/provider/item_provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
+import 'package:reafy_front/src/repository/item_repository.dart';
 
 class ItemData {
   final int itemId;
@@ -39,7 +40,7 @@ class _ItemBookshelfState extends State<ItemBookshelf> {
   @override
   void initState() {
     super.initState();
-
+    Provider.of<ItemProvider>(context, listen: false).fetchUserItems();
     // 이전에 선택한 값으로 초기화
     selectedGridIndex =
         Provider.of<ItemPlacementProvider>(context, listen: false)

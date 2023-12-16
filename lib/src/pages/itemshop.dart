@@ -121,8 +121,16 @@ class _ItemShopState extends State<ItemShop> {
                 ImageData(IconsPath.check, isSvg: true, width: 44, height: 44),
             onPressed: () {
               itemPlacementProvider.updateInitialValues(
+                itemPlacementProvider.bookshelfImagePath,
+                itemPlacementProvider.selectedBookshelfIndex,
                 itemPlacementProvider.clockImagePath,
                 itemPlacementProvider.selectedClockIndex,
+                itemPlacementProvider.othersImagePath,
+                itemPlacementProvider.selectedOthersIndex,
+                itemPlacementProvider.rugImagePath,
+                itemPlacementProvider.selectedRugIndex,
+                itemPlacementProvider.windowImagePath,
+                itemPlacementProvider.selectedWindowIndex,
               );
               showDialog(
                 context: context,
@@ -156,6 +164,15 @@ class _ItemShopState extends State<ItemShop> {
                     ),
                   ),
                   Positioned(
+                    top: 21.63,
+                    child: Container(
+                        //bookshelf
+                        width: 77.243,
+                        height: 177.66,
+                        child: ImageData(
+                            itemPlacementProvider.bookshelfImagePath)),
+                  ),
+                  Positioned(
                     //clock
                     left: 117.42,
                     child: Container(
@@ -163,77 +180,39 @@ class _ItemShopState extends State<ItemShop> {
                         height: 49.436,
                         child: ImageData(itemPlacementProvider.clockImagePath)),
                   ),
+                  Positioned(
+                    left: 203.93,
+                    top: 26.26,
+                    child: Container(
+                      //window
+                      width: 77.243,
+                      height: 77.243,
+                      child: ImageData(itemPlacementProvider.windowImagePath),
+                    ),
+                  ),
+                  Positioned(
+                    left: 203.93,
+                    top: 114.32,
+                    child: Container(
+                      //others
+                      width: 69.519,
+                      height: 84.968,
+                      child: ImageData(itemPlacementProvider.othersImagePath),
+                    ),
+                  ),
+                  Positioned(
+                    top: 213.19,
+                    left: 70.29,
+                    child: Container(
+                      //rug
+                      width: 143.637,
+                      height: 27.808,
+                      child: ImageData(itemPlacementProvider.rugImagePath),
+                    ),
+                  ),
                 ]),
               );
             }),
-            /*Consumer<PoobaoHome>(
-              builder: (context, poobaoHome, child) {
-                return Container(
-                  width: 281.17,
-                  height: 241,
-                  //decoration: BoxDecoration(color: Color(0xffd9d9d9)),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: 64.89,
-                        left: 84.98,
-                        child: Container(
-                          width: 114.32,
-                          height: 160.666,
-                          child: ImageData(IconsPath.character),
-                        ),
-                      ),
-                      Positioned(
-                        top: 21.63,
-                        child: Container(
-                            //bookshelf
-                            width: 77.243,
-                            height: 177.66,
-                            child: ImageData(poobaoHome.bookshelf_imagePath)),
-                      ),
-                      Positioned(
-                        //clock
-                        left: 117.42,
-                        child: Container(
-                            width: 49.436,
-                            height: 49.436,
-                            child: ImageData(poobaoHome.clock_imagePath)),
-                      ),
-                      Positioned(
-                        left: 203.93,
-                        top: 26.26,
-                        child: Container(
-                          //window
-                          width: 77.243,
-                          height: 77.243,
-                          child: ImageData(poobaoHome.window_imagePath),
-                        ),
-                      ),
-                      Positioned(
-                        left: 203.93,
-                        top: 114.32,
-                        child: Container(
-                          //others
-                          width: 69.519,
-                          height: 84.968,
-                          child: ImageData(poobaoHome.others_imagePath),
-                        ),
-                      ),
-                      Positioned(
-                        top: 213.19,
-                        left: 70.29,
-                        child: Container(
-                          //rug
-                          width: 143.637,
-                          height: 27.808,
-                          child: ImageData(poobaoHome.rug_imagePath),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),*/
             Container(
               margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
               height: 1.0,

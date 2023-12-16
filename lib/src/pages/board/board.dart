@@ -151,6 +151,37 @@ void _showAddMemoBottomSheet(BuildContext context) {
                 ),
                 SizedBox(width: 3.67),
                 Text(
+                  "책",
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xff666666),
+                  ),
+                ),
+                SizedBox(width: 34),
+                Text(
+                  "별들이 겹치는 순간",
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xff666666),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 9.0),
+            Row(
+              children: [
+                Container(
+                  width: 13.333,
+                  height: 13.333,
+                  child: ImageData(
+                    IconsPath.memo_date,
+                    isSvg: true,
+                  ),
+                ),
+                SizedBox(width: 3.67),
+                Text(
                   "생성일",
                   style: TextStyle(
                     fontSize: 10,
@@ -266,7 +297,7 @@ void _showAddMemoBottomSheet(BuildContext context) {
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 13),
                     width: 317,
-                    height: 128,
+                    height: 154,
                     child: TextField(
                       maxLength: 400,
                       maxLines: null,

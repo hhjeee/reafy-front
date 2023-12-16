@@ -81,11 +81,10 @@ class _ItemClockState extends State<ItemClock> {
             itemBuilder: (context, index) {
               bool isSelected = selectedGridIndex == index;
               ItemData itemIndex = itemDataList[index];
-              /*bool isButtonEnabled = Provider.of<ItemProvider>(context)
+              bool isButtonEnabled = Provider.of<ItemProvider>(context)
                       .ownedItemIds
                       .contains(itemIndex.itemId) ||
-                  index == 0;*/
-              bool isButtonEnabled = index < 5;
+                  index == 0;
 
               return InkWell(
                 onTap: () {
@@ -98,8 +97,7 @@ class _ItemClockState extends State<ItemClock> {
                           .updateClockImagePath(itemIndex.imagePath);
                     }
                   });
-                  if (index > 4) {
-                    //!isButtonEnabled
+                  if (!isButtonEnabled) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -135,7 +133,6 @@ Widget GridItem(
   String selectedImagePath, {
   required bool isButtonEnabled,
 }) {
-  final isButtonEnabled = index <= 4;
   return Flexible(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -172,7 +169,7 @@ Widget GridItem(
                     ))
                   : null,
             ),
-            if (index > 4) //(!isButtonEnabled)
+            if (!isButtonEnabled)
               Container(
                 width: 79,
                 height: 79,

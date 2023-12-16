@@ -21,17 +21,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    void _autoLoginCheck() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? token = prefs.getString('token');
-
-      if (token != null) {
-        setState(() {
-          isToken = true;
-        });
-      }
-    }
-
     Widget _bubble() {
       return Container(
           width: 260,
@@ -68,19 +57,27 @@ class _LoginPageState extends State<LoginPage> {
     Widget _loginbutton() {
       return GestureDetector(
         onTap: () async {
-          var user = context.read<AuthProvider>();
-          //_autoLoginCheck();
-          user.loginCheck();
+          print(" 터치했는데");
           print("터치 했는데");
 
-          // if user is not logined,
-          if (!await user.isLogined) {
-            await user.login();
-            await user.loginCheck();
-            Get.to(() => user.isnewUser ? OnBoardingPage() : App());
-            //await user.loginCheck();
+          var auth = context.read<AuthProvider>();
+          await auth.login();
+          //await auth.getUserInfo();
+          //print(auth.nickname);
+
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          bool isLoggedIn = prefs.getBool('isLogin') ?? false;
+          ////print("[*]로그인 여부 : $isLoggedIn");
+          if (isLoggedIn) {
+            if (await auth.performAuthenticatedAction()) {
+              Get.off(() => auth.isnewUser ? OnBoardingPage() : App());
+            } else {
+              print("[*]토큰 재발급 실패");
+              Get.off(() => LoginPage());
+            }
           } else {
-            Get.to(() => App());
+            print("[*]로그인되어있지 않은 경우");
+            Get.off(() => LoginPage());
           }
         },
         child: Container(
