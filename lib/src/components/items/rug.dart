@@ -1,23 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:provider/provider.dart';
-import 'package:reafy_front/src/components/poobao_home.dart';
+import 'package:reafy_front/src/components/purchase_dialog.dart';
+import 'package:reafy_front/src/provider/item_provider.dart';
+import 'package:reafy_front/src/provider/item_placement_provider.dart';
 
 class ItemData {
+  final int itemId;
   final String imagePath;
   final String text;
 
-  ItemData({required this.imagePath, required this.text});
+  ItemData({required this.itemId, required this.imagePath, required this.text});
 }
 
 List<ItemData> itemDataList = [
-  ItemData(imagePath: 'assets/images/nothing.png', text: '선택 안함'),
-  ItemData(imagePath: 'assets/images/items/rug_smile.png', text: '러그1'),
-  ItemData(imagePath: 'assets/images/items/rug_cloud.png', text: '러그2'),
-  ItemData(imagePath: 'assets/images/items/rug_leaf.png', text: '러그3'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그4'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그5'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그6'),
+  //rug 60~79
+  ItemData(itemId: 60, imagePath: 'assets/images/nothing.png', text: '선택 안함'),
+  ItemData(
+      itemId: 61,
+      imagePath: 'assets/images/items/rug_smile.png',
+      text: '스마일 러그'),
+  ItemData(
+      itemId: 62,
+      imagePath: 'assets/images/items/rug_cloud.png',
+      text: '구름 러그'),
+  ItemData(
+      itemId: 63,
+      imagePath: 'assets/images/items/rug_leaf.png',
+      text: '나뭇잎 러그'),
   // ...
 ];
 
@@ -36,12 +46,15 @@ class _ItemRugState extends State<ItemRug> {
 
     // 이전에 선택한 값으로 초기화
     selectedGridIndex =
-        Provider.of<PoobaoHome>(context, listen: false).getSelectedRugIndex();
+        Provider.of<ItemPlacementProvider>(context, listen: false)
+            .getSelectedRugIndex();
   }
 
   @override
   Widget build(BuildContext context) {
-    final poobaoHome = Provider.of<PoobaoHome>(context, listen: true);
+    final itemPlacementProvider =
+        Provider.of<ItemPlacementProvider>(context, listen: false);
+
     return Container(
       child: SingleChildScrollView(
         //physics: AlwaysScrollableScrollPhysics(),
@@ -58,26 +71,44 @@ class _ItemRugState extends State<ItemRug> {
             ),
             itemCount: itemDataList.length,
             itemBuilder: (context, index) {
-              // 각 사각형에 들어갈 이미지 URL
-              //String imageUrl = getImageUrl(index);
-
               bool isSelected = selectedGridIndex == index;
               ItemData itemIndex = itemDataList[index];
+              bool isButtonEnabled = Provider.of<ItemProvider>(context)
+                      .ownedItemIds
+                      .contains(itemIndex.itemId) ||
+                  index == 0;
 
               return InkWell(
                 onTap: () {
                   setState(() {
                     selectedGridIndex = index;
                     selectedImagePath = itemIndex.imagePath;
-
-                    poobaoHome.updateRugImagePath(itemIndex.imagePath);
-                    poobaoHome.updateSelectedRugIndex(index);
-                    poobaoHome.updateSelectedImagePath(itemIndex.imagePath);
-                    poobaoHome.updateSelectedItemName(itemIndex.text);
+                    if (isButtonEnabled) {
+                      itemPlacementProvider.updateSelectedRugIndex(index);
+                      itemPlacementProvider
+                          .updateRugImagePath(itemIndex.imagePath);
+                    }
                   });
+                  if (!isButtonEnabled) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return PurchaseDialog(
+                          itemId: itemIndex.itemId,
+                          itemName: itemIndex.text,
+                          itemImagePath: itemIndex.imagePath,
+                        );
+                      },
+                    );
+                  }
                 },
-                child:
-                    GridItem(index, itemIndex, isSelected, selectedImagePath),
+                child: GridItem(
+                  index,
+                  itemIndex,
+                  isSelected,
+                  selectedImagePath,
+                  isButtonEnabled: isButtonEnabled,
+                ),
               );
             },
           ),
@@ -88,9 +119,12 @@ class _ItemRugState extends State<ItemRug> {
 }
 
 Widget GridItem(
-    int index, ItemData itemIndex, bool isSelected, String selectedImagePath) {
-  bool isButtonEnabled = index < 4; //사용자가 가지고 있는 아이템일 경우
-
+  int index,
+  ItemData itemIndex,
+  bool isSelected,
+  String selectedImagePath, {
+  required bool isButtonEnabled,
+}) {
   return Flexible(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -119,11 +153,12 @@ Widget GridItem(
                       ? Border.all(color: Color(0xffffd747), width: 2)
                       : Border.all(color: Color(0xffffffff), width: 2)),
               child: itemIndex.imagePath.isNotEmpty
-                  ? Container(
-                      width: 40,
-                      height: 40,
+                  ? Center(
+                      child: Container(
+                      width: 60,
+                      height: 60,
                       child: ImageData(itemIndex.imagePath),
-                    )
+                    ))
                   : null,
             ),
             if (!isButtonEnabled)

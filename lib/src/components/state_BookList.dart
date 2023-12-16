@@ -77,15 +77,10 @@ class State_BookShelfWidgetState extends State<State_BookShelfWidget> {
                 padding: EdgeInsets.only(left: 25),
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Category_BookShelf(
-                                pageTitle: widget.title,
-                                thumbnailListLength:
-                                    widget.thumbnailList.length,
-                              )),
-                    );
+                    Get.to(Category_BookShelf(
+                      pageTitle: widget.title,
+                      thumbnailListLength: widget.thumbnailList.length,
+                    ));
                   },
                   child: Text(
                     widget.title,
@@ -99,14 +94,10 @@ class State_BookShelfWidgetState extends State<State_BookShelfWidget> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Category_BookShelf(
-                              pageTitle: widget.title,
-                              thumbnailListLength: widget.thumbnailList.length,
-                            )),
-                  );
+                  Get.to(Category_BookShelf(
+                    pageTitle: widget.title,
+                    thumbnailListLength: widget.thumbnailList.length,
+                  ));
                 },
                 child: Row(
                   children: [

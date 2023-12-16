@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:provider/provider.dart';
-import 'package:reafy_front/src/components/poobao_home.dart';
-import 'package:reafy_front/src/pages/itemshop.dart';
+import 'package:reafy_front/src/components/purchase_dialog.dart';
+import 'package:reafy_front/src/provider/item_provider.dart';
+import 'package:reafy_front/src/provider/item_placement_provider.dart';
+import 'package:reafy_front/src/repository/item_repository.dart';
 
 class ItemData {
+  final int itemId;
   final String imagePath;
   final String text;
 
-  ItemData({required this.imagePath, required this.text});
+  ItemData({required this.itemId, required this.imagePath, required this.text});
 }
 
 List<ItemData> itemDataList = [
   //대나무 수 추가
-  ItemData(imagePath: 'assets/images/nothing.png', text: '선택 안함'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '베이직 책장'),
-  ItemData(imagePath: 'assets/images/bookshelf1.png', text: '사다리 책장'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '수집가 책장'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '책장4'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '책장5'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '책장6'),
+  //bookshelf - 0~19
+  ItemData(itemId: 0, imagePath: 'assets/images/nothing.png', text: '선택 안함'),
+  ItemData(itemId: 1, imagePath: 'assets/images/nothing.png', text: '베이직 책장'),
+  ItemData(
+      itemId: 2, imagePath: 'assets/images/bookshelf1.png', text: '사다리 책장'),
+  ItemData(itemId: 3, imagePath: 'assets/images/nothing.png', text: '수집가 책장'),
+  // ItemData(itemId: 4, imagePath: 'assets/images/nothing.png', text: '책장4'),
+  // ItemData(itemId: 5, imagePath: 'assets/images/nothing.png', text: '책장5'),
+  // ItemData(itemId: 6, imagePath: 'assets/images/nothing.png', text: '책장6'),
   // ...
 ];
 
@@ -29,21 +34,23 @@ class ItemBookshelf extends StatefulWidget {
 }
 
 class _ItemBookshelfState extends State<ItemBookshelf> {
-  late int selectedGridIndex;
+  int selectedGridIndex = 0;
   String selectedImagePath = '';
 
   @override
   void initState() {
     super.initState();
-
+    Provider.of<ItemProvider>(context, listen: false).fetchUserItems();
     // 이전에 선택한 값으로 초기화
-    selectedGridIndex = Provider.of<PoobaoHome>(context, listen: false)
-        .getSelectedBookshelfIndex();
+    selectedGridIndex =
+        Provider.of<ItemPlacementProvider>(context, listen: false)
+            .getSelectedBookshelfIndex();
   }
 
   @override
   Widget build(BuildContext context) {
-    final poobaoHome = Provider.of<PoobaoHome>(context, listen: true);
+    final itemPlacementProvider =
+        Provider.of<ItemPlacementProvider>(context, listen: false);
 
     return Container(
       child: SingleChildScrollView(
@@ -63,6 +70,10 @@ class _ItemBookshelfState extends State<ItemBookshelf> {
             itemBuilder: (context, index) {
               bool isSelected = selectedGridIndex == index;
               ItemData itemIndex = itemDataList[index];
+              bool isButtonEnabled = Provider.of<ItemProvider>(context)
+                      .ownedItemIds
+                      .contains(itemIndex.itemId) ||
+                  index == 0;
 
               return InkWell(
                 onTap: () {
@@ -70,17 +81,31 @@ class _ItemBookshelfState extends State<ItemBookshelf> {
                     selectedGridIndex = index;
                     selectedImagePath = itemIndex.imagePath;
 
-                    poobaoHome.updateBookshelfImagePath(itemIndex.imagePath);
-                    poobaoHome.updateSelectedBookshelfIndex(index);
-                    poobaoHome.updateSelectedImagePath(itemIndex.imagePath);
-                    poobaoHome.updateSelectedItemName(itemIndex.text);
+                    if (isButtonEnabled) {
+                      itemPlacementProvider.updateSelectedBookshelfIndex(index);
+                      itemPlacementProvider
+                          .updateBookshelfImagePath(itemIndex.imagePath);
+                    }
                   });
+                  if (!isButtonEnabled) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return PurchaseDialog(
+                          itemId: itemIndex.itemId,
+                          itemName: itemIndex.text,
+                          itemImagePath: itemIndex.imagePath,
+                        );
+                      },
+                    );
+                  }
                 },
                 child: GridItem(
                   index,
                   itemIndex,
                   isSelected,
-                  poobaoHome.selectedImagePath,
+                  selectedImagePath,
+                  isButtonEnabled: isButtonEnabled,
                 ),
               );
             },
@@ -95,10 +120,9 @@ Widget GridItem(
   int index,
   ItemData itemIndex,
   bool isSelected,
-  String selectedImagePath,
-) {
-  bool isButtonEnabled = index < 4; //사용자가 가지고 있는 아이템일 경우
-
+  String selectedImagePath, {
+  required bool isButtonEnabled,
+}) {
   return Flexible(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,

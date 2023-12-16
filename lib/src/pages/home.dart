@@ -242,90 +242,9 @@ class _HomeState extends State<Home> {
             children: [
               Spacer(),
               _memo(),
-              Consumer<PoobaoHome>(
-                builder: (context, poobaoHome, child) {
-                  return Container(
-                    //color: gray,
-                    width: size.width,
-                    height: 332,
-                    child: Stack(
-                      children: [
-                        //// Rug
-                        Positioned(
-                          top: 276,
-                          left: 104,
-                          child: Container(
-                            width: 186,
-                            height: 36,
-                            child: ImageData(poobaoHome.rug_imagePath,
-                                width: 186, height: 36),
-                          ),
-                        ),
 
-                        //// Character
-                        Positioned(
-                          top: 64,
-                          left: 102,
-                          child: Container(
-                            width: 186,
-                            height: 248,
-                            //color: yellow,
+              Container(width: 364, height: 312),
 
-                            child: ImageData(stopwatch.isRunning
-                                ? IconsPath.character_reading
-                                : IconsPath.character),
-                          ),
-                        ),
-                        //// BookShelf
-                        Positioned(
-                          top: 28,
-                          left: 13,
-                          child: Container(
-                              width: 110,
-                              height: 230,
-                              child: ImageData(poobaoHome.bookshelf_imagePath,
-                                  width: 110, height: 230)),
-                        ),
-                        //// Clock
-                        Positioned(
-                          left: 165,
-                          top: 0,
-                          child: Container(
-                              width: 64,
-                              height: 64,
-                              child: ImageData(poobaoHome.clock_imagePath,
-                                  width: 64, height: 64)),
-                        ),
-                        //// Window
-                        Positioned(
-                          top: 34,
-                          right: 13,
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            child: ImageData(
-                              poobaoHome.window_imagePath,
-                              width: 100,
-                              height: 100,
-                            ),
-                          ),
-                        ),
-                        //// Others
-                        Positioned(
-                          right: 23,
-                          top: 148,
-                          child: Container(
-                            width: 90,
-                            height: 110,
-                            child: ImageData(poobaoHome.others_imagePath,
-                                width: 90, height: 110),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
               /*Consumer<StopwatchProvider>(
                 builder: (context, stopwatch, child) {
                   return Column(
@@ -757,3 +676,87 @@ Widget _time2() {
     }
 */
     
+    /*
+    
+              Consumer<PoobaoHome>(
+                builder: (context, poobaoHome, child) {
+                  return Container(
+                    //color: gray,
+                    width: size.width,
+                    height: 332,
+                    child: Stack(
+                      children: [
+                        //// Rug
+                        Positioned(
+                          top: 276,
+                          left: 104,
+                          child: Container(
+                            width: 186,
+                            height: 36,
+                            child: ImageData(poobaoHome.rug_imagePath,
+                                width: 186, height: 36),
+                          ),
+                        ),
+
+                        //// Character
+                        Positioned(
+                          top: 64,
+                          left: 102,
+                          child: Container(
+                            width: 186,
+                            height: 248,
+                            //color: yellow,
+                            child: ImageData(IconsPath.character),
+                          ),
+                        ),
+                        //// BookShelf
+                        Positioned(
+                          top: 28,
+                          left: 13,
+                          child: Container(
+                              width: 110,
+                              height: 230,
+                              child: ImageData(poobaoHome.bookshelf_imagePath,
+                                  width: 110, height: 230)),
+                        ),
+                        //// Clock
+                        Positioned(
+                          left: 165,
+                          top: 0,
+                          child: Container(
+                              width: 64,
+                              height: 64,
+                              child: ImageData(poobaoHome.clock_imagePath,
+                                  width: 64, height: 64)),
+                        ),
+                        //// Window
+                        Positioned(
+                          top: 34,
+                          right: 13,
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            child: ImageData(
+                              poobaoHome.window_imagePath,
+                              width: 100,
+                              height: 100,
+                            ),
+                          ),
+                        ),
+                        //// Others
+                        Positioned(
+                          right: 23,
+                          top: 148,
+                          child: Container(
+                            width: 90,
+                            height: 110,
+                            child: ImageData(poobaoHome.others_imagePath,
+                                width: 90, height: 110),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            */ 

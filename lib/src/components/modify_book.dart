@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/done.dart';
+import 'package:reafy_front/src/utils/constants.dart';
 
 class ModifyDialog extends StatefulWidget {
   @override
@@ -9,6 +10,10 @@ class ModifyDialog extends StatefulWidget {
 }
 
 class _ModifyDialogState extends State<ModifyDialog> {
+  late String isbn13;
+  int progressState = 1;
+  bool isLoading = false;
+  bool showCheckAnimation = false;
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -34,7 +39,13 @@ class _ModifyDialogState extends State<ModifyDialog> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              BookStatusButtonGroup(),
+              BookStatusButtonGroup(
+                onStatusSelected: (selectedButtonIndex) {
+                  setState(() {
+                    progressState = selectedButtonIndex == 0 ? 1 : 2;
+                  });
+                },
+              ),
             ],
           ),
           SizedBox(height: 40),
@@ -102,6 +113,10 @@ class _ModifyDialogState extends State<ModifyDialog> {
 /////
 
 class BookStatusButtonGroup extends StatefulWidget {
+  final Function(int) onStatusSelected;
+
+  BookStatusButtonGroup({required this.onStatusSelected});
+
   @override
   _BookStatusButtonGroupState createState() => _BookStatusButtonGroupState();
 }
@@ -117,37 +132,38 @@ class _BookStatusButtonGroupState extends State<BookStatusButtonGroup> {
           width: 266,
           height: 30,
           decoration: BoxDecoration(
-              color: Color(0xfffaf9f7),
-              borderRadius: BorderRadius.circular(100)),
+            color: bg_gray,
+            borderRadius: BorderRadius.circular(100),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                spreadRadius: 0,
+                blurRadius: 20,
+                offset: Offset(0, 0),
+              ),
+            ],
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             BookStatusButton(
-              status: '읽은 책',
+              status: '읽고 있는 책',
               isSelected: selectedButtonIndex == 0,
               onPressed: () {
                 setState(() {
                   selectedButtonIndex = 0;
+                  widget.onStatusSelected(selectedButtonIndex);
                 });
               },
             ),
             BookStatusButton(
-              status: '읽는 중',
+              status: '완독한 책',
               isSelected: selectedButtonIndex == 1,
               onPressed: () {
                 setState(() {
                   selectedButtonIndex = 1;
-                });
-              },
-            ),
-            BookStatusButton(
-              status: '읽을 책',
-              isSelected: selectedButtonIndex == 2,
-              onPressed: () {
-                setState(() {
-                  selectedButtonIndex = 2;
+                  widget.onStatusSelected(selectedButtonIndex);
                 });
               },
             ),
@@ -173,12 +189,12 @@ class BookStatusButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: <Widget>[
       Container(
-        width: 89,
+        width: 133,
         height: 30,
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
-            primary: isSelected ? Color(0xffFFECA6) : Color(0xFFfaf9f7),
+            primary: isSelected ? yellow_light : bg_gray,
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100),
@@ -187,7 +203,7 @@ class BookStatusButton extends StatelessWidget {
           child: Text(
             status,
             style: TextStyle(
-              color: Color(0xff333333),
+              color: Colors.black,
               fontSize: 12,
               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
             ),

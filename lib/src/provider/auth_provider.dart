@@ -332,6 +332,24 @@ class AuthProvider extends ChangeNotifier {
     
     
       try {
+<<<<<<< HEAD
+        var response = await apiClient.dio.post(url, data: body);
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          var resBody = response.data;
+          if (resBody['token'] == null) {
+            _newUser = true;
+          }
+          setToken(resBody["accessToken"]);
+
+          notifyListeners();
+        } else {
+          // Handle errors
+        }
+      } on DioError catch (e) {
+        print('error : $e');
+      }
+    }
+=======
       var response = await apiClient.dio.post(url, data: body);
       //print("token from server");
       //print(response.statusCode);
@@ -341,6 +359,7 @@ class AuthProvider extends ChangeNotifier {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         var resBody = response.data; // 서버에서 준 accessToken 1시간 짜리
+>>>>>>> bf527077bd0cca7b6f1f9bc2c31f4cfece462dbc
 
         if (resBody['token'] == null) {
           _newUser = true;

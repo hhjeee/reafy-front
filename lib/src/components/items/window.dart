@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:provider/provider.dart';
-import 'package:reafy_front/src/components/poobao_home.dart';
+import 'package:reafy_front/src/components/purchase_dialog.dart';
+import 'package:reafy_front/src/provider/item_provider.dart';
+import 'package:reafy_front/src/provider/item_placement_provider.dart';
 
 class ItemData {
+  final int itemId;
   final String imagePath;
   final String text;
 
-  ItemData({required this.imagePath, required this.text});
+  ItemData({required this.itemId, required this.imagePath, required this.text});
 }
 
 List<ItemData> itemDataList = [
-  ItemData(imagePath: 'assets/images/nothing.png', text: '선택 안함'),
-  ItemData(imagePath: 'assets/images/items/window1.png', text: '창문1'),
-  ItemData(imagePath: 'assets/images/items/window2.png', text: '창문2'),
-  ItemData(imagePath: 'assets/images/items/window3.png', text: '창문3'),
-  ItemData(imagePath: 'assets/images/items/window4.png', text: '창문4'),
-  ItemData(imagePath: 'assets/images/items/window5.png', text: '창문5'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '창문6'),
+  //window 80~99
+  ItemData(itemId: 80, imagePath: 'assets/images/nothing.png', text: '선택 안함'),
+  ItemData(
+      itemId: 81, imagePath: 'assets/images/items/window1.png', text: '창문1'),
+  ItemData(
+      itemId: 82, imagePath: 'assets/images/items/window2.png', text: '창문2'),
+  ItemData(
+      itemId: 83, imagePath: 'assets/images/items/window3.png', text: '창문3'),
+  ItemData(
+      itemId: 84, imagePath: 'assets/images/items/window4.png', text: '창문4'),
+  ItemData(
+      itemId: 85, imagePath: 'assets/images/items/window5.png', text: '창문5'),
+  ItemData(itemId: 86, imagePath: 'assets/images/nothing.png', text: '창문6'),
   // ...
 ];
 
@@ -35,13 +44,16 @@ class _ItemWindowState extends State<ItemWindow> {
     super.initState();
 
     // 이전에 선택한 값으로 초기화
-    selectedGridIndex = Provider.of<PoobaoHome>(context, listen: false)
-        .getSelectedWindowIndex();
+    selectedGridIndex =
+        Provider.of<ItemPlacementProvider>(context, listen: false)
+            .getSelectedWindowIndex();
   }
 
   @override
   Widget build(BuildContext context) {
-    final poobaoHome = Provider.of<PoobaoHome>(context, listen: true);
+    final itemPlacementProvider =
+        Provider.of<ItemPlacementProvider>(context, listen: false);
+
     return Container(
       child: SingleChildScrollView(
         //physics: AlwaysScrollableScrollPhysics(),
@@ -60,24 +72,41 @@ class _ItemWindowState extends State<ItemWindow> {
             itemBuilder: (context, index) {
               bool isSelected = selectedGridIndex == index;
               ItemData itemIndex = itemDataList[index];
+              bool isButtonEnabled = Provider.of<ItemProvider>(context)
+                      .ownedItemIds
+                      .contains(itemIndex.itemId) ||
+                  index == 0;
 
               return InkWell(
                 onTap: () {
                   setState(() {
                     selectedGridIndex = index;
                     selectedImagePath = itemIndex.imagePath;
-
-                    poobaoHome.updateWindowImagePath(itemIndex.imagePath);
-                    poobaoHome.updateSelectedWindowIndex(index);
-                    poobaoHome.updateSelectedImagePath(itemIndex.imagePath);
-                    poobaoHome.updateSelectedItemName(itemIndex.text);
+                    if (isButtonEnabled) {
+                      itemPlacementProvider.updateSelectedWindowIndex(index);
+                      itemPlacementProvider
+                          .updateWindowImagePath(itemIndex.imagePath);
+                    }
                   });
+                  if (!isButtonEnabled) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return PurchaseDialog(
+                          itemId: itemIndex.itemId,
+                          itemName: itemIndex.text,
+                          itemImagePath: itemIndex.imagePath,
+                        );
+                      },
+                    );
+                  }
                 },
                 child: GridItem(
                   index,
                   itemIndex,
                   isSelected,
                   selectedImagePath,
+                  isButtonEnabled: isButtonEnabled,
                 ),
               );
             },
@@ -92,10 +121,9 @@ Widget GridItem(
   int index,
   ItemData itemIndex,
   bool isSelected,
-  String selectedImagePath,
-) {
-  bool isButtonEnabled = index < 4; //사용자가 가지고 있는 아이템일 경우
-
+  String selectedImagePath, {
+  required bool isButtonEnabled,
+}) {
   return Flexible(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,

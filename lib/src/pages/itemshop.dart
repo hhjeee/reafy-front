@@ -9,6 +9,8 @@ import 'package:reafy_front/src/components/items/rug.dart';
 import 'package:reafy_front/src/components/items/otheritems.dart';
 import 'package:reafy_front/src/components/items/clock.dart';
 import 'package:reafy_front/src/components/items/window.dart';
+import 'package:reafy_front/src/provider/item_placement_provider.dart';
+import 'package:reafy_front/src/components/done.dart';
 
 class ItemShop extends StatefulWidget {
   const ItemShop({super.key});
@@ -68,6 +70,9 @@ class _ItemShopState extends State<ItemShop> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final itemPlacementProvider =
+        Provider.of<ItemPlacementProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -75,7 +80,10 @@ class _ItemShopState extends State<ItemShop> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Color(0xff333333)),
           onPressed: () {
-            Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
+            Provider.of<ItemPlacementProvider>(context, listen: false)
+                .restoreInitialValues();
+
+            Get.back();
           },
         ),
         title: Center(
@@ -112,10 +120,22 @@ class _ItemShopState extends State<ItemShop> {
             icon:
                 ImageData(IconsPath.check, isSvg: true, width: 44, height: 44),
             onPressed: () {
+              itemPlacementProvider.updateInitialValues(
+                itemPlacementProvider.bookshelfImagePath,
+                itemPlacementProvider.selectedBookshelfIndex,
+                itemPlacementProvider.clockImagePath,
+                itemPlacementProvider.selectedClockIndex,
+                itemPlacementProvider.othersImagePath,
+                itemPlacementProvider.selectedOthersIndex,
+                itemPlacementProvider.rugImagePath,
+                itemPlacementProvider.selectedRugIndex,
+                itemPlacementProvider.windowImagePath,
+                itemPlacementProvider.selectedWindowIndex,
+              );
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return PurchaseDialog();
+                  return DoneDialog();
                 },
               );
             },
@@ -127,76 +147,74 @@ class _ItemShopState extends State<ItemShop> {
           alignment: Alignment.center,
           child: Column(children: [
             SizedBox(height: 20),
-            Consumer<PoobaoHome>(
-              builder: (context, poobaoHome, child) {
-                return Container(
-                  width: 281.7,
-                  height: 241,
-                  //decoration: BoxDecoration(color: Color(0xffd9d9d9)),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        top: 37.67,
-                        left: 84.98,
-                        child: Container(
-                          width: 114.32,
-                          height: 160.666,
-                          child: ImageData(IconsPath.character),
-                        ),
-                      ),
-                      Positioned(
-                        top: 21.63,
-                        child: Container(
-                            //bookshelf
-                            width: 77.243,
-                            height: 177.66,
-                            child: ImageData(poobaoHome.bookshelf_imagePath)),
-                      ),
-                      Positioned(
-                        //clock
-                        left: 117.42,
-                        child: Container(
-                            width: 49.436,
-                            height: 49.436,
-                            child: ImageData(poobaoHome.clock_imagePath)),
-                      ),
-                      Positioned(
-                        left: 203.93,
-                        top: 26.26,
-                        child: Container(
-                          //window
-                          width: 77.243,
-                          height: 77.243,
-                          child: ImageData(poobaoHome.window_imagePath),
-                        ),
-                      ),
-                      Positioned(
-                        left: 203.93,
-                        top: 114.32,
-                        child: Container(
-                          //others
-                          width: 69.519,
-                          height: 84.968,
-                          child: ImageData(poobaoHome.others_imagePath),
-                        ),
-                      ),
-                      Positioned(
-                        top: 114.32,
-                        left: 89.26,
-                        child: Container(
-                          //rug
-                          width: 143.637,
-                          height: 27.808,
-                          child: ImageData(poobaoHome.rug_imagePath),
-                        ),
-                      ),
-                    ],
+            Consumer<ItemPlacementProvider>(
+                builder: (context, itemPlacementProvider, child) {
+              return Container(
+                width: 281.17,
+                height: 241,
+                //decoration: BoxDecoration(color: Color(0xffd9d9d9)),
+                child: Stack(children: [
+                  Positioned(
+                    top: 64.89,
+                    left: 84.98,
+                    child: Container(
+                      width: 114.32,
+                      height: 160.666,
+                      child: ImageData(IconsPath.character),
+                    ),
                   ),
-                );
-              },
-            ),
+                  Positioned(
+                    top: 21.63,
+                    child: Container(
+                        //bookshelf
+                        width: 77.243,
+                        height: 177.66,
+                        child: ImageData(
+                            itemPlacementProvider.bookshelfImagePath)),
+                  ),
+                  Positioned(
+                    //clock
+                    left: 117.42,
+                    child: Container(
+                        width: 49.436,
+                        height: 49.436,
+                        child: ImageData(itemPlacementProvider.clockImagePath)),
+                  ),
+                  Positioned(
+                    left: 203.93,
+                    top: 26.26,
+                    child: Container(
+                      //window
+                      width: 77.243,
+                      height: 77.243,
+                      child: ImageData(itemPlacementProvider.windowImagePath),
+                    ),
+                  ),
+                  Positioned(
+                    left: 203.93,
+                    top: 114.32,
+                    child: Container(
+                      //others
+                      width: 69.519,
+                      height: 84.968,
+                      child: ImageData(itemPlacementProvider.othersImagePath),
+                    ),
+                  ),
+                  Positioned(
+                    top: 213.19,
+                    left: 70.29,
+                    child: Container(
+                      //rug
+                      width: 143.637,
+                      height: 27.808,
+                      child: ImageData(itemPlacementProvider.rugImagePath),
+                    ),
+                  ),
+                ]),
+              );
+            }),
             Container(
-              margin: EdgeInsets.only(bottom: 20.0),
+              margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
               height: 1.0,
               color: Color(0xffd9d9d9),
             ),
@@ -328,7 +346,6 @@ class _ItemShopState extends State<ItemShop> {
               ),
             ),
             getSelectedWidget(),
-            //Items(),
           ])),
     );
   }
