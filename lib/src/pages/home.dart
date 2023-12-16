@@ -11,6 +11,7 @@ import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/components/poobao_home.dart';
 import 'package:provider/provider.dart';
+import 'package:reafy_front/src/provider/item_placement_provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -242,22 +243,89 @@ class _HomeState extends State<Home> {
             children: [
               Spacer(),
               _memo(),
-
-              Container(
-                  width: size.width,
-                  height: 332,
-                  child: Stack(children: [
-                    //// Character
-                    Positioned(
-                      top: 64,
-                      left: 102,
-                      child: Container(
-                        width: 186,
-                        height: 248,
-                        child: ImageData(IconsPath.character),
-                      ),
-                    ),
-                  ])),
+              Consumer<ItemPlacementProvider>(
+                  builder: (context, itemPlacementProvider, child) {
+                return Container(
+                    width: size.width,
+                    height: 332,
+                    child: Stack(
+                      children: [
+                        //// Rug
+                        Positioned(
+                          top: 276,
+                          left: 104,
+                          child: Container(
+                            width: 186,
+                            height: 36,
+                            child: ImageData(itemPlacementProvider.rugImagePath,
+                                width: 186, height: 36),
+                          ),
+                        ),
+                        //// Character
+                        Positioned(
+                          top: 64,
+                          left: 102,
+                          child: Container(
+                            width: 186,
+                            height: 248,
+                            //color: yellow,
+                            child: ImageData(IconsPath.character),
+                          ),
+                        ),
+                        //// BookShelf
+                        Positioned(
+                          top: 28,
+                          left: 13,
+                          child: Container(
+                              width: 110,
+                              height: 230,
+                              child: ImageData(
+                                  itemPlacementProvider.bookshelfImagePath,
+                                  width: 110,
+                                  height: 230)),
+                        ),
+                        //// Clock
+                        Positioned(
+                          left: 165,
+                          top: 0,
+                          child: Container(
+                              width: 64,
+                              height: 64,
+                              child: ImageData(
+                                  itemPlacementProvider.clockImagePath,
+                                  width: 64,
+                                  height: 64)),
+                        ),
+                        //// Window
+                        Positioned(
+                          top: 34,
+                          right: 13,
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            child: ImageData(
+                              itemPlacementProvider.windowImagePath,
+                              width: 100,
+                              height: 100,
+                            ),
+                          ),
+                        ),
+                        //// Others
+                        Positioned(
+                          right: 23,
+                          top: 148,
+                          child: Container(
+                            width: 90,
+                            height: 110,
+                            child: ImageData(
+                                itemPlacementProvider.othersImagePath,
+                                width: 90,
+                                height: 110),
+                          ),
+                        ),
+                      ],
+                    ));
+              }),
 
               /*Consumer<StopwatchProvider>(
                 builder: (context, stopwatch, child) {
