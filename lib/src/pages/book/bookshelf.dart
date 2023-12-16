@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/shelfwidget.dart';
 import 'package:reafy_front/src/models/book.dart';
-import 'package:reafy_front/src/pages/book/addbook.dart';
+import 'package:reafy_front/src/pages/book/searchbook.dart';
 import 'package:reafy_front/src/components/delete_book2.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/components/state_BookList.dart';

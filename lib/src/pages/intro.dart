@@ -11,52 +11,96 @@ class OnBoardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IntroductionScreen(
+      controlsPosition: const Position(left: 0, right: 0, bottom: 80),
       pages: [
         PageViewModel(
-            title: '나만의 책장을 \n만들어봐요',
-            body: '',
-            image: Image.asset("assets/images/onboarding_1.png"),
+            title: '',
+            bodyWidget: Column(
+              children: [
+                Text(
+                  "나만의 책장을\n만들어봐요",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 30, fontWeight: FontWeight.w800, height: 1.5),
+                ),
+                SizedBox(height: 40.0),
+                Image.asset("assets/images/onboarding_1.png", height: 415),
+              ],
+            ),
             decoration: getPageDecoration()),
         PageViewModel(
-            title: '독서 시간을\n측정할 수 있어요',
-            body: '',
-            image: Image.asset("assets/images/onboarding_2.png"),
+            title: '',
+            bodyWidget: Column(
+              children: [
+                Text(
+                  "독서 타이머로\n책에 몰입해요",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 30, fontWeight: FontWeight.w800, height: 1.5),
+                ),
+                SizedBox(height: 40.0),
+                Image.asset("assets/images/onboarding_2.png", height: 415),
+              ],
+            ),
             decoration: getPageDecoration()),
         PageViewModel(
-            title: '내 서재를\n마음대로 꾸며봐요',
-            body: '',
-            image: Image.asset("assets/images/onboarding_3.png"),
+            title: '',
+            bodyWidget: Column(
+              children: [
+                Text(
+                  "나만의 서재를\n 꾸며봐요",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 30, fontWeight: FontWeight.w800, height: 1.5),
+                ),
+                SizedBox(height: 40.0),
+                Image.asset("assets/images/onboarding_3.png", height: 415),
+              ],
+            ),
             decoration: getPageDecoration()),
         PageViewModel(
-            title: '만나서 반가워요! \n지금부터 Reafy를 \n시작해볼까요?',
-            body: '',
-            image: Image.asset("assets/images/onboarding_4.png"),
-            decoration: getPageDecoration())
+            title: '',
+            bodyWidget: Column(
+              children: [
+                Text(
+                  "반가워요! \n당신의 독서생활에\nReafy가 함께할게요",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 30, fontWeight: FontWeight.w800, height: 1.5),
+                ),
+                SizedBox(height: 20.0),
+                Image.asset(
+                  "assets/images/onboarding_4.png",
+                  height: 415,
+                ),
+              ],
+            ),
+            decoration: getPageDecoration()),
       ],
-      done: const Text("시작",
-          style: TextStyle(
-              fontSize: 18, fontWeight: FontWeight.w700, color: yellow)),
-      onDone: () {
-        Get.off(() => App());
-      },
-      //showBackButton: true,
+      showBackButton: true,
       showDoneButton: true,
       showNextButton: true,
-      showSkipButton: true,
-      next: ImageData(
+      //showSkipButton: true,
+
+      done: ImageData(
         IconsPath.nextarrow,
         isSvg: true,
         width: 15,
       ),
+      onDone: () {
+        Get.off(() => App());
+      },
 
-      skip: const Text("SKIP",
-          style: TextStyle(
-              fontSize: 18, fontWeight: FontWeight.w700, color: yellow)),
+      next: ImageData(
+        IconsPath.nextarrow,
+        isSvg: true,
+      ),
+      back: ImageData(IconsPath.backarrow, isSvg: true),
       dotsDecorator: DotsDecorator(
           color: Color(0xFFD9D9D9),
           activeColor: yellow,
           size: const Size(12, 12),
-          activeSize: const Size(25, 15),
+          activeSize: const Size(24, 12),
           activeShape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(24))),
       curve: Curves.bounceOut,
@@ -65,13 +109,9 @@ class OnBoardingPage extends StatelessWidget {
 
   PageDecoration getPageDecoration() {
     return const PageDecoration(
-        titleTextStyle:
+        bodyTextStyle:
             TextStyle(fontSize: 30, fontWeight: FontWeight.w800, height: 1.5),
-        imageFlex: 3,
-        bodyFlex: 1,
         pageColor: Color(0xffFAF9F7),
-        imagePadding: EdgeInsets.only(bottom: 30.0),
-        contentMargin: const EdgeInsets.only(bottom: 20.0),
-        safeArea: 70);
+        bodyAlignment: Alignment.center);
   }
 }

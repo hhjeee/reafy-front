@@ -12,9 +12,9 @@ class ItemData {
 
 List<ItemData> itemDataList = [
   ItemData(imagePath: 'assets/images/nothing.png', text: '선택 안함'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그1'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그2'),
-  ItemData(imagePath: 'assets/images/nothing.png', text: '러그3'),
+  ItemData(imagePath: 'assets/images/items/rug_smile.png', text: '러그1'),
+  ItemData(imagePath: 'assets/images/items/rug_cloud.png', text: '러그2'),
+  ItemData(imagePath: 'assets/images/items/rug_leaf.png', text: '러그3'),
   ItemData(imagePath: 'assets/images/nothing.png', text: '러그4'),
   ItemData(imagePath: 'assets/images/nothing.png', text: '러그5'),
   ItemData(imagePath: 'assets/images/nothing.png', text: '러그6'),

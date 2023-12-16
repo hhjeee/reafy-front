@@ -1,3 +1,3 @@
 flutter_native_splash:
-  color: "#deded2"
-  image: assets/images/login_character.png
+  background_image: "assets/images/splash_bg.png"
+  image: "assets/images/poobao_login.png"

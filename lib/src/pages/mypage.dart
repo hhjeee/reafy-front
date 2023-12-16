@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/login_page.dart';
+import 'package:reafy_front/src/pages/login_page.dart';
 import 'package:reafy_front/src/pages/profile/statistics.dart';
 import 'package:reafy_front/src/pages/profile/team.dart';
 import 'package:reafy_front/src/pages/profile/rating.dart';

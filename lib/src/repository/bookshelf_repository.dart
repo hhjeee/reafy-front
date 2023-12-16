@@ -64,14 +64,6 @@ Future<List<String>> fetchBookshelfThumbnailsByState(int progressState) async {
   final String? userToken = prefs.getString('token');
 
   try {
-    //final userToken = await UserToken();
-    //print(userToken.accessToken);
-
-//final tempUserToken =
-//    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvYXV0aElkIjoiMzE1ODUyNjkwMiIsImlhdCI6MTcwMjI5OTU1MiwiZXhwIjoxNzAyMzAzMTUyLCJzdWIiOiJBQ0NFU1MifQ.k5bgxZTxMdff7Q9GxSQnfxPWuJ3KOpe6vPEUcEW_0bc";
-
-    ///final userToken = tempUserToken;
-
     final response = await dio.get('http://13.125.145.165:3000/book/bookshelf',
         queryParameters: {'progressState': progressState},
         options: Options(headers: {
@@ -97,16 +89,11 @@ Future<List<String>> fetchBookshelfThumbnailsByState(int progressState) async {
 
 //myfavorite 책 썸네일 리스트
 Future<List<String>> fetchBookshelfThumbnailsByFavorite() async {
-  
   final Dio dio = Dio();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userToken = prefs.getString('token');
 
   try {
-    //final userToken = await UserToken();
-    //print(userToken.accessToken);
-    //final userToken = tempUserToken;
-
     final response = await dio.get('http://13.125.145.165:3000/book/favorite',
         options: Options(headers: {
           'Authorization': 'Bearer ${userToken}',
@@ -384,7 +371,6 @@ Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
   final dio = Dio();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userToken = prefs.getString('token');
-  
 
   try {
     //final userToken = await UserToken();
