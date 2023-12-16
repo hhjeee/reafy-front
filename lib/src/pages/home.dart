@@ -243,7 +243,21 @@ class _HomeState extends State<Home> {
               Spacer(),
               _memo(),
 
-              Container(width: 364, height: 312),
+              Container(
+                  width: size.width,
+                  height: 332,
+                  child: Stack(children: [
+                    //// Character
+                    Positioned(
+                      top: 64,
+                      left: 102,
+                      child: Container(
+                        width: 186,
+                        height: 248,
+                        child: ImageData(IconsPath.character),
+                      ),
+                    ),
+                  ])),
 
               /*Consumer<StopwatchProvider>(
                 builder: (context, stopwatch, child) {
