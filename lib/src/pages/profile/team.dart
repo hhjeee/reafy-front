@@ -16,12 +16,12 @@ class Team extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.black54),
           onPressed: () {
-            Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
+            Get.back();
           },
         ),
       ),
       body: Container(
-        //width: size.width,
+        width: size.width,
         decoration: BoxDecoration(color: Color(0xfffff9c1)),
         child: Container(
           decoration: BoxDecoration(
@@ -45,6 +45,13 @@ class Team extends StatelessWidget {
               SizedBox(height: 60.0),
               _member(),
               SizedBox(height: 123.0),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                    width: size.width,
+                    height: 350,
+                    child: ImageData(IconsPath.team_img)),
+              ),
               /*Transform.rotate(
                 angle: -18.994 * (3.141592653589793 / 180), // 라디안으로 변환
                 child: Container(
