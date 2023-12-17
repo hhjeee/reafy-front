@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
-import 'package:reafy_front/src/provider/bamboo_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
-////////// TODO
-/// 터치하면 대나무 사라지게
+class BambooState {
+  bool isVisible;
+  Offset position;
+  BambooState(this.isVisible, this.position);
+}
 
 class BambooMap extends StatefulWidget {
   const BambooMap({super.key});
@@ -15,11 +17,13 @@ class BambooMap extends StatefulWidget {
   State<BambooMap> createState() => _BambooMapState();
 }
 
-class _BambooMapState extends State<BambooMap>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _bambooController;
-  late Animation<double> _bambooAnimation;
+class _BambooMapState extends State<BambooMap> with TickerProviderStateMixin {
+  late List<AnimationController> _bambooController;
+  late List<Animation<double>> _bambooAnimation;
+  List<BambooState> bambooStates =
+      List.generate(6, (index) => BambooState(false, Offset(0, 0)));
 
+/*
   @override
   void initState() {
     super.initState();
@@ -31,95 +35,97 @@ class _BambooMapState extends State<BambooMap>
         curve: Curves.easeOut,
       ),
     );
+
+    for (int i = 0; i < stopwatch.itemCnt; i++) {
+      bambooStates[i].isVisible = true;
+    }
+  }*/
+  List<Offset> bambooPositions = [
+    Offset(135, 192),
+    Offset(68, 256),
+    Offset(266, 269),
+    Offset(292, 162),
+    Offset(206, 126),
+    Offset(15, 138),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _bambooController = List.generate(
+        6,
+        (index) => AnimationController(
+              vsync: this,
+              duration: Duration(milliseconds: 1600),
+            )..repeat(reverse: true));
+
+    _bambooAnimation = _bambooController
+        .map((controller) => Tween<double>(begin: 0.95, end: 1.08).animate(
+              CurvedAnimation(
+                parent: controller,
+                curve: Curves.easeInOut,
+              ),
+            ))
+        .toList();
   }
 
   @override
   void dispose() {
-    _bambooController.dispose();
+    for (var controller in _bambooController) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
-  List<Offset> giftPositions = [
-    Offset(157, 133),
-    Offset(13, 163),
-    Offset(47, 223),
-    Offset(144, 265),
-    Offset(263, 259),
-    Offset(228, 157),
-  ];
-/*
-  Widget bamboo_collect(context) {
-    StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
-    //(stopwatch.itemCnt);
-
-    List<bool> generateVisibilityList(int i) {
-      return List.generate(6, (index) => index < i);
-    }
-
-    List<bool> giftVisibility = generateVisibilityList(stopwatch.itemCnt);
-
-    return Stack(
-      children: List.generate(giftPositions.length, (index) {
-        return AnimatedPositioned(
-          duration: Duration(milliseconds: 1000),
-          curve: Curves.bounceOut,
-          left: giftVisibility[index] ? giftPositions[index].dx : 212,
-          bottom: giftVisibility[index] ? giftPositions[index].dy : 450,
-          width: giftVisibility[index] ? 115 : 0,
-          height: giftVisibility[index] ? 115 : 0,
-          child: GestureDetector(
-              onTap: () {
-                _bambooController.forward();
-                /*.whenComplete(() {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return _dialog(context);
-                      });
-                  //giftVisibility[index] = false;
-                });*/
-                // 대나무 증가 요청 보내기
-                setState(() {
-                  giftVisibility[index] = false;
-                });
-/*
-                Future.delayed(Duration(milliseconds: 1000))
-                    .then((onValue) => showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return _dialog(context);
-                        }));*/
-              },
-              child: ImageData(IconsPath.bambooicon, width: 115, height: 115)),
-        );
-      }),
-    );
-  }
-*/
-
   Widget bamboo_collect(BuildContext context) {
     StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
-    BambooProvider bambooGifts = Provider.of<BambooProvider>(context);
+
+    for (int i = 0; i < bambooStates.length; i++) {
+      bambooStates[i] = BambooState(i < stopwatch.itemCnt, bambooPositions[i]);
+    }
+
     return Stack(
-      children: List.generate(giftPositions.length, (index) {
+      children: List.generate(6, (index) {
+        BambooState state = bambooStates[index];
+
         return AnimatedPositioned(
-          duration: Duration(milliseconds: 1000),
-          curve: Curves.bounceOut,
-          left:
-              bambooGifts.giftVisibility[index] ? giftPositions[index].dx : 212,
-          bottom:
-              bambooGifts.giftVisibility[index] ? giftPositions[index].dy : 450,
-          width: bambooGifts.giftVisibility[index] ? 115 : 0,
-          height: bambooGifts.giftVisibility[index] ? 115 : 0,
-          child: GestureDetector(
-            onTap: () {
-              _bambooController.forward();
-              bambooGifts.collectGift(index);
-              // Other actions...
-            },
-            child: ImageData(IconsPath.bambooicon, width: 115, height: 115),
-          ),
-        );
+            duration: Duration(milliseconds: 3000),
+            curve: Curves.elasticIn,
+            left: state.position.dx,
+            bottom: state.position.dy,
+            child: AnimatedBuilder(
+              animation: _bambooAnimation[index],
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: _bambooAnimation[index].value,
+                  child: child,
+                );
+              },
+              child: AnimatedScale(
+                scale: state.isVisible ? 1.0 : 0.0,
+                duration: Duration(milliseconds: 2000),
+                curve: Curves.elasticOut,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      state.isVisible = false;
+                      stopwatch.decreaseItemCount();
+                    });
+
+                    //_bambooController.forward();
+                    Future.delayed(Duration(seconds: 1), () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return _dialog(context);
+                          });
+                    });
+                  },
+                  child: ImageData(IconsPath.bambooicon, width: 90, height: 90),
+                ),
+              ),
+            ));
       }),
     );
   }
@@ -141,7 +147,7 @@ class _BambooMapState extends State<BambooMap>
         ),
         _bubble(),
         Positioned(
-          bottom: -30,
+          bottom: 0,
           //left: 38,
           child: Container(
               width: size.width, height: 500, child: bamboo_collect(context)),
@@ -172,18 +178,20 @@ Widget _bubble() {
                 height: 63,
                 child: Consumer<StopwatchProvider>(
                     builder: (context, stopwatch, child) {
-                  if (!stopwatch.isRunning) {
+                  if (stopwatch.isFull) {
                     return Container(
                         child: Center(
                             child: Text(
-                      "omg", //쉬고 있어요 :)",
+                      "꼬르륵~",
+                      //"대나무가 다 자랐어요!\n주워볼까요?",
                       style: TextStyle(
                         color: black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
                       ),
                     )));
-                  } else if (stopwatch.isRunning && !stopwatch.isFull) {
+                  } else if ((stopwatch.status == Status.running) &&
+                      !stopwatch.isFull) {
                     return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -211,11 +219,11 @@ Widget _bubble() {
                     return Container(
                         child: Center(
                             child: Text(
-                      "하암 ~",
+                      "쉬고 있어요 :)", //쉬고 있어요 :)",
                       style: TextStyle(
                         color: black,
                         fontSize: 16,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w400,
                       ),
                     )));
                   }
@@ -331,7 +339,7 @@ Widget _dialog(context) {
       child: Column(children: [
         //SizedBox(height: 30.0),
         Text(
-          "대나무 줍기 완료!",
+          "냠~ 대나무를 주웠어요!",
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 18,
@@ -372,7 +380,7 @@ Widget _dialog(context) {
         SizedBox(height: 18.0),
         ElevatedButton(
           onPressed: () {
-            /// TODO
+            /// TODO 증가 요청
             Navigator.of(context).pop();
           },
           style: ElevatedButton.styleFrom(

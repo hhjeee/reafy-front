@@ -14,7 +14,142 @@ class StopwatchWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
-    stopwatch.setTimer(10); ////// 카운트다운
+    stopwatch.setTimer(10);
+
+    void _tapStopwatch(Status status) async {
+      switch (status) {
+        case Status.paused:
+          stopwatch.resume();
+          break;
+
+        case Status.running:
+          stopwatch.pause();
+          break;
+
+        case Status.stopped:
+          stopwatch.run();
+          break;
+      }
+    }
+
+    Widget _TextbyStatus(Status status) {
+      switch (status) {
+        case Status.running:
+          return Text(stopwatch.elapsedTimeString,
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 2.5,
+                  color: green));
+        case Status.paused:
+          return Text(stopwatch.elapsedTimeString,
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 2.5,
+                  color: green)); // Replace with your desired text
+        case Status.stopped:
+        default:
+          return Text("독서 시작하기",
+              style: TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.w700, color: black));
+      }
+    }
+/*
+    Widget _displayButton(Status status) {
+      return Container(
+          width: 78,
+          height: 50,
+          margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
+          child: Stack(children: [
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(21),
+                child: Container(
+                  width: 68,
+                  height: 26,
+                  color: disabled_box,
+                ),
+              ),
+            ),
+            Positioned(
+                left:
+                    stopwatch.status == Status.running ? 32 : -6, // 위치는 run 여부
+                top: -4,
+                child: Container(
+                    child: Center(
+                        child: stopwatch.status == Status.running
+                            ? Image.asset('assets/images/runbutton.png',
+                                width: 54, height: 54)
+                            : stopwatch.status == Status.paused
+                                ? Image.asset('assets/images/pausebutton.png',
+                                    width: 54, height: 54)
+                                : Image.asset('assets/images/stopbutton.png',
+                                    width: 54, height: 54))))
+          ]));
+    }
+*/
+
+    Widget _ButtonbyStatus(Status status) {
+      switch (status) {
+        case Status.running:
+          return Image.asset('assets/images/runbutton.png',
+              width: 54, height: 54);
+        case Status.paused:
+          return Image.asset('assets/images/pausebutton.png',
+              width: 54, height: 54);
+        case Status.stopped:
+        default:
+          return Image.asset('assets/images/stopbutton.png',
+              width: 54, height: 54);
+      }
+    }
+
+    Widget _displayButton(Status status) {
+      double leftPosition = 0;
+
+      switch (status) {
+        case Status.running:
+          leftPosition = 32;
+          break;
+        case Status.paused:
+        case Status.stopped:
+        default:
+          leftPosition = -6;
+          break;
+      }
+
+      return Container(
+        width: 78,
+        height: 50,
+        margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
+        child: Stack(children: [
+          Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(21),
+              child: Container(
+                width: 68,
+                height: 26,
+                color: disabled_box, // Replace with actual color
+              ),
+            ),
+          ),
+          AnimatedPositioned(
+            duration: Duration(
+                milliseconds: 300), // Set your desired animation duration
+            curve: Curves.easeInOut, // Use the curve you prefer
+            left: leftPosition,
+            top: -4,
+            child: Container(
+              child: Center(
+                child: _ButtonbyStatus(status),
+              ),
+            ),
+          )
+        ]),
+      );
+    }
+
     return Consumer<StopwatchProvider>(builder: (context, stopwatch, child) {
       return Container(
           child: Container(
@@ -37,68 +172,14 @@ class StopwatchWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(
-                  width: 200,
-                  margin: EdgeInsets.only(left: 40.0),
-                  child: Text(
-                    stopwatch.isRunning
-                        ? stopwatch.elapsedTimeString
-                        : "독서 시작하기",
-                    style: stopwatch.isRunning
-                        ? TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 2.5,
-                            color: green,
-                          )
-                        : TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: black,
-                          ),
-                  ),
-                ),
+                    width: 200,
+                    margin: EdgeInsets.only(left: 40.0),
+                    child: _TextbyStatus(stopwatch.status)),
                 GestureDetector(
-                  onTap: () {
-                    if (stopwatch.isRunning) {
-                      stopwatch.pause();
-                    } else {
-                      stopwatch.start();
-                      stopwatch.applyAnimation();
-                    }
-                  },
-                  child: Container(
-                    width: 78,
-                    height: 50,
-                    margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
-                    child: Stack(children: [
-                      Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(21),
-                          child: Container(
-                            width: 68,
-                            height: 26,
-                            color: disabled_box,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                          left: stopwatch.isRunning ? 32 : -6,
-                          top: -4,
-                          child: Container(
-                            child: Center(
-                                child: stopwatch.isRunning
-                                    ? Image.asset(
-                                        'assets/images/runningbutton.png',
-                                        width: 54,
-                                        height: 54)
-                                    : Image.asset(
-                                        'assets/images/startbutton.png',
-                                        width: 54,
-                                        height: 54)),
-                          ))
-                    ]),
-                  ),
-                )
+                    onTap: () {
+                      _tapStopwatch(stopwatch.status);
+                    },
+                    child: _displayButton(stopwatch.status))
               ]),
         ),
       ));

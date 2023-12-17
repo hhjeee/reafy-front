@@ -20,7 +20,33 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  AnimationController? _floatingController;
+  Animation<double>? _floatingAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _floatingController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    )..repeat(reverse: true);
+
+    _floatingAnimation = Tween<double>(begin: 0.0, end: 10.0).animate(
+      CurvedAnimation(
+        parent: _floatingController!,
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _floatingController?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
@@ -51,6 +77,7 @@ class _HomeState extends State<Home> {
       return Center(
           child: GestureDetector(
               onTap: () {
+                stopwatch.pause();
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -61,6 +88,7 @@ class _HomeState extends State<Home> {
               child: Container(
                   width: 338,
                   height: 50,
+                  margin: EdgeInsets.only(top: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25.0),
                     color: yellow,
@@ -183,6 +211,35 @@ class _HomeState extends State<Home> {
       );
     }
 
+    Widget _shadow() {
+      return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 35),
+          child: Container(
+            width: 120,
+            height: 10,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 10,
+                      blurRadius: 10,
+                      offset: Offset(0, 100))
+                ]),
+          ));
+    }
+
+    Widget _buildCharacter() {
+      // Replace with your character widget
+      return Container(
+        width: 186,
+        height: 248,
+        child: ImageData(stopwatch.status == Status.running
+            ? IconsPath.character_reading
+            : IconsPath.character),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xfffaf9f7),
@@ -225,149 +282,132 @@ class _HomeState extends State<Home> {
         ],
       ),
       body: Container(
-        width: size.width,
-        decoration: BoxDecoration(color: Color(0xfffff9c1)),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFFFAF9F7),
-                Color.fromRGBO(250, 249, 247, 0.0),
-              ],
+          width: size.width,
+          decoration: BoxDecoration(color: Color(0xfffff9c1)),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFFFAF9F7),
+                  Color.fromRGBO(250, 249, 247, 0.0),
+                ],
+              ),
             ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Spacer(),
-              _memo(),
-              Consumer<ItemPlacementProvider>(
-                  builder: (context, itemPlacementProvider, child) {
-                return Container(
-                    width: size.width,
-                    height: 332,
-                    child: Stack(
-                      children: [
-                        //// Rug
-                        Positioned(
-                          top: 276,
-                          left: 104,
-                          child: Container(
-                            width: 186,
-                            height: 36,
-                            child: ImageData(itemPlacementProvider.rugImagePath,
-                                width: 186, height: 36),
-                          ),
-                        ),
-                        //// Character
-                        Positioned(
-                          top: 64,
-                          left: 102,
-                          child: Container(
-                            width: 186,
-                            height: 248,
-                            //color: yellow,
-                            child: ImageData(IconsPath.character),
-                          ),
-                        ),
-                        //// BookShelf
-                        Positioned(
-                          top: 28,
-                          left: 13,
-                          child: Container(
-                              width: 110,
-                              height: 230,
-                              child: ImageData(
-                                  itemPlacementProvider.bookshelfImagePath,
-                                  width: 110,
-                                  height: 230)),
-                        ),
-                        //// Clock
-                        Positioned(
-                          left: 165,
-                          top: 0,
-                          child: Container(
-                              width: 64,
-                              height: 64,
-                              child: ImageData(
-                                  itemPlacementProvider.clockImagePath,
-                                  width: 64,
-                                  height: 64)),
-                        ),
-                        //// Window
-                        Positioned(
-                          top: 34,
-                          right: 13,
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            child: ImageData(
-                              itemPlacementProvider.windowImagePath,
-                              width: 100,
-                              height: 100,
-                            ),
-                          ),
-                        ),
-                        //// Others
-                        Positioned(
-                          right: 23,
-                          top: 148,
-                          child: Container(
-                            width: 90,
-                            height: 110,
-                            child: ImageData(
-                                itemPlacementProvider.othersImagePath,
-                                width: 90,
-                                height: 110),
-                          ),
-                        ),
-                      ],
-                    ));
-              }),
-
-              /*Consumer<StopwatchProvider>(
-                builder: (context, stopwatch, child) {
+            child: AnimatedBuilder(
+                animation: _floatingAnimation!,
+                builder: (context, _) {
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      stopwatch.isRunning ? const SizedBox() : _time(),
-                      stopwatch.isRunning
-                          ? const SizedBox()
-                          : const SizedBox(height: 15),
+                      //Text("stopwatch.status : ${stopwatch.status}"),
+                      //Text("stopwatch.isRunning : ${stopwatch.isRunning}"),
+                      //Text("stopwatch.isFull : ${stopwatch.isFull}"),
+                      //Text( "stopwatch.elapsedTimeString : ${stopwatch.elapsedTimeString}"),
+                      Spacer(),
+                      _memo(),
+                      Consumer<ItemPlacementProvider>(
+                          builder: (context, itemPlacementProvider, child) {
+                        return Container(
+                            width: size.width,
+                            height: 332,
+                            child: Stack(
+                              children: [
+                                //// Rug
+                                Positioned(
+                                  top: 276,
+                                  left: 104,
+                                  child: Container(
+                                    width: 186,
+                                    height: 36,
+                                    child: ImageData(
+                                        itemPlacementProvider.rugImagePath,
+                                        width: 186,
+                                        height: 36),
+                                  ),
+                                ),
+                                // Shadow
+                                Positioned(
+                                  top:
+                                      190, // Adjust position based on the animation value
+                                  left: 102,
+                                  child: _shadow(),
+                                ),
+                                // Character
+                                Positioned(
+                                  top: 64 +
+                                      _floatingAnimation!
+                                          .value, // Adjust position based on the animation value
+                                  left: 102,
+                                  child: _buildCharacter(),
+                                ),
+                                //// BookShelf
+                                Positioned(
+                                  top: 28,
+                                  left: 13,
+                                  child: Container(
+                                      width: 110,
+                                      height: 230,
+                                      child: ImageData(
+                                          itemPlacementProvider
+                                              .bookshelfImagePath,
+                                          width: 110,
+                                          height: 230)),
+                                ),
+                                //// Clock
+                                Positioned(
+                                  left: 165,
+                                  top: 0,
+                                  child: Container(
+                                      width: 64,
+                                      height: 64,
+                                      child: ImageData(
+                                          itemPlacementProvider.clockImagePath,
+                                          width: 64,
+                                          height: 64)),
+                                ),
+                                //// Window
+                                Positioned(
+                                  top: 34,
+                                  right: 13,
+                                  child: Container(
+                                    width: 100,
+                                    height: 100,
+                                    child: ImageData(
+                                      itemPlacementProvider.windowImagePath,
+                                      width: 100,
+                                      height: 100,
+                                    ),
+                                  ),
+                                ),
+                                //// Others
+                                Positioned(
+                                  right: 23,
+                                  top: 148,
+                                  child: Container(
+                                    width: 90,
+                                    height: 110,
+                                    child: ImageData(
+                                        itemPlacementProvider.othersImagePath,
+                                        width: 90,
+                                        height: 110),
+                                  ),
+                                ),
+                              ],
+                            ));
+                      }),
+
+                      stopwatch.status == Status.running
+                          ? _stopbutton()
+                          : _time(),
+                      const SizedBox(height: 15),
                       Center(child: StopwatchWidget()),
-                      stopwatch.isRunning
-                          ? const SizedBox(height: 15)
-                          : const SizedBox(),
-                      stopwatch.isRunning ? _stopbutton() : const SizedBox(),
+                      Spacer()
                     ],
                   );
-                },
-              ),*/
-              //Spacer(),
-              Container(
-                  height: 140,
-                  child: Column(
-                    children: [
-                      stopwatch.isRunning ? const SizedBox() : _time(),
-                      stopwatch.isRunning
-                          ? const SizedBox()
-                          : const SizedBox(height: 15),
-                      Center(child: StopwatchWidget()),
-                      //_buildAnimatedWatch(stopwatch.isRunning)),
-                      stopwatch.isRunning
-                          ? const SizedBox(height: 15)
-                          : const SizedBox(),
-                      stopwatch.isRunning ? _stopbutton() : const SizedBox()
-                      //_buildAnimatedStopButton(!stopwatch.isRunning)
-                    ],
-                  )),
-
-              Spacer()
-            ],
-          ),
-        ),
-      ),
+                }),
+          )),
     );
   }
 }
@@ -636,7 +676,6 @@ Widget _time2() {
 }
 */
 
-
 /*
     Widget _buildAnimatedStopButton(bool isrunning) {
       final AnimationController controller = AnimationController(
@@ -711,7 +750,7 @@ Widget _time2() {
       );
     }
 */
-   /*
+/*
     Widget _buildAnimatedWatch(bool isrunning) {
       final AnimationController controller = AnimationController(
         duration: const Duration(milliseconds: 500),
@@ -757,8 +796,8 @@ Widget _time2() {
       );
     }
 */
-    
-    /*
+
+/*
     
               Consumer<PoobaoHome>(
                 builder: (context, poobaoHome, child) {
@@ -841,4 +880,4 @@ Widget _time2() {
                   );
                 },
               ),
-            */ 
+            */

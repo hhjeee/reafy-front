@@ -3,21 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/binding/init_bindings.dart';
-import 'package:reafy_front/src/pages/login_page.dart';
 import 'package:provider/provider.dart';
-import 'package:reafy_front/src/components/poobao_home.dart';
 import 'package:reafy_front/src/models/bookCount.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
-import 'package:reafy_front/src/provider/bamboo_provider.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:reafy_front/src/pages/splash_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:reafy_front/src/provider/item_provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
 
@@ -47,7 +42,6 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (c) => ItemProvider()),
           ChangeNotifierProvider(create: (c) => ItemPlacementProvider()),
           ChangeNotifierProvider(create: (c) => StopwatchProvider()),
-          ChangeNotifierProvider(create: (c) => BambooProvider()),
         ],
         child: GetMaterialApp(
             builder: (context, child) {
