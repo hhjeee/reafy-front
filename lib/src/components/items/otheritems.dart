@@ -91,9 +91,8 @@ class _ItemOthersState extends State<ItemOthers> {
                     selectedGridIndex = index;
                     selectedImagePath = itemIndex.imagePath;
                     if (isButtonEnabled) {
-                      itemPlacementProvider.updateSelectedOthersIndex(index);
-                      itemPlacementProvider
-                          .updateOthersImagePath(itemIndex.imagePath);
+                      itemPlacementProvider.updateOthersData(
+                          itemIndex.itemId, index, itemIndex.imagePath);
                     }
                   });
                   if (!isButtonEnabled) {

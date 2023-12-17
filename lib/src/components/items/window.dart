@@ -83,9 +83,8 @@ class _ItemWindowState extends State<ItemWindow> {
                     selectedGridIndex = index;
                     selectedImagePath = itemIndex.imagePath;
                     if (isButtonEnabled) {
-                      itemPlacementProvider.updateSelectedWindowIndex(index);
-                      itemPlacementProvider
-                          .updateWindowImagePath(itemIndex.imagePath);
+                      itemPlacementProvider.updateWindowData(
+                          itemIndex.itemId, index, itemIndex.imagePath);
                     }
                   });
                   if (!isButtonEnabled) {

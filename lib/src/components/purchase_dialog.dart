@@ -104,7 +104,7 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
               ElevatedButton(
                 //확인 버튼 누르는게 보유한 대나무 수가 해당 아이템 가격보다 많을때 가능하도록 하기
                 onPressed: () async {
-                  bool success = await postBookInfo(widget.itemId, true);
+                  bool success = await postBookInfo(widget.itemId, false);
                   Navigator.pop(context);
 
                   if (success) {

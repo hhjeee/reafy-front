@@ -13,7 +13,9 @@ import 'package:reafy_front/src/components/items/clock.dart';
 import 'package:reafy_front/src/components/items/window.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:reafy_front/src/pages/home.dart';
+import 'package:reafy_front/src/provider/item_provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
+import 'package:reafy_front/src/repository/item_repository.dart';
 
 class ItemShop extends StatefulWidget {
   const ItemShop({super.key});
@@ -70,6 +72,34 @@ class _ItemShopState extends State<ItemShop> {
     }
   }
 
+  //전체 false로 변경
+  Future<void> updateItemsActivationFalse() async {
+    try {
+      final itemProvider = Provider.of<ItemProvider>(context, listen: false);
+      for (int itemId in itemProvider.ownedItemIds) {
+        await postBookInfo(itemId, false);
+      }
+    } catch (e) {
+      print('Error updating items activation: $e');
+    }
+  }
+
+  //아이템 배치 저장 -> 해당 아이템 activation 값 true로
+  Future<void> updateItemsActivation() async {
+    try {
+      final itemProvider = Provider.of<ItemProvider>(context, listen: false);
+      final itemPlacementProvider =
+          Provider.of<ItemPlacementProvider>(context, listen: false);
+      await postBookInfo(itemPlacementProvider.bookshelf.selectedId, true);
+      await postBookInfo(itemPlacementProvider.clock.selectedId, true);
+      await postBookInfo(itemPlacementProvider.others.selectedId, true);
+      await postBookInfo(itemPlacementProvider.rug.selectedId, true);
+      await postBookInfo(itemPlacementProvider.window.selectedId, true);
+    } catch (e) {
+      print('Error updating items activation: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -83,6 +113,7 @@ class _ItemShopState extends State<ItemShop> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Color(0xff333333)),
           onPressed: () {
+            //초기값 복구 -> 배치 저장 안되게
             Provider.of<ItemPlacementProvider>(context, listen: false)
                 .restoreInitialValues();
 
@@ -123,18 +154,18 @@ class _ItemShopState extends State<ItemShop> {
             icon:
                 ImageData(IconsPath.check, isSvg: true, width: 44, height: 44),
             onPressed: () {
-              itemPlacementProvider.updateInitialValues(
-                itemPlacementProvider.bookshelfImagePath,
-                itemPlacementProvider.selectedBookshelfIndex,
-                itemPlacementProvider.clockImagePath,
-                itemPlacementProvider.selectedClockIndex,
-                itemPlacementProvider.othersImagePath,
-                itemPlacementProvider.selectedOthersIndex,
-                itemPlacementProvider.rugImagePath,
-                itemPlacementProvider.selectedRugIndex,
-                itemPlacementProvider.windowImagePath,
-                itemPlacementProvider.selectedWindowIndex,
-              );
+              //다 false로 변경 -> 선택된 값만 true로 다시 post
+
+              ///요거 한번만 실행하고 지워죠/////
+              //updateItemsActivationFalse();
+              ////////
+
+              updateItemsActivationFalse().then((_) {
+                updateItemsActivation(); //배치 Item true
+              });
+
+              itemPlacementProvider.updateInitialValues();
+
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -178,7 +209,7 @@ class _ItemShopState extends State<ItemShop> {
                         width: 77.243,
                         height: 177.66,
                         child: ImageData(
-                            itemPlacementProvider.bookshelfImagePath)),
+                            itemPlacementProvider.bookshelf.imagePath)),
                   ),
                   Positioned(
                     //clock
@@ -186,7 +217,8 @@ class _ItemShopState extends State<ItemShop> {
                     child: Container(
                         width: 49.436,
                         height: 49.436,
-                        child: ImageData(itemPlacementProvider.clockImagePath)),
+                        child:
+                            ImageData(itemPlacementProvider.clock.imagePath)),
                   ),
                   Positioned(
                     left: 203.93,
@@ -195,7 +227,7 @@ class _ItemShopState extends State<ItemShop> {
                       //window
                       width: 77.243,
                       height: 77.243,
-                      child: ImageData(itemPlacementProvider.windowImagePath),
+                      child: ImageData(itemPlacementProvider.window.imagePath),
                     ),
                   ),
                   Positioned(
@@ -205,7 +237,7 @@ class _ItemShopState extends State<ItemShop> {
                       //others
                       width: 69.519,
                       height: 84.968,
-                      child: ImageData(itemPlacementProvider.othersImagePath),
+                      child: ImageData(itemPlacementProvider.others.imagePath),
                     ),
                   ),
                   Positioned(
@@ -215,7 +247,11 @@ class _ItemShopState extends State<ItemShop> {
                       //rug
                       width: 143.637,
                       height: 27.808,
-                      child: ImageData(itemPlacementProvider.rugImagePath),
+                      child: ImageData(
+                        itemPlacementProvider.rug.imagePath,
+                        width: 143.637,
+                        height: 27.808,
+                      ),
                     ),
                   ),
                 ]),

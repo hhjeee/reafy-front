@@ -84,9 +84,8 @@ class _ItemRugState extends State<ItemRug> {
                     selectedGridIndex = index;
                     selectedImagePath = itemIndex.imagePath;
                     if (isButtonEnabled) {
-                      itemPlacementProvider.updateSelectedRugIndex(index);
-                      itemPlacementProvider
-                          .updateRugImagePath(itemIndex.imagePath);
+                      itemPlacementProvider.updateRugData(
+                          itemIndex.itemId, index, itemIndex.imagePath);
                     }
                   });
                   if (!isButtonEnabled) {
@@ -169,7 +168,7 @@ Widget GridItem(
                   color: Color(0xff000000).withOpacity(0.25),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child:  Center(child: ImageData(IconsPath.lock)),
+                child: Center(child: ImageData(IconsPath.lock)),
               ),
             if (index == 0)
               Container(

@@ -91,10 +91,10 @@ class _ItemClockState extends State<ItemClock> {
                   setState(() {
                     selectedGridIndex = index;
                     selectedImagePath = itemIndex.imagePath;
+
                     if (isButtonEnabled) {
-                      itemPlacementProvider.updateSelectedClockIndex(index);
-                      itemPlacementProvider
-                          .updateClockImagePath(itemIndex.imagePath);
+                      itemPlacementProvider.updateClockData(
+                          itemIndex.itemId, index, itemIndex.imagePath);
                     }
                   });
                   if (!isButtonEnabled) {
