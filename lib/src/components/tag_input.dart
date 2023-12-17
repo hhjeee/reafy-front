@@ -9,22 +9,20 @@ class TagWidget extends StatefulWidget {
 
 class _TagWidgetState extends State<TagWidget> {
   List<String> tags = [];
-  void _addTag() async {
-    // Declare 'result' before the showDialog function
-    String? result;
+  final TextEditingController _tagController = TextEditingController();
 
-    result = await showDialog<String>(
+  void _addTag() async {
+    String? result = await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
             '태그를 추가하세요',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
           content: TextField(
+            controller: _tagController,
             autofocus: true,
             decoration: InputDecoration(
               hintText: '태그를 입력하세요',
@@ -64,7 +62,7 @@ class _TagWidgetState extends State<TagWidget> {
                 SizedBox(width: 6),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop('');
+                    Navigator.of(context).pop(_tagController.text);
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xffffd747),
@@ -89,18 +87,28 @@ class _TagWidgetState extends State<TagWidget> {
         );
       },
     );
+    print(result);
 
     if (result != null && result.isNotEmpty) {
+      print(result);
       setState(() {
         tags.add(result.toString());
       });
     }
+
+    print(tags);
+  }
+
+  void _deleteTag(String tag) {
+    setState(() {
+      tags.remove(tag);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 40,
+      height: 30,
       child: Row(
         children: [
           ImageData(IconsPath.memo_tag, isSvg: true, width: 13, height: 13),
@@ -114,7 +122,37 @@ class _TagWidgetState extends State<TagWidget> {
             ),
           ),
           SizedBox(width: 16),
-          // Add tag button
+          Wrap(
+            spacing: 8,
+            children: tags.map((tag) {
+              return Container(
+                margin: EdgeInsets.only(left: 2),
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: Color(0xffFFECA6),
+                ),
+                height: 24,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "#$tag  ",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xff666666),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => _deleteTag(tag),
+                      child: Icon(Icons.close, size: 12, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          ), // Add tag button
           GestureDetector(
             onTap: _addTag,
             child: Container(
@@ -133,33 +171,6 @@ class _TagWidgetState extends State<TagWidget> {
                 ),
               ),
             ),
-          ),
-          // Display existing tags
-          Wrap(
-            spacing: 8, // Spacing between each tag
-            children: tags
-                .map((tag) => Container(
-                      margin: EdgeInsets.only(left: 4),
-                      width: 67,
-                      height: 24,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 1),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: Color(0xffFFECA6),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "#$tag",
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xff666666),
-                          ),
-                        ),
-                      ),
-                    ))
-                .toList(),
           ),
         ],
       ),

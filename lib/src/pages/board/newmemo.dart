@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import "dart:io";
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/photouploader.dart';
 import 'package:reafy_front/src/components/tag_input.dart';
@@ -18,6 +19,8 @@ class _NewMemoState extends State<NewMemo> {
 
   final List<String> dropdownList = ['미드나잇 라이브러리', '별들이 겹치는 순간', '너 없는 동안'];
   String selectedBook = '별들이 겹치는 순간';
+  int currentLength = 0;
+  File? _selectedImage;
 
   Widget _bookselect() {
     return Container(
@@ -84,7 +87,18 @@ class _NewMemoState extends State<NewMemo> {
   }
 
   Widget _memoeditor() {
-    int currentLength = 0; // Initialize currentLength
+    // Initialize currentLength
+
+    Future<void> _selectImage() async {
+      final ImagePicker _picker = ImagePicker();
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+      if (image != null) {
+        setState(() {
+          _selectedImage = File(image.path);
+        });
+      }
+    }
 
     return Container(
       width: 343,
@@ -132,10 +146,11 @@ class _NewMemoState extends State<NewMemo> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    ImageData(IconsPath.memo_pic,
-                        isSvg: true, width: 20, height: 20),
-
-                    // Other icons or elements if needed
+                    GestureDetector(
+                      onTap: _selectImage, // Call the image selection method
+                      child: ImageData(IconsPath.memo_pic,
+                          isSvg: true, width: 20, height: 20),
+                    ),
                   ],
                 ),
                 Text(
@@ -156,7 +171,7 @@ class _NewMemoState extends State<NewMemo> {
 
   Widget _datepicker(context) {
     return Container(
-      height: 40,
+      height: 32,
       child: Row(
         children: [
           ImageData(
@@ -222,11 +237,11 @@ class _NewMemoState extends State<NewMemo> {
         children: [
           SizedBox(height: 25),
           _bookselect(),
-          _datepicker(context),
-          //_tag(context),
-          TagWidget(), //SizedBox(height: 26.56),
+          SizedBox(height: 16.0),
           _memoeditor(),
-
+          SizedBox(height: 6.0),
+          _datepicker(context),
+          TagWidget(),
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {

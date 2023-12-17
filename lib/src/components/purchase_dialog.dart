@@ -113,7 +113,7 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
                       context: context,
                       builder: (BuildContext context) {
                         return DoneDialog(onDone: () {
-                          BottomNavController.to.goToHome();
+                          //BottomNavController.to.goToHome();
                           Navigator.pop(context);
                           ; // Navigate to Home
                         });
