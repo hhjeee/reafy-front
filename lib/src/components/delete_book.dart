@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/done.dart';
+import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
+import 'package:reafy_front/src/pages/book/bookshelf.dart';
+import 'package:reafy_front/src/pages/book/category_bookshelf.dart';
 
 class DeleteDialog extends StatefulWidget {
   @override
@@ -74,7 +78,9 @@ class _DeleteDialogState extends State<DeleteDialog> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return DoneDialog(onDone: () {});
+                      return DoneDialog(onDone: () {
+                        BottomNavController.to.goToBookShelf();
+                      });
                     },
                   );
                 },

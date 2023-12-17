@@ -74,7 +74,8 @@ class _C_BookShelfState extends State<Category_BookShelf>
             padding: EdgeInsets.only(right: 10),
             iconSize: 44,
             icon: isEditMode
-                ? ImageData(IconsPath.check_green, isSvg: true)
+                ? ImageData(IconsPath.check_green,
+                    isSvg: true, width: 44, height: 44)
                 : ImageData(IconsPath.trash_can, isSvg: true),
             onPressed: () {
               setState(() {

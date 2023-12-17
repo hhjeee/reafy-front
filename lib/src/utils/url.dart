@@ -47,7 +47,7 @@ class ApiClient {
         };
         var tokenResponse = await tokenDio.post(tokenDio.options.baseUrl);
         print("[**] token refresh result : ${tokenResponse.statusCode}");
-        if (tokenResponse.statusCode == 200) {
+        if (tokenResponse.statusCode == 201) {
           print("refresh req Successful");
           String newAccessToken = tokenResponse.data['accessToken'];
           prefs.setString('token', newAccessToken);
