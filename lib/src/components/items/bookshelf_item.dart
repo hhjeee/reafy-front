@@ -40,6 +40,7 @@ class _ItemBookshelfState extends State<ItemBookshelf> {
   @override
   void initState() {
     super.initState();
+
     Provider.of<ItemProvider>(context, listen: false).fetchUserItems();
     // 이전에 선택한 값으로 초기화
     selectedGridIndex =
@@ -82,9 +83,8 @@ class _ItemBookshelfState extends State<ItemBookshelf> {
                     selectedImagePath = itemIndex.imagePath;
 
                     if (isButtonEnabled) {
-                      itemPlacementProvider.updateSelectedBookshelfIndex(index);
-                      itemPlacementProvider
-                          .updateBookshelfImagePath(itemIndex.imagePath);
+                      itemPlacementProvider.updateBookshelfData(
+                          itemIndex.itemId, index, itemIndex.imagePath);
                     }
                   });
                   if (!isButtonEnabled) {

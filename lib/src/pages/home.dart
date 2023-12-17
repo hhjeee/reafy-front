@@ -322,7 +322,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     width: 186,
                                     height: 36,
                                     child: ImageData(
-                                        itemPlacementProvider.rugImagePath,
+                                        itemPlacementProvider.rug.imagePath,
                                         width: 186,
                                         height: 36),
                                   ),
@@ -351,7 +351,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       height: 230,
                                       child: ImageData(
                                           itemPlacementProvider
-                                              .bookshelfImagePath,
+                                              .bookshelf.imagePath,
                                           width: 110,
                                           height: 230)),
                                 ),
@@ -363,7 +363,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                       width: 64,
                                       height: 64,
                                       child: ImageData(
-                                          itemPlacementProvider.clockImagePath,
+                                          itemPlacementProvider.clock.imagePath,
                                           width: 64,
                                           height: 64)),
                                 ),
@@ -375,7 +375,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     width: 100,
                                     height: 100,
                                     child: ImageData(
-                                      itemPlacementProvider.windowImagePath,
+                                      itemPlacementProvider.window.imagePath,
                                       width: 100,
                                       height: 100,
                                     ),
@@ -389,7 +389,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     width: 90,
                                     height: 110,
                                     child: ImageData(
-                                        itemPlacementProvider.othersImagePath,
+                                        itemPlacementProvider.others.imagePath,
                                         width: 90,
                                         height: 110),
                                   ),
