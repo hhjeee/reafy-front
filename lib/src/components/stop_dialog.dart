@@ -299,9 +299,8 @@ class _StopDialogState extends State<StopDialog> {
                             ////// 서버에 보내고 시간 업데이트
                             ////// 스탑워치 멈추기, 초기화
                             ///
-                            context
-                                .read<StopwatchProvider>()
-                                .updateIsRunning(false);
+                            //stopwatch.stop();
+                            context.read<StopwatchProvider>().stop();
                             context
                                 .read<StopwatchProvider>()
                                 .updateElapsedTime('00:00:00');
@@ -329,6 +328,7 @@ class _StopDialogState extends State<StopDialog> {
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      context.read<StopwatchProvider>().resume();
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
