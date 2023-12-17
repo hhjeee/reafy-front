@@ -35,6 +35,10 @@ class BottomNavController extends GetxController {
     changeBottomNav(PageName.HOME.index, hasGesture: true);
   }
 
+  void goToBookShelf() {
+    changeBottomNav(PageName.LIBRARY.index, hasGesture: true);
+  }
+
   Future<bool> willPopAction() async {
     var page = PageName.values[bottomHistory.last];
     if (page == PageName.HOME) {

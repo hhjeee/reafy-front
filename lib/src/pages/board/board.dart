@@ -44,7 +44,7 @@ class Board extends GetView<BoardController> {
           width: 60,
           child: FloatingActionButton(
             onPressed: () {
-              _showAddMemoBottomSheet(context);
+              showAddMemoBottomSheet(context);
               /*
               showModalBottomSheet(
                   context: context,
@@ -88,7 +88,7 @@ class Board extends GetView<BoardController> {
             )));
   }
 }
-
+/*
 Widget _add_memo(BuildContext context) {
   return GestureDetector(
     onTap: () {
@@ -368,3 +368,4 @@ void _showAddMemoBottomSheet(BuildContext context) {
     },
   );
 }
+*/

@@ -25,26 +25,19 @@ class State_BookShelfWidgetState extends State<State_BookShelfWidget> {
   List<Widget> _buildBookList(BuildContext context) {
     return widget.thumbnailList.map((thumbnail) {
       return Padding(
-        padding: const EdgeInsets.only(right: 21.61, top: 7),
+        padding: const EdgeInsets.only(right: 18.61),
         child: Container(
-          width: 66,
-          height: 96,
+          width: 68,
+          height: 100,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
-            /*boxShadow: const [
-              BoxShadow(
-                color: Colors.black26,
-                offset: Offset(0, 15.0),
-                blurRadius: 8.0,
-              ),
-            ],*/
             color: Color(0xffffffff),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
             child: Image.network(
               thumbnail,
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 // 이미지를 불러오는 데 실패한 경우의 처리
                 return const Text('이미지를 불러올 수 없습니다.');
@@ -58,8 +51,6 @@ class State_BookShelfWidgetState extends State<State_BookShelfWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return //GestureDetector(
         //onTap: () {
         //Get.to(() = ShelfDetailPage(status: book));
