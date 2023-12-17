@@ -31,6 +31,10 @@ class BottomNavController extends GetxController {
     }
   }
 
+  void goToHome() {
+    changeBottomNav(PageName.HOME.index, hasGesture: true);
+  }
+
   Future<bool> willPopAction() async {
     var page = PageName.values[bottomHistory.last];
     if (page == PageName.HOME) {

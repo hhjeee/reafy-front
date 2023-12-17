@@ -80,7 +80,7 @@ class _ModifyDialogState extends State<ModifyDialog> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return DoneDialog();
+                      return DoneDialog(onDone: () {});
                     },
                   );
                 },

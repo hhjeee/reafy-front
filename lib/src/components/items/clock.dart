@@ -177,7 +177,7 @@ Widget GridItem(
                   color: Color(0xff000000).withOpacity(0.25),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: ImageData(IconsPath.lock),
+                child: Center(child: ImageData(IconsPath.lock)),
               ),
             if (index == 0)
               Container(

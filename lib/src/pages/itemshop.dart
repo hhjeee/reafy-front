@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:reafy_front/src/app.dart';
+import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/purchase_dialog.dart';
 import 'package:reafy_front/src/components/poobao_home.dart';
@@ -9,8 +11,9 @@ import 'package:reafy_front/src/components/items/rug.dart';
 import 'package:reafy_front/src/components/items/otheritems.dart';
 import 'package:reafy_front/src/components/items/clock.dart';
 import 'package:reafy_front/src/components/items/window.dart';
+import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
+import 'package:reafy_front/src/pages/home.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
-import 'package:reafy_front/src/components/donetohome.dart';
 
 class ItemShop extends StatefulWidget {
   const ItemShop({super.key});
@@ -135,7 +138,12 @@ class _ItemShopState extends State<ItemShop> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return DoneDialog2();
+                  return DoneDialog(onDone: () {
+                    BottomNavController.to.goToHome();
+                    Navigator.pop(context);
+                    ; // Navigate to Home
+                  });
+                  //return DoneDialog();
                 },
               );
             },

@@ -38,7 +38,7 @@ class _AddDialogState extends State<AddDialog> {
         await showDialog(
           context: context,
           builder: (BuildContext context) {
-            return DoneDialog();
+            return DoneDialog(onDone: () {});
           },
         );
       } else {

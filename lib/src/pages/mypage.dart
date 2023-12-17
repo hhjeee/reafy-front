@@ -39,7 +39,6 @@ class MyPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ProfileName(),
-
               Text(auth.nickname),
               Container(
                 margin: EdgeInsets.only(top: 30, left: 29.0),

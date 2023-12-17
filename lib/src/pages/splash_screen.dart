@@ -30,6 +30,8 @@ class _SplashScreenState extends State<SplashScreen> {
     bool isLoggedIn = prefs.getBool('isLogin') ?? false;
     // is Login : 카카오 로그인페이지때 true 저장
     print("[*]로그인 여부 : $isLoggedIn");
+    print("[*]토큰 : ${prefs.getString('token')}");
+    
     if (isLoggedIn) {
       var auth = Provider.of<AuthProvider>(context, listen: false);
       if (await auth.performAuthenticatedAction()) {
