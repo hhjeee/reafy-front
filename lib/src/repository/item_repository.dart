@@ -7,7 +7,7 @@ final tempUserToken =
 
 class ItemDto {
   final int itemId;
-  final bool activation;
+  bool activation;
 
   ItemDto({
     required this.itemId,
@@ -37,8 +37,7 @@ Future<bool> postBookInfo(int itemId, bool activation) async {
           'Content-Type': "application/json"
         }));
 
-    print('Response Code: ${response.statusCode}');
-
+    print(response);
     return response.statusCode == 200 || response.statusCode == 201;
   } catch (e) {
     if (e is DioError) {
@@ -71,6 +70,7 @@ Future<List<int>> getOwnedItemIds() async {
     );
 
     if (response.statusCode == 200) {
+      print('a ${response.data}');
       List<int> ownedItemIds = [];
       for (var data in response.data) {
         ownedItemIds.add(data['itemId']);
@@ -87,12 +87,41 @@ Future<List<int>> getOwnedItemIds() async {
   }
 }
 
+// 배치된 아이템 아이디 리스트 반환
+Future<List<int>> getActivatedOwnedItemIds() async {
+  final Dio dio = Dio();
+  final url = 'http://13.125.145.165:3000/item/userItemList';
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? userToken = prefs.getString('token');
 
-/*       /*for (var data in responseData) {
-        ownedItemIds.add(data['itemId'] is String
-            ? int.tryParse(data['itemId']) ?? 0
-            : data['itemId'] as int);
-      }*/
-      /* final List<int> ownedItemIds = responseData
-          .map<int>((item) => int.parse(item['itemId'] as String))
-          .toList();*/*/
+  try {
+    final response = await dio.get(
+      url,
+      options: Options(headers: {
+        'Authorization': 'Bearer $userToken',
+        'Content-Type': 'application/json',
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('b ${response.data}');
+      List<int> activatedOwnedItemIds = [];
+
+      for (var data in response.data) {
+        // activation이 true인 아이템만 추가
+        if (data['activation'] == true) {
+          activatedOwnedItemIds.add(data['itemId']);
+        }
+      }
+      activatedOwnedItemIds.sort(); //오름차순 정렬
+
+      return activatedOwnedItemIds;
+    } else {
+      return [];
+    }
+  } catch (e) {
+    print('Error during item id retrieval: $e');
+
+    throw e;
+  }
+}
