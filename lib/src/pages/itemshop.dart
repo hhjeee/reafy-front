@@ -155,11 +155,6 @@ class _ItemShopState extends State<ItemShop> {
                 ImageData(IconsPath.check, isSvg: true, width: 44, height: 44),
             onPressed: () {
               //다 false로 변경 -> 선택된 값만 true로 다시 post
-
-              ///요거 한번만 실행하고 지워죠/////
-              //updateItemsActivationFalse();
-              ////////
-
               updateItemsActivationFalse().then((_) {
                 updateItemsActivation(); //배치 Item true
               });
