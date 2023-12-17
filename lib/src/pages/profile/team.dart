@@ -50,7 +50,12 @@ class Team extends StatelessWidget {
                 child: Container(
                     width: size.width,
                     height: 350,
-                    child: ImageData(IconsPath.team_img)),
+                    child: Image.asset(
+                      IconsPath.team_img,
+                      fit: BoxFit.cover,
+                    )),
+
+                //decoration: BoxDecoration(image: Image.asset(IconsPath.team_img ), ),
               ),
               /*Transform.rotate(
                 angle: -18.994 * (3.141592653589793 / 180), // 라디안으로 변환

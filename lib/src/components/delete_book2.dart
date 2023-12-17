@@ -87,7 +87,7 @@ class _DeleteDialogState extends State<DeleteDialog> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return DoneDialog();
+                        return DoneDialog(onDone: () {});
                       },
                     );
                   } catch (e) {

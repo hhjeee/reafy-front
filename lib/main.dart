@@ -41,7 +41,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (c) => AuthProvider()),
-          // 나중에 옮길거 안쪽으로 옮기기
           ChangeNotifierProvider(create: (c) => SelectedBooksProvider()),
           ChangeNotifierProvider(create: (c) => BookShelfProvider()),
           ChangeNotifierProvider(create: (c) => BookModel()),

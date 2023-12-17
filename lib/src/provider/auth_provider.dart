@@ -68,7 +68,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String refreshToken = prefs.getString('refreshToken') ?? '';
-      print(refreshToken);
+      print("refreshToken 토큰 : $refreshToken");
 
       Dio refreshDio = Dio();
       refreshDio.options.baseUrl =
@@ -98,11 +98,28 @@ class AuthProvider extends ChangeNotifier {
   Future<bool> isTokenValid() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? accessToken = prefs.getString('token');
-    final ApiClient apiClient = ApiClient();
-    if (accessToken == null) return false;
+    if (accessToken == null) {
+      print("[*] No access token available");
+      return false;
+    }
+
+    //final ApiClient apiClient = ApiClient();
+    //print("**************");
+
+    //apiClient.dio.options.headers = {
+    //  'Content-Type': 'application/json',
+    //  'Authorization': 'Bearer $accessToken'
+    //};
 
     try {
-      final res = await apiClient.dio.post('/authentication/accesstokenTest');
+      //apiClient.dio.options.headers{'Authorization': }
+      final Dio dio = Dio(); // Use a fresh instance to avoid conflicts
+      dio.options.baseUrl = AppUrl.baseurl;
+      dio.options.headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $accessToken'
+      };
+      final res = await dio.post('/authentication/accesstokenTest');
 /*
       Dio tokenDio = Dio();
 
@@ -115,11 +132,14 @@ class AuthProvider extends ChangeNotifier {
 
       var res = await tokenDio.post(tokenDio.options.baseUrl);
 */
-      print("[*] token validation result : ${res.statusCode}");
-      return res.statusCode == 201;
+      print("[*] Token validation response: ${res.statusCode}");
+      return res.statusCode == 201; // Assuming 200 is the success code
     } catch (e) {
+      print("[*] Token validation error: $e");
       return false;
     }
+
+    //return false;
 
     /*
 
@@ -143,10 +163,14 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<bool> performAuthenticatedAction() async {
-    if (await isTokenValid()) {
+    bool isvalid = await isTokenValid();
+
+    print("[*] 토큰 유효? :$isvalid");
+    if (isvalid) {
+      print("[*] Token is valid");
       return true;
     } else {
-      print("[*] 만료된 토큰 재발급 시도합니다");
+      print("[*] 만료된 토큰! 재발급 시도합니다");
       return await refreshToken();
     } /*else {
       if (await refreshToken()) {

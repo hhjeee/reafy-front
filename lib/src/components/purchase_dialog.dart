@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/repository/item_repository.dart';
-import 'package:reafy_front/src/components/donetohome.dart';
 
 class PurchaseDialog extends StatefulWidget {
   final int itemId;
@@ -111,7 +111,7 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return DoneDialog2();
+                        return DoneDialog(onDone: () {});
                       },
                     );
                   } else {}
