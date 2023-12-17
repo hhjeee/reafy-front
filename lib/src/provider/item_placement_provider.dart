@@ -323,6 +323,7 @@ class ItemPlacementProvider extends ChangeNotifier {
 
   // 초기값 복구 메소드
   void restoreInitialValues() {
+    fetchDataAndUseActivatedItems();
     bookshelf = Item(
       imagePath: initialBookshelfImagePath,
       selectedIndex: initialSelectedBookshelfIndex,

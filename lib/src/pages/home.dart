@@ -334,14 +334,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                   left: 102,
                                   child: _shadow(),
                                 ),
-                                // Character
-                                Positioned(
-                                  top: 64 +
-                                      _floatingAnimation!
-                                          .value, // Adjust position based on the animation value
-                                  left: 102,
-                                  child: _buildCharacter(),
-                                ),
+
                                 //// BookShelf
                                 Positioned(
                                   top: 28,
@@ -354,6 +347,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                               .bookshelf.imagePath,
                                           width: 110,
                                           height: 230)),
+                                ),
+                                // Character
+                                Positioned(
+                                  top: 64 +
+                                      _floatingAnimation!
+                                          .value, // Adjust position based on the animation value
+                                  left: 102,
+                                  child: _buildCharacter(),
                                 ),
                                 //// Clock
                                 Positioned(
