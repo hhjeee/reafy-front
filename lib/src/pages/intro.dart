@@ -18,7 +18,7 @@ class OnBoardingPage extends StatelessWidget {
             bodyWidget: Column(
               children: [
                 Text(
-                  "나만의 책장을\n만들어봐요",
+                  "내 취향대로\n책장을 채워요",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 30, fontWeight: FontWeight.w800, height: 1.5),

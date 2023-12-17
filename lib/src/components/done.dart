@@ -39,5 +39,3 @@ class _DoneDialogState extends State<DoneDialog> {
     );
   }
 }
-/////
-
