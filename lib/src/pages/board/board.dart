@@ -1,9 +1,13 @@
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/memo_card.dart';
 import 'package:reafy_front/src/controller/board_controller.dart';
+import 'package:reafy_front/src/models/memo.dart';
 import 'package:reafy_front/src/pages/board/newmemo.dart';
+import 'package:reafy_front/src/pages/book/bookdetail.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
 class Board extends GetView<BoardController> {
@@ -12,7 +16,7 @@ class Board extends GetView<BoardController> {
   Widget _memoList() {
     return Obx(() => Column(
           children: List.generate(controller.memoList.length,
-              (index) => MemoWidget(memo: controller.memoList[index])).toList(),
+              (index) => MemoCard(memo: controller.memoList[index])).toList(),
         ));
   }
 
@@ -41,7 +45,9 @@ class Board extends GetView<BoardController> {
         extendBodyBehindAppBar: true,
 
         //
-        floatingActionButton: SizedBox(
+        floatingActionButton: NewMemoButton(),
+        /*
+        SizedBox(
           height: 60,
           width: 60,
           child: FloatingActionButton(
@@ -62,6 +68,7 @@ class Board extends GetView<BoardController> {
             ),
           ),
         ),
+        */
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: Container(
             decoration: BoxDecoration(
@@ -75,5 +82,42 @@ class Board extends GetView<BoardController> {
             child: ListView(
               children: [_memoList()],
             )));
+  }
+}
+
+class NewMemoButton extends StatelessWidget {
+  const NewMemoButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        showAddMemoBottomSheet(context);
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 26),
+        width: 343,
+        height: 33,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: yellow,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 0,
+              blurRadius: 20,
+              offset: Offset(0, 0),
+            ),
+          ],
+        ),
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 10.0),
+          child: ImageData(
+            IconsPath.add_memo,
+            isSvg: true,
+          ),
+        ),
+      ),
+    );
   }
 }

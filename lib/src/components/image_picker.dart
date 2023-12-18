@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reafy_front/src/utils/constants.dart';
@@ -29,13 +31,15 @@ class _PickImageState extends State<PickImage> {
   Widget build(BuildContext context) {
     return Center(
         child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+
             //width: 300,
             //height: 250,
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-          _buildPhotoArea(),
-        ])));
+                  _buildPhotoArea(),
+                ])));
 
     /*
         child: _image != null
@@ -77,13 +81,12 @@ class _PickImageState extends State<PickImage> {
 
   Widget _buildPhotoArea() {
     return Stack(
-      alignment: Alignment.center, // This ensures the stack is centered
+      //alignment: Alignment.center, // This ensures the stack is centered
       children: [
-        /*
         _image != null
             ? Container(
-                width: 180,
-                height: 180,
+                width: double.infinity,
+                height: 200,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: FileImage(File(_image!.path)),
@@ -92,48 +95,34 @@ class _PickImageState extends State<PickImage> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               )
-            : */
-        DottedBorder(
-          color: Color(0xFFFFD747), // Border color
-          strokeWidth: 1, // Border width
-          dashPattern: [2, 3],
-          radius: const Radius.circular(40), // Gap between dashes
-          child: Container(
-              width: 339,
-              height: 84,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Color(0xFFFFF7D9)
-                    .withOpacity(0.5), // Sets the background color with opacity
+            : DottedBorder(
+                color: Color(0xFFFFD747), // Border color
+                strokeWidth: 1, // Border width
+                dashPattern: [2, 3],
+                radius: const Radius.circular(5),
+                borderType: BorderType.RRect, // Gap between dashes
+                child: Container(
+                    width: double.infinity,
+                    height: 84,
+                    color: Color(0xFFFFF7D9).withOpacity(0.5),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            icon:
+                                Icon(Icons.add_a_photo_rounded, color: yellow),
+                            iconSize: 30,
+                            onPressed: () => _buildButton(context),
+                          ),
+                          Text(
+                            "사진 첨부하기",
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                                color: yellow),
+                          )
+                        ])),
               ),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.add_a_photo_rounded, color: yellow),
-                      iconSize: 30,
-                      onPressed: () => _buildButton(context),
-                    ),
-                    Text(
-                      "사진 첨부하기",
-                      style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          color: yellow),
-                    )
-                  ])),
-        ),
-        // Add Photo button
-        /*
-        Positioned(
-          bottom: 10, // Adjust as needed
-          right: 10, // Adjust as needed
-          child: IconButton(
-            icon: Icon(Icons.add_a_photo_rounded, color: gray),
-            iconSize: 30,
-            onPressed: () => _buildButton(context),
-          ),
-        ),*/
       ],
     );
   }

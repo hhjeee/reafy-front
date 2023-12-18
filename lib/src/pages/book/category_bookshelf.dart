@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/delete_book2.dart';
@@ -51,6 +52,7 @@ class _C_BookShelfState extends State<Category_BookShelf>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    //var auth = context.read<AuthProvider>();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -106,6 +108,14 @@ class _C_BookShelfState extends State<Category_BookShelf>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              /*Text(
+                "${auth.nickname}님이 최근 ${widget.pageTitle}이에요.",
+                style: TextStyle(
+                    color: gray,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    height: 2),
+              ),*/
               SizedBox(height: 10),
               Text(
                 "총 ${widget.thumbnailListLength}권",
@@ -253,7 +263,7 @@ class _C_BookShelfState extends State<Category_BookShelf>
                           SizedBox(height: 5),
                           Text(
                             book.title.length > 8
-                                ? '${book.title.substring(0, 8)}...'
+                                ? '${book.title.substring(0, 8)}'
                                 : book.title,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -263,9 +273,7 @@ class _C_BookShelfState extends State<Category_BookShelf>
                             ),
                           ),
                           Text(
-                            book.author.length > 8
-                                ? '${book.author.substring(0, 8)}...'
-                                : book.author,
+                            book.author,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 10,

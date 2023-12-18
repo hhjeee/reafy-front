@@ -4,9 +4,9 @@ import 'package:reafy_front/src/models/memo.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
-class MemoWidget extends StatelessWidget {
+class MemoCard extends StatelessWidget {
   final Memo memo;
-  const MemoWidget({Key? key, required this.memo}) : super(key: key);
+  const MemoCard({Key? key, required this.memo}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(

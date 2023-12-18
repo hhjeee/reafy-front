@@ -206,14 +206,13 @@ class _NewMemoState extends State<NewMemo> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.screenHeight * 0.8,
-      padding: EdgeInsets.symmetric(vertical: 30),
-      margin: EdgeInsets.only(left: 24),
+    return SafeArea(
+        child: Container(
+      padding: EdgeInsets.symmetric(vertical: 35, horizontal: 23),
       color: bg_gray,
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           PickImage(),
           SizedBox(height: 25),
@@ -247,22 +246,33 @@ class _NewMemoState extends State<NewMemo> {
           ),
         ],
       ),
-    );
+    ));
   }
 }
 
 void showAddMemoBottomSheet(BuildContext context) {
   showModalBottomSheet(
     context: context,
-    isScrollControlled: true, // 모달 시트를 전체 화면으로 확장 가능하게 설정
+    isScrollControlled: true, // Allows full screen modal
+    backgroundColor:
+        Colors.transparent, // Makes the modal's background transparent
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(10.0),
-        topRight: Radius.circular(10.0),
+        topLeft: Radius.circular(40.0),
+        topRight: Radius.circular(40.0),
       ),
     ),
     builder: (BuildContext context) {
-      return NewMemo();
+      return ClipRRect(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          topRight: Radius.circular(10.0),
+        ),
+        child: Container(
+          color: bg_gray, // Your desired background color
+          child: NewMemo(),
+        ),
+      );
     },
   );
 }

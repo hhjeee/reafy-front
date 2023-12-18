@@ -19,13 +19,17 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+class _HomeState extends State<Home>
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   AnimationController? _floatingController;
   Animation<double>? _floatingAnimation;
+  late StopwatchProvider stopwatch;
 
   @override
   void initState() {
     super.initState();
+    stopwatch = StopwatchProvider();
+    WidgetsBinding.instance.addObserver(stopwatch);
 
     _floatingController = AnimationController(
       vsync: this,
@@ -43,6 +47,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     _floatingController?.dispose();
+    WidgetsBinding.instance.removeObserver(stopwatch);
+    stopwatch.dispose();
     super.dispose();
   }
 

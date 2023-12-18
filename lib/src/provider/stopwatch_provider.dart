@@ -3,40 +3,48 @@ import 'package:flutter/material.dart';
 
 enum Status { running, paused, stopped }
 
-class StopwatchProvider extends ChangeNotifier {
-  //Timer? _timer;
-
+class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   late Status _status = Status.stopped;
-
-  bool _isRunning = false;
-  int _countdownsec = 10;
-  int _remainingsec = 0;
   late int _seconds = 0;
+  int _countdownsec = 30 * 60;
+  int _remainingsec = 0;
   int _itemCnt = 0;
   bool _isfull = false;
-  //bool _animationapplied = false;
-
+  bool _addBamboo = false;
   String _elapsedTime = '00:00:00';
   String _remainingTime = '00:00';
 
   Status get status => _status;
-  bool get isRunning => _isRunning;
   int get remainingSec => _remainingsec;
   int get countdownSec => _countdownsec;
   int get itemCnt => _itemCnt;
   bool get isFull => _isfull;
-  //bool get animationApplied => _animationapplied;
-
+  bool get addBamboo => _addBamboo;
   String get elapsedTimeString => _elapsedTime;
   String get remainTimeString => _remainingTime;
 
-  //final GiftProvider giftProvider;
-  //StopwatchProvider(this.giftProvider);
-
   @override
-  void dispose() {
-    //_timer?.cancel();
-    super.dispose();
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.paused) {
+      pauseStopwatchIfNeeded();
+    } else if (state == AppLifecycleState.resumed) {
+      resumeStopwatchIfNeeded();
+    }
+  }
+
+  void pauseStopwatchIfNeeded() {
+    if (_status == Status.running) {
+      pause();
+    }
+  }
+
+  void resumeStopwatchIfNeeded() {
+    if (_status == Status.paused) {
+      resume();
+    }
   }
 
   void setTimer(int sec) {
@@ -61,7 +69,12 @@ class StopwatchProvider extends ChangeNotifier {
           _elapsedTime = formatTime(_seconds, false);
 
           if (_remainingsec <= 0) {
-            incrementItemCount();
+            bool added = incrementItemCount();
+            if (added) {
+//call `regenerateBamboo` from here
+
+              //incrementItemCount();
+            }
             notifyListeners();
 
             _remainingsec = _countdownsec; // Reset the countdown
@@ -84,24 +97,13 @@ class StopwatchProvider extends ChangeNotifier {
     _status = Status.running;
     print("RUN ! : $_seconds");
     runStopWatch();
-    //if (_isRunning) return;
-    _isRunning = true;
     notifyListeners();
-
-/*
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
-      _seconds++;
-      _elapsedTime = formatTime(_seconds, false);
-      updateRemainingTime();
-      notifyListeners();
-    });*/
   }
 
 // running -> paused
   void pause() {
     _status = Status.paused;
     print("PAUSED ! : $_seconds");
-    _isRunning = false;
     notifyListeners();
   }
 
@@ -112,14 +114,6 @@ class StopwatchProvider extends ChangeNotifier {
     print("STOPPED ! : $_seconds");
     _remainingsec = _countdownsec;
     updateRemainingTime();
-
-    //notifyListeners();
-    /*
-    if (_isRunning) {
-      _timer?.cancel();
-      _isRunning = false;
-    }*/
-    //_animationapplied = false;
     notifyListeners();
   }
 
@@ -128,15 +122,6 @@ class StopwatchProvider extends ChangeNotifier {
     print("RESUMED ! : $_seconds");
     run(); // 상태 변경됨 -> running
   }
-/*
-  void reset() {
-    _timer?.cancel();
-    _seconds = 0;
-    _isRunning = false;
-    notifyListeners();
-  }
-
-*/
 
   String formatTime(int seconds, bool shortversion) {
     //int seconds = (milliseconds / 1000).truncate();
@@ -165,12 +150,6 @@ class StopwatchProvider extends ChangeNotifier {
     _remainingTime = formatTime(_remainingsec, true);
     notifyListeners();
   }
-/*
-  void updateIsRunning(bool value) {
-    _isRunning = value;
-    print("_isRunning $_isRunning");
-    notifyListeners();
-  }*/
 
   void updateElapsedTime(String value) {
     _elapsedTime = value;
@@ -181,12 +160,13 @@ class StopwatchProvider extends ChangeNotifier {
     if (_itemCnt < 6) {
       _itemCnt += 1;
       print("[*] 대나무 생김 : $_itemCnt");
+      notifyListeners();
       return true;
     } else {
       _isfull = true;
     }
+
     notifyListeners();
-    //print("[*] 대나무  : $_itemCnt");
 
     return false;
   }
@@ -199,72 +179,4 @@ class StopwatchProvider extends ChangeNotifier {
       print("[*] 대나무  줍줍 : $_itemCnt");
     }
   }
-/*
-  void applyAnimation() {
-    _animationapplied = true;
-    notifyListeners();
-  }*/
 }
-/*
-class GiftProvider extends ChangeNotifier {
-  List<bool> giftVisibility = [false, false, false, false, false, false];
-
-  void addGift() {
-    for (int i = 0; i < giftVisibility.length; i++) {
-      if (!giftVisibility[i]) {
-        giftVisibility[i] = true;
-        notifyListeners();
-        break;
-      }
-    }
-  }
-
-  void removeGift(int index) {
-    if (index >= 0 && index < giftVisibility.length) {
-      giftVisibility[index] = false;
-      notifyListeners();
-    }
-  }
-}
-*/
-/*
-class StopwatchProvider extends GetxController {
-  var _isRunning = false.obs;
-  var _elapsedTime = '00:00:00'.obs;
-  var _remainingTime = '10:00'.obs;
-
-  var _itemCnt = 0.obs;
-  var _isFull = false.obs;
-
-  bool get isRunning => _isRunning.value;
-  String get elapsedTime => _elapsedTime.value;
-  String get remainingTime => _remainingTime.value;
-
-  int get itemCnt => _itemCnt.value;
-  bool get isFull => _isFull.value;
-
-  void updateIsRunning(bool value) {
-    _isRunning.value = value;
-    print("_isRunning $_isRunning");
-  }
-
-  void updateElapsedTime(String value) {
-    _elapsedTime.value = value;
-  }
-
-  void incrementItemCount() {
-    if (_itemCnt.value < 6) {
-      _itemCnt.value += 1;
-    }
-    if (_itemCnt.value == 6) {
-      _isFull.value = true;
-    }
-  }
-
-  void decreaseItemCount() {
-    if (_itemCnt.value > 0) {
-      _itemCnt.value -= 1;
-      _isFull.value = false;
-    }
-  }
-}*/

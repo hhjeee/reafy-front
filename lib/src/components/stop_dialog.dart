@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/pages/home.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 
 class StopDialog extends StatefulWidget {
@@ -12,35 +10,8 @@ class StopDialog extends StatefulWidget {
 }
 
 class _StopDialogState extends State<StopDialog> {
-//class StopDialog extends StatelessWidget {
-  final int totalTime = 1000;
   final List<String> dropdownList = ['미드나잇 라이브러리', '별들이 겹치는 순간', '너 없는 동안'];
   String selectedBook = '별들이 겹치는 순간';
-
-  /*StopDialog({
-    required this.totalTime,
-    required this.dropdownList,
-    required this.selectedBook,
-  });*/
-
-  String format(int seconds) {
-    var duration = Duration(seconds: seconds);
-    int hours = duration.inHours;
-    int minutes = duration.inMinutes.remainder(60);
-    int remainingSeconds = duration.inSeconds.remainder(60);
-    String timeString = '';
-    if (hours > 0) {
-      timeString += hours.toString();
-      if (hours < 10) {
-        timeString = '0$timeString'; // 시간이 1자리일 때 앞에 0을 붙임
-      }
-      timeString += ':';
-    }
-    timeString += minutes.toString().padLeft(2, '0'); // 두 자리수로 표시된 분
-    timeString += ':';
-    timeString += remainingSeconds.toString().padLeft(2, '0'); // 두 자리수로 표시된 초
-    return timeString; // 시:분:초 형식으로 반환
-  }
 
   TextEditingController textController1 = TextEditingController();
   TextEditingController textController2 = TextEditingController();
@@ -54,28 +25,21 @@ class _StopDialogState extends State<StopDialog> {
 
   @override
   Widget build(BuildContext context) {
+    StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
+
     return AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      /*title: Center(
-        child: Text(
-          format(totalTime),
-          style: const TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.w800,
-          ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
-      ),*/
-      content: SingleChildScrollView(
-        child: Container(
+        content: SingleChildScrollView(
+            child: Container(
           width: 320,
           height: 459,
           child: Column(
             children: <Widget>[
               SizedBox(height: 30.0),
               Text(
-                format(totalTime),
+                stopwatch.elapsedTimeString,
                 style: const TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w800,
@@ -352,8 +316,6 @@ class _StopDialogState extends State<StopDialog> {
               ),
             ],
           ),
-        ),
-      ),
-    );
+        )));
   }
 }
