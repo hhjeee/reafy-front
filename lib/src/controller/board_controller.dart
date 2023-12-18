@@ -18,12 +18,7 @@ class BoardController extends GetxController {
         imageUrl:
             "https://marketplace.canva.com/EAD161UHRIg/1/0/1003w/canva-%ED%8C%8C%EB%9E%80%EC%83%89-%EC%82%AC%EC%A7%84-%EA%B3%BC%ED%95%99-%EC%86%8C%EC%84%A4-%EC%B1%85-%ED%91%9C%EC%A7%80-W-oW2VKWuGo.jpg",
       ),
-      Memo(
-        title: 'Post 2',
-        content: 'Content for post 2...',
-        imageUrl:
-            "https://marketplace.canva.com/EAD161UHRIg/1/0/1003w/canva-%ED%8C%8C%EB%9E%80%EC%83%89-%EC%82%AC%EC%A7%84-%EA%B3%BC%ED%95%99-%EC%86%8C%EC%84%A4-%EC%B1%85-%ED%91%9C%EC%A7%80-W-oW2VKWuGo.jpg",
-      )
+      Memo(title: 'Post 2', content: 'Content for post 2...', imageUrl: "")
     ];
     //await PostRepository.loadFeedList();
     memoList.addAll(feedList);

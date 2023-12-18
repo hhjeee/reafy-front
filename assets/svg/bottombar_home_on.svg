@@ -1,26 +1,3 @@
-<svg width="44" height="45" viewBox="0 0 44 45" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="44" height="45" fill="#F2F2F2"/>
-<rect width="933" height="806" transform="translate(-588 -476)" fill="white"/>
-<g clip-path="url(#clip0_0_1)">
-<g filter="url(#filter0_d_0_1)">
-<rect width="390" height="71" transform="translate(-101 -11)" fill="#FAF9F7"/>
-<path d="M34.2567 19.3996L23.2567 10.515C22.5235 9.92285 21.4765 9.92285 20.7433 10.515L9.74333 19.3996C9.27322 19.7793 9 20.3512 9 20.9555V33.5C9 34.6046 9.89543 35.5 11 35.5H33C34.1046 35.5 35 34.6046 35 33.5V20.9555C35 20.3512 34.7268 19.7793 34.2567 19.3996Z" fill="#FFD747" stroke="#FFD747" stroke-width="2" stroke-linejoin="round"/>
-</g>
-</g>
-<rect x="-120.5" y="-121.5" width="429" height="383" rx="4.5" stroke="#9747FF" stroke-dasharray="10 5"/>
-<defs>
-<filter id="filter0_d_0_1" x="-143" y="-21" width="475.59" height="91" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset/>
-<feGaussianBlur stdDeviation="5"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"/>
-</filter>
-<clipPath id="clip0_0_1">
-<rect x="-121" y="-122" width="430" height="384" rx="5" fill="white"/>
-</clipPath>
-</defs>
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M34.2567 18.8996L23.2567 10.015C22.5235 9.42285 21.4765 9.42285 20.7433 10.015L9.74333 18.8996C9.27322 19.2793 9 19.8512 9 20.4555V33C9 34.1046 9.89543 35 11 35H33C34.1046 35 35 34.1046 35 33V20.4555C35 19.8512 34.7268 19.2793 34.2567 18.8996Z" fill="#FFD747" stroke="#FFD747" stroke-width="2" stroke-linejoin="round"/>
 </svg>

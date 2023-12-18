@@ -18,6 +18,8 @@ import 'package:reafy_front/src/provider/item_placement_provider.dart';
 
 import 'dart:async';
 
+import 'package:reafy_front/src/utils/constants.dart';
+
 Future main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env"); // env 파일 초기화
@@ -33,6 +35,7 @@ Future main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (c) => AuthProvider()),

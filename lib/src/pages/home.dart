@@ -9,7 +9,6 @@ import 'package:reafy_front/src/components/stopwatch.dart';
 import 'package:reafy_front/src/pages/map.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
-import 'package:reafy_front/src/components/poobao_home.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
 
@@ -20,13 +19,17 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+class _HomeState extends State<Home>
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   AnimationController? _floatingController;
   Animation<double>? _floatingAnimation;
+  late StopwatchProvider stopwatch;
 
   @override
   void initState() {
     super.initState();
+    stopwatch = StopwatchProvider();
+    WidgetsBinding.instance.addObserver(stopwatch);
 
     _floatingController = AnimationController(
       vsync: this,
@@ -44,6 +47,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     _floatingController?.dispose();
+    WidgetsBinding.instance.removeObserver(stopwatch);
+    stopwatch.dispose();
     super.dispose();
   }
 

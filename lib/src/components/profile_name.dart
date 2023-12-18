@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/provider/auth_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileName extends StatefulWidget {
   @override
@@ -12,17 +11,30 @@ class _ProfileNameState extends State<ProfileName> {
   bool isEditing = false;
   TextEditingController _textEditingController = TextEditingController();
 
-  String _displayText = "Reafy";
+  String _displayText = ""; // Make sure this is a member variable of your class
+
+  Future<void> setNickname() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? nickname = prefs.getString('nickname');
+
+    setState(() {
+      if (nickname != null) {
+        _displayText = nickname;
+      } else {
+        _displayText = "Reafy";
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    var auth = context.read<AuthProvider>();
+    setNickname();
     return GestureDetector(
       onTap: () {
         if (isEditing) {
           setState(() {
             isEditing = false;
-            _displayText = auth.nickname; //_textEditingController.text;
+            _displayText = _textEditingController.text;
           });
         }
       },
@@ -127,8 +139,7 @@ class _ProfileNameState extends State<ProfileName> {
                       onEditingComplete: () {
                         setState(() {
                           isEditing = false;
-                          _displayText =
-                              auth.nickname; //_textEditingController.text;
+                          _displayText = _textEditingController.text;
                         });
                       },
                       textAlign: TextAlign.center,

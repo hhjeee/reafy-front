@@ -7,6 +7,7 @@ const cartBarHeight = 100.0;
 const headerHeight = 85.0;
 
 const bgColor = Color(0xFFFCFCFA);
+const yellow_bg = Color(0xffFFF7D9);
 
 const yellow = Color(0xFFFFD747);
 const gray = Color(0xFF808080);

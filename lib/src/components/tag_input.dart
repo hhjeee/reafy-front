@@ -12,6 +12,12 @@ class _TagWidgetState extends State<TagWidget> {
   final TextEditingController _tagController = TextEditingController();
 
   void _addTag() async {
+    if (tags.length >= 5) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('최대 5개의 태그만 추가할 수 있습니다.')));
+      return;
+    }
+
     String? result = await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
@@ -88,14 +94,17 @@ class _TagWidgetState extends State<TagWidget> {
       },
     );
     print(result);
-
     if (result != null && result.isNotEmpty) {
-      print(result);
+      if (result.length > 10) {
+        // Show message if tag length exceeds 10 characters
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('태그는 10자를 넘을 수 없습니다.')));
+        return;
+      }
       setState(() {
-        tags.add(result.toString());
+        tags.add(result);
       });
     }
-
     print(tags);
   }
 
@@ -108,30 +117,30 @@ class _TagWidgetState extends State<TagWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 30,
-      child: Row(
-        children: [
+        alignment: Alignment.topRight,
+        height: 50,
+        child: Row(children: [
           ImageData(IconsPath.memo_tag, isSvg: true, width: 13, height: 13),
           SizedBox(width: 10),
           Text(
             "태그",
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.w700,
               color: Color(0xff666666),
             ),
           ),
           SizedBox(width: 16),
-          Wrap(
-            spacing: 8,
-            children: tags.map((tag) {
+          Expanded(
+              child: Wrap(spacing: 8, runSpacing: 6, children: [
+            ...tags.map((tag) {
               return Container(
                 margin: EdgeInsets.only(left: 2),
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: Color(0xffFFECA6),
-                ),
+                    borderRadius: BorderRadius.circular(100),
+                    color: yellow_bg,
+                    border: Border.all(color: yellow, width: 1)),
                 height: 24,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -139,7 +148,7 @@ class _TagWidgetState extends State<TagWidget> {
                     Text(
                       "#$tag  ",
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         fontWeight: FontWeight.w400,
                         color: Color(0xff666666),
                       ),
@@ -152,28 +161,49 @@ class _TagWidgetState extends State<TagWidget> {
                 ),
               );
             }).toList(),
-          ), // Add tag button
-          GestureDetector(
-            onTap: _addTag,
-            child: Container(
-              margin: EdgeInsets.only(left: 4),
-              width: 67,
-              height: 24,
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(color: Color(0xffb3b3b3), width: 0.8)),
-              child: Container(
-                margin: EdgeInsets.symmetric(vertical: 2.0),
-                child: ImageData(
-                  IconsPath.add_tag,
-                  isSvg: true,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+            if (tags.length < 5)
+              GestureDetector(
+                  onTap: _addTag,
+                  child: Container(
+                      width: 60,
+                      height: 24,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          border:
+                              Border.all(color: Color(0xffb3b3b3), width: 0.8)),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 2.0),
+                        child: ImageData(
+                          IconsPath.add_tag,
+                          isSvg: true,
+                        ),
+                      )))
+          ])),
+        ]));
   }
 }
+/*
+
+
+              GestureDetector(
+                onTap: _addTag,
+                child: Container(
+                  margin: EdgeInsets.only(left: 4),
+                  width: 67,
+                  height: 24,
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(color: Color(0xffb3b3b3), width: 0.8)),
+                  child: Container(
+                    margin: EdgeInsets.symmetric(vertical: 2.0),
+                    child: ImageData(
+                      IconsPath.add_tag,
+                      isSvg: true,
+                    ),
+                  ),
+                ),
+              ),
+           */

@@ -1,12 +1,7 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/components/shelfwidget.dart';
-import 'package:reafy_front/src/models/book.dart';
 import 'package:reafy_front/src/pages/book/searchbook.dart';
-import 'package:reafy_front/src/components/delete_book2.dart';
-import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/components/state_BookList.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:provider/provider.dart';

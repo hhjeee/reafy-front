@@ -102,17 +102,9 @@ class AuthProvider extends ChangeNotifier {
       print("[*] No access token available");
       return false;
     }
-
-    //final ApiClient apiClient = ApiClient();
-    //print("**************");
-
-    //apiClient.dio.options.headers = {
-    //  'Content-Type': 'application/json',
-    //  'Authorization': 'Bearer $accessToken'
-    //};
+    ;
 
     try {
-      //apiClient.dio.options.headers{'Authorization': }
       final Dio dio = Dio(); // Use a fresh instance to avoid conflicts
       dio.options.baseUrl = AppUrl.baseurl;
       dio.options.headers = {
@@ -120,46 +112,12 @@ class AuthProvider extends ChangeNotifier {
         'Authorization': 'Bearer $accessToken'
       };
       final res = await dio.post('/authentication/accesstokenTest');
-/*
-      Dio tokenDio = Dio();
-
-      tokenDio.options.baseUrl =
-          '${AppUrl.baseurl}/authentication/accesstokenTest';
-      tokenDio.options.headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken'
-      };
-
-      var res = await tokenDio.post(tokenDio.options.baseUrl);
-*/
       print("[*] Token validation response: ${res.statusCode}");
       return res.statusCode == 201; // Assuming 200 is the success code
     } catch (e) {
       print("[*] Token validation error: $e");
       return false;
     }
-
-    //return false;
-
-    /*
-
-        if (tokenResponse.statusCode == 200) {
-          print("refresh req Successful");
-          String newAccessToken = tokenResponse.data['accessToken'];
-          prefs.setString('token', newAccessToken);
-
-
-    try {
-      var response = await apiClient.dio.get('/');
-      print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-      print(response);
-      print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-
-      return response.statusCode == 200;
-    } catch (e) {
-      print('Token validation error: $e');
-      return false;
-    }*/
   }
 
   Future<bool> performAuthenticatedAction() async {
@@ -209,6 +167,8 @@ class AuthProvider extends ChangeNotifier {
       print('사용자 정보 요청 성공'
           '\n닉네임 : ${_userInfo.kakaoAccount?.profile?.nickname}');
       _nickname = "${_userInfo.kakaoAccount?.profile?.nickname}";
+
+      prefs.setString('nickname', _nickname);
       notifyListeners();
 
       //// 서버랑 1. 카카오토큰 주고 토큰 받아오기   2. refresh 토큰 저장해놓기
