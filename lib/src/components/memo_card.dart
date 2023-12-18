@@ -1,23 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/models/memo.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:reafy_front/src/utils/constants.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class MemoWidget extends StatelessWidget {
   final Memo memo;
   const MemoWidget({Key? key, required this.memo}) : super(key: key);
-
-  Widget _title() {
+  @override
+  Widget build(BuildContext context) {
     return Container(
-        //height: 36,
+      margin: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
+      decoration: BoxDecoration(
+        color: Color(0xFFfbfbfb),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: gray.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 20,
+            offset: Offset(0, 0), // changes position of shadow
+          ),
+        ],
+      ),
+      width: 343,
+      height: memo.imageUrl != null && memo.imageUrl!.isNotEmpty ? 450 : 180,
+      child: Column(
+        children: [
+          MemoTitle(title: memo.title),
+          MemoImage(imageUrl: memo.imageUrl),
+          const SizedBox(height: 10),
+          MemoDescription(content: memo.content),
+          const SizedBox(height: 10),
+          MemoDateAgo(dateText: "2023년 12월 23일")
+        ],
+      ),
+    );
+  }
+}
+
+class MemoTitle extends StatelessWidget {
+  final String? title;
+  const MemoTitle({Key? key, this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
         padding: const EdgeInsets.symmetric(horizontal: 6.0),
         margin: EdgeInsets.only(bottom: 9),
         child: Row(children: [
           Text(
-            memo.title ?? '',
+            title ?? '',
             style: const TextStyle(
                 fontWeight: FontWeight.w800, color: black, fontSize: 12),
           ),
@@ -25,52 +59,144 @@ class MemoWidget extends StatelessWidget {
           ImageData(IconsPath.menu, isSvg: true, width: 13, height: 3)
         ]));
   }
+}
 
-  Widget _image() {
-    return Card(
-      color: Color(0xffFAF9F7),
-      elevation: 0,
-      child: Container(
-        width: 319,
-        height: 270,
-        //padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(memo.imageUrl!),
-              fit: BoxFit.cover,
+class MemoImage extends StatelessWidget {
+  final String? imageUrl;
+  const MemoImage({Key? key, this.imageUrl}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return imageUrl != null && imageUrl!.isNotEmpty
+        ? Card(
+            color: Color(0xffFAF9F7),
+            elevation: 0,
+            child: Container(
+              width: 319,
+              height: 270,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(imageUrl!),
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: BorderRadius.circular(8)),
             ),
-            borderRadius: BorderRadius.circular(8)),
-      ),
-    );
-
-    //CachedNetworkImage(imageUrl: memo.imageUrl!);
+          )
+        : SizedBox.shrink();
   }
+}
 
-  Widget _infoDescription() {
+class MemoDescription extends StatelessWidget {
+  final String? content;
+  const MemoDescription({Key? key, this.content}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       height: 81,
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          ExpandableText(
-            memo.content ?? '',
-            prefixStyle: const TextStyle(
-                fontWeight: FontWeight.w400,
-                color: black,
-                fontSize: 12,
-                height: 1.5),
-            expandText: '더보기',
-            collapseText: '접기',
-            maxLines: 5,
-            expandOnTextTap: true,
-            collapseOnTextTap: true,
-            linkColor: Colors.grey,
-          )
-        ],
+      child: ExpandableText(
+        content ?? '',
+        prefixStyle: const TextStyle(
+            fontWeight: FontWeight.w400,
+            color: black,
+            fontSize: 12,
+            height: 1.5),
+        expandText: '더보기',
+        collapseText: '접기',
+        maxLines: 5,
+        expandOnTextTap: true,
+        collapseOnTextTap: true,
+        linkColor: Colors.grey,
       ),
     );
   }
+}
+
+class MemoDateAgo extends StatelessWidget {
+  final String dateText;
+  const MemoDateAgo({Key? key, required this.dateText}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: Row(children: [
+          Hashtag(label: "#경영"),
+          Hashtag(label: "#경영"),
+          Hashtag(label: "#경영"),
+          Spacer(),
+          Text(
+            dateText,
+            style: const TextStyle(color: Colors.grey, fontSize: 9),
+          ),
+        ]));
+  }
+}
+
+class Hashtag extends StatelessWidget {
+  final String label;
+  const Hashtag({Key? key, required this.label}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left: 4),
+      width: 46,
+      height: 13,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        color: Color(0xffFFECA6),
+      ),
+      child: Center(
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 8,
+            fontWeight: FontWeight.w400,
+            color: Color(0xff666666),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+/*
+class MemoContent extends StatelessWidget {
+  final Memo memo;
+  const MemoContent({Key? key, required this.memo}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MemoTitle(title: memo.title),
+        MemoImage(imageUrl: memo.imageUrl),
+        MemoDescription(content: memo.content),
+        MemoDateAgo(dateText: "2023년 12월 23일") // Replace with actual date
+      ],
+    );
+  }
+}
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
 
   Widget _dateAgo() {
     return Container(
@@ -87,43 +213,6 @@ class MemoWidget extends StatelessWidget {
           ),
         ]));
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 20),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
-      //color:
-      decoration: BoxDecoration(
-        color: Color(0xFFfbfbfb),
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: gray.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 20,
-            offset: Offset(0, 0), // changes position of shadow
-          ),
-        ],
-      ),
-
-      width: 343,
-      height: 450, //143
-      child: Column(
-        //crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _title(),
-          //const SizedBox(height: 15),
-          _image(),
-          const SizedBox(height: 6),
-          _infoDescription(),
-          Spacer(),
-          _dateAgo(),
-        ],
-      ),
-    );
-  }
-}
 
 Widget hashtag() {
   return Container(
@@ -266,3 +355,71 @@ Widget _memo() {
     ],
   );
 }
+
+*/
+
+/*
+  Widget _title() {
+    return Container(
+        //height: 36,
+        padding: const EdgeInsets.symmetric(horizontal: 6.0),
+        margin: EdgeInsets.only(bottom: 9),
+        child: Row(children: [
+          Text(
+            memo.title ?? '',
+            style: const TextStyle(
+                fontWeight: FontWeight.w800, color: black, fontSize: 12),
+          ),
+          Spacer(),
+          ImageData(IconsPath.menu, isSvg: true, width: 13, height: 3)
+        ]));
+  }
+
+
+  Widget _image() {
+    return Card(
+      color: Color(0xffFAF9F7),
+      elevation: 0,
+      child: Container(
+        width: 319,
+        height: 270,
+        //padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(memo.imageUrl!),
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.circular(8)),
+      ),
+    );
+
+    //CachedNetworkImage(imageUrl: memo.imageUrl!);
+  }
+
+  Widget _infoDescription() {
+    return Container(
+      height: 81,
+      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ExpandableText(
+            memo.content ?? '',
+            prefixStyle: const TextStyle(
+                fontWeight: FontWeight.w400,
+                color: black,
+                fontSize: 12,
+                height: 1.5),
+            expandText: '더보기',
+            collapseText: '접기',
+            maxLines: 5,
+            expandOnTextTap: true,
+            collapseOnTextTap: true,
+            linkColor: Colors.grey,
+          )
+        ],
+      ),
+    );
+  }
+*/
+ 

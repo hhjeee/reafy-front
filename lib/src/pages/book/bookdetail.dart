@@ -96,29 +96,29 @@ class _BookDetailPageState extends State<BookDetailPage> {
                           ),
                           Positioned(
                             top: 310,
-                            child: _hill_img(size),
+                            child: HillImage(width: size.width),
                           ),
                           Positioned(
                             top: 116,
                             left: 28,
-                            child: _leaf_img(),
+                            child: LeafImage(),
                           ),
                           Positioned(
                             top: 107,
                             left: (size.width - 178) / 2,
-                            child: _book_img(bookDetails),
+                            child: BookImage(bookDetails: bookDetails),
                           ),
                           Positioned(
                             top: 245,
                             left: size.width / 2 + 35,
-                            child: _poobao_img(),
+                            child: PoobaoImage(),
                           ),
                         ],
                       ),
                       SizedBox(height: 27.0),
                       _book_info(bookDetails),
                       SizedBox(height: 27.0),
-                      _progress(),
+                      ProgressIndicator(),
                       SizedBox(height: 21.0),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 26),
@@ -151,9 +151,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
                               ),
                             ])),
                       ),
-                      _memo(),
+                      MemoWidget(),
                       SizedBox(height: 9.0),
-                      _add_memo(context),
+                      AddMemoButton(),
                       SizedBox(height: 17.0),
                       Align(
                         alignment: Alignment.centerRight,
@@ -176,6 +176,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
             }));
   }
 
+/*
   Widget _book_img(BookshelfBookDetailsDto bookDetails) {
     return Container(
         //alignment: Alignment.center,
@@ -224,7 +225,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
       child: ImageData(IconsPath.character),
     );
   }
-
+*/
   Widget _book_info(BookshelfBookDetailsDto bookDetails) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 26.0),
@@ -344,7 +345,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
       ),
     );
   }
-
+/*
   Widget _progress() {
     return Container(
       padding: EdgeInsets.only(left: 23.0),
@@ -503,7 +504,183 @@ class _BookDetailPageState extends State<BookDetailPage> {
     );
   }
 
-  Widget _add_memo(BuildContext context) {
+  Widget AddMemoButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        showAddMemoBottomSheet(context);
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 26),
+        width: 343,
+        height: 33,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Color(0xffB3B3B3),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 0,
+              blurRadius: 20,
+              offset: Offset(0, 0),
+            ),
+          ],
+        ),
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 10.0),
+          child: ImageData(
+            IconsPath.add_memo,
+            isSvg: true,
+          ),
+        ),
+      ),
+    );
+  }
+}*/
+}
+
+/////////////////////////////////////////////
+
+class BookImage extends StatelessWidget {
+  final BookshelfBookDetailsDto bookDetails;
+
+  const BookImage({Key? key, required this.bookDetails}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 178,
+      height: 259,
+      decoration: BoxDecoration(
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            offset: Offset(2.0, 4.0),
+            blurRadius: 3.0,
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5.0),
+        child: bookDetails.thumbnailURL != null
+            ? Image.network(
+                bookDetails.thumbnailURL!,
+                fit: BoxFit.cover,
+              )
+            : Placeholder(),
+      ),
+    );
+  }
+}
+
+class LeafImage extends StatelessWidget {
+  const LeafImage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 332.36,
+      height: 181.455,
+      child: ImageData(IconsPath.book_leaves),
+    );
+  }
+}
+
+class HillImage extends StatelessWidget {
+  final double width;
+
+  const HillImage({Key? key, required this.width}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: 90,
+      child: ImageData(IconsPath.hill),
+    );
+  }
+}
+
+class PoobaoImage extends StatelessWidget {
+  const PoobaoImage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 103,
+      height: 144,
+      child: ImageData(IconsPath.character),
+    );
+  }
+}
+
+/*
+class BookInfo extends StatelessWidget {
+  final BookshelfBookDetailsDto bookDetails;
+
+  const BookInfo({Key? key, required this.bookDetails}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 26.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // IconButton for favorite and Text widgets for book details
+        ],
+      ),
+    );
+  }
+}
+*/
+class ProgressIndicator extends StatelessWidget {
+  const ProgressIndicator({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(left: 23.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                "진행 정도",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xff333333),
+                ),
+              ),
+              SizedBox(width: 266.0),
+              Text(
+                "70%",
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xff333333),
+                ),
+              ), //변경
+            ],
+          ),
+          Container(
+            //나중엔 벡터 단위로 받아와서 조건 따라 색 변경해야 할듯
+            width: 344,
+            height: 46,
+            child: ImageData(IconsPath.bamboo_bar),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AddMemoButton extends StatelessWidget {
+  const AddMemoButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         showAddMemoBottomSheet(context);
@@ -536,3 +713,128 @@ class _BookDetailPageState extends State<BookDetailPage> {
   }
 }
 
+class MemoWidget extends StatelessWidget {
+  const MemoWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 26),
+          width: 343,
+          height: 114,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Color(0xFFFBFBFB),
+            boxShadow: [
+              BoxShadow(
+                color: Color.fromRGBO(0, 0, 0, 0.1),
+                blurRadius: 20,
+                spreadRadius: 0,
+                offset: Offset(0, 0),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              SizedBox(height: 14.0),
+              Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 7, right: 4),
+                    width: 64,
+                    height: 64,
+                    child: ImageData(IconsPath.memo_ex),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(2.0),
+                    width: 258,
+                    child: Text(
+                      "정당의 목적이나 활동이 민주적 기본질서에 위배될 때에는 정부는 헌법재판소에 그 해산을 제소할 수 있고, 정당은 헌법재판소의 심판에 의하여 해산된다. 대통령이 임시회의 집회를 요구할 때에는 기간과 집회요구의 이유를 명시하여야 한다.",
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xff666666),
+                        height: 1.55556,
+                      ),
+                      textAlign: TextAlign.justify,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 4,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.0),
+              Row(
+                children: [
+                  SizedBox(width: 6.0),
+                  Container(
+                    margin: EdgeInsets.only(left: 4),
+                    width: 46,
+                    height: 13,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Color(0xffFFECA6),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "#경영",
+                        style: TextStyle(
+                          fontSize: 8,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xff666666),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 4),
+                    width: 46,
+                    height: 13,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Color(0xffFFECA6),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "#경영",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 8,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xff666666),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  Text(
+                    "23.12.03",
+                    style: TextStyle(
+                      fontSize: 6,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xffb3b3b3),
+                    ),
+                  ),
+                  SizedBox(width: 3.0),
+                  Text(
+                    "02:04",
+                    style: TextStyle(
+                      fontSize: 6,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xffb3b3b3),
+                    ),
+                  ),
+                  SizedBox(width: 12.0),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+    // Your memo widget implementation
+  }
+}

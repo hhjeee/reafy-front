@@ -9,7 +9,6 @@ import 'package:reafy_front/src/components/stopwatch.dart';
 import 'package:reafy_front/src/pages/map.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
-import 'package:reafy_front/src/components/poobao_home.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
 

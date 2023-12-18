@@ -3,7 +3,6 @@ import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/purchase_dialog.dart';
-import 'package:reafy_front/src/components/poobao_home.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/items/bookshelf_item.dart';

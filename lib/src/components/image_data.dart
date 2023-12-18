@@ -138,6 +138,7 @@ class IconsPath {
   static String get memo_ex => 'assets/images/memo_example.png';
   static String get add_memo => 'assets/svg/add_memo.svg';
   static String get memo_date => 'assets/svg/memo_date.svg';
+  static String get memo_book => 'assets/svg/memo_book.svg';
   static String get memo_tag => 'assets/svg/memo_tag.svg';
   static String get add_tag => 'assets/svg/add_tag.svg';
   static String get memo_pic => 'assets/svg/memo_picture.svg';

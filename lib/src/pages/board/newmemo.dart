@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import "dart:io";
-import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/components/photouploader.dart';
-import 'package:reafy_front/src/components/tag_input.dart';
-import 'package:reafy_front/src/utils/constants.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:reafy_front/src/components/image_picker.dart';
+import 'package:reafy_front/src/utils/constants.dart';
+import 'package:flutter/foundation.dart';
+import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/components/tag_input.dart';
 
 class NewMemo extends StatefulWidget {
   const NewMemo({super.key});
@@ -20,158 +21,10 @@ class _NewMemoState extends State<NewMemo> {
   final List<String> dropdownList = ['미드나잇 라이브러리', '별들이 겹치는 순간', '너 없는 동안'];
   String selectedBook = '별들이 겹치는 순간';
   int currentLength = 0;
-  File? _selectedImage;
-
-  Widget _bookselect() {
-    return Container(
-      height: 40,
-      child: Row(
-        children: [
-          ImageData(
-            IconsPath.memo_date,
-            isSvg: true,
-            width: 13,
-            height: 13,
-          ),
-          SizedBox(width: 10),
-          Text(
-            "책",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: Color(0xff666666),
-            ),
-          ),
-          SizedBox(width: 18),
-          Container(
-            width: 266,
-            height: 30,
-            decoration: BoxDecoration(
-              color: Color(0xffffffff),
-              borderRadius: BorderRadius.circular(4),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 1.0,
-                  blurRadius: 7.0,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton(
-                  isExpanded: true,
-                  underline: Container(),
-                  value: selectedBook,
-                  //icon: ImageData(IconsPath.dropdown),
-                  items: dropdownList.map((String item) {
-                    return DropdownMenuItem<String>(
-                      value: item,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 12.0), // 내부 패딩 설정
-                        child: Text(item),
-                      ),
-                      //child: Text(item),
-                    );
-                  }).toList(),
-                  onChanged: (dynamic item) {
-                    setState(() {
-                      selectedBook = item;
-                    });
-                  }),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _memoeditor() {
-    // Initialize currentLength
-
-    Future<void> _selectImage() async {
-      final ImagePicker _picker = ImagePicker();
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-
-      if (image != null) {
-        setState(() {
-          _selectedImage = File(image.path);
-        });
-      }
-    }
-
-    return Container(
-      width: 343,
-      height: 201,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: white,
-      ),
-      child: Column(
-        children: [
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 13),
-              width: 317,
-              child: TextField(
-                maxLength: 400,
-                maxLines: null,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: '메모를 입력해 주세요.',
-                  hintStyle: TextStyle(
-                    color: Color(0xffb3b3b3),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Color(0xff333333),
-                  fontWeight: FontWeight.w500,
-                ),
-                onChanged: (text) {
-                  setState(() {
-                    currentLength = text.length;
-                  });
-                },
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 13),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: _selectImage, // Call the image selection method
-                      child: ImageData(IconsPath.memo_pic,
-                          isSvg: true, width: 20, height: 20),
-                    ),
-                  ],
-                ),
-                Text(
-                  '$currentLength/400자', // Display the text counter here
-                  style: TextStyle(
-                    color: Color(0xffb3b3b3),
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _datepicker(context) {
     return Container(
-      height: 32,
+      height: 34,
       child: Row(
         children: [
           ImageData(
@@ -182,9 +35,9 @@ class _NewMemoState extends State<NewMemo> {
           ),
           SizedBox(width: 10),
           Text(
-            "생성일",
+            "작성일",
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.w700,
               color: Color(0xff666666),
             ),
@@ -216,7 +69,7 @@ class _NewMemoState extends State<NewMemo> {
               child: Text(
                 "${selectedDate.year}년 ${selectedDate.month}월 ${selectedDate.day}일 ${selectedDate.hour.toString().padLeft(2, '0')}:${selectedDate.minute.toString().padLeft(2, '0')}",
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w400,
                   color: Color(0xff666666),
                 ),
@@ -226,20 +79,148 @@ class _NewMemoState extends State<NewMemo> {
     );
   }
 
+  Widget _bookselect() {
+    return Container(
+      height: 40,
+      child: Row(
+        children: [
+          ImageData(
+            IconsPath.memo_book,
+            isSvg: true,
+            width: 13,
+            height: 13,
+          ),
+          SizedBox(width: 10),
+          Text(
+            "도서",
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: Color(0xff666666),
+            ),
+          ),
+          SizedBox(width: 18),
+          Container(
+            width: 266,
+            height: 30,
+            decoration: BoxDecoration(
+              color: bg_gray,
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 1.0,
+                  blurRadius: 7.0,
+                ),
+              ],
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton(
+                  isExpanded: true,
+                  underline: Container(),
+                  value: selectedBook,
+                  //icon: ImageData(IconsPath.dropdown),
+                  items: dropdownList.map((String item) {
+                    return DropdownMenuItem<String>(
+                      value: item,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 12.0), // 내부 패딩 설정
+                        child: Text(
+                          item,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: black,
+                          ),
+                        ),
+                      ),
+                      //child: Text(item),
+                    );
+                  }).toList(),
+                  onChanged: (dynamic item) {
+                    setState(() {
+                      selectedBook = item;
+                    });
+                  }),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _memoeditor() {
+    return Container(
+      width: 343,
+      height: 201,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: white,
+      ),
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 13),
+              width: 317,
+              child: TextField(
+                maxLength: 500,
+                maxLines: null,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: '메모를 입력해 주세요.',
+                  hintStyle: TextStyle(
+                    color: Color(0xffb3b3b3),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                style: TextStyle(
+                    color: dark_gray,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    height: 1.3),
+                onChanged: (text) {
+                  setState(() {
+                    currentLength = text.length;
+                  });
+                },
+              ),
+            ),
+          ),
+          /* Container(
+            padding: EdgeInsets.symmetric(horizontal: 13),
+            child: GestureDetector(
+              onTap: showImagePickerOption(context),
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  child: ImageData(IconsPath.memo_pic,
+                      isSvg: true, width: 20, height: 20),
+                  height: 44),
+            ),
+          ),*/
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: SizeConfig.screenHeight * 0.8,
+      padding: EdgeInsets.symmetric(vertical: 30),
       margin: EdgeInsets.only(left: 24),
       color: bg_gray,
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          PickImage(),
           SizedBox(height: 25),
           _bookselect(),
-          SizedBox(height: 16.0),
-          _memoeditor(),
           SizedBox(height: 6.0),
+          _memoeditor(),
+          SizedBox(height: 16.0),
           _datepicker(context),
           TagWidget(),
           SizedBox(height: 16.0),
@@ -272,14 +253,16 @@ class _NewMemoState extends State<NewMemo> {
 
 void showAddMemoBottomSheet(BuildContext context) {
   showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10.0),
-          topRight: Radius.circular(10.0),
-        ),
+    context: context,
+    isScrollControlled: true, // 모달 시트를 전체 화면으로 확장 가능하게 설정
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(10.0),
+        topRight: Radius.circular(10.0),
       ),
-      builder: (BuildContext context) {
-        return NewMemo();
-      });
+    ),
+    builder: (BuildContext context) {
+      return NewMemo();
+    },
+  );
 }

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/delete_book2.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
-import 'package:reafy_front/src/components/category_BookList.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'package:reafy_front/src/pages/book/bookdetail.dart';
