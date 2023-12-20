@@ -35,7 +35,7 @@ class IconsPath {
   // login 화면
   static String get bubble => 'assets/images/bubble.png';
   static String get title_logo => 'assets/images/title_logo.png';
-  static String get login_character => 'assets/images/poobao_login.png';
+  static String get login_character => 'assets/images/login_character.png';
   static String get login_button => 'assets/images/kakao_login.png';
 
   // 하단 바

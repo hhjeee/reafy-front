@@ -1,14 +1,12 @@
-import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/memo_card.dart';
 import 'package:reafy_front/src/controller/board_controller.dart';
-import 'package:reafy_front/src/models/memo.dart';
 import 'package:reafy_front/src/pages/board/newmemo.dart';
-import 'package:reafy_front/src/pages/book/bookdetail.dart';
 import 'package:reafy_front/src/utils/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Board extends GetView<BoardController> {
   const Board({super.key});
@@ -19,9 +17,16 @@ class Board extends GetView<BoardController> {
               (index) => MemoCard(memo: controller.memoList[index])).toList(),
         ));
   }
+/*
+  String nickname = ""; // Make sure this is a member variable of your class
+  Future<void> setNickname() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? nickname = prefs.getString('nickname');
+  }*/
 
   @override
   Widget build(BuildContext context) {
+    //setNickname();
     final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
@@ -43,8 +48,6 @@ class Board extends GetView<BoardController> {
           actions: [],
         ),
         extendBodyBehindAppBar: true,
-
-        //
         floatingActionButton: NewMemoButton(),
         /*
         SizedBox(
@@ -80,7 +83,18 @@ class Board extends GetView<BoardController> {
             width: size.width,
             height: size.height,
             child: ListView(
-              children: [_memoList()],
+              children: [
+                /*
+                Text(
+                  nickname != "" ? "${nickname}님이 최근 작성한 메모" : "최근 작성한 메모",
+                  style: TextStyle(
+                      color: gray,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,
+                      height: 2),
+                ),*/
+                _memoList()
+              ],
             )));
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/utils/constants.dart';
+import 'package:dotted_border/dotted_border.dart';
 
 class TagWidget extends StatefulWidget {
   @override
@@ -164,22 +165,24 @@ class _TagWidgetState extends State<TagWidget> {
             if (tags.length < 5)
               GestureDetector(
                   onTap: _addTag,
-                  child: Container(
-                      width: 60,
-                      height: 24,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          border:
-                              Border.all(color: Color(0xffb3b3b3), width: 0.8)),
+                  child: DottedBorder(
+                      color: Color(0xffb3b3b3), // Border color
+                      strokeWidth: 1, // Border width
+                      dashPattern: [2, 3],
+                      radius: const Radius.circular(100),
+                      borderType: BorderType.RRect, // Gap between dashes
                       child: Container(
-                        margin: EdgeInsets.symmetric(vertical: 2.0),
-                        child: ImageData(
-                          IconsPath.add_tag,
-                          isSvg: true,
-                        ),
-                      )))
+                          width: 56,
+                          height: 18,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                          child: Container(
+                            margin: EdgeInsets.symmetric(vertical: 2.0),
+                            child: ImageData(
+                              IconsPath.add_tag,
+                              isSvg: true,
+                            ),
+                          ))))
           ])),
         ]));
   }

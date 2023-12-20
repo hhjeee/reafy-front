@@ -69,11 +69,20 @@ class _HomeState extends State<Home>
                 width: 170,
                 height: 130,
               ),
-              Transform.scale(
-                scale: 1.0, // Adjust scale factor as needed
-                child: Lottie.asset('assets/lottie/loadingdot.json',
-                    width: 170, height: 130),
-              )
+              Container(
+                  padding: EdgeInsets.only(left: 20),
+                  width: 170,
+                  height: 110,
+                  child: Center(
+                      child: Transform.scale(
+                    scale: 1.0, // Adjust scale factor as needed
+                    child: Lottie.asset(
+                      'assets/lottie/Memo.json',
+                      width: 70,
+                      height: 70,
+                      frameRate: FrameRate(10000000),
+                    ),
+                  )))
             ]))
       ]);
     }
