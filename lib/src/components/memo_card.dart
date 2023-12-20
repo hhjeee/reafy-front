@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/models/memo.dart';
 import 'package:expandable_text/expandable_text.dart';
+import 'package:reafy_front/src/pages/board/newmemo.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
 class MemoCard extends StatelessWidget {
@@ -25,8 +27,9 @@ class MemoCard extends StatelessWidget {
         ],
       ),
       width: 343,
-      height: memo.imageUrl != null && memo.imageUrl!.isNotEmpty ? 450 : 180,
+      //height: memo.imageUrl != null && memo.imageUrl!.isNotEmpty ? 450 : 180,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           MemoTitle(title: memo.title),
           MemoImage(imageUrl: memo.imageUrl),
@@ -40,6 +43,7 @@ class MemoCard extends StatelessWidget {
   }
 }
 
+/*
 class MemoTitle extends StatelessWidget {
   final String? title;
   const MemoTitle({Key? key, this.title}) : super(key: key);
@@ -60,6 +64,57 @@ class MemoTitle extends StatelessWidget {
         ]));
   }
 }
+*/
+
+class MemoTitle extends StatelessWidget {
+  final String? title;
+  const MemoTitle({Key? key, this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: 20,
+        padding: const EdgeInsets.symmetric(horizontal: 6.0),
+        margin: EdgeInsets.only(bottom: 9),
+        child: Row(children: [
+          Text(
+            title ?? '',
+            style: const TextStyle(
+                fontWeight: FontWeight.w800, color: black, fontSize: 12),
+          ),
+          Spacer(),
+          SizedBox(
+              width: 50,
+              child: PopupMenuButton<String>(
+                onSelected: (String value) {
+                  if (value == 'edit') {
+                    showAddMemoBottomSheet(context);
+                  } else if (value == 'delete') {
+                    _showDeleteDialog(context);
+                  }
+                },
+                itemBuilder: (BuildContext context) {
+                  return {'edit', 'delete'}.map((String choice) {
+                    return PopupMenuItem<String>(
+                        value: choice,
+                        height: 40,
+                        child: SizedBox(
+                          width: 30,
+                          child: Text(
+                            choice == 'edit' ? "수정" : "삭제",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400, fontSize: 14),
+                          ),
+                        ));
+                  }).toList();
+                },
+                icon: ImageData(IconsPath.menu,
+                    isSvg: true, width: 13, height: 3),
+              ))
+        ]));
+  }
+}
 
 class MemoImage extends StatelessWidget {
   final String? imageUrl;
@@ -68,21 +123,49 @@ class MemoImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return imageUrl != null && imageUrl!.isNotEmpty
-        ? Card(
-            color: Color(0xffFAF9F7),
-            elevation: 0,
-            child: Container(
-              width: 319,
-              height: 270,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(imageUrl!),
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius: BorderRadius.circular(8)),
+        ? GestureDetector(
+            onTap: () => showImageDialog(context, imageUrl!),
+            child: Card(
+              color: Color(0xffFAF9F7),
+              elevation: 0,
+              child: Container(
+                width: 319,
+                height: 270,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(imageUrl!),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
             ),
           )
         : SizedBox.shrink();
+  }
+
+  void showImageDialog(BuildContext context, String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          clipBehavior: Clip.antiAlias,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.network(imageUrl),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(
+                  "뒤로가기",
+                  style: TextStyle(color: gray, fontWeight: FontWeight.w700),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -162,6 +245,86 @@ class Hashtag extends StatelessWidget {
   }
 }
 
+Widget _showDeleteDialog(context) {
+  return AlertDialog(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20),
+    ),
+    contentPadding: EdgeInsets.zero,
+    content: Container(
+      width: 320,
+      height: 160,
+      child: Column(children: [
+        SizedBox(height: 40.0),
+        Text(
+          "정말 삭제하시겠어요? \n 작성한 메모는 영구적으로 사라져요!",
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+              color: Color(0xff333333),
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              height: 1.2),
+        ),
+        SizedBox(height: 40.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xffebebeb),
+                minimumSize: Size(140, 48),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                '취소',
+                style: const TextStyle(
+                  color: Color(0xff333333),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+            SizedBox(width: 6),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context); // DeleteDialog 닫기
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DoneDialog(onDone: () {});
+                  },
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xffffd747),
+                minimumSize: Size(140, 48),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                '확인',
+                style: const TextStyle(
+                  color: Color(0xff000000),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ]),
+    ),
+    actions: <Widget>[],
+  );
+}
 
 /*
 class MemoContent extends StatelessWidget {

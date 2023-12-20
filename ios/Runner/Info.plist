@@ -65,12 +65,11 @@
 		<false/>
 		<key>UIStatusBarHidden</key>
 		<false/>
-
 		<key>NSCameraUsageDescription</key>
-   <string> </string>
-   <key>NSMicrophoneUsageDescription</key>
-   <string> </string>
-   <key>NSPhotoLibraryUsageDescription</key>
-   <string> </string>
+		<string></string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string></string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string></string>
 	</dict>
 </plist>

@@ -15,9 +15,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:reafy_front/src/pages/splash_screen.dart';
 import 'package:reafy_front/src/provider/item_provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
-
 import 'dart:async';
-
 import 'package:reafy_front/src/utils/constants.dart';
 
 Future main() async {

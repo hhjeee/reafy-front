@@ -56,15 +56,15 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Bubble(),
-            Logo(),
+            Spacer(),
             Character(width: size.width, height: size.height),
-            SizedBox(height: 30),
+            //SizedBox(height: 10),
             LoginButton(
               onTap: () async {
                 tapLoginButton();
               },
             ),
+            Spacer(),
           ]),
     ));
   }
@@ -91,6 +91,7 @@ class LoginButton extends StatelessWidget {
   }
 }
 
+/*
 class Bubble extends StatelessWidget {
   const Bubble({Key? key}) : super(key: key);
 
@@ -121,7 +122,7 @@ class Logo extends StatelessWidget {
     ));
   }
 }
-
+*/
 class Character extends StatelessWidget {
   final double width;
   final double height;
@@ -135,8 +136,14 @@ class Character extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Container(
           width: width,
-          height: height * 0.5,
-          child: ImageData(IconsPath.login_character),
+          height: height * 0.6,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              alignment: Alignment.center,
+              image: AssetImage(IconsPath.login_character),
+              fit: BoxFit.fitWidth,
+            ),
+          ),
         ));
   }
 }

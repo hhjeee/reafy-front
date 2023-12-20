@@ -6,12 +6,9 @@ import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:reafy_front/src/pages/book/bookshelf.dart';
 import 'package:reafy_front/src/pages/book/category_bookshelf.dart';
 
-class DeleteDialog extends StatefulWidget {
-  @override
-  _DeleteDialogState createState() => _DeleteDialogState();
-}
+class DeleteDialog extends StatelessWidget {
+  const DeleteDialog({super.key});
 
-class _DeleteDialogState extends State<DeleteDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
