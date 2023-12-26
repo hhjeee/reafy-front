@@ -102,7 +102,7 @@ Future<List<String>> fetchBookshelfThumbnailsByFavorite() async {
 
     if (response.statusCode == 200) {
       final List<dynamic> responseData = response.data['response'];
-
+      //print('a ${responseData}');
       final List<String> thumbnails = responseData
           .map<String>((item) => item['thumbnail_url'] as String)
           .toList();
@@ -399,7 +399,7 @@ Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
 }
 
 //favorite 등록
-Future<BookshelfBookDetailsDto> updateBookshelfBookFavorite(
+Future<void> updateBookshelfBookFavorite(
   int bookshelfBookId,
 ) async {
   final dio = Dio();
@@ -417,13 +417,15 @@ Future<BookshelfBookDetailsDto> updateBookshelfBookFavorite(
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = response.data;
+      print(data);
+      print(data['response']['is_favorite']);
       final bool isCurrentlyFavorite =
-          data['response']['isFavorite'] == 1 ? true : false;
+          data['response']['is_favorite'] == 1 ? true : false;
 
       final Map<String, dynamic> requestBody = {
         'isFavorite': isCurrentlyFavorite ? 0 : 1,
       };
-
+      print('abc ${requestBody}');
       final updateResponse = await dio.put(
         'http://13.125.145.165:3000/book/bookshelf/$bookshelfBookId',
         data: requestBody,
@@ -432,15 +434,6 @@ Future<BookshelfBookDetailsDto> updateBookshelfBookFavorite(
           'Content-Type': 'application/json',
         }),
       );
-
-      if (updateResponse.statusCode == 200) {
-        final Map<String, dynamic> updatedData = updateResponse.data;
-        final BookshelfBookDetailsDto bookshelfBookDetails =
-            BookshelfBookDetailsDto.fromJson(updatedData['response']);
-        return bookshelfBookDetails;
-      } else {
-        throw Exception('Failed to update bookshelf book favorite status');
-      }
     } else {
       throw Exception('Failed to fetch current bookshelf book details');
     }

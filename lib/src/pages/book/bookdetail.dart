@@ -20,7 +20,6 @@ class BookDetailPage extends StatefulWidget {
 
 class _BookDetailPageState extends State<BookDetailPage> {
   late Future<BookshelfBookDetailsDto> bookDetailsFuture;
-  bool isFavorite = false;
 
   @override
   void initState() {
@@ -50,7 +49,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return ModifyDialog(); // 수정된 부분
+                    return ModifyDialog();
                   },
                 );
               },
@@ -63,7 +62,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return DeleteDialog(); // 수정된 부분
+                    return DeleteDialog(bookId: widget.bookshelfBookId);
                   },
                 );
               },
@@ -80,8 +79,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
               } else if (snapshot.hasError) {
                 return Text('에러: ${snapshot.error}');
               } else {
-                print(snapshot.data);
                 final BookshelfBookDetailsDto bookDetails = snapshot.data!;
+                bool isFavorite = bookDetails.isFavorite == 1 ? true : false;
                 print(bookDetails);
                 return SingleChildScrollView(
                   child: Column(
@@ -109,13 +108,32 @@ class _BookDetailPageState extends State<BookDetailPage> {
                             child: BookImage(bookDetails: bookDetails),
                           ),
                           Positioned(
-                            top: 245,
+                            top: 220,
                             left: size.width / 2 + 35,
                             child: PoobaoImage(),
                           ),
                         ],
                       ),
-                      SizedBox(height: 27.0),
+                      //SizedBox(height: 18.0),
+                      IconButton(
+                        padding: EdgeInsets.only(left: 26),
+                        icon: isFavorite
+                            ? ImageData(IconsPath.favorite,
+                                isSvg: true, width: 22, height: 22)
+                            : ImageData(IconsPath.nonFavorite,
+                                isSvg: true, width: 22, height: 22),
+                        onPressed: () async {
+                          try {
+                            await updateBookshelfBookFavorite(
+                                bookDetails.bookshelfBookId);
+                            setState(() {
+                              isFavorite = !isFavorite;
+                            });
+                          } catch (e) {
+                            print('에러 발생: $e');
+                          }
+                        },
+                      ),
                       _book_info(bookDetails),
                       SizedBox(height: 27.0),
                       ProgressIndicator(),
@@ -220,8 +238,13 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   Widget _poobao_img() {
     return Container(
+<<<<<<< Updated upstream
       width: 103,
       height: 144,
+=======
+      width: 123,
+      height: 164,
+>>>>>>> Stashed changes
       child: ImageData(IconsPath.character),
     );
   }
@@ -232,21 +255,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          IconButton(
-            icon: isFavorite
-                ? ImageData(IconsPath.nonFavorite, isSvg: true, width: 21)
-                : ImageData(IconsPath.favorite, isSvg: true, width: 21),
-            onPressed: () async {
-              try {
-                await updateBookshelfBookFavorite(bookDetails.bookshelfBookId);
-                setState(() {
-                  isFavorite = !isFavorite;
-                });
-              } catch (e) {
-                print('에러 발생: $e');
-              }
-            },
-          ),
           Text(
             (bookDetails?.title?.length ?? 0) > 20
                 ? '${bookDetails.title!.substring(0, 20)}\n${bookDetails.title!.substring(
@@ -273,8 +281,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
               ),
               SizedBox(width: 5),
               Text(
-                (bookDetails?.author?.length ?? 0) > 25
-                    ? '${bookDetails.author!.substring(0, 25)}\n${bookDetails.author!.substring(
+                (bookDetails?.author?.length ?? 0) > 26
+                    ? '${bookDetails.author!.substring(0, 26)}\n${bookDetails.author!.substring(
                         26,
                       )}'
                     : '${bookDetails?.author ?? ''}',
@@ -302,7 +310,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
               Text(
                 (bookDetails?.publisher?.length ?? 0) > 25
                     ? '${bookDetails.publisher!.substring(0, 25)}\n${bookDetails.publisher!.substring(
-                        26,
+                        25,
                       )}'
                     : '${bookDetails?.publisher ?? ''}',
                 overflow: TextOverflow.clip, // 길이 초과 시 '...'로 표시
@@ -329,7 +337,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
               Text(
                 (bookDetails?.category?.length ?? 0) > 25
                     ? '${bookDetails.category!.substring(0, 25)}\n${bookDetails.category!.substring(
-                        26,
+                        25,
                       )}'
                     : '${bookDetails?.category ?? ''}',
                 overflow: TextOverflow.clip, // 길이 초과 시 '...'로 표시

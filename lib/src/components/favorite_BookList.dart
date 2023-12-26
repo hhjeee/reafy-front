@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/pages/book/favorite_bookshelf.dart';
+import 'package:get/get.dart';
 
 class isFavorite_BookShelfWidget extends StatefulWidget {
   final String title;
@@ -65,15 +66,10 @@ class isFavorite_BookShelfWidgetState
                 padding: EdgeInsets.only(left: 25),
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Favorite_BookShelf(
-                                pageTitle: widget.title,
-                                thumbnailListLength:
-                                    widget.thumbnailList.length,
-                              )),
-                    );
+                    Get.to(Favorite_BookShelf(
+                      pageTitle: widget.title,
+                      thumbnailListLength: widget.thumbnailList.length,
+                    ));
                   },
                   child: Text(
                     widget.title,
@@ -87,14 +83,10 @@ class isFavorite_BookShelfWidgetState
               ),
               InkWell(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Favorite_BookShelf(
-                              pageTitle: widget.title,
-                              thumbnailListLength: widget.thumbnailList.length,
-                            )),
-                  );
+                  Get.to(Favorite_BookShelf(
+                    pageTitle: widget.title,
+                    thumbnailListLength: widget.thumbnailList.length,
+                  ));
                 },
                 child: Row(
                   children: [

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:reafy_front/src/pages/book/bookshelf.dart';
 import 'package:reafy_front/src/pages/book/category_bookshelf.dart';
+import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 
-class DeleteDialog extends StatelessWidget {
-  const DeleteDialog({super.key});
+class DeleteDialog extends StatefulWidget {
+  final int bookId;
+  DeleteDialog({required this.bookId});
+  @override
+  _DeleteDialogState createState() => _DeleteDialogState();
+}
 
+class _DeleteDialogState extends State<DeleteDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -70,16 +74,24 @@ class DeleteDialog extends StatelessWidget {
               ),
               SizedBox(width: 6),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // DeleteDialog 닫기
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return DoneDialog(onDone: () {
-                        BottomNavController.to.goToBookShelf();
-                      });
-                    },
-                  );
+                onPressed: () async {
+                  try {
+                    await deleteBookshelfBook(widget.bookId);
+                    Navigator.pop(context);
+
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return DoneDialog(onDone: () {
+                          BottomNavController.to.goToBookShelf();
+                          Navigator.pop(context);
+                          ;
+                        });
+                      },
+                    );
+                  } catch (e) {
+                    print("$e");
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Color(0xffffd747),
