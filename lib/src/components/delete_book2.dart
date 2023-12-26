@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/pages/book/bookshelf.dart';
+import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 
 class DeleteDialog extends StatefulWidget {
   @override
@@ -88,6 +89,7 @@ class _DeleteDialogState extends State<DeleteDialog> {
                       context: context,
                       builder: (BuildContext context) {
                         return DoneDialog(onDone: () {
+                          BottomNavController.to.goToBookShelf();
                           Navigator.pop(context);
                         });
                       },
