@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/delete_book.dart';
 import 'package:reafy_front/src/components/modify_book.dart';
 import 'package:reafy_front/src/models/book.dart';
 import 'package:reafy_front/src/pages/board/newmemo.dart';
+import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
@@ -20,11 +22,20 @@ class BookDetailPage extends StatefulWidget {
 
 class _BookDetailPageState extends State<BookDetailPage> {
   late Future<BookshelfBookDetailsDto> bookDetailsFuture;
+  bool isFavorite = false;
 
   @override
   void initState() {
     super.initState();
     bookDetailsFuture = getBookshelfBookDetails(widget.bookshelfBookId);
+    bookDetailsFuture.then((bookDetails) {
+      setState(() {
+        isFavorite = bookDetails.isFavorite == 1 ? true : false;
+      });
+    }).catchError((error) {
+      print('Error fetching book details: $error');
+    });
+    print('detail fav ${isFavorite}');
   }
 
   @override
@@ -49,7 +60,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return ModifyDialog();
+                    return ModifyDialog(bookId: widget.bookshelfBookId);
                   },
                 );
               },
@@ -80,8 +91,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
                 return Text('에러: ${snapshot.error}');
               } else {
                 final BookshelfBookDetailsDto bookDetails = snapshot.data!;
-                bool isFavorite = bookDetails.isFavorite == 1 ? true : false;
-                print(bookDetails);
                 return SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,6 +138,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
                             setState(() {
                               isFavorite = !isFavorite;
                             });
+                            Provider.of<BookShelfProvider>(context,
+                                    listen: false)
+                                .fetchData();
                           } catch (e) {
                             print('에러 발생: $e');
                           }
@@ -238,13 +250,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   Widget _poobao_img() {
     return Container(
-<<<<<<< Updated upstream
-      width: 103,
-      height: 144,
-=======
       width: 123,
       height: 164,
->>>>>>> Stashed changes
       child: ImageData(IconsPath.character),
     );
   }

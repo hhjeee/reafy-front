@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
+import 'package:reafy_front/src/repository/coin_repository.dart';
 
 class BambooState {
   bool isVisible;
@@ -23,6 +24,8 @@ class _BambooMapState extends State<BambooMap>
   late List<AnimationController> _bambooController;
   late List<Animation<double>> _bambooAnimation;
   late StopwatchProvider stopwatch;
+
+  int? userCoin;
 
   List<BambooState> bambooStates =
       List.generate(6, (index) => BambooState(false, Offset(0, 0)));
@@ -57,6 +60,7 @@ class _BambooMapState extends State<BambooMap>
               ),
             ))
         .toList();
+    loadUserCoin();
   }
 
   @override
@@ -79,6 +83,17 @@ class _BambooMapState extends State<BambooMap>
       }
     }
 }*/
+
+  Future<void> loadUserCoin() async {
+    try {
+      int? coin = await getUserCoin();
+      setState(() {
+        userCoin = coin ?? 0; // 널일 경우 0을 기본값으로 사용합니다.
+      });
+    } catch (e) {
+      print('에러 발생: $e');
+    }
+  }
 
   Widget bamboo_collect(BuildContext context) {
     StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
@@ -154,7 +169,7 @@ class _BambooMapState extends State<BambooMap>
           child: Container(
               width: size.width, height: 500, child: bamboo_collect(context)),
         ),
-        BottomBarWidget()
+        BottomBarWidget(userCoin: userCoin)
       ],
     ));
   }
@@ -264,79 +279,76 @@ class BambooBubbleRunningContent extends StatelessWidget {
 }
 
 class BottomBarWidget extends StatelessWidget {
+  final int? userCoin;
+
+  BottomBarWidget({Key? key, required this.userCoin}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
       bottom: 51,
       left: 34,
-      child: BottomBarContent(),
+      child: Row(children: [
+        SizedBox(
+          height: 60,
+          width: 60,
+          child: FloatingActionButton(
+            onPressed: () {
+              Get.back();
+            },
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            backgroundColor: green,
+            child: ImageData(
+              IconsPath.back_arrow,
+              //width: 44,
+              //height: 44,
+              isSvg: true,
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Container(
+          width: 245,
+          height: 60,
+          padding: EdgeInsets.symmetric(horizontal: 54, vertical: 14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            color: Color(0xfffaf9f7),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                offset: Offset(0, 0),
+                blurRadius: 10,
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "내가 가진 대나무",
+                style: TextStyle(
+                  color: dark_gray,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              Text(
+                '$userCoin',
+                style: TextStyle(
+                  color: Color(0xff333333),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        )
+      ]),
     );
-  }
-}
-
-class BottomBarContent extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(children: [
-      SizedBox(
-        height: 60,
-        width: 60,
-        child: FloatingActionButton(
-          onPressed: () {
-            Get.back();
-          },
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          backgroundColor: green,
-          child: ImageData(
-            IconsPath.back_arrow,
-            //width: 44,
-            //height: 44,
-            isSvg: true,
-          ),
-        ),
-      ),
-      const SizedBox(width: 16),
-      Container(
-        width: 245,
-        height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 54, vertical: 14),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
-          color: Color(0xfffaf9f7),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              offset: Offset(0, 0),
-              blurRadius: 10,
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "내가 가진 대나무",
-              style: TextStyle(
-                color: dark_gray,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            Text(
-              "15개",
-              style: TextStyle(
-                color: Color(0xff333333),
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ),
-      )
-    ]);
   }
 }
 
@@ -448,7 +460,7 @@ Widget _bubble() {
                     return Container(
                         child: Center(
                             child: Text(
-                      "꼬르륵~",
+                      "꼬르륵~",
                       //"대나무가 다 자랐어요!\n주워볼까요?",
                       style: TextStyle(
                         color: black,

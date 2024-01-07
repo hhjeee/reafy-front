@@ -18,14 +18,10 @@ List<ItemData> itemDataList = [
   //대나무 수 추가
   //bookshelf - 0~19
   ItemData(itemId: 0, imagePath: 'assets/images/nothing.png', text: '선택 안함'),
-  ItemData(itemId: 1, imagePath: 'assets/images/nothing.png', text: '베이직 책장'),
   ItemData(
-      itemId: 2, imagePath: 'assets/images/bookshelf1.png', text: '사다리 책장'),
-  ItemData(itemId: 3, imagePath: 'assets/images/nothing.png', text: '수집가 책장'),
-  // ItemData(itemId: 4, imagePath: 'assets/images/nothing.png', text: '책장4'),
-  // ItemData(itemId: 5, imagePath: 'assets/images/nothing.png', text: '책장5'),
-  // ItemData(itemId: 6, imagePath: 'assets/images/nothing.png', text: '책장6'),
-  // ...
+      itemId: 1, imagePath: 'assets/images/items/bookshelf1.png', text: '책장1'),
+  ItemData(
+      itemId: 2, imagePath: 'assets/images/items/bookshelf2.png', text: '책장2'),
 ];
 
 class ItemBookshelf extends StatefulWidget {
