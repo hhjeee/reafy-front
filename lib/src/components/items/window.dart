@@ -18,16 +18,6 @@ List<ItemData> itemDataList = [
   ItemData(itemId: 80, imagePath: 'assets/images/nothing.png', text: '선택 안함'),
   ItemData(
       itemId: 81, imagePath: 'assets/images/items/window1.png', text: '창문1'),
-  ItemData(
-      itemId: 82, imagePath: 'assets/images/items/window2.png', text: '창문2'),
-  ItemData(
-      itemId: 83, imagePath: 'assets/images/items/window3.png', text: '창문3'),
-  ItemData(
-      itemId: 84, imagePath: 'assets/images/items/window4.png', text: '창문4'),
-  ItemData(
-      itemId: 85, imagePath: 'assets/images/items/window5.png', text: '창문5'),
-  ItemData(itemId: 86, imagePath: 'assets/images/nothing.png', text: '창문6'),
-  // ...
 ];
 
 class ItemWindow extends StatefulWidget {

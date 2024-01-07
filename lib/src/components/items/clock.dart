@@ -36,7 +36,10 @@ List<ItemData> itemDataList = [
       itemId: 25,
       imagePath: 'assets/images/items/clock_socks.png',
       text: '양말 시계'),
-  // ...
+  ItemData(
+      itemId: 26,
+      imagePath: 'assets/images/items/clock_button.png',
+      text: '단추 시계'),
 ];
 
 class ItemClock extends StatefulWidget {

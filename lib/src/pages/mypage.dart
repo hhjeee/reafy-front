@@ -39,9 +39,75 @@ class MyPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ProfileName(),
-              //Text(auth.nickname),
               Container(
                 margin: EdgeInsets.only(top: 30, left: 29.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Get.to(Team());
+                  },
+                  child: Row(
+                    children: [
+                      ImageData(IconsPath.statistic,
+                          isSvg: true, width: 26, height: 26),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 17),
+                        child: Text(
+                          "통계",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xff666666),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 13),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 162.115,
+                    height: 167,
+                    decoration: BoxDecoration(
+                      color: Color(0xffffffff),
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10.0,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  Container(
+                    width: 162.115,
+                    height: 167,
+                    decoration: BoxDecoration(
+                      color: Color(0xffffffff),
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10.0,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 16),
+                height: 4.0,
+                color: Color(0xfff5f5f5),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 29.0),
                 child: GestureDetector(
                   onTap: () {
                     Get.to(Team());

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:reafy_front/src/pages/book/bookshelf.dart';
 import 'package:reafy_front/src/pages/book/category_bookshelf.dart';
+import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 
 class DeleteDialog extends StatefulWidget {
@@ -22,21 +24,8 @@ class _DeleteDialogState extends State<DeleteDialog> {
       contentPadding: EdgeInsets.zero,
       content: Container(
         width: 320,
-        height: 160,
+        height: 170,
         child: Column(children: [
-          /*SizedBox(height: 14.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context); // Dialog를 닫음
-                },
-                child: ImageData(IconsPath.x, isSvg: true, width: 10),
-              ),
-              SizedBox(width: 19.0),
-            ],
-          ),*/
           SizedBox(height: 40.0),
           Text(
             "정말 삭제하시겠어요? \n 등록한 책이 영구적으로 사라져요!",
@@ -77,6 +66,8 @@ class _DeleteDialogState extends State<DeleteDialog> {
                 onPressed: () async {
                   try {
                     await deleteBookshelfBook(widget.bookId);
+                    Provider.of<BookShelfProvider>(context, listen: false)
+                        .fetchData();
                     Navigator.pop(context);
 
                     showDialog(

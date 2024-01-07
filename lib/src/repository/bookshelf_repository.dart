@@ -417,15 +417,54 @@ Future<void> updateBookshelfBookFavorite(
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = response.data;
-      print(data);
-      print(data['response']['is_favorite']);
       final bool isCurrentlyFavorite =
           data['response']['is_favorite'] == 1 ? true : false;
-
       final Map<String, dynamic> requestBody = {
         'isFavorite': isCurrentlyFavorite ? 0 : 1,
       };
-      print('abc ${requestBody}');
+      final updateResponse = await dio.put(
+        'http://13.125.145.165:3000/book/favorite/$bookshelfBookId',
+        data: requestBody,
+        options: Options(headers: {
+          'Authorization': 'Bearer $userToken',
+          'Content-Type': 'application/json',
+        }),
+      );
+    } else {
+      throw Exception('Failed to fetch current bookshelf book details');
+    }
+  } catch (e) {
+    print('updateBookshelfBookFavorite 함수에서 에러 발생: $e');
+    throw e;
+  }
+}
+
+// 도서 카테고리 변경
+Future<void> updateBookshelfBookCategory(
+  int bookshelfBookId,
+) async {
+  final dio = Dio();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? userToken = prefs.getString('token');
+
+  try {
+    final response = await dio.get(
+      'http://13.125.145.165:3000/book/bookshelf/$bookshelfBookId',
+      options: Options(headers: {
+        'Authorization': 'Bearer $userToken',
+        'Content-Type': 'application/json',
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = response.data;
+      final bool currentCategory =
+          data['response']['progressState'] == 1 ? true : false;
+      //print('current ${isCurrentlyFavorite}');
+      final Map<String, dynamic> requestBody = {
+        'progressState': currentCategory ? 0 : 1,
+      };
+      //print('request ${requestBody}');
       final updateResponse = await dio.put(
         'http://13.125.145.165:3000/book/bookshelf/$bookshelfBookId',
         data: requestBody,
@@ -438,7 +477,7 @@ Future<void> updateBookshelfBookFavorite(
       throw Exception('Failed to fetch current bookshelf book details');
     }
   } catch (e) {
-    print('updateBookshelfBookFavorite 함수에서 에러 발생: $e');
+    print('updateBookshelfBookCategory 함수에서 에러 발생: $e');
     throw e;
   }
 }

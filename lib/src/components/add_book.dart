@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
@@ -38,7 +39,10 @@ class _AddDialogState extends State<AddDialog> {
         await showDialog(
           context: context,
           builder: (BuildContext context) {
-            return DoneDialog(onDone: () {});
+            return DoneDialog(onDone: () {
+              BottomNavController.to.goToBookShelf();
+              Navigator.pop(context);
+            });
           },
         );
       } else {
@@ -46,11 +50,11 @@ class _AddDialogState extends State<AddDialog> {
       }
     } catch (e) {
       print("POST 실패: $e");
-    } finally {
+    } /*finally {
       setState(() {
         isLoading = false; // Stop loading
       });
-    }
+    }*/
   }
 
   @override

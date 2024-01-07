@@ -3,17 +3,41 @@ import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/utils/constants.dart';
+import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 
 class ModifyDialog extends StatefulWidget {
+  final int bookId;
+  ModifyDialog({required this.bookId});
   @override
   _ModifyDialogState createState() => _ModifyDialogState();
 }
 
 class _ModifyDialogState extends State<ModifyDialog> {
   late String isbn13;
-  int progressState = 1;
+  late int progressState;
+
   bool isLoading = false;
   bool showCheckAnimation = false;
+
+  @override
+  void initState() {
+    super.initState();
+    progressState = 1; // 초기값 설정
+    initializeProgressState();
+  }
+
+  void initializeProgressState() async {
+    try {
+      final bookshelfBookDetails = await getBookshelfBookDetails(widget.bookId);
+      setState(() {
+        progressState = bookshelfBookDetails.progressState;
+        print(progressState);
+      });
+    } catch (e) {
+      print("Error fetching book details: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -21,7 +45,6 @@ class _ModifyDialogState extends State<ModifyDialog> {
         borderRadius: BorderRadius.circular(20),
       ),
       contentPadding: EdgeInsets.zero,
-      //title:
       content: Container(
         width: 320,
         height: 190,
@@ -40,9 +63,11 @@ class _ModifyDialogState extends State<ModifyDialog> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               BookStatusButtonGroup(
+                initialSelectedIndex: progressState - 1,
                 onStatusSelected: (selectedButtonIndex) {
                   setState(() {
-                    progressState = selectedButtonIndex == 0 ? 1 : 2;
+                    progressState = selectedButtonIndex +
+                        1; // selectedButtonIndex == 0 ? 1 : 2;
                   });
                 },
               ),
@@ -75,14 +100,21 @@ class _ModifyDialogState extends State<ModifyDialog> {
               ),
               SizedBox(width: 8),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // DeleteDialog 닫기
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return DoneDialog(onDone: () {});
-                    },
-                  );
+                onPressed: () async {
+                  try {
+                    await updateBookshelfBookCategory(widget.bookId);
+
+                    Navigator.pop(context); // DeleteDialog 닫기
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return DoneDialog(onDone: () {});
+                      },
+                    );
+                  } catch (e) {
+                    // 오류 처리
+                    print("Error updating bookshelf book category: $e");
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Color(0xffffd747),
@@ -113,16 +145,25 @@ class _ModifyDialogState extends State<ModifyDialog> {
 /////
 
 class BookStatusButtonGroup extends StatefulWidget {
+  final int initialSelectedIndex;
   final Function(int) onStatusSelected;
 
-  BookStatusButtonGroup({required this.onStatusSelected});
+  BookStatusButtonGroup(
+      {required this.initialSelectedIndex, required this.onStatusSelected});
 
   @override
   _BookStatusButtonGroupState createState() => _BookStatusButtonGroupState();
 }
 
 class _BookStatusButtonGroupState extends State<BookStatusButtonGroup> {
-  int selectedButtonIndex = 0;
+  //int selectedButtonIndex = 0;
+  late int selectedButtonIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedButtonIndex = widget.initialSelectedIndex;
+  }
 
   @override
   Widget build(BuildContext context) {

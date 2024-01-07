@@ -11,6 +11,7 @@ import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
+import 'package:reafy_front/src/repository/coin_repository.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -24,6 +25,8 @@ class _HomeState extends State<Home>
   AnimationController? _floatingController;
   Animation<double>? _floatingAnimation;
   late StopwatchProvider stopwatch;
+
+  int? userCoin;
 
   @override
   void initState() {
@@ -42,6 +45,8 @@ class _HomeState extends State<Home>
         curve: Curves.easeInOut,
       ),
     );
+
+    loadUserCoin();
   }
 
   @override
@@ -50,6 +55,17 @@ class _HomeState extends State<Home>
     WidgetsBinding.instance.removeObserver(stopwatch);
     stopwatch.dispose();
     super.dispose();
+  }
+
+  Future<void> loadUserCoin() async {
+    try {
+      int coin = await getUserCoin();
+      setState(() {
+        userCoin = coin;
+      });
+    } catch (e) {
+      print('coin 에러 발생: $e');
+    }
   }
 
   @override
@@ -267,7 +283,7 @@ class _HomeState extends State<Home>
               children: [
                 ImageData(IconsPath.bamboo, isSvg: true, width: 44, height: 44),
                 Text(
-                  '25',
+                  '$userCoin',
                   style: TextStyle(
                     fontSize: 16,
                     color: green,
