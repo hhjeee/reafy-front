@@ -9,33 +9,52 @@ class ItemData {
   final int itemId;
   final String imagePath;
   final String text;
+  final int price;
 
-  ItemData({required this.itemId, required this.imagePath, required this.text});
+  ItemData(
+      {required this.itemId,
+      required this.imagePath,
+      required this.text,
+      required this.price});
 }
 
 List<ItemData> itemDataList = [
   //others 40~59
-  ItemData(itemId: 40, imagePath: 'assets/images/nothing.png', text: '선택 안함'),
+  ItemData(
+      itemId: 40,
+      imagePath: 'assets/images/nothing.png',
+      text: '선택 안함',
+      price: 10),
   ItemData(
       itemId: 41,
       imagePath: 'assets/images/items/item_flower.png',
-      text: '꽃 의자'),
+      text: '꽃 의자',
+      price: 10),
   ItemData(
       itemId: 42,
       imagePath: 'assets/images/items/item_mushroom.png',
-      text: '버섯 테이블'),
+      text: '버섯 테이블',
+      price: 10),
   ItemData(
-      itemId: 43, imagePath: 'assets/images/items/item_bear.png', text: '곰 인형'),
+      itemId: 43,
+      imagePath: 'assets/images/items/item_bear.png',
+      text: '곰 인형',
+      price: 10),
   ItemData(
-      itemId: 44, imagePath: 'assets/images/items/item_tree.png', text: '트리'),
+      itemId: 44,
+      imagePath: 'assets/images/items/item_tree.png',
+      text: '트리',
+      price: 10),
   ItemData(
       itemId: 45,
       imagePath: 'assets/images/items/item_light.png',
-      text: '달빛 전구'),
+      text: '달빛 전구',
+      price: 10),
   ItemData(
       itemId: 46,
       imagePath: 'assets/images/items/item_bamboo.png',
-      text: '선인장 화분'),
+      text: '선인장 화분',
+      price: 10),
 ];
 
 class ItemOthers extends StatefulWidget {
@@ -103,6 +122,7 @@ class _ItemOthersState extends State<ItemOthers> {
                           itemId: itemIndex.itemId,
                           itemName: itemIndex.text,
                           itemImagePath: itemIndex.imagePath,
+                          itemPrice: itemIndex.price,
                         );
                       },
                     );

@@ -9,15 +9,27 @@ class ItemData {
   final int itemId;
   final String imagePath;
   final String text;
+  final int price;
 
-  ItemData({required this.itemId, required this.imagePath, required this.text});
+  ItemData(
+      {required this.itemId,
+      required this.imagePath,
+      required this.text,
+      required this.price});
 }
 
 List<ItemData> itemDataList = [
   //window 80~99
-  ItemData(itemId: 80, imagePath: 'assets/images/nothing.png', text: '선택 안함'),
   ItemData(
-      itemId: 81, imagePath: 'assets/images/items/window1.png', text: '창문1'),
+      itemId: 80,
+      imagePath: 'assets/images/nothing.png',
+      text: '선택 안함',
+      price: 10),
+  ItemData(
+      itemId: 81,
+      imagePath: 'assets/images/items/window1.png',
+      text: '창문1',
+      price: 10),
 ];
 
 class ItemWindow extends StatefulWidget {
@@ -85,6 +97,7 @@ class _ItemWindowState extends State<ItemWindow> {
                           itemId: itemIndex.itemId,
                           itemName: itemIndex.text,
                           itemImagePath: itemIndex.imagePath,
+                          itemPrice: itemIndex.price,
                         );
                       },
                     );

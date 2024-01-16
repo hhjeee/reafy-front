@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/pages/login_page.dart';
+import 'package:reafy_front/src/pages/profile/statics.dart';
 import 'package:reafy_front/src/pages/profile/team.dart';
 import 'package:reafy_front/src/pages/profile/rating.dart';
 import 'package:reafy_front/src/components/profile_name.dart';
@@ -43,7 +44,7 @@ class MyPage extends StatelessWidget {
                 margin: EdgeInsets.only(top: 30, left: 29.0),
                 child: GestureDetector(
                   onTap: () {
-                    Get.to(Team());
+                    Get.to(Statics());
                   },
                   child: Row(
                     children: [

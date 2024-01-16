@@ -64,19 +64,16 @@ Future<List<String>> fetchBookshelfThumbnailsByState(int progressState) async {
   final String? userToken = prefs.getString('token');
 
   try {
-    final response = await dio.get('http://13.125.145.165:3000/book/bookshelf',
+    final response = await dio.get('https://reafydevkor.xyz/book/bookshelf',
         queryParameters: {'progressState': progressState},
         options: Options(headers: {
           'Authorization': 'Bearer ${userToken}',
           'Content-Type': "application/json"
         }));
-
     if (response.statusCode == 200) {
-      final List<dynamic> responseData = response.data['response'];
-
-      final List<String> thumbnails = responseData
-          .map<String>((item) => item['thumbnail_url'] as String)
-          .toList();
+      final List<dynamic> responseData = response.data as List<dynamic>;
+      final List<String> thumbnails = List<String>.from(
+          responseData.map<String>((item) => item['thumbnail_url'] as String));
 
       return thumbnails;
     } else {
@@ -94,18 +91,16 @@ Future<List<String>> fetchBookshelfThumbnailsByFavorite() async {
   final String? userToken = prefs.getString('token');
 
   try {
-    final response = await dio.get('http://13.125.145.165:3000/book/favorite',
+    final response = await dio.get('https://reafydevkor.xyz/book/favorite',
         options: Options(headers: {
           'Authorization': 'Bearer ${userToken}',
           'Content-Type': "application/json"
         }));
 
     if (response.statusCode == 200) {
-      final List<dynamic> responseData = response.data['response'];
-      //print('a ${responseData}');
-      final List<String> thumbnails = responseData
-          .map<String>((item) => item['thumbnail_url'] as String)
-          .toList();
+      final List<dynamic> responseData = response.data as List<dynamic>;
+      final List<String> thumbnails = List<String>.from(
+          responseData.map<String>((item) => item['thumbnail_url'] as String));
 
       return thumbnails;
     } else {
@@ -131,7 +126,7 @@ class BookshelfBookInfo {
 
   factory BookshelfBookInfo.fromJson(Map<String, dynamic> json) {
     return BookshelfBookInfo(
-      bookshelfBookId: json['bookshelfBookId'] as int ?? 0,
+      bookshelfBookId: json['bookshelfBookId'] as int? ?? 0,
       title: json['title']?.toString() ?? "",
       thumbnailURL: json['thumbnailURL']?.toString() ?? "",
       author: json['author']?.toString() ?? "",
@@ -169,10 +164,8 @@ Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByState(
   final Dio dio = Dio();
 
   try {
-    //final userToken = tempUserToken;
-
     final response = await dio.get(
-      'http://13.125.145.165:3000/book/bookshelf',
+      'https://reafydevkor.xyz/book/bookshelf',
       queryParameters: {'progressState': progressState},
       options: Options(headers: {
         'Authorization': 'Bearer $userToken',
@@ -181,7 +174,7 @@ Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByState(
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> responseData = response.data['response'];
+      final List<dynamic> responseData = response.data as List<dynamic>;
       final List<BookshelfBookInfo> books = responseData
           .map<BookshelfBookInfo>((item) => BookshelfBookInfo(
                 bookshelfBookId: item['bookshelf_book_id'] as int,
@@ -196,6 +189,7 @@ Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByState(
       return [];
     }
   } catch (e) {
+    print(e.toString());
     throw e;
   }
 }
@@ -210,7 +204,7 @@ Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByFavorite() async {
     //final userToken = tempUserToken;
 
     final response = await dio.get(
-      'http://13.125.145.165:3000/book/favorite',
+      'https://reafydevkor.xyz/book/favorite',
       options: Options(headers: {
         'Authorization': 'Bearer $userToken',
         'Content-Type': 'application/json',
@@ -218,7 +212,7 @@ Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByFavorite() async {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> responseData = response.data['response'];
+      final List<dynamic> responseData = response.data as List<dynamic>;
       final List<BookshelfBookInfo> books = responseData
           .map<BookshelfBookInfo>((item) => BookshelfBookInfo(
                 bookshelfBookId: item['bookshelf_book_id'] as int,
@@ -240,7 +234,7 @@ Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByFavorite() async {
 //책 등록
 Future<bool> postBookInfo(String isbn13, int progressState) async {
   final dio = Dio();
-  final url = 'http://13.125.145.165:3000/book/bookshelf';
+  final url = 'https://reafydevkor.xyz/book/bookshelf';
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userToken = prefs.getString('token');
 
@@ -290,8 +284,7 @@ Future<void> deleteBookshelfBook(int bookshelfBookId) async {
     //print(userToken.accessToken);
     //final userToken = tempUserToken;
 
-    String apiUrl =
-        'http://13.125.145.165:3000/book/bookshelf/$bookshelfBookId';
+    String apiUrl = 'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId';
 
     final response = await dio.delete(
       apiUrl,
@@ -378,7 +371,7 @@ Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
     //final userToken = tempUserToken;
 
     final response = await dio.get(
-        'http://13.125.145.165:3000/book/bookshelf/$bookshelfBookId',
+        'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
         options: Options(headers: {
           'Authorization': 'Bearer ${userToken}',
           'Content-Type': "application/json"
@@ -387,7 +380,7 @@ Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = response.data;
       final BookshelfBookDetailsDto bookshelfBookDetails =
-          BookshelfBookDetailsDto.fromJson(data['response']);
+          BookshelfBookDetailsDto.fromJson(data);
       return bookshelfBookDetails;
     } else {
       throw Exception('Failed to load bookshelf book details');
@@ -408,7 +401,7 @@ Future<void> updateBookshelfBookFavorite(
 
   try {
     final response = await dio.get(
-      'http://13.125.145.165:3000/book/bookshelf/$bookshelfBookId',
+      'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
       options: Options(headers: {
         'Authorization': 'Bearer $userToken',
         'Content-Type': 'application/json',
@@ -417,13 +410,12 @@ Future<void> updateBookshelfBookFavorite(
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = response.data;
-      final bool isCurrentlyFavorite =
-          data['response']['is_favorite'] == 1 ? true : false;
+      final bool isCurrentlyFavorite = data['is_favorite'] == 1 ? true : false;
       final Map<String, dynamic> requestBody = {
         'isFavorite': isCurrentlyFavorite ? 0 : 1,
       };
       final updateResponse = await dio.put(
-        'http://13.125.145.165:3000/book/favorite/$bookshelfBookId',
+        'https://reafydevkor.xyz/book/favorite/$bookshelfBookId',
         data: requestBody,
         options: Options(headers: {
           'Authorization': 'Bearer $userToken',
@@ -449,7 +441,7 @@ Future<void> updateBookshelfBookCategory(
 
   try {
     final response = await dio.get(
-      'http://13.125.145.165:3000/book/bookshelf/$bookshelfBookId',
+      'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
       options: Options(headers: {
         'Authorization': 'Bearer $userToken',
         'Content-Type': 'application/json',
@@ -458,15 +450,14 @@ Future<void> updateBookshelfBookCategory(
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = response.data;
-      final bool currentCategory =
-          data['response']['progressState'] == 1 ? true : false;
+      final bool currentCategory = data['progressState'] == 1 ? true : false;
       //print('current ${isCurrentlyFavorite}');
       final Map<String, dynamic> requestBody = {
         'progressState': currentCategory ? 0 : 1,
       };
       //print('request ${requestBody}');
       final updateResponse = await dio.put(
-        'http://13.125.145.165:3000/book/bookshelf/$bookshelfBookId',
+        'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
         data: requestBody,
         options: Options(headers: {
           'Authorization': 'Bearer $userToken',
@@ -478,6 +469,76 @@ Future<void> updateBookshelfBookCategory(
     }
   } catch (e) {
     print('updateBookshelfBookCategory 함수에서 에러 발생: $e');
+    throw e;
+  }
+}
+
+// 독서 기록 저장 다이얼로그(stop dialog) 전용
+class ReadingBookInfo {
+  final int bookshelfBookId;
+  final String title;
+
+  ReadingBookInfo({
+    required this.bookshelfBookId,
+    required this.title,
+  });
+
+  factory ReadingBookInfo.fromJson(Map<String, dynamic> json) {
+    return ReadingBookInfo(
+      bookshelfBookId: json['bookshelfBookId'] as int? ?? 0,
+      title: json['title']?.toString() ?? "",
+    );
+  }
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BookshelfBookInfo &&
+          runtimeType == other.runtimeType &&
+          bookshelfBookId == other.bookshelfBookId &&
+          title == other.title;
+
+  @override
+  int get hashCode => bookshelfBookId.hashCode ^ title.hashCode;
+
+  @override
+  String toString() {
+    return 'BookshelfBookInfo{bookshelfBookId: $bookshelfBookId, title: $title}';
+  }
+}
+
+Future<List<ReadingBookInfo>> fetchReadingBooksInfo(int progressState) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? userToken = prefs.getString('token');
+
+  final Dio dio = Dio();
+
+  try {
+    final response = await dio.get(
+      'https://reafydevkor.xyz/book/bookshelf',
+      queryParameters: {'progressState': progressState},
+      options: Options(headers: {
+        'Authorization': 'Bearer $userToken',
+        'Content-Type': 'application/json',
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> responseData = response.data as List<dynamic>;
+      final List<ReadingBookInfo> books = responseData
+          .map<ReadingBookInfo>((item) => ReadingBookInfo(
+                bookshelfBookId: item['bookshelf_book_id'] as int,
+                title: item['title'] as String,
+              ))
+          .toList();
+
+      print('a');
+      print(books);
+      return books;
+    } else {
+      return [];
+    }
+  } catch (e) {
+    print(e.toString());
     throw e;
   }
 }

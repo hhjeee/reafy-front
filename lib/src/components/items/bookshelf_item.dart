@@ -10,18 +10,33 @@ class ItemData {
   final int itemId;
   final String imagePath;
   final String text;
+  final int price;
 
-  ItemData({required this.itemId, required this.imagePath, required this.text});
+  ItemData(
+      {required this.itemId,
+      required this.imagePath,
+      required this.text,
+      required this.price});
 }
 
 List<ItemData> itemDataList = [
   //대나무 수 추가
   //bookshelf - 0~19
-  ItemData(itemId: 0, imagePath: 'assets/images/nothing.png', text: '선택 안함'),
   ItemData(
-      itemId: 1, imagePath: 'assets/images/items/bookshelf1.png', text: '책장1'),
+      itemId: 0,
+      imagePath: 'assets/images/nothing.png',
+      text: '선택 안함',
+      price: 10),
   ItemData(
-      itemId: 2, imagePath: 'assets/images/items/bookshelf2.png', text: '책장2'),
+      itemId: 1,
+      imagePath: 'assets/images/items/bookshelf1.png',
+      text: '책장1',
+      price: 10),
+  ItemData(
+      itemId: 2,
+      imagePath: 'assets/images/items/bookshelf2.png',
+      text: '책장2',
+      price: 10),
 ];
 
 class ItemBookshelf extends StatefulWidget {
@@ -91,6 +106,7 @@ class _ItemBookshelfState extends State<ItemBookshelf> {
                           itemId: itemIndex.itemId,
                           itemName: itemIndex.text,
                           itemImagePath: itemIndex.imagePath,
+                          itemPrice: itemIndex.price,
                         );
                       },
                     );

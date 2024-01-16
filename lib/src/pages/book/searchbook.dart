@@ -43,8 +43,9 @@ class _SearchBookState extends State<SearchBook> {
           .get('/book/search', queryParameters: {'query': query, 'page': page});
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = response.data;
-        final List<dynamic> responseList = responseData['response'];
+        //final Map<String, dynamic> responseData = response.data;
+        //final List<dynamic> responseList = responseData['response'];
+        final List<dynamic> responseList = response.data;
         final List<SearchBookResDto> searchResults = responseList
             .map((item) => SearchBookResDto.fromJson(item))
             .toList();

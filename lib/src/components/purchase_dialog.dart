@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/done.dart';
+import 'package:reafy_front/src/components/existing_item.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:provider/provider.dart';
+import 'package:reafy_front/src/provider/coin_provider.dart';
+import 'package:reafy_front/src/repository/coin_repository.dart';
 import 'package:reafy_front/src/repository/item_repository.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 
@@ -9,11 +12,13 @@ class PurchaseDialog extends StatefulWidget {
   final int itemId;
   final String itemName;
   final String itemImagePath;
+  final int itemPrice;
 
   PurchaseDialog({
     required this.itemId,
     required this.itemName,
     required this.itemImagePath,
+    required this.itemPrice,
   });
 
   @override
@@ -66,8 +71,8 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
                 isSvg: true,
                 width: 44,
               ),
-              const Text(
-                "53개", //나중에 죽순 계산하도록 수정
+              Text(
+                widget.itemPrice.toString(),
                 style: TextStyle(
                   color: Color(0xff808080),
                   fontSize: 16,
@@ -103,24 +108,39 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
               ),
               SizedBox(width: 6),
               ElevatedButton(
-                //확인 버튼 누르는게 보유한 대나무 수가 해당 아이템 가격보다 많을때 가능하도록 하기
                 onPressed: () async {
-                  bool success = await postBookInfo(widget.itemId, false);
-                  Navigator.pop(context);
+                  var currentCoin =
+                      Provider.of<CoinProvider>(context, listen: false).coins;
+                  if (currentCoin >= widget.itemPrice) {
+                    bool success =
+                        await postItem(widget.itemId, false, widget.itemPrice);
+                    Navigator.pop(context);
 
-                  if (success) {
+                    if (success) {
+                      Provider.of<CoinProvider>(context, listen: false)
+                          .setCoins(currentCoin - widget.itemPrice);
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return DoneDialog(onDone: () {
+                            //BottomNavController.to.goToHome();
+                            Navigator.pop(context);
+                            ; // Navigate to Home
+                          });
+                          //return DoneDialog();
+                        },
+                      );
+                    }
+                  } else {
+                    //코인 부족
+                    Navigator.pop(context);
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return DoneDialog(onDone: () {
-                          //BottomNavController.to.goToHome();
-                          Navigator.pop(context);
-                          ; // Navigate to Home
-                        });
-                        //return DoneDialog();
+                        return ExistingItem();
                       },
                     );
-                  } else {}
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Color(0xffffd747),

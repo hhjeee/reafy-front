@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
+import 'package:reafy_front/src/repository/bookshelf_repository.dart';
+import 'package:reafy_front/src/repository/history_repository.dart';
 
 class StopDialog extends StatefulWidget {
   @override
@@ -10,8 +13,8 @@ class StopDialog extends StatefulWidget {
 }
 
 class _StopDialogState extends State<StopDialog> {
-  final List<String> dropdownList = ['미드나잇 라이브러리', '별들이 겹치는 순간', '너 없는 동안'];
-  String selectedBook = '별들이 겹치는 순간';
+  List<ReadingBookInfo> books = [];
+  int? selectedBookId;
 
   TextEditingController textController1 = TextEditingController();
   TextEditingController textController2 = TextEditingController();
@@ -20,6 +23,19 @@ class _StopDialogState extends State<StopDialog> {
     setState(() {
       isButtonEnabled =
           textController1.text.isNotEmpty && textController2.text.isNotEmpty;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchReadingBooksInfo(1).then((fetchedBooks) {
+      setState(() {
+        books = fetchedBooks;
+        if (books.isNotEmpty) {
+          selectedBookId = books[0].bookshelfBookId;
+        }
+      });
     });
   }
 
@@ -34,7 +50,7 @@ class _StopDialogState extends State<StopDialog> {
         content: SingleChildScrollView(
             child: Container(
           width: 320,
-          height: 459,
+          height: 420,
           child: Column(
             children: <Widget>[
               SizedBox(height: 30.0),
@@ -54,7 +70,7 @@ class _StopDialogState extends State<StopDialog> {
                 ),
               ),
               SizedBox(height: 14.0),
-              Row(
+              /*Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ImageData(
@@ -69,7 +85,7 @@ class _StopDialogState extends State<StopDialog> {
                     ),
                   ),
                 ],
-              ),
+              ),*/
               Container(
                 alignment: Alignment.topLeft,
                 padding: EdgeInsets.only(top: 36.0),
@@ -86,8 +102,9 @@ class _StopDialogState extends State<StopDialog> {
                     ),
                     SizedBox(height: 8.0),
                     Container(
+                      padding: EdgeInsets.all(2.0),
                       width: 266,
-                      height: 40,
+                      height: 42,
                       decoration: BoxDecoration(
                         color: Color(0xffffffff),
                         borderRadius: BorderRadius.circular(4),
@@ -100,24 +117,23 @@ class _StopDialogState extends State<StopDialog> {
                           ),
                         ],
                       ),
-                      child: DropdownButton(
+                      child: DropdownButton<int>(
                           isExpanded: true,
                           underline: Container(),
-                          value: selectedBook,
+                          value: selectedBookId,
                           //icon: ImageData(IconsPath.dropdown),
-                          items: dropdownList.map((String item) {
-                            return DropdownMenuItem<String>(
-                              value: item,
+                          items: books.map((ReadingBookInfo book) {
+                            return DropdownMenuItem<int>(
+                              value: book.bookshelfBookId,
                               child: Padding(
-                                padding: const EdgeInsets.all(12.0), // 내부 패딩 설정
-                                child: Text(item),
+                                padding: const EdgeInsets.all(2.0),
+                                child: Text(book.title),
                               ),
-                              //child: Text(item),
                             );
                           }).toList(),
-                          onChanged: (dynamic item) {
+                          onChanged: (int? newValue) {
                             setState(() {
-                              selectedBook = item;
+                              selectedBookId = newValue;
                             });
                           }),
                     ),
@@ -259,16 +275,33 @@ class _StopDialogState extends State<StopDialog> {
                 children: [
                   ElevatedButton(
                     onPressed: isButtonEnabled
-                        ? () {
-                            ////// 서버에 보내고 시간 업데이트
-                            ////// 스탑워치 멈추기, 초기화
-                            ///
-                            //stopwatch.stop();
+                        ? () async {
+                            int readingTime = parseTimeStringToMinutes(
+                                stopwatch.elapsedTimeString);
+                            int? startPage = int.tryParse(textController1.text);
+                            int? endPage = int.tryParse(textController2.text);
+
+                            CreateUserBookHistoryDto historyDto =
+                                CreateUserBookHistoryDto(
+                              bookshelfBookId: selectedBookId,
+                              startPage: startPage,
+                              endPage: endPage,
+                              duration: readingTime,
+                              coins: 0,
+                            );
+                            await createUserBookHistory(historyDto);
+
                             context.read<StopwatchProvider>().stop();
                             context
                                 .read<StopwatchProvider>()
                                 .updateElapsedTime('00:00:00');
                             Get.back();
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return DoneDialog(onDone: () {});
+                              },
+                            );
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
@@ -318,4 +351,18 @@ class _StopDialogState extends State<StopDialog> {
           ),
         )));
   }
+}
+
+int parseTimeStringToMinutes(String timeString) {
+  List<String> parts = timeString.split(':');
+  if (parts.length != 3) {
+    return 0;
+  }
+  int hours = int.tryParse(parts[0]) ?? 0;
+  int minutes = int.tryParse(parts[1]) ?? 0;
+  int seconds = int.tryParse(parts[2]) ?? 0;
+
+  int totalSeconds = hours * 3600 + minutes * 60 + seconds;
+  // 분 단위로 변환하고 남은 초가 30초 이상이면 반올림
+  return (totalSeconds / 60).round();
 }
