@@ -59,7 +59,7 @@ class IconsPath {
   static String get stop => 'assets/svg/stop.svg';
   static String get startbutton => 'assets/images/startbutton.png';
   static String get runningbutton => 'assets/images/runningbutton.png';
-// 홈화면
+  // 홈화면
   static String get home_bubble => 'assets/images/home_bubble.png';
 
   //프로필
@@ -144,6 +144,9 @@ class IconsPath {
   static String get memo_pic => 'assets/svg/memo_picture.svg';
   static String get shelf_right => 'assets/svg/shelf_right.svg';
   static String get menu => 'assets/svg/dots.svg';
+
+  // 아이템
+  static String get crying => 'assets/images/crying.png';
 }
 
 class FloatingSVG extends StatefulWidget {

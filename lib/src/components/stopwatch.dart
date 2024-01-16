@@ -14,7 +14,7 @@ class StopwatchWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
-    stopwatch.setTimer(30 * 60);
+    stopwatch.setTimer(1 * 60); // 시간설정
 
     void _tapStopwatch(Status status) async {
       switch (status) {
@@ -187,9 +187,6 @@ class StopwatchWidget extends StatelessWidget {
   }
 }
 
-
-
-
 /*
 class StopwatchProvider extends GetxController {
   var _isRunning = false.obs;
@@ -231,9 +228,6 @@ class StopwatchProvider extends GetxController {
     }
   }
 }*/
-
-
-
 
 /*
 Widget _stopbutton() {
@@ -397,10 +391,6 @@ Widget _character() {
   );
 }
 */
-
-
-
-
 
 /*
 class StopWatchWidget extends StatelessWidget {

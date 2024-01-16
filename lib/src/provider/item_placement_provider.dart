@@ -370,25 +370,23 @@ class ItemData {
 List<ItemData> itemDataList = [
   //bookshelf - 0~19
   ItemData(
-      itemId: 0,
-      imagePath: 'assets/images/nothing.png',
-      text: '선택 안함',
-      index: 0),
+    itemId: 0,
+    imagePath: 'assets/images/nothing.png',
+    text: '선택 안함',
+    index: 0,
+  ),
   ItemData(
-      itemId: 1,
-      imagePath: 'assets/images/nothing.png',
-      text: '베이직 책장',
-      index: 1),
+    itemId: 1,
+    imagePath: 'assets/images/items/bookshelf1.png',
+    text: '책장1',
+    index: 1,
+  ),
   ItemData(
-      itemId: 2,
-      imagePath: 'assets/images/bookshelf1.png',
-      text: '사다리 책장',
-      index: 2),
-  ItemData(
-      itemId: 3,
-      imagePath: 'assets/images/nothing.png',
-      text: '수집가 책장',
-      index: 3),
+    itemId: 2,
+    imagePath: 'assets/images/items/bookshelf2.png',
+    text: '책장2',
+    index: 2,
+  ),
 
   //clock 20 ~ 39
   ItemData(

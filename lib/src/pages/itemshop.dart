@@ -12,9 +12,11 @@ import 'package:reafy_front/src/components/items/clock.dart';
 import 'package:reafy_front/src/components/items/window.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:reafy_front/src/pages/home.dart';
+import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/item_provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
 import 'package:reafy_front/src/repository/item_repository.dart';
+import 'package:reafy_front/src/repository/coin_repository.dart';
 
 class ItemShop extends StatefulWidget {
   const ItemShop({super.key});
@@ -26,6 +28,7 @@ class _ItemShopState extends State<ItemShop> {
   late List<Color> buttonColors;
   late List<FontWeight> buttonWeight;
   late int selectedIndex;
+  int? userCoin;
 
   void initState() {
     super.initState(); // 초기값 설정
@@ -35,6 +38,21 @@ class _ItemShopState extends State<ItemShop> {
 
     buttonWeight = List.filled(5, FontWeight.w400);
     buttonWeight[selectedIndex] = FontWeight.w700;
+
+    loadUserCoin();
+    Future.microtask(
+        () => Provider.of<CoinProvider>(context, listen: false).updateCoins());
+  }
+
+  Future<void> loadUserCoin() async {
+    try {
+      int? coin = await getUserCoin();
+      setState(() {
+        userCoin = coin ?? 0; // 널일 경우 0을 기본값으로 사용합니다.
+      });
+    } catch (e) {
+      print('에러 발생: $e');
+    }
   }
 
   void handleButtonPress(int index) {
@@ -76,7 +94,7 @@ class _ItemShopState extends State<ItemShop> {
     try {
       final itemProvider = Provider.of<ItemProvider>(context, listen: false);
       for (int itemId in itemProvider.ownedItemIds) {
-        await postBookInfo(itemId, false);
+        await postItem(itemId, false, 0);
       }
     } catch (e) {
       print('Error updating items activation: $e');
@@ -89,11 +107,11 @@ class _ItemShopState extends State<ItemShop> {
       final itemProvider = Provider.of<ItemProvider>(context, listen: false);
       final itemPlacementProvider =
           Provider.of<ItemPlacementProvider>(context, listen: false);
-      await postBookInfo(itemPlacementProvider.bookshelf.selectedId, true);
-      await postBookInfo(itemPlacementProvider.clock.selectedId, true);
-      await postBookInfo(itemPlacementProvider.others.selectedId, true);
-      await postBookInfo(itemPlacementProvider.rug.selectedId, true);
-      await postBookInfo(itemPlacementProvider.window.selectedId, true);
+      await postItem(itemPlacementProvider.bookshelf.selectedId, true, 0);
+      await postItem(itemPlacementProvider.clock.selectedId, true, 0);
+      await postItem(itemPlacementProvider.others.selectedId, true, 0);
+      await postItem(itemPlacementProvider.rug.selectedId, true, 0);
+      await postItem(itemPlacementProvider.window.selectedId, true, 0);
     } catch (e) {
       print('Error updating items activation: $e');
     }
@@ -131,14 +149,14 @@ class _ItemShopState extends State<ItemShop> {
                     fontWeight: FontWeight.w400),
               ),
               Text(
-                "42개 ",
+                Provider.of<CoinProvider>(context).coins.toString(),
                 style: TextStyle(
                     color: Color(0xffff333333),
                     fontSize: 16,
                     fontWeight: FontWeight.w800),
               ),
               Text(
-                "남았어요!",
+                "개 남았어요!",
                 style: TextStyle(
                     color: Color(0xffff333333),
                     fontSize: 16,

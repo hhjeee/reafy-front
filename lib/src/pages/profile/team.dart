@@ -49,7 +49,7 @@ class Team extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: Container(
                     width: size.width,
-                    height: 350,
+                    height: 365,
                     child: Image.asset(
                       IconsPath.team_img,
                       fit: BoxFit.cover,

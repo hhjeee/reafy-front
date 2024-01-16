@@ -9,37 +9,52 @@ class ItemData {
   final int itemId;
   final String imagePath;
   final String text;
+  final int price;
 
-  ItemData({required this.itemId, required this.imagePath, required this.text});
+  ItemData(
+      {required this.itemId,
+      required this.imagePath,
+      required this.text,
+      required this.price});
 }
 
 List<ItemData> itemDataList = [
   //clock 20 ~ 39
-  ItemData(itemId: 20, imagePath: 'assets/images/nothing.png', text: '선택 안함'),
+  ItemData(
+      itemId: 20,
+      imagePath: 'assets/images/nothing.png',
+      text: '선택 안함',
+      price: 15),
   ItemData(
       itemId: 21,
       imagePath: 'assets/images/items/clock_clover.png',
-      text: '클로버 시계'),
+      text: '클로버 시계',
+      price: 15),
   ItemData(
       itemId: 22,
       imagePath: 'assets/images/items/clock_star.png',
-      text: '별 시계'),
+      text: '별 시계',
+      price: 15),
   ItemData(
       itemId: 23,
       imagePath: 'assets/images/items/clock_simple.png',
-      text: '심플 시계'),
+      text: '심플 시계',
+      price: 15),
   ItemData(
       itemId: 24,
       imagePath: 'assets/images/items/clock_panda.png',
-      text: '판다 시계'),
+      text: '판다 시계',
+      price: 15),
   ItemData(
       itemId: 25,
       imagePath: 'assets/images/items/clock_socks.png',
-      text: '양말 시계'),
+      text: '양말 시계',
+      price: 15),
   ItemData(
       itemId: 26,
       imagePath: 'assets/images/items/clock_button.png',
-      text: '단추 시계'),
+      text: '단추 시계',
+      price: 15),
 ];
 
 class ItemClock extends StatefulWidget {
@@ -108,6 +123,7 @@ class _ItemClockState extends State<ItemClock> {
                           itemId: itemIndex.itemId,
                           itemName: itemIndex.text,
                           itemImagePath: itemIndex.imagePath,
+                          itemPrice: itemIndex.price,
                         );
                       },
                     );

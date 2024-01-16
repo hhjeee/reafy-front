@@ -9,25 +9,37 @@ class ItemData {
   final int itemId;
   final String imagePath;
   final String text;
+  final int price;
 
-  ItemData({required this.itemId, required this.imagePath, required this.text});
+  ItemData(
+      {required this.itemId,
+      required this.imagePath,
+      required this.text,
+      required this.price});
 }
 
 List<ItemData> itemDataList = [
   //rug 60~79
-  ItemData(itemId: 60, imagePath: 'assets/images/nothing.png', text: '선택 안함'),
+  ItemData(
+      itemId: 60,
+      imagePath: 'assets/images/nothing.png',
+      text: '선택 안함',
+      price: 15),
   ItemData(
       itemId: 61,
       imagePath: 'assets/images/items/rug_smile.png',
-      text: '스마일 러그'),
+      text: '스마일 러그',
+      price: 15),
   ItemData(
       itemId: 62,
       imagePath: 'assets/images/items/rug_cloud.png',
-      text: '구름 러그'),
+      text: '구름 러그',
+      price: 15),
   ItemData(
       itemId: 63,
       imagePath: 'assets/images/items/rug_leaf.png',
-      text: '나뭇잎 러그'),
+      text: '나뭇잎 러그',
+      price: 15),
   // ...
 ];
 
@@ -96,6 +108,7 @@ class _ItemRugState extends State<ItemRug> {
                           itemId: itemIndex.itemId,
                           itemName: itemIndex.text,
                           itemImagePath: itemIndex.imagePath,
+                          itemPrice: itemIndex.price,
                         );
                       },
                     );

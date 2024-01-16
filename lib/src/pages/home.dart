@@ -7,6 +7,7 @@ import 'package:reafy_front/src/pages/board/board.dart';
 import 'package:reafy_front/src/pages/itemshop.dart';
 import 'package:reafy_front/src/components/stopwatch.dart';
 import 'package:reafy_front/src/pages/map.dart';
+import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:provider/provider.dart';
@@ -47,6 +48,8 @@ class _HomeState extends State<Home>
     );
 
     loadUserCoin();
+    Future.microtask(
+        () => Provider.of<CoinProvider>(context, listen: false).updateCoins());
   }
 
   @override
@@ -107,7 +110,9 @@ class _HomeState extends State<Home>
       return Center(
           child: GestureDetector(
               onTap: () {
+                print("Stop button tapped");
                 stopwatch.pause();
+                print("Stop button paused");
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -283,7 +288,7 @@ class _HomeState extends State<Home>
               children: [
                 ImageData(IconsPath.bamboo, isSvg: true, width: 44, height: 44),
                 Text(
-                  '$userCoin',
+                  Provider.of<CoinProvider>(context).coins.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     color: green,

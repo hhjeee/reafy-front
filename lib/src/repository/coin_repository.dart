@@ -9,7 +9,7 @@ Future<int> getUserCoin() async {
   final String? userToken = prefs.getString('token');
 
   try {
-    final response = await dio.get('http://13.125.145.165:3000/coin',
+    final response = await dio.get('https://reafydevkor.xyz/coin',
         options: Options(headers: {
           'Authorization': 'Bearer ${userToken}',
           'Content-Type': "application/json"
@@ -30,7 +30,6 @@ Future<int> getUserCoin() async {
 }
 
 //coin 증가, 차감
-
 Future<void> updateCoin(int coin, bool isPlus) async {
   final dio = Dio();
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -43,7 +42,7 @@ Future<void> updateCoin(int coin, bool isPlus) async {
     };
 
     final response = await dio.put(
-      'http://13.125.145.165:3000/coin',
+      'https://reafydevkor.xyz/coin',
       data: requestData,
       options: Options(headers: {
         'Authorization': 'Bearer $userToken',

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/repository/coin_repository.dart';
@@ -61,6 +62,8 @@ class _BambooMapState extends State<BambooMap>
             ))
         .toList();
     loadUserCoin();
+    Future.microtask(
+        () => Provider.of<CoinProvider>(context, listen: false).updateCoins());
   }
 
   @override
@@ -88,7 +91,7 @@ class _BambooMapState extends State<BambooMap>
     try {
       int? coin = await getUserCoin();
       setState(() {
-        userCoin = coin ?? 0; // 널일 경우 0을 기본값으로 사용합니다.
+        userCoin = coin ?? 0;
       });
     } catch (e) {
       print('에러 발생: $e');
@@ -124,19 +127,28 @@ class _BambooMapState extends State<BambooMap>
                 duration: Duration(milliseconds: 2000),
                 curve: Curves.elasticOut,
                 child: GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     setState(() {
                       state.isVisible = false;
                       //bambooStates[index].isActive = false;
                     });
                     stopwatch.decreaseItemCount();
-                    ///////// TODO 대나무 증가 요청 보내기
+                    try {
+                      await updateCoin(1, true);
+                      int currentCoin =
+                          Provider.of<CoinProvider>(context, listen: false)
+                              .coins;
+                      Provider.of<CoinProvider>(context, listen: false)
+                          .setCoins(currentCoin + 1);
+                    } catch (e) {
+                      print('에러 발생: $e');
+                    }
 
                     Future.delayed(Duration(seconds: 2), () {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return BambooDialog();
+                            return BambooDialog(userCoin: userCoin);
                           });
                     });
                   },
@@ -337,7 +349,7 @@ class BottomBarWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                '$userCoin',
+                Provider.of<CoinProvider>(context).coins.toString(),
                 style: TextStyle(
                   color: Color(0xff333333),
                   fontSize: 16,
@@ -353,6 +365,10 @@ class BottomBarWidget extends StatelessWidget {
 }
 
 class BambooDialog extends StatelessWidget {
+  final int? userCoin;
+
+  BambooDialog({Key? key, required this.userCoin}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -395,8 +411,8 @@ class BambooDialog extends StatelessWidget {
                   isSvg: true,
                   width: 44,
                 ),
-                const Text(
-                  "53개", //나중에 죽순 계산하도록 수정
+                Text(
+                  Provider.of<CoinProvider>(context).coins.toString(),
                   style: TextStyle(
                     color: Color(0xff808080),
                     fontSize: 16,
@@ -408,7 +424,6 @@ class BambooDialog extends StatelessWidget {
             SizedBox(height: 18.0),
             ElevatedButton(
               onPressed: () {
-                /// TODO 증가 요청
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
