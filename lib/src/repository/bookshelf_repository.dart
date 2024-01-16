@@ -434,38 +434,28 @@ Future<void> updateBookshelfBookFavorite(
 // 도서 카테고리 변경
 Future<void> updateBookshelfBookCategory(
   int bookshelfBookId,
+  int progressState,
 ) async {
   final dio = Dio();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userToken = prefs.getString('token');
 
   try {
-    final response = await dio.get(
+    final Map<String, dynamic> requestBody = {
+      'progressState': progressState,
+    };
+
+    final response = await dio.put(
       'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
+      data: requestBody,
       options: Options(headers: {
         'Authorization': 'Bearer $userToken',
         'Content-Type': 'application/json',
       }),
     );
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = response.data;
-      final bool currentCategory = data['progressState'] == 1 ? true : false;
-      //print('current ${isCurrentlyFavorite}');
-      final Map<String, dynamic> requestBody = {
-        'progressState': currentCategory ? 0 : 1,
-      };
-      //print('request ${requestBody}');
-      final updateResponse = await dio.put(
-        'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
-        data: requestBody,
-        options: Options(headers: {
-          'Authorization': 'Bearer $userToken',
-          'Content-Type': 'application/json',
-        }),
-      );
-    } else {
-      throw Exception('Failed to fetch current bookshelf book details');
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update bookshelf book category');
     }
   } catch (e) {
     print('updateBookshelfBookCategory 함수에서 에러 발생: $e');

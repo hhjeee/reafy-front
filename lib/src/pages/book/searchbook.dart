@@ -196,14 +196,13 @@ class _SearchBookState extends State<SearchBook> {
 
   Widget _renderResults() {
     if (isSearching) {
-      // Show Lottie animation while searching
       return Expanded(
           child: Transform.scale(
         origin: Offset(0, 100),
-        scale: 1.5, // Adjust scale factor as needed
+        scale: 1.5,
         child: Lottie.asset(
           'assets/lottie/searching.json',
-        ), // Replace with your Lottie file path
+        ),
       ));
     } else {
       return Expanded(
@@ -226,35 +225,6 @@ class _SearchBookState extends State<SearchBook> {
               isbn13: displayList[index].isbn13,
             ),
           ),
-
-          /*child: FutureBuilder<List<SearchBookResDto>>(
-          // 검색 결과를 가져오는 비동기 함수
-          future: searchBooks(_searchController.text, 1), // 예시로 페이지를 1로 고정
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (snapshot.hasData && snapshot.data!.isEmpty) {
-              return Center(child: Text('일치하는 도서가 없어요.'));
-            } else if (snapshot.hasData) {
-              List<SearchBookResDto> searchResults = snapshot.data!;
-              return ListView.builder(
-                itemCount: searchResults.length,
-                itemBuilder: (context, index) {
-                  SearchBookResDto book = searchResults[index];
-                  return ListTile(
-                    title: Text(book.title),
-                    subtitle: Text(book.author),
-                    // 기타 책 정보를 표시할 수 있는 위젯 추가
-                    // 예: 이미지, 출판사, 출판일 등
-                  );
-                },
-              );
-            }
-            return Container(); // 아무것도 표시하지 않을 경우 빈 컨테이너 반환
-          },
-        ),*/
         ),
       );
     }

@@ -7,6 +7,7 @@ import 'package:reafy_front/src/binding/init_bindings.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/models/bookCount.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:reafy_front/src/pages/book/bookshelf.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
@@ -58,6 +59,9 @@ class MyApp extends StatelessWidget {
             theme: new ThemeData(
               fontFamily: 'NanumSquareRound',
             ),
+            routes: {
+              '/bookshelf': (context) => BookShelf(),
+            },
             initialBinding: InitBinding(),
             home: SplashScreen()));
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/done.dart';
+import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 
@@ -14,7 +15,7 @@ class ModifyDialog extends StatefulWidget {
 
 class _ModifyDialogState extends State<ModifyDialog> {
   late String isbn13;
-  late int progressState;
+  int? progressState;
 
   bool isLoading = false;
   bool showCheckAnimation = false;
@@ -22,17 +23,18 @@ class _ModifyDialogState extends State<ModifyDialog> {
   @override
   void initState() {
     super.initState();
-    progressState = 1; // 초기값 설정
     initializeProgressState();
   }
 
   void initializeProgressState() async {
     try {
       final bookshelfBookDetails = await getBookshelfBookDetails(widget.bookId);
-      setState(() {
-        progressState = bookshelfBookDetails.progressState;
-        print(progressState);
-      });
+      if (mounted) {
+        setState(() {
+          progressState = bookshelfBookDetails.progressState;
+          print(progressState);
+        });
+      }
     } catch (e) {
       print("Error fetching book details: $e");
     }
@@ -59,20 +61,29 @@ class _ModifyDialogState extends State<ModifyDialog> {
             ),
           ),
           SizedBox(height: 10),
-          Row(
+          progressState != null
+              ? BookStatusButtonGroup(
+                  initialSelectedIndex: progressState!,
+                  onStatusSelected: (selectedButtonIndex) {
+                    setState(() {
+                      progressState = selectedButtonIndex;
+                    });
+                  },
+                )
+              : CircularProgressIndicator(),
+          /*Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               BookStatusButtonGroup(
-                initialSelectedIndex: progressState - 1,
+                initialSelectedIndex: progressState,
                 onStatusSelected: (selectedButtonIndex) {
                   setState(() {
-                    progressState = selectedButtonIndex +
-                        1; // selectedButtonIndex == 0 ? 1 : 2;
+                    progressState = selectedButtonIndex;
                   });
                 },
               ),
             ],
-          ),
+          ),*/
           SizedBox(height: 40),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -102,13 +113,17 @@ class _ModifyDialogState extends State<ModifyDialog> {
               ElevatedButton(
                 onPressed: () async {
                   try {
-                    await updateBookshelfBookCategory(widget.bookId);
+                    await updateBookshelfBookCategory(
+                        widget.bookId, progressState!);
 
                     Navigator.pop(context); // DeleteDialog 닫기
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return DoneDialog(onDone: () {});
+                        return DoneDialog(onDone: () {
+                          BottomNavController.to.goToBookShelf();
+                          Navigator.pop(context);
+                        });
                       },
                     );
                   } catch (e) {
@@ -156,7 +171,6 @@ class BookStatusButtonGroup extends StatefulWidget {
 }
 
 class _BookStatusButtonGroupState extends State<BookStatusButtonGroup> {
-  //int selectedButtonIndex = 0;
   late int selectedButtonIndex;
 
   @override
@@ -190,20 +204,20 @@ class _BookStatusButtonGroupState extends State<BookStatusButtonGroup> {
           children: [
             BookStatusButton(
               status: '읽고 있는 책',
-              isSelected: selectedButtonIndex == 0,
+              isSelected: selectedButtonIndex == 1,
               onPressed: () {
                 setState(() {
-                  selectedButtonIndex = 0;
+                  selectedButtonIndex = 1;
                   widget.onStatusSelected(selectedButtonIndex);
                 });
               },
             ),
             BookStatusButton(
               status: '완독한 책',
-              isSelected: selectedButtonIndex == 1,
+              isSelected: selectedButtonIndex == 2,
               onPressed: () {
                 setState(() {
-                  selectedButtonIndex = 1;
+                  selectedButtonIndex = 2;
                   widget.onStatusSelected(selectedButtonIndex);
                 });
               },
