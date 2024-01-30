@@ -65,43 +65,6 @@ class MyPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 13),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 162.115,
-                    height: 167,
-                    decoration: BoxDecoration(
-                      color: Color(0xffffffff),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10.0,
-                          offset: Offset(0, 0),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Container(
-                    width: 162.115,
-                    height: 167,
-                    decoration: BoxDecoration(
-                      color: Color(0xffffffff),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10.0,
-                          offset: Offset(0, 0),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 16),
                 height: 4.0,

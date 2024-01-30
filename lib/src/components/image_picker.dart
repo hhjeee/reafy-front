@@ -6,7 +6,9 @@ import 'package:reafy_front/src/utils/constants.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 class PickImage extends StatefulWidget {
-  const PickImage({super.key});
+  final Function(String) onImagePicked; // 콜백 함수
+
+  const PickImage({Key? key, required this.onImagePicked}) : super(key: key);
 
   @override
   State<PickImage> createState() => _PickImageState();
@@ -24,6 +26,7 @@ class _PickImageState extends State<PickImage> {
       setState(() {
         _image = XFile(pickedFile.path); //가져온 이미지를 _image에 저장
       });
+      widget.onImagePicked(pickedFile.path);
     }
   }
 

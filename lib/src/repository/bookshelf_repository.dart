@@ -532,3 +532,47 @@ Future<List<ReadingBookInfo>> fetchReadingBooksInfo(int progressState) async {
     throw e;
   }
 }
+
+class BookshelfBookTitleDto {
+  final String title;
+
+  BookshelfBookTitleDto({required this.title});
+
+  factory BookshelfBookTitleDto.fromJson(Map<String, dynamic> json) {
+    return BookshelfBookTitleDto(
+      title: json['title'] as String? ?? '',
+    );
+  }
+}
+
+Future<BookshelfBookTitleDto> getBookshelfBookTitle(int bookshelfBookId) async {
+  final dio = Dio();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  final String? userToken = prefs.getString('token');
+
+  try {
+    final response = await dio.get(
+      'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $userToken',
+          'Content-Type': "application/json"
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = response.data;
+      final BookshelfBookTitleDto bookshelfBookTitle =
+          BookshelfBookTitleDto.fromJson(data);
+      print('title');
+      print(bookshelfBookTitle.title);
+      return bookshelfBookTitle;
+    } else {
+      throw Exception('Failed to load bookshelf book title');
+    }
+  } catch (e) {
+    print('getBookshelfBookTitle 함수에서 에러 발생: $e');
+    throw e;
+  }
+}

@@ -17,9 +17,16 @@ class Statics extends StatelessWidget {
               Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
             },
           ),
+          title: Text(
+            "통계",
+            style: TextStyle(
+                color: Color(0xff333333),
+                fontWeight: FontWeight.w800,
+                fontSize: 16),
+          ),
         ),
-        body: Center(
-          child: Text("Statics"),
+        body: Column(
+          children: [],
         ));
   }
 }

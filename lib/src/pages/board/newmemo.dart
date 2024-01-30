@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import "dart:io";
 import 'package:image_picker/image_picker.dart';
 import 'package:reafy_front/src/components/image_picker.dart';
+import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/components/tag_input.dart';
+import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/components/tag_input.dart';
 
 class NewMemo extends StatefulWidget {
@@ -17,10 +20,64 @@ class NewMemo extends StatefulWidget {
 
 class _NewMemoState extends State<NewMemo> {
   DateTime selectedDate = DateTime.now();
-
-  final List<String> dropdownList = ['미드나잇 라이브러리', '별들이 겹치는 순간', '너 없는 동안'];
-  String selectedBook = '별들이 겹치는 순간';
   int currentLength = 0;
+
+  List<ReadingBookInfo> books = [];
+  int? selectedBookId;
+  List<String> memoTags = [];
+  // File? imageFile;
+  String? selectedImagePath;
+
+  final TextEditingController memoController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchBooks();
+  }
+
+  void fetchBooks() async {
+    try {
+      final results = await Future.wait([
+        fetchReadingBooksInfo(1),
+        fetchReadingBooksInfo(2),
+      ]);
+
+      final allBooks = [...results[0], ...results[1]];
+
+      setState(() {
+        books = allBooks;
+        if (books.isNotEmpty) {
+          selectedBookId = books[0].bookshelfBookId;
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void dispose() {
+    memoController.dispose();
+    super.dispose();
+  }
+
+  void handleTagUpdate(List<String> updatedTags) {
+    setState(() {
+      memoTags = updatedTags;
+      print(memoTags);
+    });
+  }
+
+  void resetTags() {
+    setState(() {
+      memoTags.clear();
+    });
+  }
+
+  void handleImagePicked(String path) {
+    selectedImagePath = path;
+  }
 
   Widget _datepicker(context) {
     return Container(
@@ -101,8 +158,8 @@ class _NewMemoState extends State<NewMemo> {
           ),
           SizedBox(width: 18),
           Container(
-            width: 266,
-            height: 30,
+            width: 270,
+            height: 35,
             decoration: BoxDecoration(
               color: bg_gray,
               borderRadius: BorderRadius.circular(4),
@@ -118,15 +175,14 @@ class _NewMemoState extends State<NewMemo> {
               child: DropdownButton(
                   isExpanded: true,
                   underline: Container(),
-                  value: selectedBook,
-                  //icon: ImageData(IconsPath.dropdown),
-                  items: dropdownList.map((String item) {
-                    return DropdownMenuItem<String>(
-                      value: item,
+                  value: selectedBookId,
+                  items: books.map((ReadingBookInfo book) {
+                    return DropdownMenuItem<int>(
+                      value: book.bookshelfBookId,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 12.0), // 내부 패딩 설정
+                        padding: const EdgeInsets.all(2.0),
                         child: Text(
-                          item,
+                          book.title,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
@@ -137,9 +193,9 @@ class _NewMemoState extends State<NewMemo> {
                       //child: Text(item),
                     );
                   }).toList(),
-                  onChanged: (dynamic item) {
+                  onChanged: (int? newValue) {
                     setState(() {
-                      selectedBook = item;
+                      selectedBookId = newValue;
                     });
                   }),
             ),
@@ -166,6 +222,7 @@ class _NewMemoState extends State<NewMemo> {
               child: TextField(
                 maxLength: 500,
                 maxLines: null,
+                controller: memoController,
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: '메모를 입력해 주세요.',
@@ -188,17 +245,6 @@ class _NewMemoState extends State<NewMemo> {
               ),
             ),
           ),
-          /* Container(
-            padding: EdgeInsets.symmetric(horizontal: 13),
-            child: GestureDetector(
-              onTap: showImagePickerOption(context),
-              child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5),
-                  child: ImageData(IconsPath.memo_pic,
-                      isSvg: true, width: 20, height: 20),
-                  height: 44),
-            ),
-          ),*/
         ],
       ),
     );
@@ -214,18 +260,37 @@ class _NewMemoState extends State<NewMemo> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          PickImage(),
+          PickImage(onImagePicked: handleImagePicked),
           SizedBox(height: 25),
           _bookselect(),
           SizedBox(height: 6.0),
           _memoeditor(),
           SizedBox(height: 16.0),
           _datepicker(context),
-          TagWidget(),
+          TagWidget(onTagsUpdated: handleTagUpdate, onReset: resetTags),
           SizedBox(height: 16.0),
           ElevatedButton(
-            onPressed: () {
-              //Navigator.pop(context); /
+            onPressed: () async {
+              if (selectedBookId == null) {
+                print('필요한 정보가 누락되었습니다.');
+                return;
+              }
+
+              String tags = memoTags.join(', ');
+              print(selectedBookId);
+              print(
+                memoController.text,
+              );
+              print(tags);
+              print(selectedImagePath);
+              try {
+                await createMemo(selectedBookId!, memoController.text, 0, tags,
+                    selectedImagePath);
+                // resetTags(); // 태그 초기화
+                Navigator.pop(context);
+              } catch (e) {
+                print('메모 생성 실패: $e');
+              }
             },
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(

@@ -107,7 +107,6 @@ class IconsPath {
 
   static String get book => 'assets/images/book.png';
   static String get hill => 'assets/images/hill.png';
-  static String get bamboo_bar => 'assets/images/bamboo_bar.png';
   //static String get poobao_shadow => 'assets/images/poobao_shadow.png';
   static String get poobao_shadow => 'assets/svg/poobao_shadow.svg';
   static String get book_leaves => 'assets/images/book_leaves.png';
@@ -123,6 +122,18 @@ class IconsPath {
   static String get total => 'assets/svg/total_time.svg';
 
   static String get add_back => 'assets/images/addbook_background.png';
+
+  static String get progress0 => 'assets/images/progress/progress0.png';
+  static String get progress1 => 'assets/images/progress/progress1.png';
+  static String get progress2 => 'assets/images/progress/progress2.png';
+  static String get progress3 => 'assets/images/progress/progress3.png';
+  static String get progress4 => 'assets/images/progress/progress4.png';
+  static String get progress5 => 'assets/images/progress/progress5.png';
+  static String get progress6 => 'assets/images/progress/progress6.png';
+  static String get progress7 => 'assets/images/progress/progress7.png';
+  static String get progress8 => 'assets/images/progress/progress8.png';
+  static String get progress9 => 'assets/images/progress/progress9.png';
+  static String get progress10 => 'assets/images/progress/progress10.png';
 
   // 맵
   static String get bamboomap => 'assets/images/bamboo_map.png';

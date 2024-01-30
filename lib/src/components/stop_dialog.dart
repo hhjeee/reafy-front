@@ -70,22 +70,6 @@ class _StopDialogState extends State<StopDialog> {
                 ),
               ),
               SizedBox(height: 14.0),
-              /*Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ImageData(
-                    IconsPath.bamboo,
-                    isSvg: true,
-                  ),
-                  const Text(
-                    "15개", //나중에 죽순 계산하도록 수정
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),*/
               Container(
                 alignment: Alignment.topLeft,
                 padding: EdgeInsets.only(top: 36.0),
