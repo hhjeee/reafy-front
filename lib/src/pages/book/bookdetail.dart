@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:reafy_front/src/components/book_memo.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/delete_book.dart';
 import 'package:reafy_front/src/components/modify_book.dart';
 import 'package:reafy_front/src/models/book.dart';
-import 'package:reafy_front/src/pages/board/newmemo.dart';
+import 'package:reafy_front/src/pages/board/bookmemo.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/repository/history_repository.dart';
@@ -182,28 +183,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
                         ),
                       ),
                       SizedBox(height: 11),
-                      Container(
-                        height: 120,
-                        //color: yellow,
-                        child: Center(
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                              ImageData(IconsPath.character_empty,
-                                  width: 104, height: 94),
-                              Text(
-                                "앗, 아직 메모가 없어요!",
-                                style: TextStyle(
-                                  color: gray,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ])),
-                      ),
-                      MemoWidget(),
+                      MemoSection(bookshelfBookId: widget.bookshelfBookId),
                       SizedBox(height: 9.0),
-                      AddMemoButton(),
+                      AddMemoButton(bookshelfBookId: widget.bookshelfBookId),
                       SizedBox(height: 17.0),
                       Align(
                         alignment: Alignment.centerRight,
@@ -407,26 +389,6 @@ class PoobaoImage extends StatelessWidget {
   }
 }
 
-/*
-class BookInfo extends StatelessWidget {
-  final BookshelfBookDetailsDto bookDetails;
-
-  const BookInfo({Key? key, required this.bookDetails}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 26.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // IconButton for favorite and Text widgets for book details
-        ],
-      ),
-    );
-  }
-}
-*/
 class ProgressIndicator extends StatelessWidget {
   final int totalPages;
   final int pagesRead;
@@ -481,13 +443,18 @@ class ProgressIndicator extends StatelessWidget {
 }
 
 class AddMemoButton extends StatelessWidget {
-  const AddMemoButton({Key? key}) : super(key: key);
+  final int bookshelfBookId;
+
+  const AddMemoButton({
+    Key? key,
+    required this.bookshelfBookId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showAddMemoBottomSheet(context);
+        showAddBookMemoBottomSheet(context, bookshelfBookId);
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 26),

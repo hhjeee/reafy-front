@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class PickImage extends StatefulWidget {
   final Function(String) onImagePicked; // 콜백 함수
@@ -16,18 +17,39 @@ class PickImage extends StatefulWidget {
 
 class _PickImageState extends State<PickImage> {
   //Uint8List? _image;
-  final ImagePicker picker = ImagePicker(); //ImagePicker 초기화
+  final ImagePicker picker = ImagePicker();
   XFile? _image;
 
   Future getImage(ImageSource imageSource) async {
-    //pickedFile에 ImagePicker로 가져온 이미지가 담긴다.
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
     if (pickedFile != null) {
-      setState(() {
+      String? compressedImagePath = await compressImage(pickedFile.path);
+      if (compressedImagePath != null) {
+        setState(() {
+          _image = XFile(compressedImagePath);
+        });
+        widget.onImagePicked(compressedImagePath);
+      }
+      /*setState(() {
         _image = XFile(pickedFile.path); //가져온 이미지를 _image에 저장
       });
-      widget.onImagePicked(pickedFile.path);
+      widget.onImagePicked(pickedFile.path);*/
     }
+  }
+
+  Future<String?> compressImage(String path) async {
+    final filePath = path;
+    final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
+    final splitted = filePath.substring(0, (lastIndex));
+    final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
+
+    var compressedImage = await FlutterImageCompress.compressAndGetFile(
+      filePath,
+      outPath,
+      quality: 50, // 압축 품질 설정
+    );
+
+    return compressedImage?.path;
   }
 
   @override

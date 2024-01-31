@@ -67,14 +67,22 @@ Future<List<dynamic>> getMemoListByBookId(int bookshelfBookId, int page) async {
           'bookshelfBookId': bookshelfBookId,
           'page': page,
         },
-        options: Options(headers: {
-          'Authorization': 'Bearer $userToken',
-          'Content-Type': 'application/json',
-        }));
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $userToken',
+            'Content-Type': 'application/json',
+          },
+          validateStatus: (status) {
+            // 404때 throw 하지 않도록
+            return status! < 500;
+          },
+        ));
 
     if (response.statusCode == 200) {
       final List<dynamic> bookList = response.data;
       return bookList;
+    } else if (response.statusCode == 404) {
+      return [];
     } else {
       throw Exception('Failed to load bookshelf books');
     }
@@ -200,7 +208,7 @@ Future<void> deleteMemo(int memoid) async {
           'Content-Type': 'application/json',
         }));
 
-    if (response.statusCode != 204) {
+    if (response.statusCode != 200) {
       throw Exception('Failed to delete memo');
     }
   } catch (e) {

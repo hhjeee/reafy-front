@@ -5,6 +5,7 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/models/memo.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:reafy_front/src/pages/board/newmemo.dart';
+import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 
@@ -42,7 +43,7 @@ class MemoCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  MemoTitle(title: snapshot.data!.title),
+                  MemoTitle(title: snapshot.data!.title, memoId: memo.memoId),
                   if (memo.imageURL != null && memo.imageURL!.isNotEmpty)
                     MemoImage(imageUrl: memo.imageURL!),
                   const SizedBox(height: 10),
@@ -76,7 +77,6 @@ class MemoCard extends StatelessWidget {
             return Text('책 제목을 가져오는 데 실패했습니다.');
           }
         }
-        // 데이터를 기다리는 동안 로딩 인디케이터를 표시합니다.
         return CircularProgressIndicator();
       },
     );
@@ -85,7 +85,9 @@ class MemoCard extends StatelessWidget {
 
 class MemoTitle extends StatelessWidget {
   final String? title;
-  const MemoTitle({Key? key, this.title}) : super(key: key);
+  final int memoId;
+  const MemoTitle({Key? key, this.title, required this.memoId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +112,7 @@ class MemoTitle extends StatelessWidget {
                   if (value == 'edit') {
                     showAddMemoBottomSheet(context);
                   } else if (value == 'delete') {
-                    _showDeleteDialog(context);
+                    _showDeleteDialog(context, memoId);
                   }
                 },
                 itemBuilder: (BuildContext context) {
@@ -138,13 +140,17 @@ class MemoTitle extends StatelessWidget {
 
 class MemoImage extends StatelessWidget {
   final String? imageUrl;
+  final String baseUrl = 'https://reafydevkor.xyz/';
+
   const MemoImage({Key? key, this.imageUrl}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String fullImageUrl = baseUrl + (imageUrl ?? '');
+    print(fullImageUrl);
     return imageUrl != null && imageUrl!.isNotEmpty
         ? GestureDetector(
-            onTap: () => showImageDialog(context, imageUrl!),
+            onTap: () => showImageDialog(context, fullImageUrl!),
             child: Card(
               color: Color(0xffFAF9F7),
               elevation: 0,
@@ -153,7 +159,7 @@ class MemoImage extends StatelessWidget {
                 height: 270,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(imageUrl!),
+                      image: NetworkImage(fullImageUrl!),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(8)),
@@ -243,83 +249,92 @@ class Hashtag extends StatelessWidget {
   }
 }
 
-Widget _showDeleteDialog(context) {
-  return AlertDialog(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20),
-    ),
-    contentPadding: EdgeInsets.zero,
-    content: Container(
-      width: 320,
-      height: 160,
-      child: Column(children: [
-        SizedBox(height: 40.0),
-        Text(
-          "정말 삭제하시겠어요? \n 작성한 메모는 영구적으로 사라져요!",
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-              color: Color(0xff333333),
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              height: 1.2),
-        ),
-        SizedBox(height: 40.0),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Color(0xffebebeb),
-                minimumSize: Size(140, 48),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                elevation: 0,
-              ),
-              child: Text(
-                '취소',
+void _showDeleteDialog(BuildContext context, int memoId) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            width: 320,
+            height: 180,
+            child: Column(children: [
+              SizedBox(height: 40.0),
+              Text(
+                "정말 삭제하시겠어요? \n 작성한 메모는 영구적으로 사라져요!",
+                textAlign: TextAlign.center,
                 style: const TextStyle(
-                  color: Color(0xff333333),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                ),
+                    color: Color(0xff333333),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    height: 1.2),
               ),
-            ),
-            SizedBox(width: 6),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context); // DeleteDialog 닫기
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return DoneDialog(onDone: () {});
-                  },
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                primary: Color(0xffffd747),
-                minimumSize: Size(140, 48),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                elevation: 0,
+              SizedBox(height: 40.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xffebebeb),
+                      minimumSize: Size(140, 48),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      '취소',
+                      style: const TextStyle(
+                        color: Color(0xff333333),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 6),
+                  ElevatedButton(
+                    onPressed: () async {
+                      Navigator.pop(context); // DeleteDialog 닫기
+                      try {
+                        await deleteMemo(memoId);
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DoneDialog(onDone: () {});
+                          },
+                        );
+                      } catch (e) {
+                        print('메모 삭제 실패: $e');
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xffffd747),
+                      minimumSize: Size(140, 48),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      '확인',
+                      style: const TextStyle(
+                        color: Color(0xff000000),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              child: Text(
-                '확인',
-                style: const TextStyle(
-                  color: Color(0xff000000),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ]),
-    ),
-    actions: <Widget>[],
-  );
+            ]),
+          ),
+          actions: <Widget>[],
+        );
+      });
 }

@@ -275,7 +275,6 @@ class _NewMemoState extends State<NewMemo> {
                 print('필요한 정보가 누락되었습니다.');
                 return;
               }
-
               String tags = memoTags.join(', ');
               print(selectedBookId);
               print(
