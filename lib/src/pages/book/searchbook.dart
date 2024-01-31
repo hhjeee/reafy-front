@@ -33,6 +33,7 @@ class _SearchBookState extends State<SearchBook> {
   final ApiClient apiClient = ApiClient();
 
   bool isSearching = true;
+  int currentPage = 1;
 
   Future<List<SearchBookResDto>> searchBooks(String query, int page) async {
     var auth = context.read<AuthProvider>();
@@ -43,8 +44,6 @@ class _SearchBookState extends State<SearchBook> {
           .get('/book/search', queryParameters: {'query': query, 'page': page});
 
       if (response.statusCode == 200) {
-        //final Map<String, dynamic> responseData = response.data;
-        //final List<dynamic> responseList = responseData['response'];
         final List<dynamic> responseList = response.data;
         final List<SearchBookResDto> searchResults = responseList
             .map((item) => SearchBookResDto.fromJson(item))
@@ -58,17 +57,17 @@ class _SearchBookState extends State<SearchBook> {
     }
   }
 
-  void _performSearch(String query) {
+  void _loadMore() {
+    currentPage++;
+    _performSearch(_searchController.text, currentPage);
+  }
+
+  void _performSearch(String query, [int page = 1]) {
     setState(() {
       isSearching = true;
+      currentPage = page;
     });
-    /*fetchSearchResults(query).then((searchResults) {
-      setState(() {
-        isSearching = false;
-        displayList = List.from(searchResults);
-      });
-    });*/
-    searchBooks(query, 1).then((searchResults) {
+    searchBooks(query, page).then((searchResults) {
       setState(() {
         isSearching = false;
         displayList = searchResults.map(convertToBook).toList();
@@ -194,67 +193,70 @@ class _SearchBookState extends State<SearchBook> {
         ));
   }
 
+  Widget _buildPageNumbers(int totalPages) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List<Widget>.generate(totalPages, (index) {
+        return GestureDetector(
+          onTap: () => _loadPage(index + 1),
+          child: Container(
+            padding: EdgeInsets.all(8),
+            child: Text(
+              '${index + 1}',
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  void _loadPage(int pageNumber) {
+    _performSearch(_searchController.text, pageNumber);
+  }
+
   Widget _renderResults() {
     if (isSearching) {
-      // Show Lottie animation while searching
       return Expanded(
           child: Transform.scale(
         origin: Offset(0, 100),
-        scale: 1.5, // Adjust scale factor as needed
+        scale: 1.5,
         child: Lottie.asset(
           'assets/lottie/searching.json',
-        ), // Replace with your Lottie file path
+        ),
       ));
     } else {
-      return Expanded(
-        child: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-            colors: [
-              Color(0xFFFAF9F7),
-              Color(0xFFEBEBEB),
-              Color(0xFFEBEBEB),
-              Color(0xFFFAF9F7)
-            ],
-            stops: [0, 0.1, 0.9, 1],
-            transform: GradientRotation(1.5708),
-          )),
-          child: ListView.builder(
-            itemCount: displayList.length,
-            itemBuilder: (context, index) => BookCard(
-              book: displayList[index],
-              isbn13: displayList[index].isbn13,
-            ),
-          ),
+      double screenHeight = MediaQuery.of(context).size.height -
+          AppBar().preferredSize.height -
+          MediaQuery.of(context).padding.top;
 
-          /*child: FutureBuilder<List<SearchBookResDto>>(
-          // 검색 결과를 가져오는 비동기 함수
-          future: searchBooks(_searchController.text, 1), // 예시로 페이지를 1로 고정
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (snapshot.hasData && snapshot.data!.isEmpty) {
-              return Center(child: Text('일치하는 도서가 없어요.'));
-            } else if (snapshot.hasData) {
-              List<SearchBookResDto> searchResults = snapshot.data!;
-              return ListView.builder(
-                itemCount: searchResults.length,
-                itemBuilder: (context, index) {
-                  SearchBookResDto book = searchResults[index];
-                  return ListTile(
-                    title: Text(book.title),
-                    subtitle: Text(book.author),
-                    // 기타 책 정보를 표시할 수 있는 위젯 추가
-                    // 예: 이미지, 출판사, 출판일 등
-                  );
-                },
-              );
-            }
-            return Container(); // 아무것도 표시하지 않을 경우 빈 컨테이너 반환
-          },
-        ),*/
+      return Container(
+        height: screenHeight - 75,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+          colors: [
+            Color(0xFFFAF9F7),
+            Color(0xFFEBEBEB),
+            Color(0xFFEBEBEB),
+            Color(0xFFFAF9F7)
+          ],
+          stops: [0, 0.1, 0.9, 1],
+          transform: GradientRotation(1.5708),
+        )),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: displayList.length,
+                itemBuilder: (context, index) => BookCard(
+                  book: displayList[index],
+                  isbn13: displayList[index].isbn13,
+                ),
+              ),
+            ),
+            _buildPageNumbers(10),
+          ],
         ),
       );
     }

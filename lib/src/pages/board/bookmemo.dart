@@ -11,14 +11,19 @@ import 'package:reafy_front/src/components/tag_input.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/components/tag_input.dart';
 
-class NewMemo extends StatefulWidget {
-  const NewMemo({super.key});
+class BookMemo extends StatefulWidget {
+  final int bookshelfBookId;
+
+  const BookMemo({
+    Key? key,
+    required this.bookshelfBookId,
+  }) : super(key: key);
 
   @override
-  State<NewMemo> createState() => _NewMemoState();
+  State<BookMemo> createState() => _BookMemoState();
 }
 
-class _NewMemoState extends State<NewMemo> {
+class _BookMemoState extends State<BookMemo> {
   DateTime selectedDate = DateTime.now();
   int currentLength = 0;
 
@@ -33,27 +38,7 @@ class _NewMemoState extends State<NewMemo> {
   @override
   void initState() {
     super.initState();
-    fetchBooks();
-  }
-
-  void fetchBooks() async {
-    try {
-      final results = await Future.wait([
-        fetchReadingBooksInfo(1),
-        fetchReadingBooksInfo(2),
-      ]);
-
-      final allBooks = [...results[0], ...results[1]];
-
-      setState(() {
-        books = allBooks;
-        if (books.isNotEmpty) {
-          selectedBookId = books[0].bookshelfBookId;
-        }
-      });
-    } catch (e) {
-      print(e);
-    }
+    selectedBookId = widget.bookshelfBookId;
   }
 
   @override
@@ -136,75 +121,6 @@ class _NewMemoState extends State<NewMemo> {
     );
   }
 
-  Widget _bookselect() {
-    return Container(
-      height: 40,
-      child: Row(
-        children: [
-          ImageData(
-            IconsPath.memo_book,
-            isSvg: true,
-            width: 13,
-            height: 13,
-          ),
-          SizedBox(width: 10),
-          Text(
-            "도서",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: Color(0xff666666),
-            ),
-          ),
-          SizedBox(width: 18),
-          Container(
-            width: 270,
-            height: 35,
-            decoration: BoxDecoration(
-              color: bg_gray,
-              borderRadius: BorderRadius.circular(4),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 1.0,
-                  blurRadius: 7.0,
-                ),
-              ],
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton(
-                  isExpanded: true,
-                  underline: Container(),
-                  value: selectedBookId,
-                  items: books.map((ReadingBookInfo book) {
-                    return DropdownMenuItem<int>(
-                      value: book.bookshelfBookId,
-                      child: Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: Text(
-                          book.title,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: black,
-                          ),
-                        ),
-                      ),
-                      //child: Text(item),
-                    );
-                  }).toList(),
-                  onChanged: (int? newValue) {
-                    setState(() {
-                      selectedBookId = newValue;
-                    });
-                  }),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _memoeditor() {
     return Container(
       width: 343,
@@ -262,7 +178,6 @@ class _NewMemoState extends State<NewMemo> {
         children: [
           PickImage(onImagePicked: handleImagePicked),
           SizedBox(height: 25),
-          _bookselect(),
           SizedBox(height: 6.0),
           _memoeditor(),
           SizedBox(height: 16.0),
@@ -275,8 +190,8 @@ class _NewMemoState extends State<NewMemo> {
                 print('필요한 정보가 누락되었습니다.');
                 return;
               }
+
               String tags = memoTags.join(', ');
-              print(selectedBookId);
               print(
                 memoController.text,
               );
@@ -314,12 +229,11 @@ class _NewMemoState extends State<NewMemo> {
   }
 }
 
-void showAddMemoBottomSheet(BuildContext context) {
+void showAddBookMemoBottomSheet(BuildContext context, int bookshelfBookId) {
   showModalBottomSheet(
     context: context,
-    isScrollControlled: true, // Allows full screen modal
-    backgroundColor:
-        Colors.transparent, // Makes the modal's background transparent
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(40.0),
@@ -333,8 +247,8 @@ void showAddMemoBottomSheet(BuildContext context) {
           topRight: Radius.circular(10.0),
         ),
         child: Container(
-          color: bg_gray, // Your desired background color
-          child: NewMemo(),
+          color: bg_gray,
+          child: BookMemo(bookshelfBookId: bookshelfBookId),
         ),
       );
     },

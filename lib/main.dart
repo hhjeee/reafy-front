@@ -5,8 +5,10 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:reafy_front/src/binding/init_bindings.dart';
 import 'package:provider/provider.dart';
+import 'package:reafy_front/src/controller/board_controller.dart';
 import 'package:reafy_front/src/models/bookCount.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:reafy_front/src/pages/book/bookshelf.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
@@ -28,6 +30,7 @@ Future main() async {
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
 
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  Get.put(BoardController());
   initializeDateFormatting().then((_) => runApp(MyApp()));
 }
 

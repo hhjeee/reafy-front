@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path/path.dart' as path;
 
 //모든 메모 가져오기
 Future<List<dynamic>> getMemoList(int page) async {
@@ -16,6 +17,7 @@ Future<List<dynamic>> getMemoList(int page) async {
 
     if (response.statusCode == 200) {
       final List<dynamic> memoList = response.data;
+      print(response.data);
       return memoList;
     } else {
       throw Exception('Failed to load memo list');
@@ -65,14 +67,22 @@ Future<List<dynamic>> getMemoListByBookId(int bookshelfBookId, int page) async {
           'bookshelfBookId': bookshelfBookId,
           'page': page,
         },
-        options: Options(headers: {
-          'Authorization': 'Bearer $userToken',
-          'Content-Type': 'application/json',
-        }));
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $userToken',
+            'Content-Type': 'application/json',
+          },
+          validateStatus: (status) {
+            // 404때 throw 하지 않도록
+            return status! < 500;
+          },
+        ));
 
     if (response.statusCode == 200) {
       final List<dynamic> bookList = response.data;
       return bookList;
+    } else if (response.statusCode == 404) {
+      return [];
     } else {
       throw Exception('Failed to load bookshelf books');
     }
@@ -107,19 +117,36 @@ Future<Map<String, dynamic>> getMemoDetails(int memoId) async {
 
 // 메모 작성
 Future<void> createMemo(int bookshelfBookId, String content, int page,
-    String hashtag, String file) async {
+    String hashtag, String? file) async {
   final dio = Dio();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userToken = prefs.getString('token');
 
+  //String fileName = path.basename(file);
+
+  Map<String, dynamic> formDataMap = {
+    'bookshelfBookId': bookshelfBookId,
+    'content': content,
+    'page': page,
+    'hashtag': hashtag,
+  };
+
+  if (file != null) {
+    String fileName = path.basename(file);
+    formDataMap['file'] =
+        await MultipartFile.fromFile(file, filename: fileName);
+  }
+
   try {
-    final formData = FormData.fromMap({
-      'bookshelfBookId': bookshelfBookId,
-      'content': content,
-      'page': page,
-      'hashtag': hashtag,
-      'file': await MultipartFile.fromFile(file, filename: 'memo_image.png'),
+    final formData = FormData.fromMap(formDataMap);
+    formData.fields.forEach((element) {
+      print('${element.key}: ${element.value}');
     });
+    if (file != null) {
+      formData.files.forEach((element) {
+        print('${element.key}: ${element.value.filename}');
+      });
+    }
 
     final response = await dio.post('https://reafydevkor.xyz/memo',
         data: formData,
@@ -181,7 +208,7 @@ Future<void> deleteMemo(int memoid) async {
           'Content-Type': 'application/json',
         }));
 
-    if (response.statusCode != 204) {
+    if (response.statusCode != 200) {
       throw Exception('Failed to delete memo');
     }
   } catch (e) {

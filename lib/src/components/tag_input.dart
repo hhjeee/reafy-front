@@ -4,6 +4,12 @@ import 'package:reafy_front/src/utils/constants.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 class TagWidget extends StatefulWidget {
+  final Function(List<String>) onTagsUpdated; //콜백 함수
+  final VoidCallback onReset; // 태그 초기화 콜백 함수
+
+  TagWidget({Key? key, required this.onTagsUpdated, required this.onReset})
+      : super(key: key);
+
   @override
   _TagWidgetState createState() => _TagWidgetState();
 }
@@ -94,16 +100,16 @@ class _TagWidgetState extends State<TagWidget> {
         );
       },
     );
-    print(result);
+
     if (result != null && result.isNotEmpty) {
       if (result.length > 10) {
-        // Show message if tag length exceeds 10 characters
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('태그는 10자를 넘을 수 없습니다.')));
         return;
       }
       setState(() {
         tags.add(result);
+        widget.onTagsUpdated(tags); // 태그 추가될 때 콜백 호출
       });
     }
     print(tags);
@@ -112,7 +118,12 @@ class _TagWidgetState extends State<TagWidget> {
   void _deleteTag(String tag) {
     setState(() {
       tags.remove(tag);
+      widget.onTagsUpdated(tags); // 태그 삭제될 때 콜백 호출
     });
+  }
+
+  void resetTags() {
+    widget.onReset();
   }
 
   @override
@@ -187,26 +198,3 @@ class _TagWidgetState extends State<TagWidget> {
         ]));
   }
 }
-/*
-
-
-              GestureDetector(
-                onTap: _addTag,
-                child: Container(
-                  margin: EdgeInsets.only(left: 4),
-                  width: 67,
-                  height: 24,
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(color: Color(0xffb3b3b3), width: 0.8)),
-                  child: Container(
-                    margin: EdgeInsets.symmetric(vertical: 2.0),
-                    child: ImageData(
-                      IconsPath.add_tag,
-                      isSvg: true,
-                    ),
-                  ),
-                ),
-              ),
-           */

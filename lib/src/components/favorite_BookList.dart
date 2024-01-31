@@ -49,96 +49,82 @@ class isFavorite_BookShelfWidgetState
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return //GestureDetector(
-        //onTap: () {
-        //Get.to(() = ShelfDetailPage(status: book));
-        //},
-        //child:
-        Center(
+    return GestureDetector(
+        onTap: () {
+          Get.to(Favorite_BookShelf(
+            pageTitle: widget.title,
+            thumbnailListLength: widget.thumbnailList.length,
+          ));
+        },
+        child: Center(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 25),
-                child: InkWell(
-                  onTap: () {
-                    Get.to(Favorite_BookShelf(
-                      pageTitle: widget.title,
-                      thumbnailListLength: widget.thumbnailList.length,
-                    ));
-                  },
-                  child: Text(
-                    widget.title,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xff333333),
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Get.to(Favorite_BookShelf(
-                    pageTitle: widget.title,
-                    thumbnailListLength: widget.thumbnailList.length,
-                  ));
-                },
-                child: Row(
-                  children: [
-                    Text(
-                      widget.thumbnailList.length.toString(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 25),
+                    child: Text(
+                      widget.title,
                       style: TextStyle(
                         fontSize: 16,
                         color: Color(0xff333333),
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-                    SizedBox(width: 7),
-                    Container(
-                      width: 10,
-                      height: 19,
-                      child: ImageData(IconsPath.shelf_right, isSvg: true),
-                    ),
-                    SizedBox(width: 24),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        widget.thumbnailList.length.toString(),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Color(0xff333333),
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      SizedBox(width: 7),
+                      Container(
+                        width: 10,
+                        height: 19,
+                        child: ImageData(IconsPath.shelf_right, isSvg: true),
+                      ),
+                      SizedBox(width: 24),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Container(
+                width: double.maxFinite,
+                height: 140,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/images/shelf.png'),
+                      alignment: Alignment.bottomCenter,
+                      fit: BoxFit.fitWidth),
+                ),
+                child: Column(
+                  children: [
+                    SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(children: [
+                          SizedBox(
+                            width: 26,
+                          ),
+                          Row(
+                            children: _buildBookList(context),
+                          ),
+                          SizedBox(
+                            width: 26,
+                          ),
+                        ])),
                   ],
                 ),
               ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Container(
-            width: double.maxFinite,
-            height: 140,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/images/shelf.png'),
-                  alignment: Alignment.bottomCenter,
-                  fit: BoxFit.fitWidth),
-            ),
-            child: Column(
-              children: [
-                SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(children: [
-                      SizedBox(
-                        width: 26,
-                      ),
-                      Row(
-                        children: _buildBookList(context),
-                      ),
-                      SizedBox(
-                        width: 26,
-                      ),
-                    ])),
-              ],
-            ),
-          ),
-          SizedBox(height: 15),
-        ]));
+              SizedBox(height: 15),
+            ])));
   }
 }

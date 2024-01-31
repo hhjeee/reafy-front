@@ -76,7 +76,6 @@ class _DeleteDialogState extends State<DeleteDialog> {
                         return DoneDialog(onDone: () {
                           BottomNavController.to.goToBookShelf();
                           Navigator.pop(context);
-                          ;
                         });
                       },
                     );
