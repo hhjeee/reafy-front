@@ -191,7 +191,7 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
                     crossAxisCount: 3, // 한 행에 표시할 아이템 수
                     crossAxisSpacing: 28.0, // 아이템 간 가로 간격
                     mainAxisSpacing: 30.0, // 아이템 간 세로 간격
-                    childAspectRatio: 0.55,
+                    childAspectRatio: 0.5,
                   ),
                   itemCount: books.length,
                   itemBuilder: (context, index) {
