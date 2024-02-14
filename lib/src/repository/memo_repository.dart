@@ -1,9 +1,45 @@
 import 'package:dio/dio.dart';
+import 'package:reafy_front/src/models/memo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart' as path;
 
+class MemoResDto {
+  final int totalItems;
+  final int currentItems;
+  final int totalPages;
+  final int currentPage;
+  final List<Memo> items;
+
+  MemoResDto({
+    required this.totalItems,
+    required this.currentItems,
+    required this.totalPages,
+    required this.currentPage,
+    required this.items,
+  });
+
+  factory MemoResDto.fromJson(Map<String, dynamic> json) {
+    return MemoResDto(
+      totalItems: json['totalItems'],
+      currentItems: json['currentItems'],
+      totalPages: json['totalPages'],
+      currentPage: json['currentPage'],
+      items: List<Memo>.from(json['item'].map((item) => Memo.fromJson(item))),
+    );
+  }
+  factory MemoResDto.empty() {
+    return MemoResDto(
+      totalItems: 0,
+      currentItems: 0,
+      totalPages: 0,
+      currentPage: 0,
+      items: [],
+    );
+  }
+}
+
 //모든 메모 가져오기
-Future<List<dynamic>> getMemoList(int page) async {
+Future<MemoResDto> getMemoList(int page) async {
   final dio = Dio();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userToken = prefs.getString('token');
@@ -16,9 +52,11 @@ Future<List<dynamic>> getMemoList(int page) async {
         }));
 
     if (response.statusCode == 200) {
-      final List<dynamic> memoList = response.data;
+      /*final List<dynamic> memoList = response.data;
       print(response.data);
-      return memoList;
+      return memoList;*/
+      var memoResults = MemoResDto.fromJson(response.data);
+      return memoResults;
     } else {
       throw Exception('Failed to load memo list');
     }
@@ -56,7 +94,7 @@ Future<List<dynamic>> getMemoListByHashtag(String hashtag, int page) async {
 }
 
 // 해당 책에 쓰인 모든 메모 가져오기
-Future<List<dynamic>> getMemoListByBookId(int bookshelfBookId, int page) async {
+Future<MemoResDto> getMemoListByBookId(int bookshelfBookId, int page) async {
   final dio = Dio();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userToken = prefs.getString('token');
@@ -79,10 +117,16 @@ Future<List<dynamic>> getMemoListByBookId(int bookshelfBookId, int page) async {
         ));
 
     if (response.statusCode == 200) {
-      final List<dynamic> bookList = response.data;
-      return bookList;
+      /*final List<dynamic> memoList = (response.data['memoList'] as List)
+          .map((item) => item as Map<String, dynamic>)
+          .toList();
+
+      return memoList;*/
+
+      var memoResults = MemoResDto.fromJson(response.data);
+      return memoResults;
     } else if (response.statusCode == 404) {
-      return [];
+      return MemoResDto.empty();
     } else {
       throw Exception('Failed to load bookshelf books');
     }
@@ -196,7 +240,7 @@ Future<void> updateMemo(
 }
 
 // 메모 삭제
-Future<void> deleteMemo(int memoid) async {
+Future<void> deleteMemoById(int memoid) async {
   final dio = Dio();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userToken = prefs.getString('token');

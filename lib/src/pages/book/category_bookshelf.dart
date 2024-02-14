@@ -108,14 +108,6 @@ class _C_BookShelfState extends State<Category_BookShelf>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /*Text(
-                "${auth.nickname}님이 최근 ${widget.pageTitle}이에요.",
-                style: TextStyle(
-                    color: gray,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 12,
-                    height: 2),
-              ),*/
               SizedBox(height: 10),
               Text(
                 "총 ${widget.thumbnailListLength}권",
@@ -209,8 +201,8 @@ class _C_BookShelfState extends State<Category_BookShelf>
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3, // 한 행에 표시할 아이템 수
                     crossAxisSpacing: 28.0, // 아이템 간 가로 간격
-                    mainAxisSpacing: 30.0, // 아이템 간 세로 간격
-                    childAspectRatio: 0.55,
+                    mainAxisSpacing: 10.0, // 아이템 간 세로 간격
+                    childAspectRatio: 0.5,
                   ),
                   itemCount: books.length,
                   itemBuilder: (context, index) {

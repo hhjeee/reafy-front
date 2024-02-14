@@ -9,6 +9,7 @@ import 'package:reafy_front/src/controller/board_controller.dart';
 import 'package:reafy_front/src/models/bookCount.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:reafy_front/src/pages/book/bookshelf.dart';
+import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
@@ -18,6 +19,7 @@ import 'package:reafy_front/src/pages/splash_screen.dart';
 import 'package:reafy_front/src/provider/item_provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
 import 'package:reafy_front/src/provider/coin_provider.dart';
+import 'package:reafy_front/src/provider/time_provider.dart';
 import 'dart:async';
 import 'package:reafy_front/src/utils/constants.dart';
 
@@ -30,7 +32,6 @@ Future main() async {
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
 
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  Get.put(BoardController());
   initializeDateFormatting().then((_) => runApp(MyApp()));
 }
 
@@ -48,6 +49,8 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (c) => ItemPlacementProvider()),
           ChangeNotifierProvider(create: (c) => StopwatchProvider()),
           ChangeNotifierProvider(create: (c) => CoinProvider()),
+          ChangeNotifierProvider(create: (c) => MemoProvider()),
+          ChangeNotifierProvider(create: (c) => TimeProvider()),
         ],
         child: GetMaterialApp(
             builder: (context, child) {

@@ -24,23 +24,42 @@ List<ItemData> itemDataList = [
       itemId: 60,
       imagePath: 'assets/images/nothing.png',
       text: '선택 안함',
-      price: 15),
+      price: 0),
   ItemData(
       itemId: 61,
       imagePath: 'assets/images/items/rug_smile.png',
-      text: '스마일 러그',
-      price: 15),
+      text: '심플 러그',
+      price: 7),
   ItemData(
       itemId: 62,
-      imagePath: 'assets/images/items/rug_cloud.png',
-      text: '구름 러그',
+      imagePath: 'assets/images/nothing.png',
+      text: '진저브레드 러그',
       price: 15),
   ItemData(
       itemId: 63,
+      imagePath: 'assets/images/nothing.png',
+      text: '수박 러그',
+      price: 20),
+  ItemData(
+      itemId: 64,
+      imagePath: 'assets/images/items/rug_cloud.png',
+      text: '구름 러그',
+      price: 40),
+  ItemData(
+      itemId: 65,
+      imagePath: 'assets/images/nothing.png',
+      text: '리본 러그',
+      price: 40),
+  ItemData(
+      itemId: 66,
       imagePath: 'assets/images/items/rug_leaf.png',
-      text: '나뭇잎 러그',
-      price: 15),
-  // ...
+      text: '풀잎 러그',
+      price: 50),
+  ItemData(
+      itemId: 67,
+      imagePath: 'assets/images/nothing.png',
+      text: '판다 러그',
+      price: 70),
 ];
 
 class ItemRug extends StatefulWidget {
@@ -79,7 +98,7 @@ class _ItemRugState extends State<ItemRug> {
               crossAxisCount: 4, //그리드 열 수
               crossAxisSpacing: 14.0, //가로 간격
               mainAxisSpacing: 16.0, // 세로 간격
-              childAspectRatio: 0.8,
+              childAspectRatio: 0.6,
             ),
             itemCount: itemDataList.length,
             itemBuilder: (context, index) {

@@ -1,28 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/models/memo.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:reafy_front/src/pages/board/newmemo.dart';
+import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 
-class MemoCard extends StatelessWidget {
+class MemoCard extends StatefulWidget {
   final Memo memo;
   const MemoCard({Key? key, required this.memo}) : super(key: key);
 
   @override
+  _MemoCardState createState() => _MemoCardState();
+}
+
+class _MemoCardState extends State<MemoCard> {
+  @override
   Widget build(BuildContext context) {
-    final validHashtags = memo.hashtag.where((tag) => tag.isNotEmpty).toList();
+    final validHashtags =
+        widget.memo.hashtag.where((tag) => tag.isNotEmpty).toList();
 
     return FutureBuilder<BookshelfBookTitleDto>(
-      future: getBookshelfBookTitle(memo.bookshelfBookId),
+      future: getBookshelfBookTitle(widget.memo.bookshelfBookId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
-            print(snapshot.data!.title);
             return Container(
               margin: const EdgeInsets.only(top: 20),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
@@ -43,25 +50,31 @@ class MemoCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  MemoTitle(title: snapshot.data!.title, memoId: memo.memoId),
-                  if (memo.imageURL != null && memo.imageURL!.isNotEmpty)
-                    MemoImage(imageUrl: memo.imageURL!),
+                  MemoTitle(
+                      title: snapshot.data!.title,
+                      memoId: widget.memo.memoId,
+                      bookId: widget.memo.bookshelfBookId),
+                  if (widget.memo.imageURL != null &&
+                      widget.memo.imageURL!.isNotEmpty)
+                    MemoImage(imageUrl: widget.memo.imageURL!),
                   const SizedBox(height: 10),
-                  MemoDescription(content: memo.content),
+                  MemoDescription(content: widget.memo.content),
                   const SizedBox(height: 10),
                   if (validHashtags.isNotEmpty)
                     Wrap(
                       spacing: 5.0,
                       runSpacing: 5.0,
-                      children: memo.hashtag
+                      children: widget.memo.hashtag
                           .map((tag) => Hashtag(label: "#$tag"))
                           .toList(),
                     ),
+                  const SizedBox(height: 5),
                   Row(
                     children: [
                       Spacer(),
                       Text(
-                        DateFormat('yyyy.MM.dd kk:mm').format(memo.updatedAt),
+                        DateFormat('yyyy.MM.dd kk:mm')
+                            .format(widget.memo.updatedAt),
                         style: TextStyle(
                           color: Color(0xffb3b3b3),
                           fontSize: 10,
@@ -86,13 +99,14 @@ class MemoCard extends StatelessWidget {
 class MemoTitle extends StatelessWidget {
   final String? title;
   final int memoId;
-  const MemoTitle({Key? key, this.title, required this.memoId})
+  final int bookId;
+  const MemoTitle(
+      {Key? key, this.title, required this.memoId, required this.bookId})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 30,
         padding: const EdgeInsets.symmetric(horizontal: 6.0),
         margin: EdgeInsets.only(bottom: 9),
         child: Row(children: [
@@ -112,7 +126,7 @@ class MemoTitle extends StatelessWidget {
                   if (value == 'edit') {
                     showAddMemoBottomSheet(context);
                   } else if (value == 'delete') {
-                    _showDeleteDialog(context, memoId);
+                    _showDeleteDialog(context, memoId, bookId);
                   }
                 },
                 itemBuilder: (BuildContext context) {
@@ -249,7 +263,7 @@ class Hashtag extends StatelessWidget {
   }
 }
 
-void _showDeleteDialog(BuildContext context, int memoId) {
+void _showDeleteDialog(BuildContext context, int memoId, int bookId) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -300,9 +314,15 @@ void _showDeleteDialog(BuildContext context, int memoId) {
                   SizedBox(width: 6),
                   ElevatedButton(
                     onPressed: () async {
-                      Navigator.pop(context); // DeleteDialog 닫기
+                      //Navigator.pop(context);
                       try {
-                        await deleteMemo(memoId);
+                        final memoProvider =
+                            Provider.of<MemoProvider>(context, listen: false);
+                        await memoProvider.deleteMemo(memoId);
+                        Provider.of<MemoProvider>(context, listen: false)
+                            .loadMemosByBookId(bookId, 1);
+                        Navigator.pop(context);
+
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {

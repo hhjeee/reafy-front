@@ -28,7 +28,7 @@ class _DeleteDialogState extends State<DeleteDialog> {
         child: Column(children: [
           SizedBox(height: 40.0),
           Text(
-            "정말 삭제하시겠어요? \n 등록한 책이 영구적으로 사라져요!",
+            "정말 삭제하시겠어요? \n 등록한 책이 사라져요!",
             textAlign: TextAlign.center,
             style: const TextStyle(
                 color: Color(0xff333333),

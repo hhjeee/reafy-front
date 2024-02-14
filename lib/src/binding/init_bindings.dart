@@ -12,7 +12,6 @@ class InitBinding extends Bindings {
     Get.put(BottomNavController(), permanent: true); // 앱 종료 전까지 true
     Get.lazyPut(() => BookshelfController());
     Get.put(IntroController(), permanent: true);
-    Get.put(BoardController());
     Get.put(StopwatchProvider(), permanent: true);
   }
 }

@@ -35,7 +35,7 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
       contentPadding: EdgeInsets.zero,
       content: Container(
         width: 320,
-        height: 357,
+        height: 370,
         child: Column(children: [
           SizedBox(height: 30.0),
           Text(
