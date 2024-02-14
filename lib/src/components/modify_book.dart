@@ -62,28 +62,17 @@ class _ModifyDialogState extends State<ModifyDialog> {
           ),
           SizedBox(height: 10),
           progressState != null
-              ? BookStatusButtonGroup(
-                  initialSelectedIndex: progressState!,
-                  onStatusSelected: (selectedButtonIndex) {
-                    setState(() {
-                      progressState = selectedButtonIndex;
-                    });
-                  },
-                )
+              ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  BookStatusButtonGroup(
+                    initialSelectedIndex: progressState!,
+                    onStatusSelected: (selectedButtonIndex) {
+                      setState(() {
+                        progressState = selectedButtonIndex;
+                      });
+                    },
+                  )
+                ])
               : CircularProgressIndicator(),
-          /*Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              BookStatusButtonGroup(
-                initialSelectedIndex: progressState,
-                onStatusSelected: (selectedButtonIndex) {
-                  setState(() {
-                    progressState = selectedButtonIndex;
-                  });
-                },
-              ),
-            ],
-          ),*/
           SizedBox(height: 40),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

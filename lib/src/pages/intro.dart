@@ -82,11 +82,14 @@ class OnBoardingPage extends StatelessWidget {
       showNextButton: true,
       //showSkipButton: true,
 
-      done: ImageData(
-        IconsPath.nextarrow,
-        isSvg: true,
-        width: 15,
-      ),
+      done: Container(
+          child: Row(children: [
+        Spacer(),
+        ImageData(
+          IconsPath.nextarrow,
+          isSvg: true,
+        )
+      ])),
       onDone: () {
         Get.off(() => App());
       },

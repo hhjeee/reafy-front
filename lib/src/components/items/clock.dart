@@ -24,37 +24,42 @@ List<ItemData> itemDataList = [
       itemId: 20,
       imagePath: 'assets/images/nothing.png',
       text: '선택 안함',
-      price: 15),
+      price: 0),
   ItemData(
       itemId: 21,
-      imagePath: 'assets/images/items/clock_clover.png',
-      text: '클로버 시계',
-      price: 15),
-  ItemData(
-      itemId: 22,
-      imagePath: 'assets/images/items/clock_star.png',
-      text: '별 시계',
-      price: 15),
-  ItemData(
-      itemId: 23,
       imagePath: 'assets/images/items/clock_simple.png',
       text: '심플 시계',
+      price: 5),
+  ItemData(
+      itemId: 22,
+      imagePath: 'assets/images/items/clock_socks.png',
+      text: '양말 시계',
+      price: 10),
+  ItemData(
+      itemId: 23,
+      imagePath: 'assets/images/nothing.png',
+      text: '시계',
       price: 15),
   ItemData(
       itemId: 24,
-      imagePath: 'assets/images/items/clock_panda.png',
-      text: '판다 시계',
-      price: 15),
+      imagePath: 'assets/images/items/clock_star.png',
+      text: '별 시계',
+      price: 20),
   ItemData(
       itemId: 25,
-      imagePath: 'assets/images/items/clock_socks.png',
-      text: '양말 시계',
-      price: 15),
-  ItemData(
-      itemId: 26,
       imagePath: 'assets/images/items/clock_button.png',
       text: '단추 시계',
-      price: 15),
+      price: 25),
+  ItemData(
+      itemId: 26,
+      imagePath: 'assets/images/items/clock_clover.png',
+      text: '네잎클로버 시계',
+      price: 30),
+  ItemData(
+      itemId: 27,
+      imagePath: 'assets/images/items/clock_panda.png',
+      text: '판다 시계',
+      price: 50),
 ];
 
 class ItemClock extends StatefulWidget {
@@ -93,7 +98,7 @@ class _ItemClockState extends State<ItemClock> {
               crossAxisCount: 4, //그리드 열 수
               crossAxisSpacing: 14.0, //가로 간격
               mainAxisSpacing: 16.0, // 세로 간격
-              childAspectRatio: 0.8,
+              childAspectRatio: 0.6,
             ),
             itemCount: itemDataList.length,
             itemBuilder: (context, index) {

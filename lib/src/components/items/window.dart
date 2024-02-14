@@ -24,12 +24,42 @@ List<ItemData> itemDataList = [
       itemId: 80,
       imagePath: 'assets/images/nothing.png',
       text: '선택 안함',
-      price: 10),
+      price: 0),
   ItemData(
       itemId: 81,
       imagePath: 'assets/images/items/window1.png',
-      text: '창문1',
-      price: 10),
+      text: '심플 창문',
+      price: 15),
+  ItemData(
+      itemId: 82,
+      imagePath: 'assets/images/nothing.png',
+      text: '창문',
+      price: 30),
+  ItemData(
+      itemId: 83,
+      imagePath: 'assets/images/nothing.png',
+      text: '창문',
+      price: 50),
+  ItemData(
+      itemId: 84,
+      imagePath: 'assets/images/nothing.png',
+      text: '창문',
+      price: 70),
+  ItemData(
+      itemId: 85,
+      imagePath: 'assets/images/nothing.png',
+      text: '창문',
+      price: 90),
+  ItemData(
+      itemId: 86,
+      imagePath: 'assets/images/nothing.png',
+      text: '창문',
+      price: 120),
+  ItemData(
+      itemId: 87,
+      imagePath: 'assets/images/nothing.png',
+      text: '창문',
+      price: 150),
 ];
 
 class ItemWindow extends StatefulWidget {
@@ -68,7 +98,7 @@ class _ItemWindowState extends State<ItemWindow> {
               crossAxisCount: 4, //그리드 열 수
               crossAxisSpacing: 14.0, //가로 간격
               mainAxisSpacing: 16.0, // 세로 간격
-              childAspectRatio: 0.8,
+              childAspectRatio: 0.6,
             ),
             itemCount: itemDataList.length,
             itemBuilder: (context, index) {

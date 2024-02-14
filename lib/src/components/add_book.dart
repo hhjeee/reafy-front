@@ -70,10 +70,9 @@ class _AddDialogState extends State<AddDialog> {
         borderRadius: BorderRadius.circular(20),
       ),
       contentPadding: EdgeInsets.zero,
-      //title:
       content: Container(
         width: 320,
-        height: 185,
+        height: 200,
         child: Column(children: [
           SizedBox(height: 40.0),
           Text(

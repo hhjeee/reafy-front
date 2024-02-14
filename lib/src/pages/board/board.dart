@@ -1,62 +1,153 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/memo_card.dart';
 import 'package:reafy_front/src/controller/board_controller.dart';
 import 'package:reafy_front/src/pages/board/newmemo.dart';
+import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Board extends GetView<BoardController> {
+class Board extends StatefulWidget {
+  @override
   const Board({super.key});
+  _BoardState createState() => _BoardState();
+}
 
-  Widget _memoList() {
-    return Obx(() => Column(
-          children: List.generate(controller.memoList.length,
-              (index) => MemoCard(memo: controller.memoList[index])).toList(),
-        ));
+class _BoardState extends State<Board> {
+  int currentPage = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    final memoProvider = Provider.of<MemoProvider>(context, listen: false);
+    memoProvider.loadAllMemos(currentPage);
+  }
+
+  void _loadPage(int pageNumber) async {
+    final memoProvider = Provider.of<MemoProvider>(context, listen: false);
+    await memoProvider.loadAllMemos(pageNumber);
+    setState(() {
+      currentPage = pageNumber;
+    });
+  }
+
+  Widget _buildPageNumbers(int totalPages) {
+    int pageDisplayLimit = 5;
+    int currentPageGroupStart =
+        ((currentPage - 1) ~/ pageDisplayLimit) * pageDisplayLimit;
+
+    List<Widget> pageNumbers = List.generate(
+      min(pageDisplayLimit, totalPages - currentPageGroupStart),
+      (index) {
+        int pageNumber = currentPageGroupStart + index + 1;
+        return GestureDetector(
+          onTap: () => _loadPage(pageNumber),
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 4),
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: currentPage == pageNumber
+                  ? Color(0xffFFF7DA)
+                  : Colors.transparent,
+            ),
+            child: Text('$pageNumber'),
+          ),
+        );
+      },
+    );
+
+    if (currentPageGroupStart > 0) {
+      pageNumbers.insert(
+        0,
+        IconButton(
+          icon: Icon(Icons.arrow_left),
+          onPressed: () => _loadPage(max(currentPageGroupStart, 1)),
+        ),
+      );
+    }
+
+    if (currentPageGroupStart + pageDisplayLimit < totalPages) {
+      pageNumbers.add(
+        IconButton(
+          icon: Icon(Icons.arrow_right),
+          onPressed: () => _loadPage(
+              min(currentPageGroupStart + pageDisplayLimit + 1, totalPages)),
+        ),
+      );
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: pageNumbers,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    Get.lazyPut(() => BoardController());
+    final memoProvider = Provider.of<MemoProvider>(context);
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios, color: Color(0xff63B865)),
-            onPressed: () {
-              Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
-            },
-          ),
-          title: Text(
-            "나의 메모",
-            style: TextStyle(
-                color: Color(0xff333333),
-                fontWeight: FontWeight.w800,
-                fontSize: 16),
-          ),
-          actions: [],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: Color(0xff63B865)),
+          onPressed: () {
+            Get.back();
+          },
         ),
-        extendBodyBehindAppBar: true,
-        floatingActionButton: NewMemoButton(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/green_bg.png'),
-                fit: BoxFit.fill,
+        title: Text(
+          "나의 메모",
+          style: TextStyle(
+              color: Color(0xff333333),
+              fontWeight: FontWeight.w800,
+              fontSize: 16),
+        ),
+        actions: [],
+      ),
+      extendBodyBehindAppBar: true,
+      //floatingActionButton: NewMemoButton(),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/green_bg.png'),
+            fit: BoxFit.fill,
+          ),
+        ),
+        width: size.width,
+        height: size.height,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: (size.width - 343) / 2),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: memoProvider.memoList.length,
+                  itemBuilder: (context, index) {
+                    final memo = memoProvider.memoList[index];
+                    return MemoCard(memo: memo);
+                  },
+                ),
               ),
-            ),
-            width: size.width,
-            height: size.height,
-            child: ListView(
-              children: [_memoList()],
-            )));
+              SizedBox(height: 5),
+              _buildPageNumbers(memoProvider.totalPages),
+              SizedBox(height: 5),
+              NewMemoButton(),
+              SizedBox(height: 25.0),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -65,13 +156,13 @@ class NewMemoButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         showAddMemoBottomSheet(context);
       },
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 26),
-        width: 343,
+        width: double.infinity,
         height: 33,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),

@@ -14,7 +14,7 @@ class Book {
   });
 }
 
-Book convertToBook(SearchBookResDto searchBook) {
+Book convertToBook(SearchBookDto searchBook) {
   return Book(
     title: searchBook.title,
     author: searchBook.author,

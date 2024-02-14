@@ -54,7 +54,6 @@ class ItemPlacementProvider extends ChangeNotifier {
   Future<void> fetchDataAndUseActivatedItems() async {
     try {
       activatedItemIds = await getActivatedOwnedItemIds();
-      print(activatedItemIds);
       updateItemValues();
       updateInitialValues();
     } catch (e) {
@@ -370,23 +369,39 @@ class ItemData {
 List<ItemData> itemDataList = [
   //bookshelf - 0~19
   ItemData(
-    itemId: 0,
-    imagePath: 'assets/images/nothing.png',
-    text: '선택 안함',
-    index: 0,
-  ),
+      itemId: 0,
+      imagePath: 'assets/images/nothing.png',
+      text: '선택 안함',
+      index: 0),
   ItemData(
-    itemId: 1,
-    imagePath: 'assets/images/items/bookshelf1.png',
-    text: '책장1',
-    index: 1,
-  ),
+      itemId: 1,
+      imagePath: 'assets/images/items/bookshelf1.png',
+      text: '심플 책장',
+      index: 1),
   ItemData(
-    itemId: 2,
-    imagePath: 'assets/images/items/bookshelf2.png',
-    text: '책장2',
-    index: 2,
-  ),
+      itemId: 2,
+      imagePath: 'assets/images/items/bookshelf2.png',
+      text: '트리 책장',
+      index: 2),
+  ItemData(
+      itemId: 3,
+      imagePath: 'assets/images/items/bookshelf3.png',
+      text: '당근 책장',
+      index: 3),
+  ItemData(
+      itemId: 4, imagePath: 'assets/images/nothing.png', text: '책장', index: 4),
+  ItemData(
+      itemId: 5, imagePath: 'assets/images/nothing.png', text: '책장', index: 5),
+  ItemData(
+      itemId: 6,
+      imagePath: 'assets/images/items/bookshelf6.png',
+      text: '책장',
+      index: 6),
+  ItemData(
+      itemId: 7,
+      imagePath: 'assets/images/items/bookshelf7.png',
+      text: '판다 책장',
+      index: 7),
 
   //clock 20 ~ 39
   ItemData(
@@ -395,31 +410,37 @@ List<ItemData> itemDataList = [
       text: '선택 안함',
       index: 0),
   ItemData(
-    itemId: 21,
-    imagePath: 'assets/images/items/clock_clover.png',
-    text: '클로버 시계',
-    index: 1,
-  ),
-  ItemData(
-      itemId: 22,
-      imagePath: 'assets/images/items/clock_star.png',
-      text: '별 시계',
-      index: 2),
-  ItemData(
-      itemId: 23,
+      itemId: 21,
       imagePath: 'assets/images/items/clock_simple.png',
       text: '심플 시계',
-      index: 3),
+      index: 1),
+  ItemData(
+      itemId: 22,
+      imagePath: 'assets/images/items/clock_socks.png',
+      text: '양말 시계',
+      index: 2),
+  ItemData(
+      itemId: 23, imagePath: 'assets/images/nothing.png', text: '시계', index: 3),
   ItemData(
       itemId: 24,
-      imagePath: 'assets/images/items/clock_panda.png',
-      text: '판다 시계',
+      imagePath: 'assets/images/items/clock_star.png',
+      text: '별 시계',
       index: 4),
   ItemData(
       itemId: 25,
-      imagePath: 'assets/images/items/clock_socks.png',
-      text: '양말 시계',
+      imagePath: 'assets/images/items/clock_button.png',
+      text: '단추 시계',
       index: 5),
+  ItemData(
+      itemId: 26,
+      imagePath: 'assets/images/items/clock_clover.png',
+      text: '네잎클로버 시계',
+      index: 6),
+  ItemData(
+      itemId: 27,
+      imagePath: 'assets/images/items/clock_panda.png',
+      text: '판다 시계',
+      index: 7),
 
   //others 40~59
   ItemData(
@@ -429,34 +450,39 @@ List<ItemData> itemDataList = [
       index: 0),
   ItemData(
       itemId: 41,
-      imagePath: 'assets/images/items/item_flower.png',
-      text: '꽃 의자',
+      imagePath: 'assets/images/items/item_simple.png',
+      text: '심플 소품',
       index: 1),
   ItemData(
       itemId: 42,
-      imagePath: 'assets/images/items/item_mushroom.png',
-      text: '버섯 테이블',
+      imagePath: 'assets/images/items/item_tree.png',
+      text: '트리',
       index: 2),
   ItemData(
       itemId: 43,
-      imagePath: 'assets/images/items/item_bear.png',
-      text: '곰 인형',
+      imagePath: 'assets/images/items/item_orange.png',
+      text: '오렌지 테이블',
       index: 3),
   ItemData(
       itemId: 44,
-      imagePath: 'assets/images/items/item_tree.png',
-      text: '트리',
+      imagePath: 'assets/images/items/item_light.png',
+      text: '달 전구',
       index: 4),
   ItemData(
       itemId: 45,
-      imagePath: 'assets/images/items/item_light.png',
-      text: '달빛 전구',
+      imagePath: 'assets/images/items/item_bear.png',
+      text: '곰인형',
       index: 5),
   ItemData(
       itemId: 46,
-      imagePath: 'assets/images/items/item_bamboo.png',
-      text: '선인장 화분',
+      imagePath: 'assets/images/items/item_flower.png',
+      text: '꽃 의자',
       index: 6),
+  ItemData(
+      itemId: 47,
+      imagePath: 'assets/images/items/item_bamboo.png',
+      text: '대나무 화분',
+      index: 7),
 
   //rug 60~79
   ItemData(
@@ -467,18 +493,38 @@ List<ItemData> itemDataList = [
   ItemData(
       itemId: 61,
       imagePath: 'assets/images/items/rug_smile.png',
-      text: '스마일 러그',
+      text: '심플 러그',
       index: 1),
   ItemData(
       itemId: 62,
-      imagePath: 'assets/images/items/rug_cloud.png',
-      text: '구름 러그',
+      imagePath: 'assets/images/nothing.png',
+      text: '진저브레드 러그',
       index: 2),
   ItemData(
       itemId: 63,
-      imagePath: 'assets/images/items/rug_leaf.png',
-      text: '나뭇잎 러그',
+      imagePath: 'assets/images/nothing.png',
+      text: '수박 러그',
       index: 3),
+  ItemData(
+      itemId: 64,
+      imagePath: 'assets/images/items/rug_cloud.png',
+      text: '구름 러그',
+      index: 4),
+  ItemData(
+      itemId: 65,
+      imagePath: 'assets/images/nothing.png',
+      text: '리본 러그',
+      index: 5),
+  ItemData(
+      itemId: 66,
+      imagePath: 'assets/images/items/rug_leaf.png',
+      text: '풀잎 러그',
+      index: 6),
+  ItemData(
+      itemId: 67,
+      imagePath: 'assets/images/items/nothing.png',
+      text: '판다 러그',
+      index: 7),
 
   //window 80~99
   ItemData(
@@ -489,31 +535,18 @@ List<ItemData> itemDataList = [
   ItemData(
       itemId: 81,
       imagePath: 'assets/images/items/window1.png',
-      text: '창문1',
+      text: '심플 창문',
       index: 1),
   ItemData(
-      itemId: 82,
-      imagePath: 'assets/images/items/window2.png',
-      text: '창문2',
-      index: 2),
+      itemId: 82, imagePath: 'assets/images/nothing.png', text: '창문', index: 2),
   ItemData(
-      itemId: 83,
-      imagePath: 'assets/images/items/window3.png',
-      text: '창문3',
-      index: 3),
+      itemId: 83, imagePath: 'assets/images/nothing.png', text: '창문', index: 3),
   ItemData(
-      itemId: 84,
-      imagePath: 'assets/images/items/window4.png',
-      text: '창문4',
-      index: 4),
+      itemId: 84, imagePath: 'assets/images/nothing.png', text: '창문', index: 4),
   ItemData(
-      itemId: 85,
-      imagePath: 'assets/images/items/window5.png',
-      text: '창문5',
-      index: 5),
+      itemId: 85, imagePath: 'assets/images/nothing.png', text: '창문', index: 5),
   ItemData(
-      itemId: 86,
-      imagePath: 'assets/images/nothing.png',
-      text: '창문6',
-      index: 6),
+      itemId: 86, imagePath: 'assets/images/nothing.png', text: '창문', index: 6),
+  ItemData(
+      itemId: 87, imagePath: 'assets/images/nothing.png', text: '창문', index: 7),
 ];

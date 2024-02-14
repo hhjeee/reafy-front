@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
+import 'package:reafy_front/src/provider/time_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/repository/history_repository.dart';
 
@@ -50,7 +51,7 @@ class _StopDialogState extends State<StopDialog> {
         content: SingleChildScrollView(
             child: Container(
           width: 320,
-          height: 420,
+          height: 450,
           child: Column(
             children: <Widget>[
               SizedBox(height: 30.0),
@@ -271,7 +272,6 @@ class _StopDialogState extends State<StopDialog> {
                               startPage: startPage,
                               endPage: endPage,
                               duration: readingTime,
-                              coins: 0,
                             );
                             await createUserBookHistory(historyDto);
 
@@ -279,6 +279,9 @@ class _StopDialogState extends State<StopDialog> {
                             context
                                 .read<StopwatchProvider>()
                                 .updateElapsedTime('00:00:00');
+                            await Provider.of<TimeProvider>(context,
+                                    listen: false)
+                                .getTimes();
                             Get.back();
                             showDialog(
                               context: context,
@@ -307,6 +310,7 @@ class _StopDialogState extends State<StopDialog> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
                       context.read<StopwatchProvider>().resume();

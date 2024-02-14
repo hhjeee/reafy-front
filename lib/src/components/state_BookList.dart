@@ -28,7 +28,7 @@ class State_BookShelfWidgetState extends State<State_BookShelfWidget> {
         padding: const EdgeInsets.only(right: 18.61),
         child: Container(
           width: 68,
-          height: 100,
+          height: 96,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
             color: Color(0xffffffff),

@@ -9,6 +9,8 @@ import 'package:reafy_front/src/components/stopwatch.dart';
 import 'package:reafy_front/src/pages/map.dart';
 import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
+import 'package:reafy_front/src/provider/time_provider.dart';
+import 'package:reafy_front/src/repository/statics_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
@@ -50,6 +52,11 @@ class _HomeState extends State<Home>
     loadUserCoin();
     Future.microtask(
         () => Provider.of<CoinProvider>(context, listen: false).updateCoins());
+
+    Future.microtask(() {
+      final timeProvider = Provider.of<TimeProvider>(context, listen: false);
+      timeProvider.getTimes();
+    });
   }
 
   @override
@@ -74,7 +81,7 @@ class _HomeState extends State<Home>
   @override
   Widget build(BuildContext context) {
     StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
-
+    final timeProvider = Provider.of<TimeProvider>(context);
     final size = MediaQuery.of(context).size;
     Widget _memo() {
       return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -147,7 +154,34 @@ class _HomeState extends State<Home>
                   ))));
     }
 
-    Widget _time() {
+    Widget _time(todayTime, totalTime) {
+      String displayTodayTime;
+      if (todayTime != null) {
+        if (todayTime >= 60) {
+          int hours = todayTime ~/ 60;
+          int minutes = todayTime % 60;
+          displayTodayTime = '$hours시간 $minutes분';
+        } else {
+          displayTodayTime = '$todayTime분';
+        }
+      } else {
+        displayTodayTime = '0분';
+      }
+
+      String displayTotalTime;
+      if (totalTime != null && totalTime.isNotEmpty) {
+        int totalMinutes = int.parse(totalTime);
+        if (totalMinutes >= 60) {
+          int hours = totalMinutes ~/ 60;
+          int minutes = totalMinutes % 60;
+          displayTotalTime = '${hours}시간 ${minutes}분';
+        } else {
+          displayTotalTime = '${totalMinutes}분';
+        }
+      } else {
+        displayTotalTime = '0분';
+      }
+
       return Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -185,7 +219,7 @@ class _HomeState extends State<Home>
                             fontWeight: FontWeight.w400),
                       ),
                       Text(
-                        "28분 16초",
+                        displayTodayTime,
                         style: TextStyle(
                             color: Color(0xff333333),
                             fontSize: 14,
@@ -223,14 +257,14 @@ class _HomeState extends State<Home>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Total",
+                        "Month",
                         style: TextStyle(
                             color: Color(0xff666666),
                             fontSize: 12,
                             fontWeight: FontWeight.w400),
                       ),
                       Text(
-                        "37시간 20분",
+                        displayTotalTime,
                         style: TextStyle(
                             color: Color(0xff333333),
                             fontSize: 14,
@@ -336,10 +370,6 @@ class _HomeState extends State<Home>
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      //Text("stopwatch.status : ${stopwatch.status}"),
-                      //Text("stopwatch.isRunning : ${stopwatch.isRunning}"),
-                      //Text("stopwatch.isFull : ${stopwatch.isFull}"),
-                      //Text( "stopwatch.elapsedTimeString : ${stopwatch.elapsedTimeString}"),
                       Spacer(),
                       _memo(),
                       Consumer<ItemPlacementProvider>(
@@ -433,10 +463,10 @@ class _HomeState extends State<Home>
                               ],
                             ));
                       }),
-
                       stopwatch.status == Status.running
                           ? _stopbutton()
-                          : _time(),
+                          : _time(
+                              timeProvider.todayTime, timeProvider.totalTime),
                       const SizedBox(height: 15),
                       Center(child: StopwatchWidget()),
                       Spacer()

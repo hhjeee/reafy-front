@@ -5,25 +5,52 @@ import 'package:reafy_front/src/models/book.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //책 검색
-class SearchBookResDto {
+class SearchBookDto {
   final String isbn13;
   final String thumbnailURL;
   final String title;
   final String author;
 
-  SearchBookResDto({
+  SearchBookDto({
     required this.isbn13,
     required this.thumbnailURL,
     required this.title,
     required this.author,
   });
 
-  factory SearchBookResDto.fromJson(Map<String, dynamic> json) {
-    return SearchBookResDto(
+  factory SearchBookDto.fromJson(Map<String, dynamic> json) {
+    return SearchBookDto(
       isbn13: json['isbn13'],
       thumbnailURL: json['thumbnailURL'],
       title: json['title'],
       author: json['author'],
+    );
+  }
+}
+
+class SearchBookResDto {
+  final int totalItems;
+  final int currentItems;
+  final int totalPages;
+  final int currentPage;
+  final List<SearchBookDto> items;
+
+  SearchBookResDto({
+    required this.totalItems,
+    required this.currentItems,
+    required this.totalPages,
+    required this.currentPage,
+    required this.items,
+  });
+
+  factory SearchBookResDto.fromJson(Map<String, dynamic> json) {
+    return SearchBookResDto(
+      totalItems: json['totalItems'],
+      currentItems: json['currentItems'],
+      totalPages: json['totalPages'],
+      currentPage: json['currentPage'],
+      items: List<SearchBookDto>.from(
+          json['item'].map((item) => SearchBookDto.fromJson(item))),
     );
   }
 }

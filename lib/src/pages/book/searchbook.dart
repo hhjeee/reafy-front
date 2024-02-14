@@ -34,8 +34,9 @@ class _SearchBookState extends State<SearchBook> {
 
   bool isSearching = true;
   int currentPage = 1;
+  int totalPages = 1;
 
-  Future<List<SearchBookResDto>> searchBooks(String query, int page) async {
+  Future<SearchBookResDto> searchBooks(String query, int page) async {
     var auth = context.read<AuthProvider>();
     //await auth.performAuthenticatedAction();
 
@@ -44,10 +45,12 @@ class _SearchBookState extends State<SearchBook> {
           .get('/book/search', queryParameters: {'query': query, 'page': page});
 
       if (response.statusCode == 200) {
-        final List<dynamic> responseList = response.data;
+        /*final List<dynamic> responseList = response.data;
         final List<SearchBookResDto> searchResults = responseList
             .map((item) => SearchBookResDto.fromJson(item))
             .toList();
+        return searchResults;*/
+        var searchResults = SearchBookResDto.fromJson(response.data);
         return searchResults;
       } else {
         throw Exception('Failed to load search results');
@@ -70,7 +73,8 @@ class _SearchBookState extends State<SearchBook> {
     searchBooks(query, page).then((searchResults) {
       setState(() {
         isSearching = false;
-        displayList = searchResults.map(convertToBook).toList();
+        displayList = searchResults.items.map(convertToBook).toList();
+        totalPages = searchResults.totalPages;
       });
     });
   }
@@ -194,20 +198,61 @@ class _SearchBookState extends State<SearchBook> {
   }
 
   Widget _buildPageNumbers(int totalPages) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List<Widget>.generate(totalPages, (index) {
+    int pageDisplayLimit = 5;
+    int currentPageGroupStart =
+        ((currentPage - 1) ~/ pageDisplayLimit) * pageDisplayLimit;
+
+    List<Widget> pageNumbers = List.generate(
+      min(pageDisplayLimit, totalPages - currentPageGroupStart),
+      (index) {
+        int pageNumber = currentPageGroupStart + index + 1;
         return GestureDetector(
-          onTap: () => _loadPage(index + 1),
+          onTap: () {
+            _loadPage(pageNumber);
+          },
           child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 4),
             padding: EdgeInsets.all(8),
-            child: Text(
-              '${index + 1}',
-              style: TextStyle(fontSize: 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: currentPage == pageNumber
+                  ? Color(0xffFFF7DA)
+                  : Colors.transparent,
             ),
+            child: Text('$pageNumber'),
           ),
         );
-      }),
+      },
+    );
+
+    // 이전 페이지 그룹으로 이동하는 버튼 추가 (첫 페이지 그룹이 아닐 경우)
+    if (currentPageGroupStart > 0) {
+      pageNumbers.insert(
+        0,
+        IconButton(
+          icon: Icon(Icons.arrow_left),
+          onPressed: () {
+            _loadPage(currentPageGroupStart);
+          },
+        ),
+      );
+    }
+
+    // 다음 페이지 그룹으로 이동하는 버튼 추가 (마지막 페이지 그룹이 아닐 경우)
+    if (currentPageGroupStart + pageDisplayLimit < totalPages) {
+      pageNumbers.add(
+        IconButton(
+          icon: Icon(Icons.arrow_right),
+          onPressed: () {
+            _loadPage(currentPageGroupStart + pageDisplayLimit + 1);
+          },
+        ),
+      );
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: pageNumbers,
     );
   }
 
@@ -231,7 +276,7 @@ class _SearchBookState extends State<SearchBook> {
           MediaQuery.of(context).padding.top;
 
       return Container(
-        height: screenHeight - 75,
+        height: screenHeight - 60,
         decoration: BoxDecoration(
             gradient: LinearGradient(
           colors: [
@@ -255,7 +300,8 @@ class _SearchBookState extends State<SearchBook> {
                 ),
               ),
             ),
-            _buildPageNumbers(10),
+            _buildPageNumbers(totalPages),
+            SizedBox(height: 10),
           ],
         ),
       );
@@ -299,7 +345,7 @@ class _SearchBookState extends State<SearchBook> {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                  padding: EdgeInsets.only(top: 16),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,

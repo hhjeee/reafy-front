@@ -30,14 +30,14 @@ class _DeleteDialogState extends State<DeleteDialog> {
       contentPadding: EdgeInsets.zero,
       content: Container(
         width: 320,
-        height: 160,
+        height: 180,
         child: Column(children: [
           SizedBox(height: 40.0),
           Consumer<SelectedBooksProvider>(
             builder: (context, selectedBooksProvider, _) {
               print(selectedBooksProvider.selectedBooks);
               return Text(
-                "총 ${selectedBooksProvider.selectedBooks.length}권을 정말 삭제하시겠어요? \n 등록한 책이 영구적으로 사라져요!",
+                "총 ${selectedBooksProvider.selectedBooks.length}권을 정말 삭제하시겠어요? \n 등록한 책이 사라져요!",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Color(0xff333333),

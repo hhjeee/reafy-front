@@ -36,14 +36,12 @@ class CreateUserBookHistoryDto {
   int? startPage;
   int? endPage;
   int duration;
-  int coins;
 
   CreateUserBookHistoryDto({
     required this.bookshelfBookId,
     required this.startPage,
     required this.endPage,
     required this.duration,
-    required this.coins,
   });
 
   Map<String, dynamic> toJson() {
@@ -52,7 +50,6 @@ class CreateUserBookHistoryDto {
       'startPage': startPage,
       'endPage': endPage,
       'duration': duration,
-      'coins': coins,
     };
   }
 }

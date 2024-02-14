@@ -33,7 +33,7 @@ class isFavorite_BookShelfWidgetState
             borderRadius: BorderRadius.circular(8.0),
             child: Image.network(
               thumbnail,
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 // 이미지를 불러오는 데 실패한 경우의 처리
                 return const Text('이미지를 불러올 수 없습니다.');

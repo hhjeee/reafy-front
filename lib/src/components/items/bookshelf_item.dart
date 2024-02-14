@@ -26,17 +26,39 @@ List<ItemData> itemDataList = [
       itemId: 0,
       imagePath: 'assets/images/nothing.png',
       text: '선택 안함',
-      price: 10),
+      price: 0),
   ItemData(
       itemId: 1,
       imagePath: 'assets/images/items/bookshelf1.png',
-      text: '책장1',
-      price: 10),
+      text: '심플 책장',
+      price: 20),
   ItemData(
       itemId: 2,
       imagePath: 'assets/images/items/bookshelf2.png',
-      text: '책장2',
-      price: 10),
+      text: '트리 책장',
+      price: 40),
+  ItemData(
+      itemId: 3,
+      imagePath: 'assets/images/items/bookshelf3.png',
+      text: '당근 책장',
+      price: 60),
+  ItemData(
+      itemId: 4, imagePath: 'assets/images/nothing.png', text: '책장', price: 80),
+  ItemData(
+      itemId: 5,
+      imagePath: 'assets/images/nothing.png',
+      text: '책장',
+      price: 100),
+  ItemData(
+      itemId: 6,
+      imagePath: 'assets/images/items/bookshelf6.png',
+      text: '책장',
+      price: 150),
+  ItemData(
+      itemId: 7,
+      imagePath: 'assets/images/items/bookshelf7.png',
+      text: '판다 책장',
+      price: 200),
 ];
 
 class ItemBookshelf extends StatefulWidget {
@@ -76,7 +98,7 @@ class _ItemBookshelfState extends State<ItemBookshelf> {
               crossAxisCount: 4, //그리드 열 수
               crossAxisSpacing: 14.0, //가로 간격
               mainAxisSpacing: 16.0, // 세로 간격
-              childAspectRatio: 0.8,
+              childAspectRatio: 0.6,
             ),
             itemCount: itemDataList.length,
             itemBuilder: (context, index) {

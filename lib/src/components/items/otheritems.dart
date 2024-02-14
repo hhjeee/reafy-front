@@ -24,37 +24,42 @@ List<ItemData> itemDataList = [
       itemId: 40,
       imagePath: 'assets/images/nothing.png',
       text: '선택 안함',
-      price: 10),
+      price: 0),
   ItemData(
       itemId: 41,
-      imagePath: 'assets/images/items/item_flower.png',
-      text: '꽃 의자',
-      price: 10),
+      imagePath: 'assets/images/items/item_simple.png',
+      text: '심플 소품',
+      price: 5),
   ItemData(
       itemId: 42,
-      imagePath: 'assets/images/items/item_mushroom.png',
-      text: '버섯 테이블',
-      price: 10),
-  ItemData(
-      itemId: 43,
-      imagePath: 'assets/images/items/item_bear.png',
-      text: '곰 인형',
-      price: 10),
-  ItemData(
-      itemId: 44,
       imagePath: 'assets/images/items/item_tree.png',
       text: '트리',
       price: 10),
   ItemData(
-      itemId: 45,
+      itemId: 43,
+      imagePath: 'assets/images/items/item_orange.png',
+      text: '오렌지 테이블',
+      price: 15),
+  ItemData(
+      itemId: 44,
       imagePath: 'assets/images/items/item_light.png',
-      text: '달빛 전구',
-      price: 10),
+      text: '달 전구',
+      price: 20),
+  ItemData(
+      itemId: 45,
+      imagePath: 'assets/images/items/item_bear.png',
+      text: '곰인형',
+      price: 25),
   ItemData(
       itemId: 46,
+      imagePath: 'assets/images/items/item_flower.png',
+      text: '꽃 의자',
+      price: 30),
+  ItemData(
+      itemId: 47,
       imagePath: 'assets/images/items/item_bamboo.png',
-      text: '선인장 화분',
-      price: 10),
+      text: '대나무 화분',
+      price: 50),
 ];
 
 class ItemOthers extends StatefulWidget {
@@ -93,7 +98,7 @@ class _ItemOthersState extends State<ItemOthers> {
               crossAxisCount: 4, //그리드 열 수
               crossAxisSpacing: 14.0, //가로 간격
               mainAxisSpacing: 16.0, // 세로 간격
-              childAspectRatio: 0.8,
+              childAspectRatio: 0.6,
             ),
             itemCount: itemDataList.length,
             itemBuilder: (context, index) {
