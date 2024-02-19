@@ -44,7 +44,7 @@ class MyPage extends StatelessWidget {
                 margin: EdgeInsets.only(top: 30, left: 29.0),
                 child: GestureDetector(
                   onTap: () {
-                    // Get.to(Statics());
+                    Get.to(Statics());
                   },
                   child: Row(
                     children: [
@@ -96,7 +96,7 @@ class MyPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
+              /*Container(
                 margin: EdgeInsets.symmetric(vertical: 16),
                 height: 4.0,
                 color: Color(0xfff5f5f5),
@@ -126,6 +126,7 @@ class MyPage extends StatelessWidget {
                   ),
                 ),
               ),
+             */
               Container(
                 margin: EdgeInsets.symmetric(vertical: 16),
                 height: 4.0,

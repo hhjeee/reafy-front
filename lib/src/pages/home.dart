@@ -3,7 +3,7 @@ import 'package:get/route_manager.dart';
 import 'package:lottie/lottie.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/stop_dialog.dart';
-import 'package:reafy_front/src/pages/board/board.dart';
+import 'package:reafy_front/src/pages/board.dart';
 import 'package:reafy_front/src/pages/itemshop.dart';
 import 'package:reafy_front/src/components/stopwatch.dart';
 import 'package:reafy_front/src/pages/map.dart';
@@ -157,15 +157,23 @@ class _HomeState extends State<Home>
     Widget _time(todayTime, totalTime) {
       String displayTodayTime;
       if (todayTime != null) {
-        if (todayTime >= 60) {
-          int hours = todayTime ~/ 60;
-          int minutes = todayTime % 60;
-          displayTodayTime = '$hours시간 $minutes분';
+        if (todayTime >= 3600) {
+          // 1시간 이상일 경우
+          int hours = todayTime ~/ 3600;
+          int minutes = (todayTime % 3600) ~/ 60;
+          int seconds = todayTime % 60;
+          displayTodayTime = '$hours시간 $minutes분 $seconds초';
+        } else if (todayTime >= 60) {
+          // 1분 이상 1시간 미만일 경우
+          int minutes = todayTime ~/ 60;
+          int seconds = todayTime % 60;
+          displayTodayTime = '$minutes분 $seconds초';
         } else {
-          displayTodayTime = '$todayTime분';
+          // 1분 미만일 경우
+          displayTodayTime = '$todayTime초';
         }
       } else {
-        displayTodayTime = '0분';
+        displayTodayTime = '0초';
       }
 
       String displayTotalTime;

@@ -17,9 +17,6 @@ class DeleteDialog extends StatefulWidget {
 class _DeleteDialogState extends State<DeleteDialog> {
   @override
   Widget build(BuildContext context) {
-    // SelectedBooksProvider selectedBooksProvider =
-    //Provider.of<SelectedBooksProvider>(context, listen: false);
-    // print(selectedBooksProvider.selectedBooks);
     SelectedBooksProvider selectedBooksProvider =
         Provider.of<SelectedBooksProvider>(context, listen: false);
 
@@ -35,7 +32,6 @@ class _DeleteDialogState extends State<DeleteDialog> {
           SizedBox(height: 40.0),
           Consumer<SelectedBooksProvider>(
             builder: (context, selectedBooksProvider, _) {
-              print(selectedBooksProvider.selectedBooks);
               return Text(
                 "총 ${selectedBooksProvider.selectedBooks.length}권을 정말 삭제하시겠어요? \n 등록한 책이 사라져요!",
                 textAlign: TextAlign.center,
@@ -88,7 +84,8 @@ class _DeleteDialogState extends State<DeleteDialog> {
                     selectedBooksProvider.clearBooks();
                     Provider.of<BookShelfProvider>(context, listen: false)
                         .fetchData();
-                    Navigator.pop(context); // DeleteDialog 닫기
+
+                    Navigator.pop(context);
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {

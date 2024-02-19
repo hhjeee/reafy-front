@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
+import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 
@@ -42,6 +44,9 @@ class _ModifyDialogState extends State<ModifyDialog> {
 
   @override
   Widget build(BuildContext context) {
+    SelectedBooksProvider selectedBooksProvider =
+        Provider.of<SelectedBooksProvider>(context, listen: false);
+
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -49,7 +54,7 @@ class _ModifyDialogState extends State<ModifyDialog> {
       contentPadding: EdgeInsets.zero,
       content: Container(
         width: 320,
-        height: 190,
+        height: 200,
         child: Column(children: [
           SizedBox(height: 40.0),
           Text(
@@ -104,7 +109,7 @@ class _ModifyDialogState extends State<ModifyDialog> {
                   try {
                     await updateBookshelfBookCategory(
                         widget.bookId, progressState!);
-
+                    selectedBooksProvider.clearBooks();
                     Navigator.pop(context); // DeleteDialog 닫기
                     showDialog(
                       context: context,

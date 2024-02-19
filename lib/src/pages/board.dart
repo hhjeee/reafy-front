@@ -6,8 +6,8 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/memo_card.dart';
+import 'package:reafy_front/src/components/new_board_memo.dart';
 import 'package:reafy_front/src/controller/board_controller.dart';
-import 'package:reafy_front/src/pages/board/newmemo.dart';
 import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
@@ -114,8 +114,6 @@ class _BoardState extends State<Board> {
         actions: [],
       ),
       extendBodyBehindAppBar: true,
-      //floatingActionButton: NewMemoButton(),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -126,26 +124,28 @@ class _BoardState extends State<Board> {
         width: size.width,
         height: size.height,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: (size.width - 343) / 2),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: memoProvider.memoList.length,
-                  itemBuilder: (context, index) {
-                    final memo = memoProvider.memoList[index];
-                    return MemoCard(memo: memo);
-                  },
-                ),
-              ),
-              SizedBox(height: 5),
-              _buildPageNumbers(memoProvider.totalPages),
-              SizedBox(height: 5),
-              NewMemoButton(),
-              SizedBox(height: 25.0),
-            ],
-          ),
-        ),
+            padding: EdgeInsets.symmetric(horizontal: (size.width - 343) / 2),
+            child:
+                Consumer<MemoProvider>(builder: (context, memoProvider, child) {
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: memoProvider.memoList.length,
+                      itemBuilder: (context, index) {
+                        final memo = memoProvider.memoList[index];
+                        return MemoCard(memo: memo);
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  _buildPageNumbers(memoProvider.totalPages),
+                  SizedBox(height: 5),
+                  NewMemoButton(),
+                  SizedBox(height: 25.0),
+                ],
+              );
+            })),
       ),
     );
   }

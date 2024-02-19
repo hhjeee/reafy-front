@@ -3,9 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/components/new_board_memo.dart';
+import 'package:reafy_front/src/components/new_book_memo.dart';
 import 'package:reafy_front/src/models/memo.dart';
 import 'package:expandable_text/expandable_text.dart';
-import 'package:reafy_front/src/pages/board/newmemo.dart';
 import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
@@ -53,7 +54,8 @@ class _MemoCardState extends State<MemoCard> {
                   MemoTitle(
                       title: snapshot.data!.title,
                       memoId: widget.memo.memoId,
-                      bookId: widget.memo.bookshelfBookId),
+                      bookId: widget.memo.bookshelfBookId,
+                      memo: widget.memo),
                   if (widget.memo.imageURL != null &&
                       widget.memo.imageURL!.isNotEmpty)
                     MemoImage(imageUrl: widget.memo.imageURL!),
@@ -100,8 +102,14 @@ class MemoTitle extends StatelessWidget {
   final String? title;
   final int memoId;
   final int bookId;
+  final Memo memo;
+
   const MemoTitle(
-      {Key? key, this.title, required this.memoId, required this.bookId})
+      {Key? key,
+      this.title,
+      required this.memoId,
+      required this.bookId,
+      required this.memo})
       : super(key: key);
 
   @override
@@ -124,7 +132,7 @@ class MemoTitle extends StatelessWidget {
               child: PopupMenuButton<String>(
                 onSelected: (String value) {
                   if (value == 'edit') {
-                    showAddMemoBottomSheet(context);
+                    showAddBookMemoBottomSheet(context, bookId, memo: memo);
                   } else if (value == 'delete') {
                     _showDeleteDialog(context, memoId, bookId);
                   }

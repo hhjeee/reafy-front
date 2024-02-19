@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import "dart:io";
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_picker.dart';
+import 'package:reafy_front/src/models/memo.dart';
+import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:flutter/foundation.dart';
@@ -11,19 +14,21 @@ import 'package:reafy_front/src/components/tag_input.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/components/tag_input.dart';
 
-class BookMemo extends StatefulWidget {
+class newBookMemo extends StatefulWidget {
   final int bookshelfBookId;
+  final Memo? memo;
 
-  const BookMemo({
+  const newBookMemo({
     Key? key,
     required this.bookshelfBookId,
+    this.memo,
   }) : super(key: key);
 
   @override
-  State<BookMemo> createState() => _BookMemoState();
+  State<newBookMemo> createState() => _newBookMemoState();
 }
 
-class _BookMemoState extends State<BookMemo> {
+class _newBookMemoState extends State<newBookMemo> {
   DateTime selectedDate = DateTime.now();
   int currentLength = 0;
 
@@ -39,6 +44,16 @@ class _BookMemoState extends State<BookMemo> {
   void initState() {
     super.initState();
     selectedBookId = widget.bookshelfBookId;
+    selectedDate = DateTime.now();
+
+    if (widget.memo != null) {
+      memoController.text = widget.memo!.content;
+      //selectedDate = widget.memo!.createdAt;
+      memoTags = widget.memo!.hashtag;
+      selectedImagePath = widget.memo!.imageURL;
+    } else {
+      selectedDate = DateTime.now();
+    }
   }
 
   @override
@@ -85,37 +100,14 @@ class _BookMemoState extends State<BookMemo> {
             ),
           ),
           SizedBox(width: 4),
-          TextButton(
-              onPressed: () {
-                showCupertinoDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          color: white,
-                          height: 300,
-                          child: CupertinoDatePicker(
-                              initialDateTime: selectedDate,
-                              mode: CupertinoDatePickerMode.dateAndTime,
-                              onDateTimeChanged: (DateTime newDate) {
-                                setState(() {
-                                  selectedDate = newDate;
-                                });
-                              }),
-                        ),
-                      );
-                    },
-                    barrierDismissible: true);
-              },
-              child: Text(
-                "${selectedDate.year}년 ${selectedDate.month}월 ${selectedDate.day}일 ${selectedDate.hour.toString().padLeft(2, '0')}:${selectedDate.minute.toString().padLeft(2, '0')}",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xff666666),
-                ),
-              ))
+          Text(
+            "${selectedDate.year}년 ${selectedDate.month}월 ${selectedDate.day}일 ${selectedDate.hour.toString().padLeft(2, '0')}:${selectedDate.minute.toString().padLeft(2, '0')}",
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Color(0xff666666),
+            ),
+          ),
         ],
       ),
     );
@@ -176,13 +168,19 @@ class _BookMemoState extends State<BookMemo> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          PickImage(onImagePicked: handleImagePicked),
+          PickImage(
+            onImagePicked: handleImagePicked,
+            imagePath: selectedImagePath,
+          ),
           SizedBox(height: 25),
           SizedBox(height: 6.0),
           _memoeditor(),
           SizedBox(height: 16.0),
           _datepicker(context),
-          TagWidget(onTagsUpdated: handleTagUpdate, onReset: resetTags),
+          TagWidget(
+              onTagsUpdated: handleTagUpdate,
+              onReset: resetTags,
+              initialTags: memoTags),
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () async {
@@ -190,17 +188,22 @@ class _BookMemoState extends State<BookMemo> {
                 print('필요한 정보가 누락되었습니다.');
                 return;
               }
-
               String tags = memoTags.join(', ');
-              print(
-                memoController.text,
-              );
-              print(tags);
-              print(selectedImagePath);
               try {
-                await createMemo(selectedBookId!, memoController.text, 0, tags,
-                    selectedImagePath);
-                // resetTags(); // 태그 초기화
+                if (widget.memo == null) {
+                  //메모 생성
+                  Memo newMemo = await createMemo(selectedBookId!,
+                      memoController.text, 0, tags, selectedImagePath);
+                  Provider.of<MemoProvider>(context, listen: false)
+                      .addBookMemo(newMemo);
+                } else {
+                  //메모 수정
+                  Memo updatedMemo = await updateMemo(widget.memo!.memoId,
+                      memoController.text, 0, tags, selectedImagePath);
+                  Provider.of<MemoProvider>(context, listen: false)
+                      .updateMemo(updatedMemo);
+                }
+
                 Navigator.pop(context);
               } catch (e) {
                 print('메모 생성 실패: $e');
@@ -229,7 +232,8 @@ class _BookMemoState extends State<BookMemo> {
   }
 }
 
-void showAddBookMemoBottomSheet(BuildContext context, int bookshelfBookId) {
+void showAddBookMemoBottomSheet(BuildContext context, int bookshelfBookId,
+    {Memo? memo}) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -248,7 +252,7 @@ void showAddBookMemoBottomSheet(BuildContext context, int bookshelfBookId) {
         ),
         child: Container(
           color: bg_gray,
-          child: BookMemo(bookshelfBookId: bookshelfBookId),
+          child: newBookMemo(bookshelfBookId: bookshelfBookId, memo: memo),
         ),
       );
     },

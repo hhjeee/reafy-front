@@ -22,6 +22,15 @@ class MemoSection extends StatefulWidget {
 class _MemoSectionState extends State<MemoSection> {
   int currentPage = 1;
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<MemoProvider>(context, listen: false)
+          .loadMemosByBookId(widget.bookshelfBookId, currentPage);
+    });
+  }
+
   void _loadPage(int pageNumber) {
     setState(() {
       currentPage = pageNumber;
@@ -82,53 +91,42 @@ class _MemoSectionState extends State<MemoSection> {
 
   @override
   Widget build(BuildContext context) {
-    final memoProvider = Provider.of<MemoProvider>(context, listen: false);
-
-    return FutureBuilder(
-      future:
-          memoProvider.loadMemosByBookId(widget.bookshelfBookId, currentPage),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('메모를 불러오는 데 실패했습니다.'));
-        } else {
-          if (memoProvider.memos.isEmpty) {
-            return Container(
-              height: 120,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ImageData(IconsPath.character_empty,
-                        width: 104, height: 94),
-                    Text(
-                      "앗, 아직 메모가 없어요!",
-                      style: TextStyle(
-                        color: gray,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          } else {
-            return Center(
+    return Consumer<MemoProvider>(
+      builder: (context, memoProvider, child) {
+        if (memoProvider.memos.isEmpty) {
+          return Container(
+            height: 120,
+            child: Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Column(
-                    children: memoProvider.memos
-                        .map((memo) => MemoCard(memo: memo))
-                        .toList(),
+                  ImageData(IconsPath.character_empty, width: 104, height: 94),
+                  Text(
+                    "앗, 아직 메모가 없어요!",
+                    style: TextStyle(
+                      color: gray,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                  SizedBox(height: 5),
-                  _buildPageNumbers(memoProvider.totalPages),
                 ],
               ),
-            );
-          }
+            ),
+          );
+        } else {
+          return Center(
+            child: Column(
+              children: [
+                Column(
+                  children: memoProvider.memos
+                      .map((memo) => MemoCard(memo: memo))
+                      .toList(),
+                ),
+                SizedBox(height: 5),
+                _buildPageNumbers(memoProvider.totalPages),
+              ],
+            ),
+          );
         }
       },
     );
