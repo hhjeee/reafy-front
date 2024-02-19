@@ -7,9 +7,11 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class PickImage extends StatefulWidget {
-  final Function(String) onImagePicked; // 콜백 함수
+  final Function(String) onImagePicked;
+  final String? imagePath;
 
-  const PickImage({Key? key, required this.onImagePicked}) : super(key: key);
+  const PickImage({Key? key, required this.onImagePicked, this.imagePath})
+      : super(key: key);
 
   @override
   State<PickImage> createState() => _PickImageState();
@@ -19,6 +21,14 @@ class _PickImageState extends State<PickImage> {
   //Uint8List? _image;
   final ImagePicker picker = ImagePicker();
   XFile? _image;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.imagePath != null) {
+      _image = XFile(widget.imagePath!);
+    }
+  }
 
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
@@ -30,10 +40,6 @@ class _PickImageState extends State<PickImage> {
         });
         widget.onImagePicked(compressedImagePath);
       }
-      /*setState(() {
-        _image = XFile(pickedFile.path); //가져온 이미지를 _image에 저장
-      });
-      widget.onImagePicked(pickedFile.path);*/
     }
   }
 
@@ -57,56 +63,15 @@ class _PickImageState extends State<PickImage> {
     return Center(
         child: Container(
             padding: EdgeInsets.symmetric(horizontal: 10),
-
-            //width: 300,
-            //height: 250,
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _buildPhotoArea(),
                 ])));
-
-    /*
-        child: _image != null
-            ? Container(
-                width: 180,
-                height: 180,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: Image.file(File(_image!.path)),
-                    /*NetworkImage("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"),*/
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ), /*
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: MemoryImage(_image!),
-                    fit: BoxFit.cover,
-                  ),
-                  //borderRadius: BorderRadius.circular(10), // 네모난 모양으로 설정
-                ),*/
-              )
-            : Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: gray, width: 1)),
-                child: Center(
-                    child: IconButton(
-                        iconSize: 30,
-                        onPressed: () {
-                          showImagePickerOption(context);
-                        },
-                        icon: const Icon(Icons.add_a_photo_rounded,
-                            color: gray)))));
- */
   }
 
   Widget _buildPhotoArea() {
     return Stack(
-      //alignment: Alignment.center, // This ensures the stack is centered
       children: [
         _image != null
             ? Container(
@@ -121,11 +86,11 @@ class _PickImageState extends State<PickImage> {
                 ),
               )
             : DottedBorder(
-                color: Color(0xFFFFD747), // Border color
-                strokeWidth: 1, // Border width
+                color: Color(0xFFFFD747),
+                strokeWidth: 1,
                 dashPattern: [2, 3],
                 radius: const Radius.circular(5),
-                borderType: BorderType.RRect, // Gap between dashes
+                borderType: BorderType.RRect,
                 child: Container(
                     width: double.infinity,
                     height: 84,
@@ -148,13 +113,26 @@ class _PickImageState extends State<PickImage> {
                           )
                         ])),
               ),
+        if (_image != null)
+          Positioned(
+            right: 10,
+            top: 10,
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  _image = null;
+                });
+              },
+              child: Icon(Icons.cancel, color: Color(0xFFFFD747), size: 24),
+            ),
+          ),
       ],
     );
   }
 
   void _buildButton(BuildContext context) {
     showModalBottomSheet(
-        backgroundColor: Colors.blue[100],
+        backgroundColor: Color(0xFFFFF7D9),
         context: context,
         builder: (builder) {
           return Padding(
@@ -172,10 +150,7 @@ class _PickImageState extends State<PickImage> {
                       child: const SizedBox(
                         child: Column(
                           children: [
-                            Icon(
-                              Icons.image,
-                              size: 70,
-                            ),
+                            Icon(Icons.image, size: 70, color: yellow),
                             Text("Gallery")
                           ],
                         ),
@@ -190,10 +165,7 @@ class _PickImageState extends State<PickImage> {
                       child: const SizedBox(
                         child: Column(
                           children: [
-                            Icon(
-                              Icons.camera_alt,
-                              size: 70,
-                            ),
+                            Icon(Icons.camera_alt, size: 70, color: yellow),
                             Text("Camera")
                           ],
                         ),

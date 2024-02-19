@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import "dart:io";
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_picker.dart';
+import 'package:reafy_front/src/models/memo.dart';
+import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:flutter/foundation.dart';
@@ -11,14 +14,14 @@ import 'package:reafy_front/src/components/tag_input.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/components/tag_input.dart';
 
-class NewMemo extends StatefulWidget {
-  const NewMemo({super.key});
+class NewBoardMemo extends StatefulWidget {
+  const NewBoardMemo({super.key});
 
   @override
-  State<NewMemo> createState() => _NewMemoState();
+  State<NewBoardMemo> createState() => _NewBoardMemoState();
 }
 
-class _NewMemoState extends State<NewMemo> {
+class _NewBoardMemoState extends State<NewBoardMemo> {
   DateTime selectedDate = DateTime.now();
   int currentLength = 0;
 
@@ -276,16 +279,13 @@ class _NewMemoState extends State<NewMemo> {
                 return;
               }
               String tags = memoTags.join(', ');
-              print(selectedBookId);
-              print(
-                memoController.text,
-              );
-              print(tags);
-              print(selectedImagePath);
+
               try {
-                await createMemo(selectedBookId!, memoController.text, 0, tags,
-                    selectedImagePath);
-                // resetTags(); // 태그 초기화
+                Memo newMemo = await createMemo(selectedBookId!,
+                    memoController.text, 0, tags, selectedImagePath);
+                Provider.of<MemoProvider>(context, listen: false)
+                    .addBoardMemo(newMemo);
+
                 Navigator.pop(context);
               } catch (e) {
                 print('메모 생성 실패: $e');
@@ -295,7 +295,7 @@ class _NewMemoState extends State<NewMemo> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                primary: Color(0xFFFFD747),
+                backgroundColor: Color(0xFFFFD747),
                 shadowColor: Colors.black.withOpacity(0.1),
                 elevation: 5,
                 fixedSize: Size(343, 38)),
@@ -317,9 +317,8 @@ class _NewMemoState extends State<NewMemo> {
 void showAddMemoBottomSheet(BuildContext context) {
   showModalBottomSheet(
     context: context,
-    isScrollControlled: true, // Allows full screen modal
-    backgroundColor:
-        Colors.transparent, // Makes the modal's background transparent
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(40.0),
@@ -333,8 +332,8 @@ void showAddMemoBottomSheet(BuildContext context) {
           topRight: Radius.circular(10.0),
         ),
         child: Container(
-          color: bg_gray, // Your desired background color
-          child: NewMemo(),
+          color: bg_gray,
+          child: NewBoardMemo(),
         ),
       );
     },

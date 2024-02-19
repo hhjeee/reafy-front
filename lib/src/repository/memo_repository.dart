@@ -160,13 +160,11 @@ Future<Map<String, dynamic>> getMemoDetails(int memoId) async {
 }
 
 // 메모 작성
-Future<void> createMemo(int bookshelfBookId, String content, int page,
+Future<Memo> createMemo(int bookshelfBookId, String content, int page,
     String hashtag, String? file) async {
   final dio = Dio();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userToken = prefs.getString('token');
-
-  //String fileName = path.basename(file);
 
   Map<String, dynamic> formDataMap = {
     'bookshelfBookId': bookshelfBookId,
@@ -200,7 +198,10 @@ Future<void> createMemo(int bookshelfBookId, String content, int page,
           },
         ));
 
-    if (response.statusCode != 201) {
+    if (response.statusCode == 201) {
+      final Memo newMemo = Memo.fromJson(response.data);
+      return newMemo;
+    } else {
       throw Exception('Failed to create memo');
     }
   } catch (e) {
@@ -209,21 +210,37 @@ Future<void> createMemo(int bookshelfBookId, String content, int page,
 }
 
 // 메모 수정
-Future<void> updateMemo(
-    int memoid, String content, int page, String hashtag, String file) async {
+Future<Memo> updateMemo(
+    int memoId, String content, int page, String hashtag, String? file) async {
   final dio = Dio();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userToken = prefs.getString('token');
 
-  try {
-    final formData = FormData.fromMap({
-      'content': content,
-      'page': page,
-      'hashtag': hashtag,
-      'file': await MultipartFile.fromFile(file, filename: 'memo_image.png'),
-    });
+  Map<String, dynamic> formDataMap = {
+    'memoId': memoId,
+    'content': content,
+    'page': page,
+    'hashtag': hashtag,
+  };
 
-    final response = await dio.post('https://reafydevkor.xyz/memo/$memoid',
+  if (file != null) {
+    String fileName = path.basename(file);
+    formDataMap['file'] =
+        await MultipartFile.fromFile(file, filename: fileName);
+  }
+
+  try {
+    final formData = FormData.fromMap(formDataMap);
+    formData.fields.forEach((element) {
+      print('${element.key}: ${element.value}');
+    });
+    if (file != null) {
+      formData.files.forEach((element) {
+        print('${element.key}: ${element.value.filename}');
+      });
+    }
+
+    final response = await dio.put('https://reafydevkor.xyz/memo/$memoId',
         data: formData,
         options: Options(
           headers: {
@@ -231,7 +248,10 @@ Future<void> updateMemo(
           },
         ));
 
-    if (response.statusCode != 204) {
+    if (response.statusCode == 200) {
+      final Memo updatedMemo = Memo.fromJson(response.data);
+      return updatedMemo;
+    } else {
       throw Exception('Failed to update memo');
     }
   } catch (e) {

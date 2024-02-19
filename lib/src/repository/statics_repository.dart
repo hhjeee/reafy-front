@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<Map<String, dynamic>> getMonthlyPageStatics(int year) async {
+Future<List<Map<String, dynamic>>> getMonthlyPageStatistics(int year) async {
   final dio = Dio();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   final String? userToken = prefs.getString('token');
@@ -19,7 +19,9 @@ Future<Map<String, dynamic>> getMonthlyPageStatics(int year) async {
     );
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> pageStatics = response.data;
+      final List<dynamic> pageStaticsData = response.data;
+      final List<Map<String, dynamic>> pageStatics =
+          List<Map<String, dynamic>>.from(pageStaticsData);
       return pageStatics;
     } else {
       throw Exception('Failed to load monthly page statistics');

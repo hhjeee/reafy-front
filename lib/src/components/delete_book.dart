@@ -4,6 +4,7 @@ import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:reafy_front/src/pages/book/bookshelf.dart';
 import 'package:reafy_front/src/pages/book/category_bookshelf.dart';
+import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 
@@ -17,6 +18,9 @@ class DeleteDialog extends StatefulWidget {
 class _DeleteDialogState extends State<DeleteDialog> {
   @override
   Widget build(BuildContext context) {
+    SelectedBooksProvider selectedBooksProvider =
+        Provider.of<SelectedBooksProvider>(context, listen: false);
+
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -66,6 +70,7 @@ class _DeleteDialogState extends State<DeleteDialog> {
                 onPressed: () async {
                   try {
                     await deleteBookshelfBook(widget.bookId);
+                    selectedBooksProvider.clearBooks();
                     Provider.of<BookShelfProvider>(context, listen: false)
                         .fetchData();
                     Navigator.pop(context);

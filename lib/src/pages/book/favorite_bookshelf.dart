@@ -49,6 +49,9 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    SelectedBooksProvider selectedBooksProvider =
+        Provider.of<SelectedBooksProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -56,6 +59,7 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Color(0xff63b865)),
           onPressed: () {
+            selectedBooksProvider.clearBooks();
             Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
           },
         ),

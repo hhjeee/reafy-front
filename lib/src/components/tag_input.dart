@@ -4,11 +4,16 @@ import 'package:reafy_front/src/utils/constants.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 class TagWidget extends StatefulWidget {
-  final Function(List<String>) onTagsUpdated; //콜백 함수
-  final VoidCallback onReset; // 태그 초기화 콜백 함수
+  final Function(List<String>) onTagsUpdated;
+  final VoidCallback onReset;
+  final List<String>? initialTags;
 
-  TagWidget({Key? key, required this.onTagsUpdated, required this.onReset})
-      : super(key: key);
+  TagWidget({
+    Key? key,
+    required this.onTagsUpdated,
+    required this.onReset,
+    this.initialTags,
+  }) : super(key: key);
 
   @override
   _TagWidgetState createState() => _TagWidgetState();
@@ -17,6 +22,14 @@ class TagWidget extends StatefulWidget {
 class _TagWidgetState extends State<TagWidget> {
   List<String> tags = [];
   final TextEditingController _tagController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialTags != null && widget.initialTags!.isNotEmpty) {
+      tags = List.from(widget.initialTags!);
+    }
+  }
 
   void _addTag() async {
     if (tags.length >= 5) {
@@ -29,10 +42,17 @@ class _TagWidgetState extends State<TagWidget> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           title: Text(
             '태그를 추가하세요',
             textAlign: TextAlign.center,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                color: Color(0xff333333),
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                height: 1.2),
           ),
           content: TextField(
             controller: _tagController,
@@ -47,7 +67,10 @@ class _TagWidgetState extends State<TagWidget> {
               ),
               iconColor: yellow,
             ),
-            onSubmitted: (value) => Navigator.of(context).pop(value),
+            onSubmitted: (value) async {
+              _tagController.clear();
+              Navigator.of(context).pop(value);
+            },
           ),
           actions: <Widget>[
             Row(
@@ -145,7 +168,7 @@ class _TagWidgetState extends State<TagWidget> {
           SizedBox(width: 16),
           Expanded(
               child: Wrap(spacing: 8, runSpacing: 6, children: [
-            ...tags.map((tag) {
+            ...tags.where((tag) => tag.trim().isNotEmpty).map((tag) {
               return Container(
                 margin: EdgeInsets.only(left: 2),
                 padding: EdgeInsets.symmetric(horizontal: 10),

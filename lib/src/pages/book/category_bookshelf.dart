@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
+import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/delete_book2.dart';
@@ -52,7 +53,9 @@ class _C_BookShelfState extends State<Category_BookShelf>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    //var auth = context.read<AuthProvider>();
+    SelectedBooksProvider selectedBooksProvider =
+        Provider.of<SelectedBooksProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -60,14 +63,16 @@ class _C_BookShelfState extends State<Category_BookShelf>
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Color(0xff63b865)),
           onPressed: () {
+            selectedBooksProvider.clearBooks();
+            Provider.of<BookShelfProvider>(context, listen: false).fetchData();
             Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
           },
         ),
         title: Text(
-          widget.pageTitle,
+          isEditMode ? '삭제할 책을 선택해 주세요!' : widget.pageTitle,
           style: TextStyle(
               color: Color(0xff333333),
-              fontWeight: FontWeight.w800,
+              fontWeight: isEditMode ? FontWeight.w400 : FontWeight.w800,
               fontSize: 16),
         ),
         actions: [
@@ -108,16 +113,6 @@ class _C_BookShelfState extends State<Category_BookShelf>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 10),
-              Text(
-                "총 ${widget.thumbnailListLength}권",
-                style: TextStyle(
-                  color: Color(0xff333333),
-                  fontWeight: FontWeight.w700,
-                  fontSize: 12,
-                ),
-              ),
-              //Category_BookShelfWidget(books: books),
               FutureBuilder(
                 future: fetchBookshelfBooksInfoByState(progressState),
                 builder: (context, snapshot) {
@@ -128,10 +123,6 @@ class _C_BookShelfState extends State<Category_BookShelf>
                   } else {
                     books = snapshot.data as List<BookshelfBookInfo>;
                     return _buildCategoryBookShelfWidget(books);
-
-                    /*List<BookshelfBookInfo> books =
-                        snapshot.data as List<BookshelfBookInfo>;
-                    return _buildCategoryBookShelfWidget(books);*/
                   }
                 },
               ),
@@ -193,91 +184,108 @@ class _C_BookShelfState extends State<Category_BookShelf>
           return Container(
             margin: EdgeInsets.only(top: 22),
             child: SingleChildScrollView(
-              child: Container(
-                height: 650,
-                child: GridView.builder(
-                  padding: EdgeInsets.all(8.0),
-                  shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, // 한 행에 표시할 아이템 수
-                    crossAxisSpacing: 28.0, // 아이템 간 가로 간격
-                    mainAxisSpacing: 10.0, // 아이템 간 세로 간격
-                    childAspectRatio: 0.5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "총 ${books.length}권",
+                    style: TextStyle(
+                      color: Color(0xff333333),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                    ),
                   ),
-                  itemCount: books.length,
-                  itemBuilder: (context, index) {
-                    final book = books[index];
-                    bool isSelected =
-                        selectedBooksProvider.selectedBooks.contains(book);
-
-                    return GestureDetector(
-                      onTap: () {
-                        if (isEditMode) {
-                          setState(() {
-                            print(isSelected);
-                            if (isSelected) {
-                              selectedBooksProvider.removeBook(book);
-                              print(selectedBooksProvider.selectedBooks);
-                            } else {
-                              selectedBooksProvider.addBook(book);
-                              print(selectedBooksProvider.selectedBooks);
-                            }
-                          });
-                        } else {
-                          Get.to(() => BookDetailPage(
-                              bookshelfBookId: book.bookshelfBookId));
-                        }
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          isEditMode
-                              ? _buildShakeAnimation(book, isSelected)
-                              : Container(
-                                  width: 94,
-                                  height: 127,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6.0),
-                                    color: Color(0xffffffff),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.network(
-                                      book.thumbnailURL,
-                                      fit: BoxFit.fitWidth,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return const Text('이미지를 불러올 수 없습니다.');
-                                      },
-                                    ),
-                                  ),
-                                ),
-                          SizedBox(height: 5),
-                          Text(
-                            book.title.length > 8
-                                ? '${book.title.substring(0, 8)}'
-                                : book.title,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xff333333),
-                            ),
-                          ),
-                          Text(
-                            book.author,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xff333333),
-                            ),
-                          ),
-                        ],
+                  SizedBox(height: 22),
+                  Container(
+                    height: 650,
+                    child: GridView.builder(
+                      padding: EdgeInsets.all(8.0),
+                      shrinkWrap: true,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3, // 한 행에 표시할 아이템 수
+                        crossAxisSpacing: 28.0, // 아이템 간 가로 간격
+                        mainAxisSpacing: 10.0, // 아이템 간 세로 간격
+                        childAspectRatio: 0.5,
                       ),
-                    );
-                  },
-                ),
+                      itemCount: books.length,
+                      itemBuilder: (context, index) {
+                        final book = books[index];
+                        bool isSelected =
+                            selectedBooksProvider.selectedBooks.contains(book);
+
+                        return GestureDetector(
+                          onTap: () {
+                            if (isEditMode) {
+                              setState(() {
+                                print(isSelected);
+                                if (isSelected) {
+                                  selectedBooksProvider.removeBook(book);
+                                  print(selectedBooksProvider.selectedBooks);
+                                } else {
+                                  selectedBooksProvider.addBook(book);
+                                  print(selectedBooksProvider.selectedBooks);
+                                }
+                              });
+                            } else {
+                              Get.to(() => BookDetailPage(
+                                  bookshelfBookId: book.bookshelfBookId));
+                            }
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              isEditMode
+                                  ? _buildShakeAnimation(book, isSelected)
+                                  : Container(
+                                      width: 94,
+                                      height: 127,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(6.0),
+                                        color: Color(0xffffffff),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: Image.network(
+                                          book.thumbnailURL,
+                                          fit: BoxFit.fitWidth,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return const Text(
+                                                '이미지를 불러올 수 없습니다.');
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                              SizedBox(height: 5),
+                              Text(
+                                book.title.length > 8
+                                    ? '${book.title.substring(0, 8)}'
+                                    : book.title,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xff333333),
+                                ),
+                              ),
+                              Text(
+                                book.author,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff333333),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           );

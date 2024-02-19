@@ -22,6 +22,7 @@ class TimeProvider with ChangeNotifier {
     try {
       Map<String, dynamic> todayTimeStatistics = await getTodayTimeStatistics();
       int today = todayTimeStatistics['todayReadingTimes'];
+      print(today);
 
       List<Map<String, dynamic>> monthTimeStatistics =
           await getMonthlyTimeStatistics(DateTime.now().year);

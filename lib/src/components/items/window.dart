@@ -212,6 +212,7 @@ Widget GridItem(
         SizedBox(height: 6.0),
         Text(
           itemIndex.text,
+          textAlign: TextAlign.center,
           style: const TextStyle(
               color: Color(0xff333333),
               fontSize: 12,

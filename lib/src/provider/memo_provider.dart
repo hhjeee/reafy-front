@@ -33,8 +33,13 @@ class MemoProvider with ChangeNotifier {
     }
   }
 
-  void addMemoBoard(Memo memo) {
-    _memoList.add(memo);
+  void addBookMemo(Memo memo) {
+    _memos.insert(0, memo);
+    notifyListeners();
+  }
+
+  void addBoardMemo(Memo memo) {
+    _memoList.insert(0, memo);
     notifyListeners();
   }
 
@@ -42,6 +47,7 @@ class MemoProvider with ChangeNotifier {
     try {
       await deleteMemoById(memoId);
       _memos.removeWhere((memo) => memo.memoId == memoId);
+      _memoList.removeWhere((memo) => memo.memoId == memoId);
       notifyListeners();
     } catch (e) {
       print("메모 삭제 중 오류 발생: $e");

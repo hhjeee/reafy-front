@@ -261,7 +261,7 @@ class _StopDialogState extends State<StopDialog> {
                   ElevatedButton(
                     onPressed: isButtonEnabled
                         ? () async {
-                            int readingTime = parseTimeStringToMinutes(
+                            int readingTime = parseTimeStringToSeconds(
                                 stopwatch.elapsedTimeString);
                             int? startPage = int.tryParse(textController1.text);
                             int? endPage = int.tryParse(textController2.text);
@@ -341,7 +341,7 @@ class _StopDialogState extends State<StopDialog> {
   }
 }
 
-int parseTimeStringToMinutes(String timeString) {
+int parseTimeStringToSeconds(String timeString) {
   List<String> parts = timeString.split(':');
   if (parts.length != 3) {
     return 0;
@@ -351,6 +351,6 @@ int parseTimeStringToMinutes(String timeString) {
   int seconds = int.tryParse(parts[2]) ?? 0;
 
   int totalSeconds = hours * 3600 + minutes * 60 + seconds;
-  // 분 단위로 변환하고 남은 초가 30초 이상이면 반올림
-  return (totalSeconds / 60).round();
+
+  return totalSeconds;
 }
