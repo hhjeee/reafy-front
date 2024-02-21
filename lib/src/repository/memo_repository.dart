@@ -52,9 +52,6 @@ Future<MemoResDto> getMemoList(int page) async {
         }));
 
     if (response.statusCode == 200) {
-      /*final List<dynamic> memoList = response.data;
-      print(response.data);
-      return memoList;*/
       var memoResults = MemoResDto.fromJson(response.data);
       return memoResults;
     } else {
@@ -117,12 +114,6 @@ Future<MemoResDto> getMemoListByBookId(int bookshelfBookId, int page) async {
         ));
 
     if (response.statusCode == 200) {
-      /*final List<dynamic> memoList = (response.data['memoList'] as List)
-          .map((item) => item as Map<String, dynamic>)
-          .toList();
-
-      return memoList;*/
-
       var memoResults = MemoResDto.fromJson(response.data);
       return memoResults;
     } else if (response.statusCode == 404) {
@@ -247,7 +238,6 @@ Future<Memo> updateMemo(
             'Authorization': 'Bearer $userToken',
           },
         ));
-
     if (response.statusCode == 200) {
       final Memo updatedMemo = Memo.fromJson(response.data);
       return updatedMemo;

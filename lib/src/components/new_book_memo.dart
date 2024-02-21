@@ -65,7 +65,6 @@ class _newBookMemoState extends State<newBookMemo> {
   void handleTagUpdate(List<String> updatedTags) {
     setState(() {
       memoTags = updatedTags;
-      print(memoTags);
     });
   }
 
@@ -201,7 +200,7 @@ class _newBookMemoState extends State<newBookMemo> {
                   Memo updatedMemo = await updateMemo(widget.memo!.memoId,
                       memoController.text, 0, tags, selectedImagePath);
                   Provider.of<MemoProvider>(context, listen: false)
-                      .updateMemo(updatedMemo);
+                      .updateBookMemo(updatedMemo);
                 }
 
                 Navigator.pop(context);

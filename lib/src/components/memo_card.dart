@@ -169,7 +169,6 @@ class MemoImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String fullImageUrl = baseUrl + (imageUrl ?? '');
-    print(fullImageUrl);
     return imageUrl != null && imageUrl!.isNotEmpty
         ? GestureDetector(
             onTap: () => showImageDialog(context, fullImageUrl!),

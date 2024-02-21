@@ -57,6 +57,11 @@ class _HomeState extends State<Home>
       final timeProvider = Provider.of<TimeProvider>(context, listen: false);
       timeProvider.getTimes();
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Provider.of<ItemPlacementProvider>(context, listen: false)
+          .fetchDataAndUseActivatedItems();
+    });
   }
 
   @override
@@ -117,9 +122,7 @@ class _HomeState extends State<Home>
       return Center(
           child: GestureDetector(
               onTap: () {
-                print("Stop button tapped");
                 stopwatch.pause();
-                print("Stop button paused");
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {

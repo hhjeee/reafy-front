@@ -26,6 +26,12 @@ Future<List<dynamic>> getBookshelfBookHistory(int bookshelfbookid) async {
       throw Exception('Failed to load bookshelf book history');
     }
   } catch (e) {
+    if (e is DioError) {
+      //404인 경우 빈 리스트 반환
+      if (e.response?.statusCode == 404) {
+        return [];
+      }
+    }
     throw e;
   }
 }

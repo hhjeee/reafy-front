@@ -135,7 +135,6 @@ class _TagWidgetState extends State<TagWidget> {
         widget.onTagsUpdated(tags); // 태그 추가될 때 콜백 호출
       });
     }
-    print(tags);
   }
 
   void _deleteTag(String tag) {

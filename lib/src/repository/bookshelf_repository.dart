@@ -547,9 +547,6 @@ Future<List<ReadingBookInfo>> fetchReadingBooksInfo(int progressState) async {
                 title: item['title'] as String,
               ))
           .toList();
-
-      print('a');
-      print(books);
       return books;
     } else {
       return [];
@@ -592,8 +589,6 @@ Future<BookshelfBookTitleDto> getBookshelfBookTitle(int bookshelfBookId) async {
       final Map<String, dynamic> data = response.data;
       final BookshelfBookTitleDto bookshelfBookTitle =
           BookshelfBookTitleDto.fromJson(data);
-      print('title');
-      print(bookshelfBookTitle.title);
       return bookshelfBookTitle;
     } else {
       throw Exception('Failed to load bookshelf book title');

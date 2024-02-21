@@ -15,7 +15,12 @@ import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/components/tag_input.dart';
 
 class NewBoardMemo extends StatefulWidget {
-  const NewBoardMemo({super.key});
+  final Memo? memo;
+
+  const NewBoardMemo({
+    Key? key,
+    this.memo,
+  }) : super(key: key);
 
   @override
   State<NewBoardMemo> createState() => _NewBoardMemoState();
@@ -37,6 +42,16 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
   void initState() {
     super.initState();
     fetchBooks();
+    selectedDate = DateTime.now();
+
+    if (widget.memo != null) {
+      memoController.text = widget.memo!.content;
+      //selectedDate = widget.memo!.createdAt;
+      memoTags = widget.memo!.hashtag;
+      selectedImagePath = widget.memo!.imageURL;
+    } else {
+      selectedDate = DateTime.now();
+    }
   }
 
   void fetchBooks() async {
@@ -68,7 +83,6 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
   void handleTagUpdate(List<String> updatedTags) {
     setState(() {
       memoTags = updatedTags;
-      print(memoTags);
     });
   }
 
@@ -103,37 +117,14 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
             ),
           ),
           SizedBox(width: 4),
-          TextButton(
-              onPressed: () {
-                showCupertinoDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          color: white,
-                          height: 300,
-                          child: CupertinoDatePicker(
-                              initialDateTime: selectedDate,
-                              mode: CupertinoDatePickerMode.dateAndTime,
-                              onDateTimeChanged: (DateTime newDate) {
-                                setState(() {
-                                  selectedDate = newDate;
-                                });
-                              }),
-                        ),
-                      );
-                    },
-                    barrierDismissible: true);
-              },
-              child: Text(
-                "${selectedDate.year}년 ${selectedDate.month}월 ${selectedDate.day}일 ${selectedDate.hour.toString().padLeft(2, '0')}:${selectedDate.minute.toString().padLeft(2, '0')}",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xff666666),
-                ),
-              ))
+          Text(
+            "${selectedDate.year}년 ${selectedDate.month}월 ${selectedDate.day}일 ${selectedDate.hour.toString().padLeft(2, '0')}:${selectedDate.minute.toString().padLeft(2, '0')}",
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Color(0xff666666),
+            ),
+          ),
         ],
       ),
     );
@@ -263,14 +254,20 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          PickImage(onImagePicked: handleImagePicked),
+          PickImage(
+            onImagePicked: handleImagePicked,
+            imagePath: selectedImagePath,
+          ),
           SizedBox(height: 25),
           _bookselect(),
           SizedBox(height: 6.0),
           _memoeditor(),
           SizedBox(height: 16.0),
           _datepicker(context),
-          TagWidget(onTagsUpdated: handleTagUpdate, onReset: resetTags),
+          TagWidget(
+              onTagsUpdated: handleTagUpdate,
+              onReset: resetTags,
+              initialTags: memoTags),
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () async {
@@ -281,10 +278,19 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
               String tags = memoTags.join(', ');
 
               try {
-                Memo newMemo = await createMemo(selectedBookId!,
-                    memoController.text, 0, tags, selectedImagePath);
-                Provider.of<MemoProvider>(context, listen: false)
-                    .addBoardMemo(newMemo);
+                if (widget.memo == null) {
+                  //메모 생성
+                  Memo newMemo = await createMemo(selectedBookId!,
+                      memoController.text, 0, tags, selectedImagePath);
+                  Provider.of<MemoProvider>(context, listen: false)
+                      .addBookMemo(newMemo);
+                } else {
+                  //메모 수정
+                  Memo updatedMemo = await updateMemo(widget.memo!.memoId,
+                      memoController.text, 0, tags, selectedImagePath);
+                  Provider.of<MemoProvider>(context, listen: false)
+                      .updateBookMemo(updatedMemo);
+                }
 
                 Navigator.pop(context);
               } catch (e) {
@@ -314,7 +320,7 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
   }
 }
 
-void showAddMemoBottomSheet(BuildContext context) {
+void showAddMemoBottomSheet(BuildContext context, {Memo? memo}) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -333,7 +339,7 @@ void showAddMemoBottomSheet(BuildContext context) {
         ),
         child: Container(
           color: bg_gray,
-          child: NewBoardMemo(),
+          child: NewBoardMemo(memo: memo),
         ),
       );
     },
