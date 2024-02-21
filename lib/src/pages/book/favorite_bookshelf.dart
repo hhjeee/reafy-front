@@ -155,7 +155,7 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
               borderRadius: BorderRadius.circular(8.0),
               child: Image.network(
                 book.thumbnailURL,
-                fit: BoxFit.fitWidth,
+                fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   // 이미지를 불러오는 데 실패한 경우의 처리
                   return const Text('이미지를 불러올 수 없습니다.');
@@ -207,13 +207,10 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
                       onTap: () {
                         if (isEditMode) {
                           setState(() {
-                            print(isSelected);
                             if (isSelected) {
                               selectedBooksProvider.removeBook(book);
-                              print(selectedBooksProvider.selectedBooks);
                             } else {
                               selectedBooksProvider.addBook(book);
-                              print(selectedBooksProvider.selectedBooks);
                             }
                           });
                         } else {
@@ -237,7 +234,7 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: Image.network(
                                       book.thumbnailURL,
-                                      fit: BoxFit.fitWidth,
+                                      fit: BoxFit.cover,
                                       errorBuilder:
                                           (context, error, stackTrace) {
                                         return const Text('이미지를 불러올 수 없습니다.');

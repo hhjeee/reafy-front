@@ -42,7 +42,6 @@ class BottomNavController extends GetxController {
   Future<bool> willPopAction() async {
     var page = PageName.values[bottomHistory.last];
     if (page == PageName.HOME) {
-      print("exit");
       return true;
     } else {
       changeBottomNav(1, hasGesture: false); // Home 이 아니라면 홈으로 이동

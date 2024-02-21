@@ -282,121 +282,116 @@ class _ItemShopState extends State<ItemShop> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   //SizedBox(width: 26.0),
-                  Flexible(
-                    child: TextButton(
-                      onPressed: () {
-                        handleButtonPress(0);
-                        setState(() {
-                          selectedCategory = 0;
-                        });
-                      },
-                      child: Text(
-                        '책장',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: buttonWeight[0],
-                          color: buttonColors[0],
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        minimumSize: Size.zero,
-                        padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  TextButton(
+                    onPressed: () {
+                      handleButtonPress(0);
+                      setState(() {
+                        selectedCategory = 0;
+                      });
+                    },
+                    child: Text(
+                      '책장',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: buttonWeight[0],
+                        color: buttonColors[0],
                       ),
                     ),
-                  ),
-                  Flexible(
-                    child: TextButton(
-                      onPressed: () {
-                        handleButtonPress(1);
-                        setState(() {
-                          selectedCategory = 1;
-                        });
-                      },
-                      child: Text(
-                        '러그',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: buttonWeight[1],
-                          color: buttonColors[1],
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        minimumSize: Size.zero,
-                        padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
+                    style: TextButton.styleFrom(
+                      minimumSize: Size.zero,
+                      padding: EdgeInsets.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                   ),
-                  Flexible(
-                    child: TextButton(
-                      onPressed: () {
-                        handleButtonPress(2);
-                        setState(() {
-                          selectedCategory = 2;
-                        });
-                      },
-                      child: Text(
-                        '창문',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: buttonWeight[2],
-                          color: buttonColors[2],
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        minimumSize: Size.zero,
-                        padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+
+                  TextButton(
+                    onPressed: () {
+                      handleButtonPress(1);
+                      setState(() {
+                        selectedCategory = 1;
+                      });
+                    },
+                    child: Text(
+                      '러그',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: buttonWeight[1],
+                        color: buttonColors[1],
                       ),
                     ),
-                  ),
-                  Flexible(
-                    child: TextButton(
-                      onPressed: () {
-                        handleButtonPress(3);
-                        setState(() {
-                          selectedCategory = 3;
-                        });
-                      },
-                      child: Text(
-                        '시계',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: buttonWeight[3],
-                          color: buttonColors[3],
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        minimumSize: Size.zero,
-                        padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
+                    style: TextButton.styleFrom(
+                      minimumSize: Size.zero,
+                      padding: EdgeInsets.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                   ),
-                  Flexible(
-                    child: TextButton(
-                      onPressed: () {
-                        handleButtonPress(4);
-                        setState(() {
-                          selectedCategory = 4;
-                        });
-                      },
-                      child: Text(
-                        '소품',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: buttonWeight[4],
-                          color: buttonColors[4],
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        minimumSize: Size.zero,
-                        padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+
+                  TextButton(
+                    onPressed: () {
+                      handleButtonPress(2);
+                      setState(() {
+                        selectedCategory = 2;
+                      });
+                    },
+                    child: Text(
+                      '창문',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: buttonWeight[2],
+                        color: buttonColors[2],
                       ),
                     ),
+                    style: TextButton.styleFrom(
+                      minimumSize: Size.zero,
+                      padding: EdgeInsets.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
                   ),
+
+                  TextButton(
+                    onPressed: () {
+                      handleButtonPress(3);
+                      setState(() {
+                        selectedCategory = 3;
+                      });
+                    },
+                    child: Text(
+                      '시계',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: buttonWeight[3],
+                        color: buttonColors[3],
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      minimumSize: Size.zero,
+                      padding: EdgeInsets.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
+
+                  TextButton(
+                    onPressed: () {
+                      handleButtonPress(4);
+                      setState(() {
+                        selectedCategory = 4;
+                      });
+                    },
+                    child: Text(
+                      '소품',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: buttonWeight[4],
+                        color: buttonColors[4],
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      minimumSize: Size.zero,
+                      padding: EdgeInsets.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
+
                   //SizedBox(width: 26.0),
                 ],
               ),

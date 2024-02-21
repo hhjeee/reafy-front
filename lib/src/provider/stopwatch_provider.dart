@@ -113,6 +113,7 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
     _status = Status.stopped;
     print("STOPPED ! : $_seconds");
     _remainingsec = _countdownsec;
+    _seconds = 0;
     updateRemainingTime();
     notifyListeners();
   }

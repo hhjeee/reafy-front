@@ -35,7 +35,7 @@ List<ItemData> itemDataList = [
   ItemData(
       itemId: 2,
       imagePath: 'assets/images/items/bookshelf2.png',
-      text: '트리 책장',
+      text: '크리스마스 책장',
       price: 40),
   ItemData(
       itemId: 3,
@@ -43,16 +43,19 @@ List<ItemData> itemDataList = [
       text: '당근 책장',
       price: 60),
   ItemData(
-      itemId: 4, imagePath: 'assets/images/nothing.png', text: '책장', price: 80),
+      itemId: 4,
+      imagePath: 'assets/images/items/bookshelf4.png',
+      text: '무지개 책장',
+      price: 80),
   ItemData(
       itemId: 5,
-      imagePath: 'assets/images/nothing.png',
-      text: '책장',
+      imagePath: 'assets/images/items/bookshelf5.png',
+      text: '아이스크림 책장',
       price: 100),
   ItemData(
       itemId: 6,
       imagePath: 'assets/images/items/bookshelf6.png',
-      text: '책장',
+      text: '나무 책장',
       price: 150),
   ItemData(
       itemId: 7,
@@ -157,69 +160,67 @@ Widget GridItem(
   String selectedImagePath, {
   required bool isButtonEnabled,
 }) {
-  return Flexible(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: 79,
+            height: 79,
+            decoration: BoxDecoration(
+                color: isSelected && isButtonEnabled
+                    ? Color(0xfffffd747).withOpacity(0.1)
+                    : Color(0xffffffff),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 3,
+                    blurRadius: 10,
+                    offset: Offset(0, 1),
+                  ),
+                ],
+                border: isSelected && isButtonEnabled
+                    ? Border.all(color: Color(0xffffd747), width: 2)
+                    : Border.all(color: Color(0xffffffff), width: 2)),
+            child: itemIndex.imagePath.isNotEmpty
+                ? Container(
+                    width: 40,
+                    height: 60,
+                    child: ImageData(itemIndex.imagePath),
+                  )
+                : null,
+          ),
+          if (!isButtonEnabled)
             Container(
               width: 79,
               height: 79,
               decoration: BoxDecoration(
-                  color: isSelected && isButtonEnabled
-                      ? Color(0xfffffd747).withOpacity(0.1)
-                      : Color(0xffffffff),
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 3,
-                      blurRadius: 10,
-                      offset: Offset(0, 1),
-                    ),
-                  ],
-                  border: isSelected && isButtonEnabled
-                      ? Border.all(color: Color(0xffffd747), width: 2)
-                      : Border.all(color: Color(0xffffffff), width: 2)),
-              child: itemIndex.imagePath.isNotEmpty
-                  ? Container(
-                      width: 40,
-                      height: 60,
-                      child: ImageData(itemIndex.imagePath),
-                    )
-                  : null,
+                color: Color(0xff000000).withOpacity(0.25),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(child: ImageData(IconsPath.lock)),
             ),
-            if (!isButtonEnabled)
-              Container(
-                width: 79,
-                height: 79,
-                decoration: BoxDecoration(
-                  color: Color(0xff000000).withOpacity(0.25),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Center(child: ImageData(IconsPath.lock)),
-              ),
-            if (index == 0)
-              Container(
-                width: 79,
-                height: 79,
-                child: ImageData(IconsPath.select_nothing),
-              ),
-          ],
-        ),
-        SizedBox(height: 6.0),
-        Text(
-          itemIndex.text,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-              color: Color(0xff333333),
-              fontSize: 12,
-              fontWeight: FontWeight.w400),
-        ),
-      ],
-    ),
+          if (index == 0)
+            Container(
+              width: 79,
+              height: 79,
+              child: ImageData(IconsPath.select_nothing),
+            ),
+        ],
+      ),
+      SizedBox(height: 6.0),
+      Text(
+        itemIndex.text,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+            color: Color(0xff333333),
+            fontSize: 12,
+            fontWeight: FontWeight.w400),
+      ),
+    ],
   );
 }

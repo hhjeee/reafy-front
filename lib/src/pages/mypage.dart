@@ -138,7 +138,6 @@ class MyPage extends StatelessWidget {
                   onTap: () async {
                     var user = context.read<AuthProvider>();
                     user.logout();
-                    print('로그아웃 완료욤');
                     Get.off(() => LoginPage());
                   },
                   child: Row(

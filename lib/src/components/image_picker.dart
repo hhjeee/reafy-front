@@ -18,7 +18,6 @@ class PickImage extends StatefulWidget {
 }
 
 class _PickImageState extends State<PickImage> {
-  //Uint8List? _image;
   final ImagePicker picker = ImagePicker();
   XFile? _image;
 

@@ -54,11 +54,25 @@ class MemoProvider with ChangeNotifier {
     }
   }
 
-  void updateMemo(Memo updatedMemo) {
-    int index = _memos.indexWhere((memo) => memo.memoId == updatedMemo.memoId);
-    if (index != -1) {
-      _memos[index] = updatedMemo;
-      notifyListeners();
+  Future<void> updateBookMemo(Memo updatedMemo) async {
+    try {
+      int indexInMemos =
+          _memos.indexWhere((memo) => memo.memoId == updatedMemo.memoId);
+      if (indexInMemos != -1) {
+        _memos[indexInMemos] = updatedMemo;
+        notifyListeners();
+      }
+      int indexInList =
+          _memoList.indexWhere((memo) => memo.memoId == updatedMemo.memoId);
+      if (indexInList != -1) {
+        _memoList[indexInList] = updatedMemo;
+      }
+
+      if (indexInMemos != -1 || indexInList != -1) {
+        notifyListeners();
+      }
+    } catch (e) {
+      print("메모 수정 중 오류 발생: $e");
     }
   }
 }

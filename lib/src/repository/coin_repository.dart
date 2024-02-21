@@ -17,7 +17,6 @@ Future<int> getUserCoin() async {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = response.data;
-      print(responseData);
 
       final int totalCoin = responseData['totalCoin'];
       return totalCoin;

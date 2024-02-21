@@ -1,11 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/components/page_graph.dart';
+import 'package:reafy_front/src/components/time_graph.dart';
 import 'package:reafy_front/src/repository/statics_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-class Statics extends StatelessWidget {
+class Statics extends StatefulWidget {
   const Statics({super.key});
+
+  @override
+  State<Statics> createState() => _StaticsState();
+}
+
+class _StaticsState extends State<Statics> {
+  int currentYear = DateTime.now().year;
+  int selectedPageYear = DateTime.now().year;
+  int selectedTimeYear = DateTime.now().year;
+  List<int> yearList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _initYearList();
+  }
+
+  void _initYearList() {
+    final int startYear = 2020; // 시작 연도
+    final int endYear = DateTime.now().year; // 현재 연도
+
+    for (int year = startYear; year <= endYear; year++) {
+      yearList.add(year);
+    }
+  }
+
+  void onYearPageChanged(int newYear) {
+    setState(() {
+      selectedPageYear = newYear;
+    });
+  }
+
+  void onYearTimeChanged(int newYear) {
+    setState(() {
+      selectedTimeYear = newYear;
+    });
+  }
+
+  Future<List<Map<String, dynamic>>> _loadMonthlyPageStatistics() async {
+    return await getMonthlyPageStatistics(selectedPageYear);
+  }
+
+  Future<List<Map<String, dynamic>>> _loadMonthlyTimeStatistics() async {
+    return await getMonthlyTimeStatistics(selectedTimeYear);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,162 +78,269 @@ class Statics extends StatelessWidget {
         body: SingleChildScrollView(
             child: Column(
           children: [
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 5),
-              width: double.infinity,
-              height: 650,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: const Color(0xFFFAF9F7),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    offset: Offset(0, 0),
-                    blurRadius: 20,
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  SizedBox(height: 20),
-                  Container(
-                    width: 130,
-                    height: 35.684,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: const Color(0xFFFAF9F7),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.25),
-                          offset: Offset(0, 0),
-                          blurRadius: 4,
-                          spreadRadius: 0,
-                        ),
-                      ],
-                    ),
-                    child: Container(
-                      width: 100,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: Color(0xff63b865), width: 2),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '월별 독서 시간',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                            color: Color(0xff63b865),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  FutureBuilder<List<Map<String, dynamic>>>(
-                    future: getMonthlyTimeStatistics(DateTime.now().year),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.hasData) {
-                          List<BarChartGroupData> barGroups = [];
-
-                          for (int i = 0; i < snapshot.data!.length; i++) {
-                            final data = snapshot.data![i];
-                            final monthNumString = data['month']?.split("-")[1];
-                            final readingTimeString =
-                                data['totalReadingTimes'] as String?;
-
-                            if (monthNumString != null &&
-                                readingTimeString != null) {
-                              final monthNum = int.tryParse(monthNumString);
-                              final readingTime =
-                                  double.tryParse(readingTimeString);
-
-                              print(
-                                  'monthNum: $monthNum, readingTime: $readingTime');
-
-                              if (monthNum != null &&
-                                  readingTime != null &&
-                                  readingTime.isFinite) {
-                                barGroups.add(
-                                  BarChartGroupData(
-                                    x: monthNum - 1,
-                                    barRods: [
-                                      BarChartRodData(
-                                        fromY: 0,
-                                        color: Color(0xff63b865),
-                                        borderRadius: BorderRadius.circular(3),
-                                        toY: readingTime > 0 ? readingTime : 0,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-                            }
-                          }
-                          return Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: BarChart(
-                              BarChartData(
-                                alignment: BarChartAlignment.spaceAround,
-                                maxY: 80, // 최대 Y 값
-                                titlesData: FlTitlesData(
-                                  show: true,
-                                  bottomTitles: AxisTitles(
-                                    sideTitles: SideTitles(
-                                      showTitles: true,
-                                      reservedSize: 30,
-                                      getTitlesWidget:
-                                          (double value, TitleMeta meta) {
-                                        final titles = [
-                                          '1월',
-                                          '2월',
-                                          '3월',
-                                          '4월',
-                                          '5월',
-                                          '6월',
-                                          '7월',
-                                          '8월',
-                                          '9월',
-                                          '10월',
-                                          '11월',
-                                          '12월'
-                                        ];
-                                        return SideTitleWidget(
-                                          axisSide: meta.axisSide,
-                                          space: 16, // 타이틀과 축 사이의 공간을 조정하세요.
-                                          child: Text(titles[value.toInt()],
-                                              style: TextStyle(
-                                                  color: Color(0xff7589a2),
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 14)),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  leftTitles: AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false),
-                                  ),
-                                ),
-                                /*borderData: FlBorderData(
-                                  show: false,
-                                ),
-                                barGroups: barGroups,*/
-                              ),
-                            ),
-                          );
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        }
-                      }
-                      return Center(child: CircularProgressIndicator());
-                    },
-                  ),
-                ],
-              ),
+            FutureBuilder<List<Map<String, dynamic>>>(
+              future: _loadMonthlyPageStatistics(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // 데이터 로딩 중
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  // 에러 발생시
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  // 데이터가 있는 경우
+                  List<double> monthlyPage = snapshot.data!
+                      .map(
+                          (data) => double.parse(data['totalPages'].toString()))
+                      .toList();
+                  return buildPageGraphContainer(
+                      context,
+                      '월별 읽은 페이지',
+                      monthlyPage,
+                      yearList,
+                      selectedPageYear,
+                      onYearPageChanged);
+                } else {
+                  // 데이터가 없는 경우
+                  return Text('No data available');
+                }
+              },
+            ),
+            SizedBox(height: 10),
+            FutureBuilder<List<Map<String, dynamic>>>(
+              future: _loadMonthlyTimeStatistics(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // 데이터 로딩 중
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  // 에러 발생시
+                  return Text('Error: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  // 데이터가 있는 경우
+                  List<double> monthlyTime = snapshot.data!
+                      .map((data) =>
+                          double.parse(data['totalReadingTimes'].toString()) /
+                          60) // 분을 시간으로 변환
+                      .toList();
+                  return buildTimeGraphContainer(
+                      context,
+                      '월별 독서 시간',
+                      monthlyTime,
+                      yearList,
+                      selectedTimeYear,
+                      onYearTimeChanged);
+                } else {
+                  // 데이터가 없는 경우
+                  return Text('No data available');
+                }
+              },
             ),
           ],
         )));
   }
+}
+
+Widget buildPageGraphContainer(
+    BuildContext context,
+    String title,
+    List<double> monthlyPage,
+    List<int> yearList,
+    int selectedYear,
+    Function(int) onYearChanged) {
+  return Container(
+    width: double.infinity,
+    height: 650,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      color: const Color(0xFFFAF9F7),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          offset: Offset(0, 0),
+          blurRadius: 20,
+          spreadRadius: 0,
+        ),
+      ],
+    ),
+    child: Column(
+      children: [
+        SizedBox(height: 20),
+        Container(
+          width: 130,
+          height: 35.684,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: const Color(0xFFFAF9F7),
+            border: Border.all(color: Colors.transparent, width: 3),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.25),
+                offset: Offset(0, 0),
+                blurRadius: 4,
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: Color(0xff63b865), width: 2),
+            ),
+            child: Center(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xff63b865),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(right: 20),
+          child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            DropdownButton<int>(
+              value: selectedYear,
+              underline: Container(),
+              icon: ImageData(
+                IconsPath.dropdown,
+                isSvg: true,
+              ),
+              items: yearList.map<DropdownMenuItem<int>>((int year) {
+                return DropdownMenuItem<int>(
+                  value: year,
+                  child: Text(
+                    year.toString(),
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 17, 10, 10),
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12),
+                  ),
+                );
+              }).toList(),
+              onChanged: (int? newValue) {
+                if (newValue != null) {
+                  onYearChanged(newValue);
+                }
+              },
+            ),
+          ]),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: SizedBox(
+            height: 520,
+            child: PageBarGraph(
+              monthlyPage: monthlyPage,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget buildTimeGraphContainer(
+    BuildContext context,
+    String title,
+    List<double> monthlyTime,
+    List<int> yearList,
+    int selectedYear,
+    Function(int) onYearChanged) {
+  return Container(
+    width: double.infinity,
+    height: 650,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      color: const Color(0xFFFAF9F7),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          offset: Offset(0, 0),
+          blurRadius: 20,
+          spreadRadius: 0,
+        ),
+      ],
+    ),
+    child: Column(
+      children: [
+        SizedBox(height: 20),
+        Container(
+          width: 130,
+          height: 35.684,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: const Color(0xFFFAF9F7),
+            border: Border.all(color: Colors.transparent, width: 3),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.25),
+                offset: Offset(0, 0),
+                blurRadius: 4,
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: Color(0xff63b865), width: 2),
+            ),
+            child: Center(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xff63b865),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(right: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              DropdownButton<int>(
+                value: selectedYear,
+                underline: Container(),
+                icon: ImageData(IconsPath.dropdown, isSvg: true, width: 12),
+                items: yearList.map<DropdownMenuItem<int>>((int year) {
+                  return DropdownMenuItem<int>(
+                    value: year,
+                    child: Text(
+                      year.toString(),
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 17, 10, 10),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (int? newValue) {
+                  if (newValue != null) {
+                    onYearChanged(newValue);
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: SizedBox(
+            height: 520,
+            child: TimeBarGraph(
+              monthlyTime: monthlyTime,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

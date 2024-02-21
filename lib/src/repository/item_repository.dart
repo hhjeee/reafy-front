@@ -38,7 +38,6 @@ Future<bool> postItem(int itemId, bool activation, int price) async {
           'Content-Type': "application/json"
         }));
 
-    print(response);
     return response.statusCode == 200 || response.statusCode == 201;
   } catch (e) {
     if (e is DioError) {
@@ -71,7 +70,6 @@ Future<List<int>> getOwnedItemIds() async {
     );
 
     if (response.statusCode == 200) {
-      print('a ${response.data}');
       List<int> ownedItemIds = [];
       for (var data in response.data) {
         ownedItemIds.add(data['itemId']);
@@ -105,7 +103,6 @@ Future<List<int>> getActivatedOwnedItemIds() async {
     );
 
     if (response.statusCode == 200) {
-      print('b ${response.data}');
       List<int> activatedOwnedItemIds = [];
 
       for (var data in response.data) {

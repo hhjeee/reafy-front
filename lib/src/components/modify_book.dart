@@ -34,7 +34,6 @@ class _ModifyDialogState extends State<ModifyDialog> {
       if (mounted) {
         setState(() {
           progressState = bookshelfBookDetails.progressState;
-          print(progressState);
         });
       }
     } catch (e) {
