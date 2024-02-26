@@ -32,17 +32,17 @@ List<ItemData> itemDataList = [
       price: 15),
   ItemData(
       itemId: 82,
-      imagePath: 'assets/images/nothing.png',
+      imagePath: 'assets/images/items/window2.png',
       text: '리스 창문',
       price: 30),
   ItemData(
       itemId: 83,
-      imagePath: 'assets/images/nothing.png',
+      imagePath: 'assets/images/items/window3.png',
       text: '토마토 창문',
       price: 50),
   ItemData(
       itemId: 84,
-      imagePath: 'assets/images/nothing.png',
+      imagePath: 'assets/images/items/window4.png',
       text: '밤하늘 창문',
       price: 70),
   ItemData(

@@ -32,12 +32,12 @@ List<ItemData> itemDataList = [
       price: 7),
   ItemData(
       itemId: 62,
-      imagePath: 'assets/images/nothing.png',
+      imagePath: 'assets/images/items/rug_cookie.png',
       text: '쿠키 러그',
       price: 15),
   ItemData(
       itemId: 63,
-      imagePath: 'assets/images/nothing.png',
+      imagePath: 'assets/images/items/rug_peach.png',
       text: '복숭아 러그',
       price: 20),
   ItemData(

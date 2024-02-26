@@ -37,7 +37,7 @@ List<ItemData> itemDataList = [
       price: 10),
   ItemData(
       itemId: 23,
-      imagePath: 'assets/images/nothing.png',
+      imagePath: 'assets/images/items/clock_apple.png',
       text: '사과 시계',
       price: 15),
   ItemData(
