@@ -42,7 +42,7 @@ class ApiClient {
         print("에러다");
         print(error.response);
         print("에러다");
-        if (error.response?.statusCode == 500) {
+        if (error.response?.statusCode == 401) {
           print("[*] Token expired");
           SharedPreferences prefs = await SharedPreferences.getInstance();
           String? refreshToken = prefs.getString('refreshToken');
