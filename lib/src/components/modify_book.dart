@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
@@ -86,7 +84,7 @@ class _ModifyDialogState extends State<ModifyDialog> {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xffebebeb),
+                  backgroundColor: Color(0xffebebeb),
                   minimumSize: Size(140, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -125,7 +123,7 @@ class _ModifyDialogState extends State<ModifyDialog> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xffffd747),
+                  backgroundColor: Color(0xffffd747),
                   minimumSize: Size(140, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -242,7 +240,7 @@ class BookStatusButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
-            primary: isSelected ? yellow_light : bg_gray,
+            backgroundColor: isSelected ? yellow_light : bg_gray,
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100),

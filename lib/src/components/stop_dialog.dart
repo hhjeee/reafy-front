@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/done.dart';
-import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/provider/time_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
@@ -292,7 +291,7 @@ class _StopDialogState extends State<StopDialog> {
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
-                      primary: isButtonEnabled
+                      backgroundColor: isButtonEnabled
                           ? Color(0xffffd747)
                           : Color(0xffebebeb),
                       minimumSize: Size(286, 48),
@@ -317,7 +316,7 @@ class _StopDialogState extends State<StopDialog> {
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xffffffff),
+                      backgroundColor: Color(0xffffffff),
                       minimumSize: Size(286, 48),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),

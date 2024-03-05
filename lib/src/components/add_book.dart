@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/done.dart';
-import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
@@ -102,7 +101,7 @@ class _AddDialogState extends State<AddDialog> {
                 Get.back();
               },
               style: ElevatedButton.styleFrom(
-                primary: Color(0xffEBEBEB),
+                backgroundColor: Color(0xffEBEBEB),
                 minimumSize: Size(140, 48),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -122,7 +121,7 @@ class _AddDialogState extends State<AddDialog> {
             ElevatedButton(
               onPressed: isLoading ? null : onConfirmPressed,
               style: ElevatedButton.styleFrom(
-                primary: Color(0xffffd747),
+                backgroundColor: Color(0xffffd747),
                 minimumSize: Size(140, 48),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -232,7 +231,7 @@ class BookStatusButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
-            primary: isSelected ? yellow_light : bg_gray,
+            backgroundColor: isSelected ? yellow_light : bg_gray,
             elevation: 0,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(100),

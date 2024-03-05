@@ -1,18 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import "dart:io";
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_picker.dart';
 import 'package:reafy_front/src/models/memo.dart';
 import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
-import 'package:flutter/foundation.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/tag_input.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
-import 'package:reafy_front/src/components/tag_input.dart';
 
 class NewBoardMemo extends StatefulWidget {
   final Memo? memo;

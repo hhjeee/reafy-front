@@ -1,8 +1,5 @@
 import 'package:dio/dio.dart';
-import 'dart:convert';
-import 'package:reafy_front/src/models/user.dart';
-import 'package:reafy_front/src/models/book.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reafy_front/src/utils/url.dart';
 
 //책 검색
 class SearchBookDto {
@@ -86,17 +83,11 @@ class BookshelfBookDto {
 
 //서재 메인에서 받아오는 카테고리별 썸네일 리스트
 Future<List<String>> fetchBookshelfThumbnailsByState(int progressState) async {
-  final Dio dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
+  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await dio.get('https://reafydevkor.xyz/book/bookshelf',
-        queryParameters: {'progressState': progressState},
-        options: Options(headers: {
-          'Authorization': 'Bearer ${userToken}',
-          'Content-Type': "application/json"
-        }));
+    final response = await ApiClient.instance.dio.get(
+        'https://reafydevkor.xyz/book/bookshelf',
+        queryParameters: {'progressState': progressState});
     if (response.statusCode == 200) {
       final List<dynamic> responseData = response.data as List<dynamic>;
       final List<String> thumbnails = List<String>.from(
@@ -113,16 +104,10 @@ Future<List<String>> fetchBookshelfThumbnailsByState(int progressState) async {
 
 //myfavorite 책 썸네일 리스트
 Future<List<String>> fetchBookshelfThumbnailsByFavorite() async {
-  final Dio dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
+  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await dio.get('https://reafydevkor.xyz/book/favorite',
-        options: Options(headers: {
-          'Authorization': 'Bearer ${userToken}',
-          'Content-Type': "application/json"
-        }));
+    final response = await ApiClient.instance.dio
+        .get('https://reafydevkor.xyz/book/favorite');
 
     if (response.statusCode == 200) {
       final List<dynamic> responseData = response.data as List<dynamic>;
@@ -185,20 +170,12 @@ class BookshelfBookInfo {
 //상태(카테고리)별 책 정보 조회
 Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByState(
     int progressState) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
-  final Dio dio = Dio();
+  //final ApiClient apiClient = ApiClient();
 
   try {
-    final response = await dio.get(
-      'https://reafydevkor.xyz/book/bookshelf',
-      queryParameters: {'progressState': progressState},
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
-    );
+    final response = await ApiClient.instance.dio.get(
+        'https://reafydevkor.xyz/book/bookshelf',
+        queryParameters: {'progressState': progressState});
 
     if (response.statusCode == 200) {
       final List<dynamic> responseData = response.data as List<dynamic>;
@@ -223,20 +200,10 @@ Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByState(
 
 //페이보릿 책 정보 조회
 Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByFavorite() async {
-  final Dio dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
+  //final ApiClient apiClient = ApiClient();
   try {
-    //final userToken = tempUserToken;
-
-    final response = await dio.get(
-      'https://reafydevkor.xyz/book/favorite',
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
-    );
+    final response = await ApiClient.instance.dio
+        .get('https://reafydevkor.xyz/book/favorite');
 
     if (response.statusCode == 200) {
       final List<dynamic> responseData = response.data as List<dynamic>;
@@ -260,27 +227,16 @@ Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByFavorite() async {
 
 //책 등록
 Future<bool> postBookInfo(String isbn13, int progressState) async {
-  final dio = Dio();
-  final url = 'https://reafydevkor.xyz/book/bookshelf';
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
+  //final ApiClient apiClient = ApiClient();
   try {
-    //final userToken = await UserToken();
-    //print(userToken.accessToken);
-    //final userToken = tempUserToken;
-
-    final response = await dio.post(url,
-        data: {'isbn13': isbn13, 'progressState': progressState},
-        options: Options(headers: {
-          'Authorization': 'Bearer ${userToken}',
-          'Content-Type': "application/json"
-        }));
+    final response = await ApiClient.instance.dio.post(
+      'https://reafydevkor.xyz/book/bookshelf',
+      data: {'isbn13': isbn13, 'progressState': progressState},
+    );
 
     // 서버 응답 코드 확인
     print('Response Code: ${response.statusCode}');
 
-    // 성공 여부 반환
     return response.statusCode == 200 || response.statusCode == 201;
   } catch (e) {
     // DioError 처리
@@ -302,24 +258,11 @@ Future<bool> postBookInfo(String isbn13, int progressState) async {
 
 //책 삭제
 Future<void> deleteBookshelfBook(int bookshelfBookId) async {
-  final dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
+  //final ApiClient apiClient = ApiClient();
 
   try {
-    //final userToken = await UserToken();
-    //print(userToken.accessToken);
-    //final userToken = tempUserToken;
-
-    String apiUrl = 'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId';
-
-    final response = await dio.delete(
-      apiUrl,
-      options: Options(headers: {
-        'Authorization': 'Bearer ${userToken}',
-        'Content-Type': 'application/json',
-      }),
-    );
+    final res = await ApiClient.instance.dio
+        .delete('https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId');
   } catch (error) {
     // 오류 처리
     throw Exception('Failed to delete book: $error');
@@ -388,21 +331,11 @@ class BookshelfBookDetailsDto {
 //책 상세정보 조회
 Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
     int bookshelfBookId) async {
-  final dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
+  //final ApiClient apiClient = ApiClient();
   try {
-    //final userToken = await UserToken();
-    //print(userToken.accessToken);
-    //final userToken = tempUserToken;
-
-    final response = await dio.get(
-        'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
-        options: Options(headers: {
-          'Authorization': 'Bearer ${userToken}',
-          'Content-Type': "application/json"
-        }));
+    final response = await ApiClient.instance.dio.get(
+      'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
+    );
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = response.data;
@@ -422,18 +355,11 @@ Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
 Future<void> updateBookshelfBookFavorite(
   int bookshelfBookId,
 ) async {
-  final dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
+  //final ApiClient apiClient = ApiClient();
 
   try {
-    final response = await dio.get(
-      'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
-    );
+    final response = await ApiClient.instance.dio
+        .get('https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId');
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = response.data;
@@ -441,13 +367,9 @@ Future<void> updateBookshelfBookFavorite(
       final Map<String, dynamic> requestBody = {
         'isFavorite': isCurrentlyFavorite ? 0 : 1,
       };
-      final updateResponse = await dio.put(
+      final updateResponse = await ApiClient.instance.dio.put(
         'https://reafydevkor.xyz/book/favorite/$bookshelfBookId',
         data: requestBody,
-        options: Options(headers: {
-          'Authorization': 'Bearer $userToken',
-          'Content-Type': 'application/json',
-        }),
       );
     } else {
       throw Exception('Failed to fetch current bookshelf book details');
@@ -463,23 +385,14 @@ Future<void> updateBookshelfBookCategory(
   int bookshelfBookId,
   int progressState,
 ) async {
-  final dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
+  //final ApiClient apiClient = ApiClient();
 
   try {
-    final Map<String, dynamic> requestBody = {
-      'progressState': progressState,
-    };
+    final Map<String, dynamic> requestBody = {'progressState': progressState};
 
-    final response = await dio.put(
-      'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
-      data: requestBody,
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
-    );
+    final response = await ApiClient.instance.dio.put(
+        'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
+        data: requestBody);
 
     if (response.statusCode != 200) {
       throw Exception('Failed to update bookshelf book category');
@@ -524,22 +437,13 @@ class ReadingBookInfo {
 }
 
 Future<List<ReadingBookInfo>> fetchReadingBooksInfo(int progressState) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
-  final Dio dio = Dio();
-
+  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await dio.get(
-      'https://reafydevkor.xyz/book/bookshelf',
-      queryParameters: {'progressState': progressState},
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
-    );
+    final response = await ApiClient.instance.dio.get(
+        'https://reafydevkor.xyz/book/bookshelf',
+        queryParameters: {'progressState': progressState});
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final List<dynamic> responseData = response.data as List<dynamic>;
       final List<ReadingBookInfo> books = responseData
           .map<ReadingBookInfo>((item) => ReadingBookInfo(
@@ -570,19 +474,19 @@ class BookshelfBookTitleDto {
 }
 
 Future<BookshelfBookTitleDto> getBookshelfBookTitle(int bookshelfBookId) async {
-  final dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
+  //final dio = Dio();
+  //SharedPreferences prefs = await SharedPreferences.getInstance();
+  //final String? userToken = prefs.getString('token');
+  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await dio.get(
+    final response = await ApiClient.instance.dio.get(
       'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $userToken',
-          'Content-Type': "application/json"
-        },
-      ),
+      //options: Options(
+      //  headers: {
+      //    'Authorization': 'Bearer $userToken',
+      //    'Content-Type': "application/json"
+      //  },
+      //),
     );
 
     if (response.statusCode == 200) {

@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:reafy_front/src/pages/login_page.dart';
 import 'package:reafy_front/src/utils/url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,9 +9,7 @@ class AuthProvider extends ChangeNotifier {
   //bool _loginStat = false;
   bool _newUser = true;
   String _nickname = "Reafy";
-
   User get userInfo => _userInfo;
-
   //bool get isLogin => _loginStat;
   bool get isnewUser => _newUser;
   String get nickname => _nickname;
@@ -64,6 +60,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 */
+
   Future<bool> refreshToken() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -79,10 +76,9 @@ class AuthProvider extends ChangeNotifier {
       };
 
       var res = await refreshDio.post(refreshDio.options.baseUrl);
-
       print("[*] token refresh result : ${res.statusCode}");
 
-      if (res.statusCode == 200) {
+      if (res.statusCode == 200 || res.statusCode == 201) {
         String newAccessToken = res.data['accessToken'];
         //await prefs.setString('token', newAccessToken);
         await setToken(newAccessToken);
@@ -164,8 +160,8 @@ class AuthProvider extends ChangeNotifier {
 
       _userInfo = await UserApi.instance.me();
 
-      print('사용자 정보 요청 성공'
-          '\n닉네임 : ${_userInfo.kakaoAccount?.profile?.nickname}');
+      //print('사용자 정보 요청 성공'
+      //    '\n닉네임 : ${_userInfo.kakaoAccount?.profile?.nickname}');
       _nickname = "${_userInfo.kakaoAccount?.profile?.nickname}";
 
       prefs.setString('nickname', _nickname);
@@ -177,19 +173,19 @@ class AuthProvider extends ChangeNotifier {
           data: {"accessToken": token.accessToken, "vendor": "kakao"});
       if (res.statusCode == 200 || res.statusCode == 201) {
         var resBody = res.data;
-        print("[*]서버 커스텀 토큰 : $resBody");
+        //print("[*]서버 커스텀 토큰 : $resBody");
         //print("[*]Response :${res.headers}");
 
         var cookies = res.headers['set-cookie'];
         if (cookies != null && cookies.isNotEmpty) {
           var refreshToken = cookies.first.split(';')[0].split('=')[1];
-          print('[*] refreshToken : $refreshToken');
+          //print('[*] refreshToken : $refreshToken');
           await setRefreshToken(refreshToken);
         }
 
-        print("###########################");
-        print(resBody);
-        print("###########################");
+        //print("###########################");
+        //print(resBody);
+        //print("###########################");
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         if (prefs.getString('token') != null) {
@@ -215,10 +211,11 @@ class AuthProvider extends ChangeNotifier {
     try {
       await UserApi.instance.logout();
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.remove('token');
+      await prefs.remove('token');
       print('[*]로그아웃 성공 , SDK에서 토큰 삭제');
       print('[*]로그아웃 완료');
       setLogin(false);
+      notifyListeners();
       //_loginStat = false;
     } catch (e) {
       print('[*]로그아웃 실패 , SDK에서 토큰 삭제 $e');
@@ -316,7 +313,6 @@ class AuthProvider extends ChangeNotifier {
     
     
       try {
-<<<<<<< HEAD
         var response = await apiClient.dio.post(url, data: body);
         if (response.statusCode == 200 || response.statusCode == 201) {
           var resBody = response.data;
@@ -333,17 +329,6 @@ class AuthProvider extends ChangeNotifier {
         print('error : $e');
       }
     }
-=======
-      var response = await apiClient.dio.post(url, data: body);
-      //print("token from server");
-      //print(response.statusCode);
-      //print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-      //print(response);
-      //print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        var resBody = response.data; // 서버에서 준 accessToken 1시간 짜리
->>>>>>> bf527077bd0cca7b6f1f9bc2c31f4cfece462dbc
 
         if (resBody['token'] == null) {
           _newUser = true;

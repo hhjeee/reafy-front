@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -68,8 +69,8 @@ class _TagWidgetState extends State<TagWidget> {
               iconColor: yellow,
             ),
             onSubmitted: (value) async {
-              _tagController.clear();
               Navigator.of(context).pop(value);
+              _tagController.clear();
             },
           ),
           actions: <Widget>[
@@ -79,7 +80,7 @@ class _TagWidgetState extends State<TagWidget> {
                 ElevatedButton(
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
-                    primary: Color(0xffebebeb),
+                    backgroundColor: Color(0xffebebeb),
                     minimumSize: Size(120, 48),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -98,10 +99,24 @@ class _TagWidgetState extends State<TagWidget> {
                 SizedBox(width: 6),
                 ElevatedButton(
                   onPressed: () {
+                    if (_tagController.text != null) {
+                      if (_tagController.text.length > 10) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('태그는 10자를 넘을 수 없습니다.')));
+                        return;
+                      }
+                      setState(() {
+                        tags.add(_tagController.text);
+                        widget.onTagsUpdated(tags); // 태그 추가될 때 콜백 호출
+                        _tagController.clear(); // 태그를 추가한 후 입력 필드를 비웁니다.
+                      });
+                    }
+
+                    _tagController.clear();
                     Navigator.of(context).pop(_tagController.text);
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Color(0xffffd747),
+                    backgroundColor: Color(0xffffd747),
                     minimumSize: Size(120, 48),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),

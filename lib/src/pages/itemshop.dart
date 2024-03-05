@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/components/purchase_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/items/bookshelf_item.dart';
@@ -11,7 +9,6 @@ import 'package:reafy_front/src/components/items/otheritems.dart';
 import 'package:reafy_front/src/components/items/clock.dart';
 import 'package:reafy_front/src/components/items/window.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
-import 'package:reafy_front/src/pages/home.dart';
 import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/item_provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';

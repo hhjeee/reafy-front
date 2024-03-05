@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/purchase_dialog.dart';
 import 'package:reafy_front/src/provider/item_provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
-import 'package:reafy_front/src/repository/item_repository.dart';
 
 class ItemData {
   final int itemId;

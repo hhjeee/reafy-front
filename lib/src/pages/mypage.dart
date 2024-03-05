@@ -6,7 +6,6 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/pages/login_page.dart';
 import 'package:reafy_front/src/pages/profile/statics.dart';
 import 'package:reafy_front/src/pages/profile/team.dart';
-import 'package:reafy_front/src/pages/profile/rating.dart';
 import 'package:reafy_front/src/components/profile_name.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 
@@ -15,22 +14,6 @@ class MyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    var auth = context.read<AuthProvider>();
-
-    void showAlertDialog(BuildContext context) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('logout'),
-            actions: [],
-          );
-        },
-      );
-    }
-
     return Scaffold(
       body: Container(
           decoration: BoxDecoration(

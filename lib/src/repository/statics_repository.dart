@@ -1,21 +1,11 @@
-import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reafy_front/src/utils/url.dart';
 
 Future<List<Map<String, dynamic>>> getMonthlyPageStatistics(int year) async {
-  final dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
+  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await dio.get(
+    final response = await ApiClient.instance.dio.get(
       'https://reafydevkor.xyz/statistics/pages',
-      queryParameters: {
-        'year': year,
-      },
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
+      queryParameters: {'year': year},
     );
 
     if (response.statusCode == 200) {
@@ -32,21 +22,11 @@ Future<List<Map<String, dynamic>>> getMonthlyPageStatistics(int year) async {
 }
 
 Future<List<Map<String, dynamic>>> getMonthlyTimeStatistics(int year) async {
-  final dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
+  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await dio.get(
-      'https://reafydevkor.xyz/statistics/times',
-      queryParameters: {
-        'year': year,
-      },
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
-    );
+    final response = await ApiClient.instance.dio.get(
+        'https://reafydevkor.xyz/statistics/times',
+        queryParameters: {'year': year});
 
     if (response.statusCode == 200) {
       final List<dynamic> timeStaticsData = response.data;
@@ -62,18 +42,10 @@ Future<List<Map<String, dynamic>>> getMonthlyTimeStatistics(int year) async {
 }
 
 Future<Map<String, dynamic>> getTodayTimeStatistics() async {
-  final Dio dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
+  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await dio.get(
-      'https://reafydevkor.xyz/statistics/today',
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': "application/json"
-      }),
-    );
+    final response = await ApiClient.instance.dio
+        .get('https://reafydevkor.xyz/statistics/today');
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> statistics =

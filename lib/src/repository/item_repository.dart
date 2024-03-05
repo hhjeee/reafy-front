@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:reafy_front/src/models/user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reafy_front/src/utils/url.dart';
 
 class ItemDto {
   final int itemId;
@@ -21,26 +20,21 @@ class ItemDto {
 
 //아이템 구매
 Future<bool> postItem(int itemId, bool activation, int price) async {
-  final dio = Dio();
-  final url = 'https://reafydevkor.xyz/item';
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? userToken = prefs.getString('token');
-
+  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await dio.post(url,
-        data: {
-          'itemId': itemId,
-          'activation': activation,
-          'price': price,
-        },
-        options: Options(headers: {
-          'Authorization': 'Bearer ${userToken}',
-          'Content-Type': "application/json"
-        }));
+    final response = await ApiClient.instance.dio.post(
+      'https://reafydevkor.xyz/item',
+      data: {
+        'itemId': itemId,
+        'activation': activation,
+        'price': price,
+      },
+    );
 
     return response.statusCode == 200 || response.statusCode == 201;
   } catch (e) {
     if (e is DioError) {
+      print("postItem");
       print('DioError: ${e.message}');
       if (e.response != null) {
         print('Response Data: ${e.response?.data}');
@@ -55,19 +49,11 @@ Future<bool> postItem(int itemId, bool activation, int price) async {
 
 // 소유 아이템 아이디 리스트 반환
 Future<List<int>> getOwnedItemIds() async {
-  final Dio dio = Dio();
-  final url = 'https://reafydevkor.xyz/item/userItemList';
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? userToken = prefs.getString('token');
+  //final ApiClient apiClient = ApiClient();
 
   try {
-    final response = await dio.get(
-      url,
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
-    );
+    final response = await ApiClient.instance.dio
+        .get('https://reafydevkor.xyz/item/userItemList');
 
     if (response.statusCode == 200) {
       List<int> ownedItemIds = [];
@@ -88,18 +74,11 @@ Future<List<int>> getOwnedItemIds() async {
 
 // 배치된 아이템 아이디 리스트 반환
 Future<List<int>> getActivatedOwnedItemIds() async {
-  final Dio dio = Dio();
-  final url = 'https://reafydevkor.xyz/item/userItemList';
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? userToken = prefs.getString('token');
+  //final ApiClient apiClient = ApiClient();
 
   try {
-    final response = await dio.get(
-      url,
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
+    final response = await ApiClient.instance.dio.get(
+      'https://reafydevkor.xyz/item/userItemList',
     );
 
     if (response.statusCode == 200) {

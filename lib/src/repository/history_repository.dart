@@ -1,22 +1,19 @@
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reafy_front/src/utils/url.dart';
 
 // 독서 기록 조회
 Future<List<dynamic>> getBookshelfBookHistory(int bookshelfbookid) async {
-  final dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
+  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await dio.get(
+    final response = await ApiClient.instance.dio.get(
       'https://reafydevkor.xyz/history/bookshelfbook',
       queryParameters: {
         'bookshelfbookid': bookshelfbookid,
       },
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
+      //options: Options(headers: {
+      //  'Authorization': 'Bearer $userToken',
+      //  'Content-Type': 'application/json',
+      //}),
     );
 
     if (response.statusCode == 200) {
@@ -61,19 +58,12 @@ class CreateUserBookHistoryDto {
 }
 
 Future<void> createUserBookHistory(CreateUserBookHistoryDto historyDto) async {
-  final dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
+  //final ApiClient apiClient = ApiClient();
 
   try {
-    final response = await dio.post(
-      'https://reafydevkor.xyz/history/bookshelfbook',
-      data: historyDto.toJson(),
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
-    );
+    final response = await ApiClient.instance.dio.post(
+        'https://reafydevkor.xyz/history/bookshelfbook',
+        data: historyDto.toJson());
 
     if (response.statusCode != 201) {
       throw Exception('Failed to create book history');

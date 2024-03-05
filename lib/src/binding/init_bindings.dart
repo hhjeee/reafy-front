@@ -1,4 +1,3 @@
-import 'package:reafy_front/src/controller/board_controller.dart';
 import 'package:reafy_front/src/controller/books_controller.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:get/get.dart';

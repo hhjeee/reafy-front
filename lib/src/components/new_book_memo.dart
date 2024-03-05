@@ -1,18 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import "dart:io";
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_picker.dart';
 import 'package:reafy_front/src/models/memo.dart';
 import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
-import 'package:flutter/foundation.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/tag_input.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
-import 'package:reafy_front/src/components/tag_input.dart';
 
 class newBookMemo extends StatefulWidget {
   final int bookshelfBookId;
@@ -212,7 +207,7 @@ class _newBookMemoState extends State<newBookMemo> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                primary: Color(0xFFFFD747),
+                backgroundColor: Color(0xFFFFD747),
                 shadowColor: Colors.black.withOpacity(0.1),
                 elevation: 5,
                 fixedSize: Size(343, 38)),

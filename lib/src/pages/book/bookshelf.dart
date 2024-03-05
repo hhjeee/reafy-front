@@ -53,7 +53,9 @@ class _BookShelfState extends State<BookShelf> {
         ),
         body: SingleChildScrollView(
             child: Container(
+
                 decoration: BoxDecoration(
+                  color: Color(0xfffcfcec),
                   image: DecorationImage(
                     image: AssetImage('assets/images/green_bg.png'),
                     fit: BoxFit.fill,

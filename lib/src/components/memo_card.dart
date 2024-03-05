@@ -3,12 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/components/new_board_memo.dart';
 import 'package:reafy_front/src/components/new_book_memo.dart';
 import 'package:reafy_front/src/models/memo.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:reafy_front/src/provider/memo_provider.dart';
-import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 
@@ -171,7 +169,7 @@ class MemoImage extends StatelessWidget {
     String fullImageUrl = baseUrl + (imageUrl ?? '');
     return imageUrl != null && imageUrl!.isNotEmpty
         ? GestureDetector(
-            onTap: () => showImageDialog(context, fullImageUrl!),
+            onTap: () => showImageDialog(context, fullImageUrl),
             child: Card(
               color: Color(0xffFAF9F7),
               elevation: 0,
@@ -180,7 +178,7 @@ class MemoImage extends StatelessWidget {
                 height: 270,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(fullImageUrl!),
+                      image: NetworkImage(fullImageUrl),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(8)),
@@ -302,7 +300,7 @@ void _showDeleteDialog(BuildContext context, int memoId, int bookId) {
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xffebebeb),
+                      backgroundColor: Color(0xffebebeb),
                       minimumSize: Size(140, 48),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -341,7 +339,7 @@ void _showDeleteDialog(BuildContext context, int memoId, int bookId) {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xffffd747),
+                      backgroundColor: Color(0xffffd747),
                       minimumSize: Size(140, 48),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),

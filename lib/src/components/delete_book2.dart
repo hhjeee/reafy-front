@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/done.dart';
-import 'package:reafy_front/src/models/bookcount.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
-import 'package:reafy_front/src/pages/book/bookshelf.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 
 class DeleteDialog extends StatefulWidget {
@@ -53,7 +50,7 @@ class _DeleteDialogState extends State<DeleteDialog> {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xffebebeb),
+                  backgroundColor: Color(0xffebebeb),
                   minimumSize: Size(140, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -100,7 +97,7 @@ class _DeleteDialogState extends State<DeleteDialog> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xffffd747),
+                  backgroundColor: Color(0xffffd747),
                   minimumSize: Size(140, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

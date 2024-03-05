@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/models/book.dart';
-import 'package:reafy_front/src/pages/book/bookdetail.dart';
-import 'package:reafy_front/src/pages/book/category_bookshelf.dart';
-import 'package:reafy_front/src/utils/constants.dart';
-import 'package:reafy_front/src/models/bookcount.dart';
-import 'package:provider/provider.dart';
 import 'package:reafy_front/src/pages/book/category_bookshelf.dart';
 
 class State_BookShelfWidget extends StatefulWidget {

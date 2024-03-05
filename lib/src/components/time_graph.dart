@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/models/barData.dart';
 
 class TimeBarGraph extends StatefulWidget {
