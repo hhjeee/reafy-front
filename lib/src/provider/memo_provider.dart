@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/models/memo.dart';
+import 'package:collection/collection.dart';
 
 class MemoProvider with ChangeNotifier {
   List<Memo> _memos = [];
@@ -33,6 +35,10 @@ class MemoProvider with ChangeNotifier {
     }
   }
 
+  Memo? findMemoById(int memoId) {
+    return _memoList.firstWhereOrNull((memo) => memo.memoId == memoId);
+  }
+
   void addBookMemo(Memo memo) {
     _memos.insert(0, memo);
     notifyListeners();
@@ -46,9 +52,18 @@ class MemoProvider with ChangeNotifier {
   Future<void> deleteMemo(int memoId) async {
     try {
       await deleteMemoById(memoId);
-      _memos.removeWhere((memo) => memo.memoId == memoId);
-      _memoList.removeWhere((memo) => memo.memoId == memoId);
-      notifyListeners();
+
+      int removedMemoIndex = _memos.indexWhere((memo) => memo.memoId == memoId);
+      int removedMemoListIndex =
+          _memoList.indexWhere((memo) => memo.memoId == memoId);
+
+      if (removedMemoIndex != -1) {
+        _memos.removeAt(removedMemoIndex);
+      }
+      if (removedMemoListIndex != -1) {
+        _memoList.removeAt(removedMemoListIndex);
+        notifyListeners();
+      }
     } catch (e) {
       print("메모 삭제 중 오류 발생: $e");
     }
@@ -58,17 +73,21 @@ class MemoProvider with ChangeNotifier {
     try {
       int indexInMemos =
           _memos.indexWhere((memo) => memo.memoId == updatedMemo.memoId);
-      if (indexInMemos != -1) {
-        _memos[indexInMemos] = updatedMemo;
-        notifyListeners();
-      }
       int indexInList =
           _memoList.indexWhere((memo) => memo.memoId == updatedMemo.memoId);
+
+      bool isUpdated = false;
+
+      if (indexInMemos != -1) {
+        _memos[indexInMemos] = updatedMemo;
+        isUpdated = true;
+      }
       if (indexInList != -1) {
         _memoList[indexInList] = updatedMemo;
+        isUpdated = true;
       }
 
-      if (indexInMemos != -1 || indexInList != -1) {
+      if (isUpdated) {
         notifyListeners();
       }
     } catch (e) {

@@ -18,4 +18,11 @@ class BookShelfProvider extends ChangeNotifier {
       print('Error: $e');
     }
   }
+
+  Future<void> fetchFavoriteThumbnailList() async {
+    thumbnailsForIsFavorite = await fetchBookshelfThumbnailsByFavorite();
+    print('aa');
+    print(thumbnailsForIsFavorite);
+    notifyListeners();
+  }
 }

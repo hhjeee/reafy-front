@@ -7,11 +7,13 @@ import 'package:reafy_front/src/components/delete_book.dart';
 import 'package:reafy_front/src/components/modify_book.dart';
 import 'package:reafy_front/src/components/new_book_memo.dart';
 import 'package:reafy_front/src/models/book.dart';
+import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/repository/history_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/utils/reading_progress.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BookDetailPage extends StatefulWidget {
   final int bookshelfBookId;
@@ -27,6 +29,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
   late Future<BookshelfBookDetailsDto> bookDetailsFuture;
   bool isFavorite = false;
   int totalPagesRead = 0;
+  dynamic recentHistory;
 
   @override
   void initState() {
@@ -50,6 +53,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
       int readPages = calculateTotalPagesRead(historyList);
       setState(() {
         totalPagesRead = readPages;
+        historyList.isNotEmpty
+            ? recentHistory = historyList[0]
+            : recentHistory = {};
       });
     } catch (e) {
       print('Error fetching book history: $e');
@@ -156,19 +162,24 @@ class _BookDetailPageState extends State<BookDetailPage> {
                             setState(() {
                               isFavorite = !isFavorite;
                             });
+
+                            Provider.of<SelectedBooksProvider>(context,
+                                    listen: false)
+                                .clearBooks();
                             Provider.of<BookShelfProvider>(context,
                                     listen: false)
-                                .fetchData();
+                                .fetchFavoriteThumbnailList();
                           } catch (e) {
                             print('에러 발생: $e');
                           }
                         },
                       ),
                       _book_info(bookDetails),
-                      SizedBox(height: 27.0),
+                      SizedBox(height: 15.0),
                       ProgressIndicator(
                           totalPages: bookDetails.pages,
-                          pagesRead: totalPagesRead),
+                          pagesRead: totalPagesRead,
+                          recentHistory: recentHistory),
                       SizedBox(height: 21.0),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 26),
@@ -281,7 +292,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
             ],
           ),
           SizedBox(height: 7),
-          Row(
+          /* Row(
             children: [
               Text(
                 "카테고리",
@@ -307,7 +318,36 @@ class _BookDetailPageState extends State<BookDetailPage> {
               ),
             ],
           ),
+       */
+          hyperlinkText(bookDetails.link),
         ],
+      ),
+    );
+  }
+
+  Widget hyperlinkText(String? url) {
+    // 링크가 비어있지 않은지 확인하고, 필요한 처리를 합니다.
+    final String displayUrl = (url != null && url.length > 40)
+        ? '${url.substring(0, 35)}...'
+        : (url ?? '');
+
+    return InkWell(
+      onTap: () async {
+        if (url != null && await canLaunch(url)) {
+          await launch(url);
+        } else {
+          print('Could not launch $url');
+        }
+      },
+      child: Text(
+        "책 상세보기",
+        overflow: TextOverflow.clip,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w800,
+          color: Color(0xff333333),
+          decoration: TextDecoration.underline,
+        ),
       ),
     );
   }
@@ -391,11 +431,13 @@ class PoobaoImage extends StatelessWidget {
 class ProgressIndicator extends StatelessWidget {
   final int totalPages;
   final int pagesRead;
+  final dynamic recentHistory;
 
   const ProgressIndicator({
     Key? key,
     required this.totalPages,
     required this.pagesRead,
+    this.recentHistory,
   }) : super(key: key);
 
   @override
@@ -405,7 +447,7 @@ class ProgressIndicator extends StatelessWidget {
     String progressImagePath = getProgressImage(progressPercent);
 
     return Container(
-      padding: EdgeInsets.only(left: 23.0),
+      padding: EdgeInsets.symmetric(horizontal: 26),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -419,22 +461,62 @@ class ProgressIndicator extends StatelessWidget {
                   color: Color(0xff333333),
                 ),
               ),
-              SizedBox(width: 266.0),
+              Spacer(),
               Text(
                 "${progressPercent.toStringAsFixed(0)}%",
                 style: TextStyle(
                   fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xff333333),
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xff63b865),
                 ),
               ), //변경
             ],
           ),
           Container(
-            width: 344,
+            width: MediaQuery.of(context).size.width - 50,
             height: 46,
             child: ImageData(progressImagePath),
           ),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 3),
+              child: Row(
+                children: [
+                  Text(
+                    '0p',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xff333333),
+                    ),
+                  ),
+                  Spacer(),
+                  Text(
+                    "${totalPages}p",
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xff333333),
+                    ),
+                  )
+                ],
+              )),
+          recentHistory.isNotEmpty
+              ? Row(
+                  children: [
+                    ImageData(IconsPath.information,
+                        isSvg: true, width: 10, height: 10),
+                    SizedBox(width: 2),
+                    Text(
+                      '마지막으로 ${recentHistory['startPage']}p-${recentHistory['endPage']}p만큼 읽었어요',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xff63b865),
+                      ),
+                    )
+                  ],
+                )
+              : Container(),
         ],
       ),
     );

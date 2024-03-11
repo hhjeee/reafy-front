@@ -5,6 +5,7 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
+import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 
@@ -110,6 +111,8 @@ class _ModifyDialogState extends State<ModifyDialog> {
                         widget.bookId, progressState!);
                     selectedBooksProvider.clearBooks();
                     Navigator.pop(context); // DeleteDialog 닫기
+                    Provider.of<BookShelfProvider>(context, listen: false)
+                        .fetchData();
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {

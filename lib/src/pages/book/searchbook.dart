@@ -35,6 +35,26 @@ class _SearchBookState extends State<SearchBook> {
   bool isSearching = true;
   int currentPage = 1;
   int totalPages = 1;
+  late Quote randomQuote;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectRandomQuote();
+  }
+
+  void _selectRandomQuote() {
+    final List<Quote> quotes = [
+      Quote(text: "책 없는 방은 영혼 없는 육체와도 같다.", author: "키케로"),
+      Quote(text: "좋은 책은 좋은 친구와 같다.", author: "생피에르"),
+      Quote(text: "독서는 정신의 음악이다.", author: "소크라테스"),
+      Quote(text: "독서는 하나의 창조 과정이다.", author: "에렌부르그"),
+      Quote(text: "그저 생각하고, 생활을 위해 독서하라.", author: "베이컨"),
+      Quote(text: "좋은 책은 인류에게 불멸의 정신이다.", author: "J.밀턴"),
+      Quote(text: "내가 세계를 알게 된 것은 책에 의해서였다.", author: "사르트르"),
+    ];
+    randomQuote = quotes[_random.nextInt(quotes.length)];
+  }
 
   Future<SearchBookResDto> searchBooks(String query, int page) async {
     var auth = context.read<AuthProvider>();
@@ -100,9 +120,14 @@ class _SearchBookState extends State<SearchBook> {
               color: Color(0xff666666),
               fontSize: 14,
               fontWeight: FontWeight.w400),
-          suffixIcon: Icon(
-            Icons.search,
-            color: Color(0xffFFCA0E),
+          suffixIcon: IconButton(
+            icon: Icon(
+              Icons.search,
+              color: Color(0xffFFCA0E),
+            ),
+            onPressed: () {
+              _performSearch(_searchController.text);
+            },
           ),
         ),
       ),
@@ -118,17 +143,6 @@ class _SearchBookState extends State<SearchBook> {
   }
 
   Widget _quotes() {
-    final List<Quote> quotes = [
-      Quote(text: "책 없는 방은 영혼 없는 육체와도 같다.", author: "키케로"),
-      Quote(text: "좋은 책은 좋은 친구와 같다.", author: "생피에르"),
-      Quote(text: "독서는 정신의 음악이다.", author: "소크라테스"),
-      Quote(text: "독서는 하나의 창조 과정이다.", author: "에렌부르그"),
-      Quote(text: "그저 생각하고, 생활을 위해 독서하라.", author: "베이컨"),
-      Quote(text: "좋은 책은 인류에게 불멸의 정신이다.", author: "J.밀턴"),
-      Quote(text: "내가 세계를 알게 된 것은 책에 의해서였다.", author: "사르트르"),
-    ];
-
-    final int randomIndex = _random.nextInt(quotes.length);
     return Positioned(
         bottom: 15,
         child: Column(
@@ -155,7 +169,7 @@ class _SearchBookState extends State<SearchBook> {
               ),
               child: Center(
                 child: Text(
-                  quotes[randomIndex].author,
+                  randomQuote.author,
                   style: TextStyle(
                       color: Color(0xff333333),
                       fontSize: 12,
@@ -180,7 +194,7 @@ class _SearchBookState extends State<SearchBook> {
               ),
               child: Center(
                 child: Text(
-                  quotes[randomIndex].text,
+                  randomQuote.text,
                   style: TextStyle(
                       color: Color(0xff333333),
                       fontSize: 12,

@@ -77,7 +77,10 @@ class _TagWidgetState extends State<TagWidget> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () {
+                    _tagController.clear();
+                    Navigator.pop(context);
+                  },
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xffebebeb),
                     minimumSize: Size(120, 48),
@@ -98,7 +101,9 @@ class _TagWidgetState extends State<TagWidget> {
                 SizedBox(width: 6),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop(_tagController.text);
+                    final String tagText = _tagController.text;
+                    _tagController.clear();
+                    Navigator.of(context).pop(tagText);
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xffffd747),

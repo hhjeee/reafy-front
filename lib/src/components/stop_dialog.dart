@@ -16,14 +16,19 @@ class StopDialog extends StatefulWidget {
 class _StopDialogState extends State<StopDialog> {
   List<ReadingBookInfo> books = [];
   int? selectedBookId;
+  bool _isStartPageValid = true;
+  bool _isEndPageValid = true;
 
   TextEditingController textController1 = TextEditingController();
   TextEditingController textController2 = TextEditingController();
   bool isButtonEnabled = false;
+
   void updateButtonState() {
     setState(() {
-      isButtonEnabled =
-          textController1.text.isNotEmpty && textController2.text.isNotEmpty;
+      isButtonEnabled = _isStartPageValid &&
+          _isEndPageValid &&
+          textController1.text.isNotEmpty &&
+          textController2.text.isNotEmpty;
     });
   }
 
@@ -40,6 +45,20 @@ class _StopDialogState extends State<StopDialog> {
     });
   }
 
+  void _validatePageInput() {
+    bool startPageValid = textController1.text.isEmpty ||
+        int.tryParse(textController1.text) != null;
+    bool endPageValid = textController2.text.isEmpty ||
+        int.tryParse(textController2.text) != null;
+
+    setState(() {
+      _isStartPageValid = startPageValid;
+      _isEndPageValid = endPageValid;
+    });
+
+    updateButtonState();
+  }
+
   @override
   Widget build(BuildContext context) {
     StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
@@ -51,7 +70,7 @@ class _StopDialogState extends State<StopDialog> {
         content: SingleChildScrollView(
             child: Container(
           width: 320,
-          height: 450,
+          height: 470,
           child: Column(
             children: <Widget>[
               SizedBox(height: 30.0),
@@ -131,24 +150,44 @@ class _StopDialogState extends State<StopDialog> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "읽은 페이지:",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xff666666),
-                      ),
+                    Row(
+                      children: [
+                        const Text(
+                          "읽은 페이지:",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xff666666),
+                          ),
+                        ),
+                        Spacer(),
+                        if (!_isStartPageValid || !_isEndPageValid)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              '숫자를 입력해주세요',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                      ],
                     ),
                     SizedBox(height: 8.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          width: 130, //TextField 크기
+                          width: 120,
                           height: 32,
                           decoration: BoxDecoration(
                             color: Color(0xffffffff),
                             borderRadius: BorderRadius.circular(4),
+                            border: !_isStartPageValid
+                                ? Border.all(color: Colors.red, width: 2)
+                                : null,
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.2),
@@ -173,6 +212,7 @@ class _StopDialogState extends State<StopDialog> {
                                   controller: textController1,
                                   onChanged: (_) {
                                     updateButtonState();
+                                    _validatePageInput();
                                   },
                                   textAlign: TextAlign.right,
                                   decoration: InputDecoration(
@@ -197,11 +237,14 @@ class _StopDialogState extends State<StopDialog> {
                           ),
                         ),
                         Container(
-                          width: 130, //TextField 크기
+                          width: 120,
                           height: 32,
                           decoration: BoxDecoration(
                             color: Color(0xffffffff),
                             borderRadius: BorderRadius.circular(4),
+                            border: !_isEndPageValid
+                                ? Border.all(color: Colors.red, width: 2)
+                                : null,
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.2),
@@ -226,6 +269,7 @@ class _StopDialogState extends State<StopDialog> {
                                   controller: textController2,
                                   onChanged: (_) {
                                     updateButtonState();
+                                    _validatePageInput();
                                   },
                                   textAlign: TextAlign.right,
                                   decoration: InputDecoration(
