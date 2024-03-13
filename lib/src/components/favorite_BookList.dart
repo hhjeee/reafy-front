@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/pages/book/favorite_bookshelf.dart';
 import 'package:get/get.dart';
+import 'package:reafy_front/src/provider/state_book_provider.dart';
 
 class isFavorite_BookShelfWidget extends StatefulWidget {
   final String title;
-  final List<String> thumbnailList;
 
-  const isFavorite_BookShelfWidget(
-      {required this.title, required this.thumbnailList, Key? key})
+  const isFavorite_BookShelfWidget({required this.title, Key? key})
       : super(key: key);
 
   @override
@@ -18,8 +18,18 @@ class isFavorite_BookShelfWidget extends StatefulWidget {
 
 class isFavorite_BookShelfWidgetState
     extends State<isFavorite_BookShelfWidget> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<BookShelfProvider>(context, listen: false)
+        .fetchFavoriteThumbnailList();
+  }
+
   List<Widget> _buildBookList(BuildContext context) {
-    return widget.thumbnailList.map((thumbnail) {
+    List<String> thumbnailList =
+        Provider.of<BookShelfProvider>(context).thumbnailsForIsFavorite;
+
+    return thumbnailList.map((thumbnail) {
       return Padding(
         padding: const EdgeInsets.only(right: 21.61, top: 7),
         child: Container(
@@ -48,12 +58,13 @@ class isFavorite_BookShelfWidgetState
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    List<String> thumbnailList =
+        Provider.of<BookShelfProvider>(context).thumbnailsForIsFavorite;
 
     return GestureDetector(
         onTap: () {
           Get.to(Favorite_BookShelf(
             pageTitle: widget.title,
-            thumbnailListLength: widget.thumbnailList.length,
           ));
         },
         child: Center(
@@ -78,7 +89,7 @@ class isFavorite_BookShelfWidgetState
                   Row(
                     children: [
                       Text(
-                        widget.thumbnailList.length.toString(),
+                        thumbnailList.length.toString(),
                         style: TextStyle(
                           fontSize: 16,
                           color: Color(0xff333333),

@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+const url = 'https://dev.reafydevkor.xyz';
+
 // 독서 기록 조회
 Future<List<dynamic>> getBookshelfBookHistory(int bookshelfbookid) async {
   final dio = Dio();
@@ -9,7 +11,7 @@ Future<List<dynamic>> getBookshelfBookHistory(int bookshelfbookid) async {
 
   try {
     final response = await dio.get(
-      'https://reafydevkor.xyz/history/bookshelfbook',
+      '$url/history',
       queryParameters: {
         'bookshelfbookid': bookshelfbookid,
       },
@@ -67,7 +69,7 @@ Future<void> createUserBookHistory(CreateUserBookHistoryDto historyDto) async {
 
   try {
     final response = await dio.post(
-      'https://reafydevkor.xyz/history/bookshelfbook',
+      '$url/history',
       data: historyDto.toJson(),
       options: Options(headers: {
         'Authorization': 'Bearer $userToken',
@@ -79,6 +81,7 @@ Future<void> createUserBookHistory(CreateUserBookHistoryDto historyDto) async {
       throw Exception('Failed to create book history');
     }
   } catch (e) {
+    print('createUserBookHistory 함수에서 에러 발생: $e');
     throw e;
   }
 }

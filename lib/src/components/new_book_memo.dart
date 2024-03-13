@@ -74,8 +74,34 @@ class _newBookMemoState extends State<newBookMemo> {
     });
   }
 
-  void handleImagePicked(String path) {
+  void handleImagePicked(String? path) {
     selectedImagePath = path;
+  }
+
+  Future<void> updateMemoState() async {
+    if (selectedBookId == null) {
+      print('필요한 정보가 누락되었습니다.');
+      return;
+    }
+    String tags = memoTags.join(', ');
+
+    try {
+      if (widget.memo == null) {
+        //메모 생성
+        Memo newMemo = await createMemo(
+            selectedBookId!, memoController.text, 0, tags, selectedImagePath);
+        Provider.of<MemoProvider>(context, listen: false).addBookMemo(newMemo);
+      } else {
+        //메모 수정
+        Memo updatedMemo = await updateMemo(widget.memo!.memoId,
+            memoController.text, 0, tags, selectedImagePath);
+        Provider.of<MemoProvider>(context, listen: false)
+            .updateBookMemo(updatedMemo);
+      }
+      Navigator.pop(context); // 성공적으로 업데이트한 후 모달을 닫습니다.
+    } catch (e) {
+      print('메모 생성 또는 업데이트 실패: $e');
+    }
   }
 
   Widget _datepicker(context) {
@@ -182,32 +208,7 @@ class _newBookMemoState extends State<newBookMemo> {
               initialTags: memoTags),
           SizedBox(height: 16.0),
           ElevatedButton(
-            onPressed: () async {
-              if (selectedBookId == null) {
-                print('필요한 정보가 누락되었습니다.');
-                return;
-              }
-              String tags = memoTags.join(', ');
-              try {
-                if (widget.memo == null) {
-                  //메모 생성
-                  Memo newMemo = await createMemo(selectedBookId!,
-                      memoController.text, 0, tags, selectedImagePath);
-                  Provider.of<MemoProvider>(context, listen: false)
-                      .addBookMemo(newMemo);
-                } else {
-                  //메모 수정
-                  Memo updatedMemo = await updateMemo(widget.memo!.memoId,
-                      memoController.text, 0, tags, selectedImagePath);
-                  Provider.of<MemoProvider>(context, listen: false)
-                      .updateBookMemo(updatedMemo);
-                }
-
-                Navigator.pop(context);
-              } catch (e) {
-                print('메모 생성 실패: $e');
-              }
-            },
+            onPressed: () => updateMemoState(),
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -244,15 +245,21 @@ void showAddBookMemoBottomSheet(BuildContext context, int bookshelfBookId,
       ),
     ),
     builder: (BuildContext context) {
-      return ClipRRect(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(10.0),
-          topRight: Radius.circular(10.0),
+      return GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10.0),
+            topRight: Radius.circular(10.0),
+          ),
+          child: Container(
+            color: bg_gray,
+            child: newBookMemo(bookshelfBookId: bookshelfBookId, memo: memo),
+          ),
         ),
-        child: Container(
-          color: bg_gray,
-          child: newBookMemo(bookshelfBookId: bookshelfBookId, memo: memo),
-        ),
+        behavior: HitTestBehavior.opaque,
       );
     },
   );

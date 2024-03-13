@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/delete_book2.dart';
+import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
@@ -9,11 +10,9 @@ import 'package:reafy_front/src/pages/book/bookdetail.dart';
 
 class Favorite_BookShelf extends StatefulWidget {
   final String pageTitle;
-  final int thumbnailListLength;
 
   const Favorite_BookShelf({
     required this.pageTitle,
-    required this.thumbnailListLength,
     Key? key,
   }) : super(key: key);
 
@@ -38,6 +37,10 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
       duration: Duration(milliseconds: 250),
     );
     _shakeController.repeat(reverse: true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<BookShelfProvider>(context, listen: false)
+          .fetchFavoriteThumbnailList();
+    });
   }
 
   @override
@@ -103,32 +106,31 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
               fit: BoxFit.fill,
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 10),
-              Text(
-                "총 ${widget.thumbnailListLength}권",
-                style: TextStyle(
-                  color: Color(0xff333333),
-                  fontWeight: FontWeight.w700,
-                  fontSize: 12,
-                ),
-              ),
-              FutureBuilder(
-                future: fetchBookshelfBooksInfoByFavorite(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    books = snapshot.data as List<BookshelfBookInfo>;
-                    return _buildFavoriteBookShelfWidget(books);
-                  }
-                },
-              ),
-            ],
+          child: FutureBuilder(
+            future: fetchBookshelfBooksInfoByFavorite(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                books = snapshot.data as List<BookshelfBookInfo>;
+                return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20),
+                      Text(
+                        "총 ${books.length}권",
+                        style: TextStyle(
+                          color: Color(0xff333333),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                        ),
+                      ),
+                      _buildFavoriteBookShelfWidget(books)
+                    ]);
+              }
+            },
           ),
         ),
       ),
@@ -187,7 +189,7 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
             margin: EdgeInsets.only(top: 22),
             child: SingleChildScrollView(
               child: Container(
-                height: 650,
+                height: MediaQuery.of(context).size.height - 200,
                 child: GridView.builder(
                   padding: EdgeInsets.all(8.0),
                   shrinkWrap: true,

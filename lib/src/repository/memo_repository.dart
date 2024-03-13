@@ -3,6 +3,8 @@ import 'package:reafy_front/src/models/memo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart' as path;
 
+const url = 'https://dev.reafydevkor.xyz';
+
 class MemoResDto {
   final int totalItems;
   final int currentItems;
@@ -45,7 +47,7 @@ Future<MemoResDto> getMemoList(int page) async {
   final String? userToken = prefs.getString('token');
 
   try {
-    final response = await dio.get('https://reafydevkor.xyz/memo?page=$page',
+    final response = await dio.get('$url/memo?page=$page',
         options: Options(headers: {
           'Authorization': 'Bearer $userToken',
           'Content-Type': 'application/json'
@@ -69,7 +71,7 @@ Future<List<dynamic>> getMemoListByHashtag(String hashtag, int page) async {
   final String? userToken = prefs.getString('token');
 
   try {
-    final response = await dio.get('https://reafydevkor.xyz/memo/hashtag',
+    final response = await dio.get('$url/memo/hashtag',
         queryParameters: {
           'hashtag': hashtag,
           'page': page,
@@ -97,7 +99,7 @@ Future<MemoResDto> getMemoListByBookId(int bookshelfBookId, int page) async {
   final String? userToken = prefs.getString('token');
 
   try {
-    final response = await dio.get('https://reafydevkor.xyz/memo/bookshelfbook',
+    final response = await dio.get('$url/memo/bookshelfbook',
         queryParameters: {
           'bookshelfBookId': bookshelfBookId,
           'page': page,
@@ -133,7 +135,7 @@ Future<Map<String, dynamic>> getMemoDetails(int memoId) async {
   final String? userToken = prefs.getString('token');
 
   try {
-    final response = await dio.get('https://reafydevkor.xyz/memo/$memoId',
+    final response = await dio.get('$url/memo/$memoId',
         options: Options(headers: {
           'Authorization': 'Bearer $userToken',
           'Content-Type': 'application/json',
@@ -181,7 +183,7 @@ Future<Memo> createMemo(int bookshelfBookId, String content, int page,
       });
     }
 
-    final response = await dio.post('https://reafydevkor.xyz/memo',
+    final response = await dio.post('$url/memo',
         data: formData,
         options: Options(
           headers: {
@@ -231,7 +233,7 @@ Future<Memo> updateMemo(
       });
     }
 
-    final response = await dio.put('https://reafydevkor.xyz/memo/$memoId',
+    final response = await dio.put('$url/memo/$memoId',
         data: formData,
         options: Options(
           headers: {
@@ -256,7 +258,7 @@ Future<void> deleteMemoById(int memoid) async {
   final String? userToken = prefs.getString('token');
 
   try {
-    final response = await dio.delete('https://reafydevkor.xyz/memo/$memoid',
+    final response = await dio.delete('$url/memo/$memoid',
         options: Options(headers: {
           'Authorization': 'Bearer $userToken',
           'Content-Type': 'application/json',

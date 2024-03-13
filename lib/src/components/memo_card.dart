@@ -14,7 +14,9 @@ import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 
 class MemoCard extends StatefulWidget {
   final Memo memo;
-  const MemoCard({Key? key, required this.memo}) : super(key: key);
+  final String type;
+  const MemoCard({Key? key, required this.memo, required this.type})
+      : super(key: key);
 
   @override
   _MemoCardState createState() => _MemoCardState();
@@ -26,91 +28,117 @@ class _MemoCardState extends State<MemoCard> {
     final validHashtags =
         widget.memo.hashtag.where((tag) => tag.isNotEmpty).toList();
 
-    return FutureBuilder<BookshelfBookTitleDto>(
-      future: getBookshelfBookTitle(widget.memo.bookshelfBookId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasData) {
-            return Container(
-              margin: const EdgeInsets.only(top: 20),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
-              decoration: BoxDecoration(
-                color: Color(0xFFfbfbfb),
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: gray.withOpacity(0.1),
-                    spreadRadius: 2,
-                    blurRadius: 20,
-                    offset: Offset(0, 0),
-                  ),
-                ],
+    return Consumer<MemoProvider>(builder: (context, memoProvider, child) {
+      Memo? memo;
+      if (widget.type == 'board')
+        memo = memoProvider.findMemoById(widget.memo.memoId);
+      else if (widget.type == 'book')
+        memo = memoProvider.findBookMemoById(widget.memo.memoId);
+
+      if (memo == null) {
+        return SizedBox.shrink(); // 메모가 없으면 아무것도 표시하지 않음
+      }
+
+      final validHashtags =
+          memo.hashtag.where((tag) => tag.isNotEmpty).toList();
+      return Container(
+        margin: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
+        decoration: BoxDecoration(
+          color: Color(0xFFfbfbfb),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: gray.withOpacity(0.1),
+              spreadRadius: 2,
+              blurRadius: 20,
+              offset: Offset(0, 0),
+            ),
+          ],
+        ),
+        width: 343,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            MemoTitle(
+                memoId: widget.memo.memoId,
+                bookId: widget.memo.bookshelfBookId,
+                memo: widget.memo),
+            if (widget.memo.imageURL != null &&
+                widget.memo.imageURL!.isNotEmpty)
+              MemoImage(imageUrl: widget.memo.imageURL!),
+            const SizedBox(height: 10),
+            MemoDescription(content: widget.memo.content),
+            const SizedBox(height: 10),
+            if (validHashtags.isNotEmpty)
+              Wrap(
+                spacing: 5.0,
+                runSpacing: 5.0,
+                children: widget.memo.hashtag
+                    .map((tag) => Hashtag(label: "#$tag"))
+                    .toList(),
               ),
-              width: 343,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MemoTitle(
-                      title: snapshot.data!.title,
-                      memoId: widget.memo.memoId,
-                      bookId: widget.memo.bookshelfBookId,
-                      memo: widget.memo),
-                  if (widget.memo.imageURL != null &&
-                      widget.memo.imageURL!.isNotEmpty)
-                    MemoImage(imageUrl: widget.memo.imageURL!),
-                  const SizedBox(height: 10),
-                  MemoDescription(content: widget.memo.content),
-                  const SizedBox(height: 10),
-                  if (validHashtags.isNotEmpty)
-                    Wrap(
-                      spacing: 5.0,
-                      runSpacing: 5.0,
-                      children: widget.memo.hashtag
-                          .map((tag) => Hashtag(label: "#$tag"))
-                          .toList(),
-                    ),
-                  const SizedBox(height: 5),
-                  Row(
-                    children: [
-                      Spacer(),
-                      Text(
-                        DateFormat('yyyy.MM.dd kk:mm')
-                            .format(widget.memo.updatedAt),
-                        style: TextStyle(
-                          color: Color(0xffb3b3b3),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                Spacer(),
+                Text(
+                  DateFormat('yyyy.MM.dd kk:mm').format(widget.memo.updatedAt),
+                  style: TextStyle(
+                    color: Color(0xffb3b3b3),
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
                   ),
-                ],
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Text('책 제목을 가져오는 데 실패했습니다.');
-          }
-        }
-        return CircularProgressIndicator();
-      },
-    );
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
 
-class MemoTitle extends StatelessWidget {
-  final String? title;
+class MemoTitle extends StatefulWidget {
   final int memoId;
   final int bookId;
   final Memo memo;
 
   const MemoTitle(
       {Key? key,
-      this.title,
       required this.memoId,
       required this.bookId,
       required this.memo})
       : super(key: key);
+
+  @override
+  _MemoTitleState createState() => _MemoTitleState();
+}
+
+class _MemoTitleState extends State<MemoTitle> {
+  String _title = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBookTitle();
+  }
+
+  void _loadBookTitle() async {
+    try {
+      BookshelfBookTitleDto bookTitleDto =
+          await getBookshelfBookTitle(widget.bookId);
+      String title = bookTitleDto.title;
+      if (mounted) {
+        setState(() {
+          _title = title;
+        });
+      }
+    } catch (e) {
+      print("책 제목을 가져오는 중 오류 발생: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +149,7 @@ class MemoTitle extends StatelessWidget {
           Container(
             width: 275,
             child: Text(
-              title ?? '',
+              _title,
               style: const TextStyle(
                   fontWeight: FontWeight.w800, color: black, fontSize: 12),
               overflow: TextOverflow.clip,
@@ -132,9 +160,10 @@ class MemoTitle extends StatelessWidget {
               child: PopupMenuButton<String>(
                 onSelected: (String value) {
                   if (value == 'edit') {
-                    showAddBookMemoBottomSheet(context, bookId, memo: memo);
+                    showAddBookMemoBottomSheet(context, widget.bookId,
+                        memo: widget.memo);
                   } else if (value == 'delete') {
-                    _showDeleteDialog(context, memoId, bookId);
+                    _showDeleteDialog(context, widget.memoId, widget.bookId);
                   }
                 },
                 itemBuilder: (BuildContext context) {

@@ -69,8 +69,7 @@ class _BookShelfState extends State<BookShelf> {
                         builder: (context, bookShelfProvider, child) {
                           return State_BookShelfWidget(
                             title: '읽고 있는 책',
-                            thumbnailList:
-                                bookShelfProvider.thumbnailsForProgressState1,
+                            state: 1,
                           );
                         },
                       ),
@@ -78,8 +77,7 @@ class _BookShelfState extends State<BookShelf> {
                         builder: (context, bookShelfProvider, child) {
                           return State_BookShelfWidget(
                             title: '완독한 책',
-                            thumbnailList:
-                                bookShelfProvider.thumbnailsForProgressState2,
+                            state: 2,
                           );
                         },
                       ),
@@ -88,8 +86,6 @@ class _BookShelfState extends State<BookShelf> {
                         builder: (context, bookShelfProvider, child) {
                           return isFavorite_BookShelfWidget(
                             title: 'My Favorite',
-                            thumbnailList:
-                                bookShelfProvider.thumbnailsForIsFavorite,
                           );
                         },
                       ),

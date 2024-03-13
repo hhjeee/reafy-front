@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:reafy_front/src/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+const url = 'https://dev.reafydevkor.xyz';
+
 //coin 조회
 Future<int> getUserCoin() async {
   final dio = Dio();
@@ -9,7 +11,7 @@ Future<int> getUserCoin() async {
   final String? userToken = prefs.getString('token');
 
   try {
-    final response = await dio.get('https://reafydevkor.xyz/coin',
+    final response = await dio.get('$url/coin',
         options: Options(headers: {
           'Authorization': 'Bearer ${userToken}',
           'Content-Type': "application/json"
@@ -41,7 +43,7 @@ Future<void> updateCoin(int coin, bool isPlus) async {
     };
 
     final response = await dio.put(
-      'https://reafydevkor.xyz/coin',
+      '$url/coin',
       data: requestData,
       options: Options(headers: {
         'Authorization': 'Bearer $userToken',
@@ -58,12 +60,3 @@ Future<void> updateCoin(int coin, bool isPlus) async {
     throw e;
   }
 }
-
-/* 
-try {
-  await updateCoin(10, true);
-  print('코인이 성공적으로 증가되었습니다.');
-} catch (e) {
-  print('에러 발생: $e');
-}
-*/

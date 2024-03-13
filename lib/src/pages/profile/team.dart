@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:ui';
+//import 'dart:ui';
 import 'package:reafy_front/src/components/image_data.dart';
 
 class Team extends StatelessWidget {

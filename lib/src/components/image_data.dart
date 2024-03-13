@@ -155,6 +155,7 @@ class IconsPath {
   static String get memo_pic => 'assets/svg/memo_picture.svg';
   static String get shelf_right => 'assets/svg/shelf_right.svg';
   static String get menu => 'assets/svg/dots.svg';
+  static String get information => 'assets/svg/information.svg';
 
   // 아이템
   static String get crying => 'assets/images/crying.png';

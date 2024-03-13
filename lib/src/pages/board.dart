@@ -125,27 +125,24 @@ class _BoardState extends State<Board> {
         height: size.height,
         child: Padding(
             padding: EdgeInsets.symmetric(horizontal: (size.width - 343) / 2),
-            child:
-                Consumer<MemoProvider>(builder: (context, memoProvider, child) {
-              return Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: memoProvider.memoList.length,
-                      itemBuilder: (context, index) {
-                        final memo = memoProvider.memoList[index];
-                        return MemoCard(memo: memo);
-                      },
-                    ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: memoProvider.memoList.length,
+                    itemBuilder: (context, index) {
+                      final memo = memoProvider.memoList[index];
+                      return MemoCard(memo: memo, type: 'board');
+                    },
                   ),
-                  SizedBox(height: 5),
-                  _buildPageNumbers(memoProvider.totalPages),
-                  SizedBox(height: 5),
-                  NewMemoButton(),
-                  SizedBox(height: 25.0),
-                ],
-              );
-            })),
+                ),
+                SizedBox(height: 5),
+                _buildPageNumbers(memoProvider.totalPages),
+                SizedBox(height: 5),
+                NewMemoButton(),
+                SizedBox(height: 25.0),
+              ],
+            )),
       ),
     );
   }

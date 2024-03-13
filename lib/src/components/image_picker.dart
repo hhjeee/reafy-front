@@ -7,7 +7,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class PickImage extends StatefulWidget {
-  final Function(String) onImagePicked;
+  final Function(String?) onImagePicked;
   final String? imagePath;
 
   const PickImage({Key? key, required this.onImagePicked, this.imagePath})
@@ -121,6 +121,7 @@ class _PickImageState extends State<PickImage> {
                 setState(() {
                   _image = null;
                 });
+                widget.onImagePicked(null);
               },
               child: Icon(Icons.cancel, color: Color(0xFFFFD747), size: 24),
             ),

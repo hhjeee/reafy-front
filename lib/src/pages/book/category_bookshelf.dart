@@ -12,11 +12,9 @@ import 'package:reafy_front/src/pages/book/bookdetail.dart';
 
 class Category_BookShelf extends StatefulWidget {
   final String pageTitle;
-  final int thumbnailListLength;
 
   const Category_BookShelf({
     required this.pageTitle,
-    required this.thumbnailListLength,
     Key? key,
   }) : super(key: key);
 
@@ -197,7 +195,7 @@ class _C_BookShelfState extends State<Category_BookShelf>
                   ),
                   SizedBox(height: 22),
                   Container(
-                    height: 650,
+                    height: MediaQuery.of(context).size.height - 200,
                     child: GridView.builder(
                       padding: EdgeInsets.all(8.0),
                       shrinkWrap: true,

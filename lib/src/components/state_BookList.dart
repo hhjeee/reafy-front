@@ -4,6 +4,7 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/models/book.dart';
 import 'package:reafy_front/src/pages/book/bookdetail.dart';
 import 'package:reafy_front/src/pages/book/category_bookshelf.dart';
+import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/models/bookcount.dart';
 import 'package:provider/provider.dart';
@@ -11,10 +12,10 @@ import 'package:reafy_front/src/pages/book/category_bookshelf.dart';
 
 class State_BookShelfWidget extends StatefulWidget {
   final String title;
-  final List<String> thumbnailList;
+  final int state;
 
   const State_BookShelfWidget(
-      {required this.title, required this.thumbnailList, Key? key})
+      {required this.title, required this.state, Key? key})
       : super(key: key);
 
   @override
@@ -22,8 +23,26 @@ class State_BookShelfWidget extends StatefulWidget {
 }
 
 class State_BookShelfWidgetState extends State<State_BookShelfWidget> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<BookShelfProvider>(context, listen: false).fetchData();
+  }
+
   List<Widget> _buildBookList(BuildContext context) {
-    return widget.thumbnailList.map((thumbnail) {
+    List<String> thumbnailList = [];
+
+    if (widget.state == 1) {
+      thumbnailList =
+          Provider.of<BookShelfProvider>(context).thumbnailsForProgressState1;
+    } else if (widget.state == 2) {
+      thumbnailList =
+          Provider.of<BookShelfProvider>(context).thumbnailsForProgressState2;
+    } else {
+      thumbnailList = [];
+    }
+
+    return thumbnailList.map((thumbnail) {
       return Padding(
         padding: const EdgeInsets.only(right: 18.61),
         child: Container(
@@ -51,11 +70,22 @@ class State_BookShelfWidgetState extends State<State_BookShelfWidget> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> thumbnailList;
+
+    if (widget.state == 1) {
+      thumbnailList =
+          Provider.of<BookShelfProvider>(context).thumbnailsForProgressState1;
+    } else if (widget.state == 2) {
+      thumbnailList =
+          Provider.of<BookShelfProvider>(context).thumbnailsForProgressState2;
+    } else {
+      thumbnailList = [];
+    }
+
     return GestureDetector(
         onTap: () {
           Get.to(Category_BookShelf(
             pageTitle: widget.title,
-            thumbnailListLength: widget.thumbnailList.length,
           ));
         },
         child: Center(
@@ -80,7 +110,7 @@ class State_BookShelfWidgetState extends State<State_BookShelfWidget> {
                   Row(
                     children: [
                       Text(
-                        widget.thumbnailList.length.toString(),
+                        thumbnailList.length.toString(),
                         style: TextStyle(
                           fontSize: 16,
                           color: Color(0xff333333),
