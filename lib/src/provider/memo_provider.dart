@@ -15,6 +15,8 @@ class MemoProvider with ChangeNotifier {
 
   Future<void> loadMemosByBookId(int bookId, int page) async {
     try {
+      _memos = [];
+      notifyListeners();
       MemoResDto memoRes = await getMemoListByBookId(bookId, page);
       _memos = memoRes.items;
       _totalPages = memoRes.totalPages;
@@ -37,6 +39,10 @@ class MemoProvider with ChangeNotifier {
 
   Memo? findMemoById(int memoId) {
     return _memoList.firstWhereOrNull((memo) => memo.memoId == memoId);
+  }
+
+  Memo? findBookMemoById(int memoId) {
+    return _memos.firstWhereOrNull((memo) => memo.memoId == memoId);
   }
 
   void addBookMemo(Memo memo) {

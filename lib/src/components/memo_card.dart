@@ -14,7 +14,9 @@ import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 
 class MemoCard extends StatefulWidget {
   final Memo memo;
-  const MemoCard({Key? key, required this.memo}) : super(key: key);
+  final String type;
+  const MemoCard({Key? key, required this.memo, required this.type})
+      : super(key: key);
 
   @override
   _MemoCardState createState() => _MemoCardState();
@@ -27,7 +29,11 @@ class _MemoCardState extends State<MemoCard> {
         widget.memo.hashtag.where((tag) => tag.isNotEmpty).toList();
 
     return Consumer<MemoProvider>(builder: (context, memoProvider, child) {
-      Memo? memo = memoProvider.findMemoById(widget.memo.memoId);
+      Memo? memo;
+      if (widget.type == 'board')
+        memo = memoProvider.findMemoById(widget.memo.memoId);
+      else if (widget.type == 'book')
+        memo = memoProvider.findBookMemoById(widget.memo.memoId);
 
       if (memo == null) {
         return SizedBox.shrink(); // 메모가 없으면 아무것도 표시하지 않음

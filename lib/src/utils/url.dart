@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 
 class AppUrl {
-  static String baseurl = 'https://reafydevkor.xyz';
+  static String baseurl = 'https://dev.reafydevkor.xyz';
 }
 
 class ApiClient {

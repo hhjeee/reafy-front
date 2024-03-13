@@ -31,7 +31,9 @@ class _MemoSectionState extends State<MemoSection> {
     });
   }
 
-  void _loadPage(int pageNumber) {
+  void _loadPage(int pageNumber) async {
+    final memoProvider = Provider.of<MemoProvider>(context, listen: false);
+    await memoProvider.loadMemosByBookId(widget.bookshelfBookId, pageNumber);
     setState(() {
       currentPage = pageNumber;
     });
@@ -91,10 +93,9 @@ class _MemoSectionState extends State<MemoSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MemoProvider>(
-      builder: (context, memoProvider, child) {
-        if (memoProvider.memos.isEmpty) {
-          return Container(
+    final memoProvider = Provider.of<MemoProvider>(context);
+    return memoProvider.memos.length == 0
+        ? Container(
             height: 120,
             child: Center(
               child: Column(
@@ -112,14 +113,13 @@ class _MemoSectionState extends State<MemoSection> {
                 ],
               ),
             ),
-          );
-        } else {
-          return Center(
+          )
+        : Center(
             child: Column(
               children: [
                 Column(
                   children: memoProvider.memos
-                      .map((memo) => MemoCard(memo: memo))
+                      .map((memo) => MemoCard(memo: memo, type: 'book'))
                       .toList(),
                 ),
                 SizedBox(height: 5),
@@ -127,8 +127,5 @@ class _MemoSectionState extends State<MemoSection> {
               ],
             ),
           );
-        }
-      },
-    );
   }
 }

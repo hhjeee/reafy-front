@@ -7,6 +7,7 @@ import 'package:reafy_front/src/components/delete_book.dart';
 import 'package:reafy_front/src/components/modify_book.dart';
 import 'package:reafy_front/src/components/new_book_memo.dart';
 import 'package:reafy_front/src/models/book.dart';
+import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
@@ -30,6 +31,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
   bool isFavorite = false;
   int totalPagesRead = 0;
   dynamic recentHistory;
+  int currentPage = 1;
 
   @override
   void initState() {
@@ -42,7 +44,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
     }).catchError((error) {
       print('Error fetching book details: $error');
     });
-
     CalculateTotalPagesRead();
   }
 
@@ -357,7 +358,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
 class BookImage extends StatelessWidget {
   final BookshelfBookDetailsDto bookDetails;
-
   const BookImage({Key? key, required this.bookDetails}) : super(key: key);
 
   @override
@@ -378,7 +378,7 @@ class BookImage extends StatelessWidget {
         borderRadius: BorderRadius.circular(5.0),
         child: bookDetails.thumbnailURL != null
             ? Image.network(
-                bookDetails.thumbnailURL!,
+                bookDetails.thumbnailURL,
                 fit: BoxFit.cover,
               )
             : Placeholder(),

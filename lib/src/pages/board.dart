@@ -132,7 +132,7 @@ class _BoardState extends State<Board> {
                     itemCount: memoProvider.memoList.length,
                     itemBuilder: (context, index) {
                       final memo = memoProvider.memoList[index];
-                      return MemoCard(memo: memo);
+                      return MemoCard(memo: memo, type: 'board');
                     },
                   ),
                 ),

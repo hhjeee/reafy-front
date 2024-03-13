@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+const url = 'https://dev.reafydevkor.xyz';
+
 Future<List<Map<String, dynamic>>> getMonthlyPageStatistics(int year) async {
   final dio = Dio();
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -8,7 +10,7 @@ Future<List<Map<String, dynamic>>> getMonthlyPageStatistics(int year) async {
 
   try {
     final response = await dio.get(
-      'https://reafydevkor.xyz/statistics/pages',
+      '$url/statistics/pages',
       queryParameters: {
         'year': year,
       },
@@ -38,7 +40,7 @@ Future<List<Map<String, dynamic>>> getMonthlyTimeStatistics(int year) async {
 
   try {
     final response = await dio.get(
-      'https://reafydevkor.xyz/statistics/times',
+      '$url/statistics/times',
       queryParameters: {
         'year': year,
       },
@@ -68,7 +70,7 @@ Future<Map<String, dynamic>> getTodayTimeStatistics() async {
 
   try {
     final response = await dio.get(
-      'https://reafydevkor.xyz/statistics/today',
+      '$url/statistics/today',
       options: Options(headers: {
         'Authorization': 'Bearer $userToken',
         'Content-Type': "application/json"

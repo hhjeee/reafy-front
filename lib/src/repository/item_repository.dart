@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:reafy_front/src/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+const url = 'https://dev.reafydevkor.xyz';
+
 class ItemDto {
   final int itemId;
   bool activation;
@@ -22,12 +24,11 @@ class ItemDto {
 //아이템 구매
 Future<bool> postItem(int itemId, bool activation, int price) async {
   final dio = Dio();
-  final url = 'https://reafydevkor.xyz/item';
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? userToken = prefs.getString('token');
 
   try {
-    final response = await dio.post(url,
+    final response = await dio.post('$url/item',
         data: {
           'itemId': itemId,
           'activation': activation,
@@ -56,13 +57,12 @@ Future<bool> postItem(int itemId, bool activation, int price) async {
 // 소유 아이템 아이디 리스트 반환
 Future<List<int>> getOwnedItemIds() async {
   final Dio dio = Dio();
-  final url = 'https://reafydevkor.xyz/item/userItemList';
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? userToken = prefs.getString('token');
 
   try {
     final response = await dio.get(
-      url,
+      '$url/item/userItemList',
       options: Options(headers: {
         'Authorization': 'Bearer $userToken',
         'Content-Type': 'application/json',
@@ -89,13 +89,12 @@ Future<List<int>> getOwnedItemIds() async {
 // 배치된 아이템 아이디 리스트 반환
 Future<List<int>> getActivatedOwnedItemIds() async {
   final Dio dio = Dio();
-  final url = 'https://reafydevkor.xyz/item/userItemList';
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? userToken = prefs.getString('token');
 
   try {
     final response = await dio.get(
-      url,
+      '$url/item/userItemList',
       options: Options(headers: {
         'Authorization': 'Bearer $userToken',
         'Content-Type': 'application/json',
