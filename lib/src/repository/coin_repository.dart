@@ -1,28 +1,20 @@
 import 'package:dio/dio.dart';
-import 'package:reafy_front/src/models/user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reafy_front/src/utils/api.dart';
 
-const url = 'https://dev.reafydevkor.xyz';
-
+final Dio authdio = authDio().getDio();
 //coin 조회
 Future<int> getUserCoin() async {
-  final dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
+  //var dio = await authDio();
   try {
-    final response = await dio.get('$url/coin',
-        options: Options(headers: {
-          'Authorization': 'Bearer ${userToken}',
-          'Content-Type': "application/json"
-        }));
+    final res = await authdio.get('${baseUrl}/coin');
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = response.data;
+    if (res.statusCode == 200) {
+      final Map<String, dynamic> resData = res.data;
 
-      final int totalCoin = responseData['totalCoin'];
+      final int totalCoin = resData['totalCoin'];
       return totalCoin;
     } else {
+      print(res.statusCode);
       throw Exception('Failed to load coin');
     }
   } catch (e) {
@@ -32,28 +24,20 @@ Future<int> getUserCoin() async {
 
 //coin 증가, 차감
 Future<void> updateCoin(int coin, bool isPlus) async {
-  final dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
+  ////var dio = await authDio();
+  ////final ApiClient apiClient = ApiClient();
   try {
-    final Map<String, dynamic> requestData = {
+    final Map<String, dynamic> reqData = {
       'coin': coin,
       'isPlus': isPlus,
     };
 
-    final response = await dio.put(
-      '$url/coin',
-      data: requestData,
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
-    );
+    final res = await authdio.put('${baseUrl}/coin', data: reqData);
 
-    if (response.statusCode == 200) {
+    if (res.statusCode == 200) {
       print('코인 업데이트 성공');
     } else {
+      print(res.statusCode);
       throw Exception('코인 업데이트 실패');
     }
   } catch (e) {

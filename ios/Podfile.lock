@@ -9,9 +9,6 @@ PODS:
     - Flutter
   - flutter_native_splash (0.0.1):
     - Flutter
-  - FMDB (2.7.5):
-    - FMDB/standard (= 2.7.5)
-  - FMDB/standard (2.7.5)
   - image_picker_ios (0.0.1):
     - Flutter
   - kakao_flutter_sdk_common (1.9.0):
@@ -63,7 +60,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - FMDB
     - libwebp
     - Mantle
     - SDWebImage
@@ -101,7 +97,7 @@ SPEC CHECKSUMS:
   kakao_flutter_sdk_common: 6cc350382c723c0ec6faf44e7c68a22b1c48737b
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
-  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
+  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   SDWebImage: fc8f2d48bbfd72ef39d70e981bd24a3f3be53fec
   SDWebImageWebPCoder: d25b638fc2c98782072f159165f22232f225b9d7
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
@@ -110,4 +106,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 7be2f5f74864d463a8ad433546ed1de7e0f29aef
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.14.3

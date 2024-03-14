@@ -4,9 +4,7 @@ import 'package:reafy_front/src/components/existing_item.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/coin_provider.dart';
-import 'package:reafy_front/src/repository/coin_repository.dart';
 import 'package:reafy_front/src/repository/item_repository.dart';
-import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 
 class PurchaseDialog extends StatefulWidget {
   final int itemId;
@@ -90,7 +88,7 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xffebebeb),
+                  backgroundColor: Color(0xffebebeb),
                   minimumSize: Size(140, 48), //158, 48
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -143,7 +141,7 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xffffd747),
+                  backgroundColor: Color(0xffffd747),
                   minimumSize: Size(140, 48),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:reafy_front/src/models/user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reafy_front/src/utils/api.dart';
+
+final Dio authdio = authDio().getDio();
 
 const url = 'https://dev.reafydevkor.xyz';
 
@@ -23,25 +24,21 @@ class ItemDto {
 
 //아이템 구매
 Future<bool> postItem(int itemId, bool activation, int price) async {
-  final dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? userToken = prefs.getString('token');
-
+  ;
   try {
-    final response = await dio.post('$url/item',
-        data: {
-          'itemId': itemId,
-          'activation': activation,
-          'price': price,
-        },
-        options: Options(headers: {
-          'Authorization': 'Bearer ${userToken}',
-          'Content-Type': "application/json"
-        }));
+    final response = await authdio.post(
+      '${baseUrl}/item',
+      data: {
+        'itemId': itemId,
+        'activation': activation,
+        'price': price,
+      },
+    );
 
     return response.statusCode == 200 || response.statusCode == 201;
   } catch (e) {
     if (e is DioError) {
+      print("postItem");
       print('DioError: ${e.message}');
       if (e.response != null) {
         print('Response Data: ${e.response?.data}');
@@ -56,20 +53,10 @@ Future<bool> postItem(int itemId, bool activation, int price) async {
 
 // 소유 아이템 아이디 리스트 반환
 Future<List<int>> getOwnedItemIds() async {
-  final Dio dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? userToken = prefs.getString('token');
-
   try {
-    final response = await dio.get(
-      '$url/item/userItemList',
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
-    );
+    final response = await authdio.get('${baseUrl}/item/userItemList');
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       List<int> ownedItemIds = [];
       for (var data in response.data) {
         ownedItemIds.add(data['itemId']);
@@ -88,20 +75,10 @@ Future<List<int>> getOwnedItemIds() async {
 
 // 배치된 아이템 아이디 리스트 반환
 Future<List<int>> getActivatedOwnedItemIds() async {
-  final Dio dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? userToken = prefs.getString('token');
-
   try {
-    final response = await dio.get(
-      '$url/item/userItemList',
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
-    );
+    final response = await authdio.get('${baseUrl}/item/userItemList');
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       List<int> activatedOwnedItemIds = [];
 
       for (var data in response.data) {

@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'dart:async';
-import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/components/stop_dialog.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class StopwatchWidget extends StatelessWidget {
   const StopwatchWidget({super.key});

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:reafy_front/src/components/add_book.dart';
 import 'package:reafy_front/src/models/book.dart';
 
@@ -34,7 +33,7 @@ class BookCard extends StatelessWidget {
                   height: 98,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(book.coverImageUrl!),
+                      image: NetworkImage(book.coverImageUrl),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(8),

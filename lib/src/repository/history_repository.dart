@@ -1,36 +1,27 @@
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reafy_front/src/utils/api.dart';
 
-const url = 'https://dev.reafydevkor.xyz';
-
+final Dio authdio = authDio().getDio();
 // 독서 기록 조회
 Future<List<dynamic>> getBookshelfBookHistory(int bookshelfbookid) async {
-  final dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
+  //var dio = await authDio();
   try {
-    final response = await dio.get(
-      '$url/history',
-      queryParameters: {
-        'bookshelfbookid': bookshelfbookid,
-      },
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
-    );
+    final res = await authdio.get('${baseUrl}/history', queryParameters: {
+      'bookshelfbookid': bookshelfbookid,
+    });
 
-    if (response.statusCode == 200) {
-      final List<dynamic> historyList = response.data;
+    if (res.statusCode == 200 || res.statusCode == 201) {
+      final List<dynamic> historyList = res.data;
       return historyList;
     } else {
       throw Exception('Failed to load bookshelf book history');
     }
   } catch (e) {
     if (e is DioError) {
-      //404인 경우 빈 리스트 반환
       if (e.response?.statusCode == 404) {
+        //404인 경우 빈 리스트 반환
+        //////// getBookshelfBookDetails 함수에서 에러 발생: type 'Null' is not a subtype of type 'String'
+        //flutter: Error fetching book details: type 'Null' is not a subtype of type 'String'
         return [];
       }
     }
@@ -63,21 +54,12 @@ class CreateUserBookHistoryDto {
 }
 
 Future<void> createUserBookHistory(CreateUserBookHistoryDto historyDto) async {
-  final dio = Dio();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  final String? userToken = prefs.getString('token');
-
+  //var dio = await authDio();
   try {
-    final response = await dio.post(
-      '$url/history',
-      data: historyDto.toJson(),
-      options: Options(headers: {
-        'Authorization': 'Bearer $userToken',
-        'Content-Type': 'application/json',
-      }),
-    );
+    final res =
+        await authdio.post('${baseUrl}/history', data: historyDto.toJson());
 
-    if (response.statusCode != 201) {
+    if (res.statusCode != 201) {
       throw Exception('Failed to create book history');
     }
   } catch (e) {

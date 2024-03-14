@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/memo_card.dart';
-import 'package:reafy_front/src/models/memo.dart';
 import 'package:reafy_front/src/provider/memo_provider.dart';
-import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
 class MemoSection extends StatefulWidget {

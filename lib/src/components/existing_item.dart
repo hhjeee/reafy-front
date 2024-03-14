@@ -43,7 +43,7 @@ class ExistingItem extends StatelessWidget {
               Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(
-              primary: Color(0xffffd747),
+              backgroundColor: Color(0xffffd747),
               minimumSize: Size(286, 48),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),

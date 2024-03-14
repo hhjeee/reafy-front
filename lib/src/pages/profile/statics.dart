@@ -4,8 +4,6 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/page_graph.dart';
 import 'package:reafy_front/src/components/time_graph.dart';
 import 'package:reafy_front/src/repository/statics_repository.dart';
-import 'package:reafy_front/src/utils/constants.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 class Statics extends StatefulWidget {
   const Statics({super.key});

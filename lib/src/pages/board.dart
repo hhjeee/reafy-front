@@ -1,17 +1,13 @@
 import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/memo_card.dart';
 import 'package:reafy_front/src/components/new_board_memo.dart';
-import 'package:reafy_front/src/controller/board_controller.dart';
 import 'package:reafy_front/src/provider/memo_provider.dart';
-import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Board extends StatefulWidget {
   @override
@@ -21,6 +17,7 @@ class Board extends StatefulWidget {
 
 class _BoardState extends State<Board> {
   int currentPage = 1;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -91,7 +88,7 @@ class _BoardState extends State<Board> {
 
   @override
   Widget build(BuildContext context) {
-    final memoProvider = Provider.of<MemoProvider>(context);
+    //final memoProvider = Provider.of<MemoProvider>(context);
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -153,7 +150,6 @@ class NewMemoButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         showAddMemoBottomSheet(context);

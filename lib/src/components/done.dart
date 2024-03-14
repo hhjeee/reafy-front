@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/pages/book/bookshelf.dart';
 
 class DoneDialog extends StatefulWidget {
   final Function onDone;

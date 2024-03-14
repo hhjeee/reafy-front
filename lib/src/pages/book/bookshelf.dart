@@ -51,20 +51,22 @@ class _BookShelfState extends State<BookShelf> {
             },
           ),
         ),
-        body: SingleChildScrollView(
-            child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/green_bg.png'),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                width: size.width,
-                height: size.height,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      SizedBox(height: 10),
+        body: Container(
+            decoration: BoxDecoration(
+              color: Color(0xfffcfcec),
+              image: DecorationImage(
+                image: AssetImage('assets/images/green_bg.png'),
+                fit: BoxFit.fill,
+              ),
+            ),
+            width: size.width,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  Expanded(
+                      child: ListView(
+                    children: [
                       Consumer<BookShelfProvider>(
                         builder: (context, bookShelfProvider, child) {
                           return State_BookShelfWidget(
@@ -89,6 +91,8 @@ class _BookShelfState extends State<BookShelf> {
                           );
                         },
                       ),
-                    ]))));
+                    ],
+                  ))
+                ])));
   }
 }

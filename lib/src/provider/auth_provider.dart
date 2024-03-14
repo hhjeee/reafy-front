@@ -1,119 +1,61 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:reafy_front/src/pages/login_page.dart';
-import 'package:reafy_front/src/utils/url.dart';
+import 'package:reafy_front/src/utils/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider extends ChangeNotifier {
   late User _userInfo;
-  //bool _loginStat = false;
   bool _newUser = true;
   String _nickname = "Reafy";
 
   User get userInfo => _userInfo;
-
-  //bool get isLogin => _loginStat;
-  bool get isnewUser => _newUser;
+  bool get isNewUser => _newUser;
   String get nickname => _nickname;
-  //String get accessToken => _token;
 
-  final reqBaseUrl = AppUrl.baseurl;
-  final ApiClient apiClient = ApiClient();
-
-  Future<void> setLogin(bool loginstat) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isLogin', loginstat);
+  Future<void> setLoginStatus(bool loginStatus) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLogin', loginStatus);
+    notifyListeners();
   }
 
   Future<void> setToken(String token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('token', token);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+    //print("[*] Token set : $token");
   }
 
   Future<void> setRefreshToken(String refreshToken) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     await prefs.setString('refreshToken', refreshToken);
+    //print("[*] refreshToken : $refreshToken");
   }
 
-/*
-  @override
-  Future<void> loginCheck() async {
-    if (!_loginStat) {
-      return;
-    }
-    if (await AuthApi.instance.hasToken()) {
-      try {
-        AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();
-        print('토큰 유효성 체크 성공 ${tokenInfo.id} ${tokenInfo.expiresIn}');
-        _loginStat = true;
-      } catch (e) {
-        if (e is KakaoException && e.isInvalidTokenError()) {
-          print('토큰 만료 $e');
-        } else {
-          print('토큰 정보 조회 실패 $e');
-        }
-        _loginStat = false;
-      }
-    } else {
-      print('발급된 토큰 없음');
-      _loginStat = false;
-    }
-
-    notifyListeners();
-  }
-*/
   Future<bool> refreshToken() async {
+    final dio = authDio().getDio(); // Using the custom Dio
+    final refreshToken =
+        (await SharedPreferences.getInstance()).getString('refreshToken') ?? '';
+
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String refreshToken = prefs.getString('refreshToken') ?? '';
-      print("refreshToken 토큰 : $refreshToken");
-
-      Dio refreshDio = Dio();
-      refreshDio.options.baseUrl =
-          '${AppUrl.baseurl}/authentication/accesstokenTest';
-      refreshDio.options.headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $refreshToken'
-      };
-
-      var res = await refreshDio.post(refreshDio.options.baseUrl);
-
-      print("[*] token refresh result : ${res.statusCode}");
-
-      if (res.statusCode == 200) {
-        String newAccessToken = res.data['accessToken'];
-        //await prefs.setString('token', newAccessToken);
-        await setToken(newAccessToken);
+      final res = await dio.post('/authentication/accesstokenTest',
+          options: Options(headers: {'Authorization': 'Bearer $refreshToken'}));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        await setToken(res.data['accessToken']);
         return true;
       }
       return false;
     } catch (e) {
-      print('[*] Refresh token error: $e');
+      print('[*] Refresh token error: $e.message');
       return false;
     }
   }
 
   Future<bool> isTokenValid() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? accessToken = prefs.getString('token');
-    if (accessToken == null) {
-      print("[*] No access token available");
-      return false;
-    }
-    ;
-
+    final dio = authDio().getDio();
     try {
-      final Dio dio = Dio(); // Use a fresh instance to avoid conflicts
-      dio.options.baseUrl = AppUrl.baseurl;
-      dio.options.headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken'
-      };
       final res = await dio.post('/authentication/accesstokenTest');
       print("[*] Token validation response: ${res.statusCode}");
-      return res.statusCode == 201; // Assuming 200 is the success code
+      return res.statusCode == 200 || res.statusCode == 201;
     } catch (e) {
       print("[*] Token validation error: $e");
       return false;
@@ -121,243 +63,66 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<bool> performAuthenticatedAction() async {
-    bool isvalid = await isTokenValid();
-
-    print("[*] 토큰 유효? :$isvalid");
-    if (isvalid) {
+    if (await isTokenValid()) {
       print("[*] Token is valid");
       return true;
     } else {
-      print("[*] 만료된 토큰! 재발급 시도합니다");
+      print("[*] Expired token! Attempting to refresh.");
       return await refreshToken();
-    } /*else {
-      if (await refreshToken()) {
-        return true;
-      } else {
-        print("[*]Failed to refresh token");
-        logout();
-        return false;
-      }*/
+    }
   }
 
   @override
   Future<void> login() async {
-    String url = "/authentication/login";
+    final dio = authDio().getDio(); // Use the custom Dio instance
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // ... Kakao login code ...
     try {
       bool isInstalled = await isKakaoTalkInstalled();
-      OAuthToken token;
+      OAuthToken token = isInstalled
+          ? await UserApi.instance.loginWithKakaoTalk()
+          : await UserApi.instance.loginWithKakaoAccount();
 
-      if (isInstalled) {
-        token = await UserApi.instance.loginWithKakaoTalk();
-      } else {
-        token = await UserApi.instance.loginWithKakaoAccount();
-      }
-      //print('[*]Login successful. Kakao Token: $token');
-      setLogin(true);
-
-      print('[*]Login successful. Kakao Token: ${token.accessToken}');
-      //_loginStat = true;
-      //_token = token.accessToken;
-
+      print('[*] Kakao Login successful');
+      //. Kakao Token: ${token.accessToken}');
+      setLoginStatus(true);
       _userInfo = await UserApi.instance.me();
+      _nickname = _userInfo.kakaoAccount?.profile?.nickname ?? "Reafy";
+      await prefs.setString('nickname', _nickname);
 
-      print('사용자 정보 요청 성공'
-          '\n닉네임 : ${_userInfo.kakaoAccount?.profile?.nickname}');
-      _nickname = "${_userInfo.kakaoAccount?.profile?.nickname}";
-
-      prefs.setString('nickname', _nickname);
-      notifyListeners();
-
-      //// 서버랑 1. 카카오토큰 주고 토큰 받아오기   2. refresh 토큰 저장해놓기
-
-      var res = await apiClient.dio.post(url,
+      var res = await dio.post("/authentication/login",
           data: {"accessToken": token.accessToken, "vendor": "kakao"});
-      if (res.statusCode == 200 || res.statusCode == 201) {
-        var resBody = res.data;
-        print("[*]서버 커스텀 토큰 : $resBody");
-        //print("[*]Response :${res.headers}");
 
-        var cookies = res.headers['set-cookie'];
-        if (cookies != null && cookies.isNotEmpty) {
-          var refreshToken = cookies.first.split(';')[0].split('=')[1];
-          print('[*] refreshToken : $refreshToken');
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        var refreshToken =
+            res.headers.value('set-cookie')?.split(';').first.split('=').last;
+        if (refreshToken != null) {
           await setRefreshToken(refreshToken);
         }
 
-        print("###########################");
-        print(resBody);
-        print("###########################");
-
-        SharedPreferences prefs = await SharedPreferences.getInstance();
         if (prefs.getString('token') != null) {
           _newUser = false;
-          notifyListeners();
         }
 
-        //if (resBody['accessToken'] == null)
-        await setToken(resBody["accessToken"]);
-        //await setRefreshToken(resBody["refreshToken"]);
+        await setToken(res.data["accessToken"]);
         notifyListeners();
       }
     } catch (e) {
-      print('[*]Login failed: $e');
-      setLogin(false);
-      //_loginStat = false;
+      print('[*] LOGIN FAILED : $e.message');
+      setLoginStatus(false);
     }
-    //notifyListeners();
   }
 
   @override
   Future<void> logout() async {
     try {
-      await UserApi.instance.logout();
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.remove('token');
-      print('[*]로그아웃 성공 , SDK에서 토큰 삭제');
-      print('[*]로그아웃 완료');
-      setLogin(false);
-      //_loginStat = false;
+      await UserApi.instance.logout(); // Kakao SDK logout
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear(); // Clears all data in SharedPreferences
+
+      print('[*] LOGOUT SUCCESSFUL');
+      setLoginStatus(false); // Update login status and notify listeners
     } catch (e) {
-      print('[*]로그아웃 실패 , SDK에서 토큰 삭제 $e');
+      print('[*] LOGOUT FAILED');
     }
   }
-/*
-  Future<void> getUsername() async {
-    try {
-      _userInfo = await UserApi.instance.me();
-      print('사용자 정보 요청 성공'
-          '\n닉네임 : ${_userInfo.kakaoAccount?.profile?.nickname}');
-      return "${_userInfo.kakaoAccount?.profile?.nickname}";
-      //notifyListeners();
-    } catch (e) {
-      print('사용자 정보요청 실패 $e');
-      return "Reafy";
-    }
-    return "Reafy";
-    //notifyListeners();
-  }*/
 }
-
-//login (req, res, next)
-
-/*
-
-  @override
-  Future<void> loginCheck() async {
-    if (!_loginStat) {
-      return;
-    }
-    if (await AuthApi.instance.hasToken()) {
-      try {
-        AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();
-        print('토큰 유효성 체크 성공 ${tokenInfo.id} ${tokenInfo.expiresIn}');
-        _loginStat = true;
-      } catch (e) {
-        if (e is KakaoException && e.isInvalidTokenError()) {
-          print('토큰 만료 $e');
-        } else {
-          print('토큰 정보 조회 실패 $e');
-        }
-        _loginStat = false;
-      }
-    } else {
-      print('발급된 토큰 없음');
-      _loginStat = false;
-    }
-
-    notifyListeners();
-  }
-
-*/
-
-/*
-
-  @override
-  Future<void> getUserInfo() async {
-    try {
-      _userInfo = await UserApi.instance.me();
-      print('[user.dart] 사용자 정보 요청 성공'
-          '\n회원번호 : ${_userInfo.id}'
-          '\n닉네임 : ${_userInfo.kakaoAccount?.profile?.nickname}');
-    } catch (e) {
-      print('사용자 정보요청 실패 $e');
-    }
-    notifyListeners();
-  }*/
-
-/* if (isInstalled) {
-        try {
-          OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
-          print('카카오톡으로 로그인 성공 '); //
-          print('카카오 token: $token');
-          setLogin();
-          _loginStat = true;
-        } catch (e) {
-          _loginStat = false;
-          print('카카오톡으로 로그인 실패 $e');
-        }
-      } else {
-        try {
-          OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
-          print('카카오계정으로 로그인 성공'); //
-          setLogin();
-          _token = token.accessToken;
-        } catch (e) {
-          print('카카오계정으로 로그인 실패 $e');
-        }
-      }
-    } catch (e) {
-      print('로그인 실패 $e');
-    }
-    notifyListeners();
-    
-    
-      try {
-<<<<<<< HEAD
-        var response = await apiClient.dio.post(url, data: body);
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          var resBody = response.data;
-          if (resBody['token'] == null) {
-            _newUser = true;
-          }
-          setToken(resBody["accessToken"]);
-
-          notifyListeners();
-        } else {
-          // Handle errors
-        }
-      } on DioError catch (e) {
-        print('error : $e');
-      }
-    }
-=======
-      var response = await apiClient.dio.post(url, data: body);
-      //print("token from server");
-      //print(response.statusCode);
-      //print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-      //print(response);
-      //print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        var resBody = response.data; // 서버에서 준 accessToken 1시간 짜리
->>>>>>> bf527077bd0cca7b6f1f9bc2c31f4cfece462dbc
-
-        if (resBody['token'] == null) {
-          _newUser = true;
-        }
-        // save accessToken and RefreshToken
-        setToken(resBody["accessToken"]);
-
-        notifyListeners();
-      } else {
-        // Handle errors
-      }
-    } on DioError catch (e) {
-      print('error : $e');
-    }
-    //}
-
-    notifyListeners();*/
