@@ -20,13 +20,17 @@ import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/time_provider.dart';
 import 'dart:async';
 import 'package:reafy_front/src/utils/constants.dart';
-import 'package:reafy_front/src/utils/api.dart';
 
 Future main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env"); // env 파일 초기화
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent, // 상태 표시줄 배경색을 투명하게 설정
+    statusBarIconBrightness: Brightness.dark, // 상단바 아이콘을 밝게 설정 (어두운 배경에 적합)
+  ));
+
   initializeDateFormatting('ko_KR', null);
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
 
@@ -64,6 +68,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             themeMode: ThemeMode.light,
             theme: new ThemeData(
+              popupMenuTheme: PopupMenuThemeData(color: Colors.white),
               brightness: Brightness.light,
               dialogBackgroundColor: Color(0xffFAF9F7),
               progressIndicatorTheme: ProgressIndicatorThemeData(

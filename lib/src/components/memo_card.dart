@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/done.dart';
-import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/new_book_memo.dart';
 import 'package:reafy_front/src/models/memo.dart';
 import 'package:expandable_text/expandable_text.dart';
@@ -13,6 +12,7 @@ import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 class MemoCard extends StatefulWidget {
   final Memo memo;
   const MemoCard({Key? key, required this.memo}) : super(key: key);
+  
 
   @override
   _MemoCardState createState() => _MemoCardState();
@@ -113,11 +113,11 @@ class MemoTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6.0),
+        padding: const EdgeInsets.only(left: 6.0),
         margin: EdgeInsets.only(bottom: 9),
         child: Row(children: [
           Container(
-            width: 275,
+            width: 280,
             child: Text(
               title ?? '',
               style: const TextStyle(
@@ -125,8 +125,9 @@ class MemoTitle extends StatelessWidget {
               overflow: TextOverflow.clip,
             ),
           ),
-          SizedBox(
-              width: 30,
+          Spacer(),
+          Container(
+              width: 25,
               child: PopupMenuButton<String>(
                 onSelected: (String value) {
                   if (value == 'edit') {
@@ -139,20 +140,20 @@ class MemoTitle extends StatelessWidget {
                   return {'edit', 'delete'}.map((String choice) {
                     return PopupMenuItem<String>(
                         value: choice,
-                        height: 40,
-                        child: SizedBox(
-                          width: 30,
-                          child: Text(
-                            choice == 'edit' ? "수정" : "삭제",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400, fontSize: 14),
-                          ),
-                        ));
+                        padding: EdgeInsets.all(0),
+                        height: 28,
+                        child: Container(
+                            alignment: Alignment.center,
+                            height: 28,
+                            child: Text(choice == 'edit' ? "수정" : "삭제",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 13))));
                   }).toList();
                 },
-                icon: ImageData(IconsPath.menu,
-                    isSvg: true, width: 13, height: 3),
+                offset: Offset(15, 25),
+                icon: Icon(Icons.more_horiz_rounded, color: gray, size: 18),
               )),
         ]));
   }
@@ -160,7 +161,7 @@ class MemoTitle extends StatelessWidget {
 
 class MemoImage extends StatelessWidget {
   final String? imageUrl;
-  final String baseUrl = 'https://reafydevkor.xyz/';
+  final String baseUrl = 'https://dev.reafydevkor.xyz/';
 
   const MemoImage({Key? key, this.imageUrl}) : super(key: key);
 
