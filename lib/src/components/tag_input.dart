@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:dotted_border/dotted_border.dart';

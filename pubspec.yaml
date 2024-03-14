@@ -17,7 +17,6 @@ dependencies:
 
   kakao_flutter_sdk_user: ^1.7.0
   provider: ^5.0.0
-  flutter_slidable: ^3.0.1
   intl: ^0.19.0
   flutter_native_splash: ^2.3.6
   lottie: ^2.2.0
@@ -28,14 +27,12 @@ dependencies:
   cached_network_image: ^3.2.0
   image_picker: ^1.0.5
   shared_preferences: ^2.0.18
-  dio_cookie_manager: ^3.1.1
   flutter_image_compress: ^2.1.0
 
   flutter_dotenv: ^5.0.2
   dotted_border: ^2.1.0
   fl_chart: ^0.66.2
 
-  cookie_jar: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/book_card.dart';
 import 'package:reafy_front/src/components/image_data.dart';
@@ -5,7 +6,7 @@ import 'package:reafy_front/src/models/book.dart';
 import 'dart:math';
 import 'package:lottie/lottie.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
-import 'package:reafy_front/src/utils/url.dart';
+import 'package:reafy_front/src/utils/api.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +31,7 @@ class _SearchBookState extends State<SearchBook> {
   List<Book> displayList = [];
   TextEditingController _searchController = TextEditingController();
   final Random _random = Random();
-  final ApiClient apiClient = ApiClient();
+  //final ApiClient apiClient = ApiClient();
 
   bool isSearching = true;
   int currentPage = 1;
@@ -39,13 +40,16 @@ class _SearchBookState extends State<SearchBook> {
   Future<SearchBookResDto> searchBooks(String query, int page) async {
     var auth = context.read<AuthProvider>();
     //await auth.performAuthenticatedAction();
+    //var dio = await authDio();\
+
+    final Dio authdio = authDio().getDio();
 
     try {
-      final response = await apiClient.dio
+      final res = await authdio
           .get('/book/search', queryParameters: {'query': query, 'page': page});
 
-      if (response.statusCode == 200) {
-        var searchResults = SearchBookResDto.fromJson(response.data);
+      if (res.statusCode == 200) {
+        var searchResults = SearchBookResDto.fromJson(res.data);
         return searchResults;
       } else {
         throw Exception('Failed to load search results');

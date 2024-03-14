@@ -1,23 +1,17 @@
 import 'package:dio/dio.dart';
-import 'package:reafy_front/src/utils/url.dart';
+import 'package:reafy_front/src/utils/api.dart';
 
+final Dio authdio = authDio().getDio();
 // 독서 기록 조회
 Future<List<dynamic>> getBookshelfBookHistory(int bookshelfbookid) async {
-  //final ApiClient apiClient = ApiClient();
+  //var dio = await authDio();
   try {
-    final response = await ApiClient.instance.dio.get(
-      'https://reafydevkor.xyz/history/bookshelfbook',
-      queryParameters: {
-        'bookshelfbookid': bookshelfbookid,
-      },
-      //options: Options(headers: {
-      //  'Authorization': 'Bearer $userToken',
-      //  'Content-Type': 'application/json',
-      //}),
-    );
+    final res = await authdio.get('${baseUrl}/history', queryParameters: {
+      'bookshelfbookid': bookshelfbookid,
+    });
 
-    if (response.statusCode == 200) {
-      final List<dynamic> historyList = response.data;
+    if (res.statusCode == 200) {
+      final List<dynamic> historyList = res.data;
       return historyList;
     } else {
       throw Exception('Failed to load bookshelf book history');
@@ -58,14 +52,12 @@ class CreateUserBookHistoryDto {
 }
 
 Future<void> createUserBookHistory(CreateUserBookHistoryDto historyDto) async {
-  //final ApiClient apiClient = ApiClient();
-
+  //var dio = await authDio();
   try {
-    final response = await ApiClient.instance.dio.post(
-        'https://reafydevkor.xyz/history/bookshelfbook',
-        data: historyDto.toJson());
+    final res =
+        await authdio.post('${baseUrl}/history', data: historyDto.toJson());
 
-    if (response.statusCode != 201) {
+    if (res.statusCode != 201) {
       throw Exception('Failed to create book history');
     }
   } catch (e) {

@@ -6,7 +6,6 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/delete_book.dart';
 import 'package:reafy_front/src/components/modify_book.dart';
 import 'package:reafy_front/src/components/new_book_memo.dart';
-import 'package:reafy_front/src/pages/board.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/repository/history_repository.dart';
@@ -65,7 +64,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Color(0xff63B865)),
           onPressed: () {
-            Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
+            Get.back();
           },
         ),
         actions: [
@@ -103,9 +102,10 @@ class _BookDetailPageState extends State<BookDetailPage> {
           future: bookDetailsFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return Center(
+                  child: CircularProgressIndicator(color: Colors.transparent));
             } else if (snapshot.hasError) {
-              return Text('에러: ${snapshot.error}');
+              return Center(child: Text('Error: ${snapshot.error}'));
             } else {
               final BookshelfBookDetailsDto bookDetails = snapshot.data!;
               return SingleChildScrollView(

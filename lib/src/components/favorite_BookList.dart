@@ -47,8 +47,6 @@ class isFavorite_BookShelfWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return GestureDetector(
         onTap: () {
           Get.to(Favorite_BookShelf(

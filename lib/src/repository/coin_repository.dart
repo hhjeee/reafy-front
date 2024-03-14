@@ -1,20 +1,20 @@
-import 'package:reafy_front/src/utils/url.dart';
+import 'package:dio/dio.dart';
+import 'package:reafy_front/src/utils/api.dart';
 
+final Dio authdio = authDio().getDio();
 //coin 조회
 Future<int> getUserCoin() async {
-  //final ApiClient apiClient = ApiClient();
-
+  //var dio = await authDio();
   try {
-    final response =
-        await ApiClient.instance.dio.get('https://reafydevkor.xyz/coin');
+    final res = await authdio.get('${baseUrl}/coin');
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = response.data;
+    if (res.statusCode == 200) {
+      final Map<String, dynamic> resData = res.data;
 
-      final int totalCoin = responseData['totalCoin'];
+      final int totalCoin = resData['totalCoin'];
       return totalCoin;
     } else {
-      print(response.statusCode);
+      print(res.statusCode);
       throw Exception('Failed to load coin');
     }
   } catch (e) {
@@ -24,20 +24,20 @@ Future<int> getUserCoin() async {
 
 //coin 증가, 차감
 Future<void> updateCoin(int coin, bool isPlus) async {
+  ////var dio = await authDio();
   ////final ApiClient apiClient = ApiClient();
   try {
-    final Map<String, dynamic> requestData = {
+    final Map<String, dynamic> reqData = {
       'coin': coin,
       'isPlus': isPlus,
     };
 
-    final response = await ApiClient.instance.dio
-        .put('https://reafydevkor.xyz/coin', data: requestData);
+    final res = await authdio.put('${baseUrl}/coin', data: reqData);
 
-    if (response.statusCode == 200) {
+    if (res.statusCode == 200) {
       print('코인 업데이트 성공');
     } else {
-      print(response.statusCode);
+      print(res.statusCode);
       throw Exception('코인 업데이트 실패');
     }
   } catch (e) {

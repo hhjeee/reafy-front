@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:reafy_front/src/utils/url.dart';
+import 'package:reafy_front/src/utils/api.dart';
 
+final Dio authdio = authDio().getDio();
 class ItemDto {
   final int itemId;
   bool activation;
@@ -20,10 +21,10 @@ class ItemDto {
 
 //아이템 구매
 Future<bool> postItem(int itemId, bool activation, int price) async {
-  //final ApiClient apiClient = ApiClient();
+  //var dio = await authDio();
   try {
-    final response = await ApiClient.instance.dio.post(
-      'https://reafydevkor.xyz/item',
+    final response = await authdio.post(
+      '${baseUrl}/item',
       data: {
         'itemId': itemId,
         'activation': activation,
@@ -49,11 +50,10 @@ Future<bool> postItem(int itemId, bool activation, int price) async {
 
 // 소유 아이템 아이디 리스트 반환
 Future<List<int>> getOwnedItemIds() async {
-  //final ApiClient apiClient = ApiClient();
-
+  //var dio = await authDio();
   try {
-    final response = await ApiClient.instance.dio
-        .get('https://reafydevkor.xyz/item/userItemList');
+    final response =
+        await authdio.get('${baseUrl}/item/userItemList');
 
     if (response.statusCode == 200) {
       List<int> ownedItemIds = [];
@@ -74,11 +74,10 @@ Future<List<int>> getOwnedItemIds() async {
 
 // 배치된 아이템 아이디 리스트 반환
 Future<List<int>> getActivatedOwnedItemIds() async {
-  //final ApiClient apiClient = ApiClient();
-
+  //var dio = await authDio();
   try {
-    final response = await ApiClient.instance.dio.get(
-      'https://reafydevkor.xyz/item/userItemList',
+    final response = await authdio.get(
+      '${baseUrl}/item/userItemList',
     );
 
     if (response.statusCode == 200) {

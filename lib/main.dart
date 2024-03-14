@@ -20,7 +20,7 @@ import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/time_provider.dart';
 import 'dart:async';
 import 'package:reafy_front/src/utils/constants.dart';
-import 'package:reafy_front/src/utils/url.dart';
+import 'package:reafy_front/src/utils/api.dart';
 
 Future main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +36,7 @@ Future main() async {
 
 class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
-    ApiClient.instance.setBuildContext(context);
+    //authDio.instance.setBuildContext(context);
     final ColorScheme colorScheme = ColorScheme.fromSeed(
       brightness: MediaQuery.platformBrightnessOf(context),
       seedColor: green,

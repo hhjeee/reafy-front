@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:reafy_front/src/utils/url.dart';
+import 'package:reafy_front/src/utils/api.dart';
+
+final Dio authdio = authDio().getDio();
 
 //책 검색
 class SearchBookDto {
@@ -83,15 +85,13 @@ class BookshelfBookDto {
 
 //서재 메인에서 받아오는 카테고리별 썸네일 리스트
 Future<List<String>> fetchBookshelfThumbnailsByState(int progressState) async {
-  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await ApiClient.instance.dio.get(
-        'https://reafydevkor.xyz/book/bookshelf',
+    final res = await authdio.get('${baseUrl}/book/bookshelf',
         queryParameters: {'progressState': progressState});
-    if (response.statusCode == 200) {
-      final List<dynamic> responseData = response.data as List<dynamic>;
+    if (res.statusCode == 200) {
+      final List<dynamic> resData = res.data as List<dynamic>;
       final List<String> thumbnails = List<String>.from(
-          responseData.map<String>((item) => item['thumbnail_url'] as String));
+          resData.map<String>((item) => item['thumbnail_url'] as String));
 
       return thumbnails;
     } else {
@@ -104,15 +104,13 @@ Future<List<String>> fetchBookshelfThumbnailsByState(int progressState) async {
 
 //myfavorite 책 썸네일 리스트
 Future<List<String>> fetchBookshelfThumbnailsByFavorite() async {
-  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await ApiClient.instance.dio
-        .get('https://reafydevkor.xyz/book/favorite');
+    final res = await authdio.get('${baseUrl}/book/favorite');
 
-    if (response.statusCode == 200) {
-      final List<dynamic> responseData = response.data as List<dynamic>;
+    if (res.statusCode == 200) {
+      final List<dynamic> resData = res.data as List<dynamic>;
       final List<String> thumbnails = List<String>.from(
-          responseData.map<String>((item) => item['thumbnail_url'] as String));
+          resData.map<String>((item) => item['thumbnail_url'] as String));
 
       return thumbnails;
     } else {
@@ -170,16 +168,13 @@ class BookshelfBookInfo {
 //상태(카테고리)별 책 정보 조회
 Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByState(
     int progressState) async {
-  //final ApiClient apiClient = ApiClient();
-
   try {
-    final response = await ApiClient.instance.dio.get(
-        'https://reafydevkor.xyz/book/bookshelf',
+    final res = await authdio.get('${baseUrl}/book/bookshelf',
         queryParameters: {'progressState': progressState});
 
-    if (response.statusCode == 200) {
-      final List<dynamic> responseData = response.data as List<dynamic>;
-      final List<BookshelfBookInfo> books = responseData
+    if (res.statusCode == 200) {
+      final List<dynamic> resData = res.data as List<dynamic>;
+      final List<BookshelfBookInfo> books = resData
           .map<BookshelfBookInfo>((item) => BookshelfBookInfo(
                 bookshelfBookId: item['bookshelf_book_id'] as int,
                 title: item['title'] as String,
@@ -200,14 +195,12 @@ Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByState(
 
 //페이보릿 책 정보 조회
 Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByFavorite() async {
-  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await ApiClient.instance.dio
-        .get('https://reafydevkor.xyz/book/favorite');
+    final res = await authdio.get('${baseUrl}/book/favorite');
 
-    if (response.statusCode == 200) {
-      final List<dynamic> responseData = response.data as List<dynamic>;
-      final List<BookshelfBookInfo> books = responseData
+    if (res.statusCode == 200) {
+      final List<dynamic> resData = res.data as List<dynamic>;
+      final List<BookshelfBookInfo> books = resData
           .map<BookshelfBookInfo>((item) => BookshelfBookInfo(
                 bookshelfBookId: item['bookshelf_book_id'] as int,
                 title: item['title'] as String,
@@ -227,17 +220,16 @@ Future<List<BookshelfBookInfo>> fetchBookshelfBooksInfoByFavorite() async {
 
 //책 등록
 Future<bool> postBookInfo(String isbn13, int progressState) async {
-  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await ApiClient.instance.dio.post(
-      'https://reafydevkor.xyz/book/bookshelf',
+    final res = await authdio.post(
+      '${baseUrl}/book/bookshelf',
       data: {'isbn13': isbn13, 'progressState': progressState},
     );
 
     // 서버 응답 코드 확인
-    print('Response Code: ${response.statusCode}');
+    print('Response Code: ${res.statusCode}');
 
-    return response.statusCode == 200 || response.statusCode == 201;
+    return res.statusCode == 200 || res.statusCode == 201;
   } catch (e) {
     // DioError 처리
     if (e is DioError) {
@@ -258,13 +250,10 @@ Future<bool> postBookInfo(String isbn13, int progressState) async {
 
 //책 삭제
 Future<void> deleteBookshelfBook(int bookshelfBookId) async {
-  //final ApiClient apiClient = ApiClient();
-
   try {
-    final res = await ApiClient.instance.dio
-        .delete('https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId');
+    final res =
+        await authdio.delete('${baseUrl}/book/bookshelf/$bookshelfBookId');
   } catch (error) {
-    // 오류 처리
     throw Exception('Failed to delete book: $error');
   }
 }
@@ -331,14 +320,13 @@ class BookshelfBookDetailsDto {
 //책 상세정보 조회
 Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
     int bookshelfBookId) async {
-  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await ApiClient.instance.dio.get(
-      'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
+    final res = await authdio.get(
+      '${baseUrl}/book/bookshelf/$bookshelfBookId',
     );
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = response.data;
+    if (res.statusCode == 200) {
+      final Map<String, dynamic> data = res.data;
       final BookshelfBookDetailsDto bookshelfBookDetails =
           BookshelfBookDetailsDto.fromJson(data);
       return bookshelfBookDetails;
@@ -355,21 +343,18 @@ Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
 Future<void> updateBookshelfBookFavorite(
   int bookshelfBookId,
 ) async {
-  //final ApiClient apiClient = ApiClient();
-
   try {
-    final response = await ApiClient.instance.dio
-        .get('https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId');
+    final res = await authdio.get('${baseUrl}/book/bookshelf/$bookshelfBookId');
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = response.data;
+    if (res.statusCode == 200) {
+      final Map<String, dynamic> data = res.data;
       final bool isCurrentlyFavorite = data['is_favorite'] == 1 ? true : false;
-      final Map<String, dynamic> requestBody = {
+      final Map<String, dynamic> reqBody = {
         'isFavorite': isCurrentlyFavorite ? 0 : 1,
       };
-      final updateResponse = await ApiClient.instance.dio.put(
-        'https://reafydevkor.xyz/book/favorite/$bookshelfBookId',
-        data: requestBody,
+      final updateRes = await authdio.put(
+        '${baseUrl}/book/favorite/$bookshelfBookId',
+        data: reqBody,
       );
     } else {
       throw Exception('Failed to fetch current bookshelf book details');
@@ -385,16 +370,13 @@ Future<void> updateBookshelfBookCategory(
   int bookshelfBookId,
   int progressState,
 ) async {
-  //final ApiClient apiClient = ApiClient();
-
   try {
-    final Map<String, dynamic> requestBody = {'progressState': progressState};
+    final Map<String, dynamic> reqBody = {'progressState': progressState};
 
-    final response = await ApiClient.instance.dio.put(
-        'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
-        data: requestBody);
+    final res = await authdio.put('${baseUrl}/book/bookshelf/$bookshelfBookId',
+        data: reqBody);
 
-    if (response.statusCode != 200) {
+    if (res.statusCode != 200) {
       throw Exception('Failed to update bookshelf book category');
     }
   } catch (e) {
@@ -437,15 +419,13 @@ class ReadingBookInfo {
 }
 
 Future<List<ReadingBookInfo>> fetchReadingBooksInfo(int progressState) async {
-  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await ApiClient.instance.dio.get(
-        'https://reafydevkor.xyz/book/bookshelf',
+    final res = await authdio.get('${baseUrl}/book/bookshelf',
         queryParameters: {'progressState': progressState});
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final List<dynamic> responseData = response.data as List<dynamic>;
-      final List<ReadingBookInfo> books = responseData
+    if (res.statusCode == 200 || res.statusCode == 201) {
+      final List<dynamic> resData = res.data as List<dynamic>;
+      final List<ReadingBookInfo> books = resData
           .map<ReadingBookInfo>((item) => ReadingBookInfo(
                 bookshelfBookId: item['bookshelf_book_id'] as int,
                 title: item['title'] as String,
@@ -474,23 +454,13 @@ class BookshelfBookTitleDto {
 }
 
 Future<BookshelfBookTitleDto> getBookshelfBookTitle(int bookshelfBookId) async {
-  //final dio = Dio();
-  //SharedPreferences prefs = await SharedPreferences.getInstance();
-  //final String? userToken = prefs.getString('token');
-  //final ApiClient apiClient = ApiClient();
   try {
-    final response = await ApiClient.instance.dio.get(
-      'https://reafydevkor.xyz/book/bookshelf/$bookshelfBookId',
-      //options: Options(
-      //  headers: {
-      //    'Authorization': 'Bearer $userToken',
-      //    'Content-Type': "application/json"
-      //  },
-      //),
+    final res = await authdio.get(
+      '${baseUrl}/book/bookshelf/$bookshelfBookId',
     );
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = response.data;
+    if (res.statusCode == 200) {
+      final Map<String, dynamic> data = res.data;
       final BookshelfBookTitleDto bookshelfBookTitle =
           BookshelfBookTitleDto.fromJson(data);
       return bookshelfBookTitle;

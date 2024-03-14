@@ -1,15 +1,15 @@
-import 'package:reafy_front/src/utils/url.dart';
+import 'package:dio/dio.dart';
+import 'package:reafy_front/src/utils/api.dart';
 
+final Dio authdio = authDio().getDio();
 Future<List<Map<String, dynamic>>> getMonthlyPageStatistics(int year) async {
-  //final ApiClient apiClient = ApiClient();
+  //var dio = await authDio();
   try {
-    final response = await ApiClient.instance.dio.get(
-      'https://reafydevkor.xyz/statistics/pages',
-      queryParameters: {'year': year},
-    );
+    final res = await authdio.get('${baseUrl}/statistics/pages',
+        queryParameters: {'year': year});
 
-    if (response.statusCode == 200) {
-      final List<dynamic> pageStaticsData = response.data;
+    if (res.statusCode == 200) {
+      final List<dynamic> pageStaticsData = res.data;
       final List<Map<String, dynamic>> pageStatics =
           List<Map<String, dynamic>>.from(pageStaticsData);
       return pageStatics;
@@ -22,14 +22,13 @@ Future<List<Map<String, dynamic>>> getMonthlyPageStatistics(int year) async {
 }
 
 Future<List<Map<String, dynamic>>> getMonthlyTimeStatistics(int year) async {
-  //final ApiClient apiClient = ApiClient();
+  //var dio = await authDio();
   try {
-    final response = await ApiClient.instance.dio.get(
-        'https://reafydevkor.xyz/statistics/times',
+    final res = await authdio.get('${baseUrl}/statistics/times',
         queryParameters: {'year': year});
 
-    if (response.statusCode == 200) {
-      final List<dynamic> timeStaticsData = response.data;
+    if (res.statusCode == 200) {
+      final List<dynamic> timeStaticsData = res.data;
       final List<Map<String, dynamic>> timeStatics =
           List<Map<String, dynamic>>.from(timeStaticsData);
       return timeStatics;
@@ -42,14 +41,12 @@ Future<List<Map<String, dynamic>>> getMonthlyTimeStatistics(int year) async {
 }
 
 Future<Map<String, dynamic>> getTodayTimeStatistics() async {
-  //final ApiClient apiClient = ApiClient();
+  //var dio = await authDio();
   try {
-    final response = await ApiClient.instance.dio
-        .get('https://reafydevkor.xyz/statistics/today');
+    final res = await authdio.get('${baseUrl}/statistics/today');
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> statistics =
-          response.data as Map<String, dynamic>;
+    if (res.statusCode == 200) {
+      final Map<String, dynamic> statistics = res.data as Map<String, dynamic>;
       return statistics;
     } else {
       throw Exception('Failed to load today\'s reading statistics');
