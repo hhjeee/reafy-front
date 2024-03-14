@@ -49,10 +49,12 @@ class authDio {
               queryParameters: e.requestOptions.queryParameters);
           return handler.resolve(cloneResponse);
         } else {
+          // TODO : 서버 에러 시
+          /*
           final BuildContext? context = Get.context;
           if (context != null) {
             _showLoginExpiredDialog(context);
-          }
+          }*/
         }
         return handler.next(e);
       }
@@ -67,7 +69,7 @@ class authDio {
 
     final baseUrl = dotenv.env['BASE_URL'] ?? 'https://dev.reafydevkor.xyz';
 
-    print("[***] Starting token refresh with refreshToken: $refreshToken");
+    print("[***] Starting token refresh");
 
     refreshDio.interceptors.add(CustomLogInterceptor());
     try {
@@ -155,14 +157,14 @@ Future<void> _showLoginExpiredDialog(BuildContext context) async {
             child: Text('로그인 만료',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
                 textAlign: TextAlign.center),
           ),
           content: Text("로그인이 만료되었습니다.\n다시 로그인 해주세요!",
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 13,
               )),
           contentPadding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
           actions: [

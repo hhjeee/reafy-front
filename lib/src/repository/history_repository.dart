@@ -10,7 +10,7 @@ Future<List<dynamic>> getBookshelfBookHistory(int bookshelfbookid) async {
       'bookshelfbookid': bookshelfbookid,
     });
 
-    if (res.statusCode == 200) {
+    if (res.statusCode == 200 || res.statusCode == 201) {
       final List<dynamic> historyList = res.data;
       return historyList;
     } else {
@@ -18,8 +18,10 @@ Future<List<dynamic>> getBookshelfBookHistory(int bookshelfbookid) async {
     }
   } catch (e) {
     if (e is DioError) {
-      //404인 경우 빈 리스트 반환
       if (e.response?.statusCode == 404) {
+        //404인 경우 빈 리스트 반환
+        //////// getBookshelfBookDetails 함수에서 에러 발생: type 'Null' is not a subtype of type 'String'
+        //flutter: Error fetching book details: type 'Null' is not a subtype of type 'String'
         return [];
       }
     }

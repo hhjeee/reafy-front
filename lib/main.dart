@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
     //authDio.instance.setBuildContext(context);
     final ColorScheme colorScheme = ColorScheme.fromSeed(
       brightness: MediaQuery.platformBrightnessOf(context),
-      seedColor: green,
+      seedColor: bg_gray,
     );
     SizeConfig().init(context);
     return MultiProvider(
@@ -68,9 +68,10 @@ class MyApp extends StatelessWidget {
             themeMode: ThemeMode.light,
             theme: new ThemeData(
               colorScheme: colorScheme,
+              dialogBackgroundColor: bg_gray,
               progressIndicatorTheme: ProgressIndicatorThemeData(
                 circularTrackColor: Colors.transparent,
-                color: yellow_bg, // 여기서 원하는 색상으로 변경
+                color: Colors.transparent, // 여기서 원하는 색상으로 변경
               ),
               fontFamily: 'NanumSquareRound',
             ),

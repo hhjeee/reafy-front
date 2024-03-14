@@ -4,7 +4,6 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
-import 'package:reafy_front/src/pages/home.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
 class OnBoardingPage extends StatelessWidget {
@@ -12,6 +11,7 @@ class OnBoardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IntroductionScreen(
+      globalBackgroundColor: Color(0xffFAF9F7),
       controlsPosition: const Position(left: 0, right: 0, bottom: 80),
       pages: [
         PageViewModel(

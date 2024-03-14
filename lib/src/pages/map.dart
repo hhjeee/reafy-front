@@ -1,7 +1,9 @@
+import 'dart:ffi' hide Size;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/components/tool_tips.dart';
 import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
@@ -75,17 +77,6 @@ class _BambooMapState extends State<BambooMap>
     stopwatch.dispose();
     super.dispose();
   }
-
-/*  void regenerateBamboo() {
-    for (int i = 0; i < bambooStates.length; i++) {
-      if (!bambooStates[i].isActive) {
-        setState(() {
-          bambooStates[i].isActive = true;
-        });
-        break;
-      }
-    }
-}*/
 
   Future<void> loadUserCoin() async {
     try {
@@ -175,7 +166,13 @@ class _BambooMapState extends State<BambooMap>
                 image: AssetImage(IconsPath.bamboomap), fit: BoxFit.cover),
           ),
         ),
+        TopBarWidget(selectedNumber: 5),
         BubbleWidget(),
+        Positioned(
+          top: 212,
+          left: 275,
+          child: CustomTooltipButton(message: "15분 읽으면\n대나무 한 개가 자라요!"),
+        ),
         Positioned(
           bottom: 0,
           child: Container(
@@ -191,12 +188,8 @@ class BubbleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: 221,
-      left: 176,
-      child: GestureDetector(
-        onTap: () {
-          //Get.to(Board());
-        },
+        top: 221,
+        left: 176,
         child: Stack(
           children: [
             ImageData(
@@ -215,9 +208,7 @@ class BubbleWidget extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
+        ));
   }
 }
 
@@ -314,8 +305,6 @@ class BottomBarWidget extends StatelessWidget {
             backgroundColor: green,
             child: ImageData(
               IconsPath.back_arrow,
-              //width: 44,
-              //height: 44,
               isSvg: true,
             ),
           ),
@@ -444,6 +433,82 @@ class BambooDialog extends StatelessWidget {
               ),
             ),
           ]),
+        ));
+  }
+}
+
+class TopBarWidget extends StatelessWidget {
+  final int selectedNumber;
+  TopBarWidget({required this.selectedNumber});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    List<int> numbers = [5, 10, 15, 20]; // List of numbers
+    final int userCoins = Provider.of<CoinProvider>(context).coins; // 현재 코인 수
+
+    final int selected =
+        numbers.firstWhere((number) => userCoins >= number, orElse: () => 0);
+
+    return Positioned(
+        top: 60,
+        left: 40,
+        child: Container(
+          width: size.width - 80,
+          height: 56,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            color: Color.fromARGB(120, 250, 249, 247),
+          ),
+          padding: EdgeInsets.fromLTRB(19, 6, 3, 6),
+          child: Row(
+            children: [
+              Text(
+                "주간 대나무",
+                style: TextStyle(
+                    color: black, fontSize: 12, fontWeight: FontWeight.w800),
+              ),
+              SizedBox(width: 4),
+              Tooltip(
+                message:
+                    '주간 독서시간을 산정하여 추가 대나무를 지급해요!\n노란색 박스를 누르면 획득할 수 있어요 :)',
+                textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                ),
+                child: Icon(Icons.info_outline_rounded, color: black, size: 16),
+              ),
+              SizedBox(width: 10),
+              ...numbers.map((number) => Expanded(
+                      child: Container(
+                    margin: EdgeInsets.only(right: 10),
+                    alignment: Alignment.center,
+                    width: 50,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(11),
+                      color: number == selected
+                          ? Colors.green
+                          : number < selected
+                              ? dark_gray
+                              : null,
+                    ),
+                    // Highlight if selected
+                    child: Text(
+                      '${number}시간\n(${number}개)',
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: number == selected
+                              ? bg_gray
+                              : number < selected
+                                  ? Color(0xff666666)
+                                  : Color(0xff333333)),
+                    ),
+                  ))),
+            ],
+          ),
         ));
   }
 }

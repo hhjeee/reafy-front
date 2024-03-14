@@ -324,7 +324,6 @@ Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
     final res = await authdio.get(
       '${baseUrl}/book/bookshelf/$bookshelfBookId',
     );
-
     if (res.statusCode == 200) {
       final Map<String, dynamic> data = res.data;
       final BookshelfBookDetailsDto bookshelfBookDetails =

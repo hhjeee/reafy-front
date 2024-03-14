@@ -204,32 +204,36 @@ class _BookDetailPageState extends State<BookDetailPage> {
               );
             }
           }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showAddBookMemoBottomSheet(context, widget.bookshelfBookId);
-        },
-        //backgroundColor: Color(0xffB3B3B3),
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 26),
-          width: 333,
-          height: 33,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Color(0xffB3B3B3),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                spreadRadius: 0,
-                blurRadius: 20,
-                offset: Offset(0, 0),
-              ),
-            ],
+      floatingActionButton: Container(
+        width: size.width - 40, // Width of the button
+        height: 33, // Height of the button
+        decoration: BoxDecoration(
+          color: Color(0xffB3B3B3), // Background color of the button
+          borderRadius: BorderRadius.circular(10), // Corner radius
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1), // Shadow color
+              spreadRadius: 0,
+              blurRadius: 10, // Shadow blur radius
+              offset: Offset(0, 0), // Shadow position
+            ),
+          ],
+        ),
+        child: FloatingActionButton(
+          onPressed: () {
+            showAddBookMemoBottomSheet(context, widget.bookshelfBookId);
+          },
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.circular(10), // Making the FAB rectangular
           ),
-          child: Icon(Icons.add, color: Colors.white),
+          backgroundColor:
+              Colors.transparent, // Making FAB's background transparent
+          elevation: 0, // Removing any additional shadow or elevation
+          child: Icon(Icons.add, color: Colors.white), // Button icon
         ),
       ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.centerFloat, // 버튼 위치 조정
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

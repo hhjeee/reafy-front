@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:reafy_front/src/utils/api.dart';
 
 final Dio authdio = authDio().getDio();
+
 class ItemDto {
   final int itemId;
   bool activation;
@@ -21,7 +22,7 @@ class ItemDto {
 
 //아이템 구매
 Future<bool> postItem(int itemId, bool activation, int price) async {
-  //var dio = await authDio();
+  ;
   try {
     final response = await authdio.post(
       '${baseUrl}/item',
@@ -50,12 +51,10 @@ Future<bool> postItem(int itemId, bool activation, int price) async {
 
 // 소유 아이템 아이디 리스트 반환
 Future<List<int>> getOwnedItemIds() async {
-  //var dio = await authDio();
   try {
-    final response =
-        await authdio.get('${baseUrl}/item/userItemList');
+    final response = await authdio.get('${baseUrl}/item/userItemList');
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       List<int> ownedItemIds = [];
       for (var data in response.data) {
         ownedItemIds.add(data['itemId']);
@@ -74,13 +73,10 @@ Future<List<int>> getOwnedItemIds() async {
 
 // 배치된 아이템 아이디 리스트 반환
 Future<List<int>> getActivatedOwnedItemIds() async {
-  //var dio = await authDio();
   try {
-    final response = await authdio.get(
-      '${baseUrl}/item/userItemList',
-    );
+    final response = await authdio.get('${baseUrl}/item/userItemList');
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       List<int> activatedOwnedItemIds = [];
 
       for (var data in response.data) {
