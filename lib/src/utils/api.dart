@@ -85,7 +85,7 @@ class authDio {
         final newAccessToken = refreshResponse.data['accessToken'];
         await prefs.setString('token', newAccessToken);
         print(
-            "[***] Token refresh successful with newAccessToken: $newAccessToken");
+            "[***] Token refresh successful "); //with newAccessToken: $newAccessToken");
         return newAccessToken;
       } else {
         print(

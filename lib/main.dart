@@ -37,10 +37,7 @@ Future main() async {
 class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     //authDio.instance.setBuildContext(context);
-    final ColorScheme colorScheme = ColorScheme.fromSeed(
-      brightness: MediaQuery.platformBrightnessOf(context),
-      seedColor: bg_gray,
-    );
+
     SizeConfig().init(context);
     return MultiProvider(
         providers: [
@@ -67,8 +64,8 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             themeMode: ThemeMode.light,
             theme: new ThemeData(
-              colorScheme: colorScheme,
-              dialogBackgroundColor: bg_gray,
+              brightness: Brightness.light,
+              dialogBackgroundColor: Color(0xffFAF9F7),
               progressIndicatorTheme: ProgressIndicatorThemeData(
                 circularTrackColor: Colors.transparent,
                 color: Colors.transparent, // 여기서 원하는 색상으로 변경
