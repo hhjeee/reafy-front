@@ -120,7 +120,7 @@ class MyPage extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () async {
                     var user = context.read<AuthProvider>();
-                    user.logout();
+                    user.logout(context);
                     Get.off(() => LoginPage());
                   },
                   child: Row(

@@ -21,7 +21,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void showSplashScreen() async {
-    await Future.delayed(Duration(milliseconds: 2000));
+    // Changed from 2000 to 4000
+    await Future.delayed(Duration(seconds: 2));
     checkLoginStatus();
   }
 
@@ -30,9 +31,12 @@ class _SplashScreenState extends State<SplashScreen> {
     bool isLoggedIn = prefs.getBool('isLogin') ?? false;
 
     if (isLoggedIn) {
+      //await Future.delayed(Duration(seconds: 2));
       FlutterNativeSplash.remove();
       Get.off(() => App());
     } else {
+      await Future.delayed(Duration(seconds: 2));
+      FlutterNativeSplash.remove();
       Get.off(() => LoginPage());
     }
   }
@@ -41,7 +45,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-            child: Lottie.asset('assets/lottie/SplashScreen.json',
-                frameRate: FrameRate.max)));
+            child: Lottie.asset(
+      'assets/lottie/SplashScreen.json',
+    )));
   }
 }
