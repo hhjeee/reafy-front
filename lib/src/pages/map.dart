@@ -94,14 +94,14 @@ class _BambooMapState extends State<BambooMap>
 
     for (int i = 0; i < bambooStates.length; i++) {
       bambooStates[i] = BambooState(i < stopwatch.itemCnt, bambooPositions[i]);
-    }
+    } //stopwatch.itemCnt
 
     return Stack(
       children: List.generate(6, (index) {
         BambooState state = bambooStates[index];
 
         return AnimatedPositioned(
-            duration: Duration(milliseconds: 3000),
+            duration: Duration(milliseconds: 1600),
             curve: Curves.elasticIn,
             left: state.position.dx,
             bottom: state.position.dy,
@@ -119,11 +119,6 @@ class _BambooMapState extends State<BambooMap>
                 curve: Curves.elasticOut,
                 child: GestureDetector(
                   onTap: () async {
-                    setState(() {
-                      state.isVisible = false;
-                      //bambooStates[index].isActive = false;
-                    });
-                    stopwatch.decreaseItemCount();
                     try {
                       await updateCoin(1, true);
                       int currentCoin =
@@ -135,13 +130,17 @@ class _BambooMapState extends State<BambooMap>
                       print('에러 발생: $e');
                     }
 
-                    Future.delayed(Duration(seconds: 2), () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return BambooDialog(userCoin: userCoin);
-                          });
+                    await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return BambooDialog(userCoin: userCoin);
+                        });
+
+                    setState(() {
+                      state.isVisible = false;
                     });
+
+                    stopwatch.decreaseItemCount();
                   },
                   child: ImageData(IconsPath.bambooicon, width: 90, height: 90),
                 ),
@@ -153,7 +152,6 @@ class _BambooMapState extends State<BambooMap>
 
   @override
   Widget build(BuildContext context) {
-    //bool isNight = _isNightTime();
     final size = MediaQuery.of(context).size;
     return Scaffold(
         body: Stack(
@@ -447,14 +445,12 @@ class TopBarWidget extends StatelessWidget {
     List<int> numbers = [5, 10, 15, 20]; // List of numbers
     final int userCoins = Provider.of<CoinProvider>(context).coins; // 현재 코인 수
 
-    final int selected =
-        numbers.firstWhere((number) => userCoins >= number, orElse: () => 0);
-
+    final int selected = (userCoins ~/ 5) * 5;
     return Positioned(
         top: 60,
-        left: 40,
+        left: 20,
         child: Container(
-          width: size.width - 80,
+          width: size.width - 40,
           height: 56,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
@@ -470,19 +466,24 @@ class TopBarWidget extends StatelessWidget {
               ),
               SizedBox(width: 4),
               Tooltip(
-                message:
-                    '주간 독서시간을 산정하여 추가 대나무를 지급해요!\n노란색 박스를 누르면 획득할 수 있어요 :)',
-                textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                ),
-                child: Icon(Icons.info_outline_rounded, color: black, size: 16),
-              ),
-              SizedBox(width: 10),
+                  message:
+                      '주간 독서시간을 산정하여 추가 대나무를 지급해요!\n노란색 박스를 누르면 획득할 수 있어요 :)',
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  child: ImageData(IconsPath.toolkit,
+                      isSvg: true,
+                      width: 12,
+                      height:
+                          12) //Icon(Icons.info_outline_rounded, color: black, size: 16),
+                  ),
+              SizedBox(width: 14),
               ...numbers.map((number) => Expanded(
                       child: Container(
-                    margin: EdgeInsets.only(right: 10),
+                    //padding: EdgeInsets.symmetric(horizontal: 10),
+                    margin: EdgeInsets.only(right: 8),
                     alignment: Alignment.center,
                     width: 50,
                     height: 44,
@@ -491,7 +492,7 @@ class TopBarWidget extends StatelessWidget {
                       color: number == selected
                           ? Colors.green
                           : number < selected
-                              ? dark_gray
+                              ? Color(0xff808080)
                               : null,
                     ),
                     // Highlight if selected
@@ -500,11 +501,12 @@ class TopBarWidget extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
+                          letterSpacing: 0.1,
                           color: number == selected
                               ? bg_gray
                               : number < selected
                                   ? Color(0xff666666)
-                                  : Color(0xff333333)),
+                                  : Color.fromRGBO(51, 51, 51, 0.40)),
                     ),
                   ))),
             ],

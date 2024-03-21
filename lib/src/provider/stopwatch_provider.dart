@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 enum Status { running, paused, stopped }
 
 class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
-
   late Status _status = Status.stopped;
   late int _seconds = 0;
   int _countdownsec = 30 * 60;
@@ -96,7 +95,7 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   void run() {
     // stopped -> running
     _status = Status.running;
-    print("RUN ! : $_seconds");
+    //print("RUN ! : $_seconds");
     runStopWatch();
     notifyListeners();
   }

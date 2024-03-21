@@ -156,61 +156,8 @@ class IconsPath {
   static String get shelf_right => 'assets/svg/shelf_right.svg';
   static String get menu => 'assets/svg/dots.svg';
   static String get information => 'assets/svg/information.svg';
+  static String get toolkit => 'assets/svg/toolkit.svg';
 
   // 아이템
   static String get crying => 'assets/images/crying.png';
-}
-
-class FloatingSVG extends StatefulWidget {
-  final String svgAssetPath;
-  final Duration duration;
-  final double verticalRange;
-
-  const FloatingSVG({
-    Key? key,
-    required this.svgAssetPath,
-    this.duration = const Duration(seconds: 2),
-    this.verticalRange = 20.0,
-  }) : super(key: key);
-
-  @override
-  _FloatingSVGState createState() => _FloatingSVGState();
-}
-
-class _FloatingSVGState extends State<FloatingSVG>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    )..repeat(reverse: true);
-
-    _animation =
-        Tween<double>(begin: 0, end: widget.verticalRange).animate(_controller);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset(0, _animation.value),
-          child: child,
-        );
-      },
-      child: SvgPicture.asset(widget.svgAssetPath), // Load SVG
-    );
-  }
 }

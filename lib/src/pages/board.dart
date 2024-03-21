@@ -88,7 +88,7 @@ class _BoardState extends State<Board> {
 
   @override
   Widget build(BuildContext context) {
-    //final memoProvider = Provider.of<MemoProvider>(context);
+    final memoProvider = Provider.of<MemoProvider>(context);
     final size = MediaQuery.of(context).size;
 
     return Scaffold(

@@ -60,23 +60,28 @@ class OnBoardingPage extends StatelessWidget {
             ),
             decoration: getPageDecoration()),
         PageViewModel(
-            title: '',
-            bodyWidget: Column(
-              children: [
-                Text(
-                  "반가워요! \n당신의 독서생활에\nReafy가 함께할게요",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: 30, fontWeight: FontWeight.w800, height: 1.5),
-                ),
-                SizedBox(height: 20.0),
-                Image.asset(
-                  "assets/images/onboarding_4.png",
-                  height: 415,
-                ),
-              ],
-            ),
-            decoration: getPageDecoration()),
+          title: '',
+          bodyWidget: Stack(
+            children: [
+              Column(
+                children: [
+                  Text(
+                    "반가워요! \n당신의 독서생활에\nReafy가 함께할게요",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 30, fontWeight: FontWeight.w800, height: 1.5),
+                  ),
+                  SizedBox(height: 20.0),
+                  Image.asset(
+                    "assets/images/onboarding_4.png",
+                    height: 415,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          decoration: getPageDecoration(),
+        ),
       ],
       showBackButton: true,
       showDoneButton: true,
@@ -92,10 +97,7 @@ class OnBoardingPage extends StatelessWidget {
         )
       ])),
       onDone: () {
-        final BottomNavController bottomNavController =
-            Get.find<BottomNavController>();
-        bottomNavController.pageIndex.value = 1;
-        Get.off(() => App()); //
+        Get.off(() => TutorialScreen()); //
       },
 
       next: Container(
@@ -131,5 +133,31 @@ class OnBoardingPage extends StatelessWidget {
             TextStyle(fontSize: 30, fontWeight: FontWeight.w800, height: 1.5),
         pageColor: Color(0xffFAF9F7),
         bodyAlignment: Alignment.center);
+  }
+}
+
+// TutorialScreen 위젯 예시
+class TutorialScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text("튜토리얼 작업 중!"),
+            ElevatedButton(
+              onPressed: () {
+                final BottomNavController bottomNavController =
+                    Get.find<BottomNavController>();
+                bottomNavController.pageIndex.value = 1;
+                Get.off(() => App());
+              },
+              child: Text("홈 화면으로"),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
