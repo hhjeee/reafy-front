@@ -68,7 +68,13 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             themeMode: ThemeMode.light,
             theme: new ThemeData(
-              popupMenuTheme: PopupMenuThemeData(color: Colors.white),
+              scaffoldBackgroundColor: bg_gray,
+              primaryColor: yellow,
+              colorScheme:
+                  ColorScheme.fromSwatch(primarySwatch: Colors.green).copyWith(
+                secondary: yellow,
+              ),
+              popupMenuTheme: PopupMenuThemeData(color: bg_gray),
               brightness: Brightness.light,
               dialogBackgroundColor: Color(0xffFAF9F7),
               progressIndicatorTheme: ProgressIndicatorThemeData(

@@ -1,5 +1,6 @@
 import 'dart:ffi' hide Size;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
@@ -465,20 +466,7 @@ class TopBarWidget extends StatelessWidget {
                     color: black, fontSize: 12, fontWeight: FontWeight.w800),
               ),
               SizedBox(width: 4),
-              Tooltip(
-                  message:
-                      '주간 독서시간을 산정하여 추가 대나무를 지급해요!\n노란색 박스를 누르면 획득할 수 있어요 :)',
-                  textStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
-                  ),
-                  child: ImageData(IconsPath.toolkit,
-                      isSvg: true,
-                      width: 12,
-                      height:
-                          12) //Icon(Icons.info_outline_rounded, color: black, size: 16),
-                  ),
+              TooltipButton(),
               SizedBox(width: 14),
               ...numbers.map((number) => Expanded(
                       child: Container(

@@ -141,23 +141,30 @@ class TutorialScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("튜토리얼 작업 중!"),
-            ElevatedButton(
-              onPressed: () {
-                final BottomNavController bottomNavController =
-                    Get.find<BottomNavController>();
-                bottomNavController.pageIndex.value = 1;
-                Get.off(() => App());
-              },
-              child: Text("홈 화면으로"),
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/tutorial.png"),
+              fit: BoxFit.cover,
             ),
-          ],
+          ),
         ),
-      ),
-    );
+        floatingActionButton: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+          ),
+          onPressed: () {
+            final BottomNavController bottomNavController =
+                Get.find<BottomNavController>();
+            bottomNavController.pageIndex.value = 1;
+            Get.off(() => App());
+          },
+          child: ImageData(IconsPath.exitbutton, width: 65, height: 65),
+        ),
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.centerDocked);
   }
 }

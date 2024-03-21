@@ -6,12 +6,10 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/delete_book.dart';
 import 'package:reafy_front/src/components/modify_book.dart';
 import 'package:reafy_front/src/components/new_book_memo.dart';
-import 'package:reafy_front/src/models/book.dart';
-import 'package:reafy_front/src/provider/memo_provider.dart';
-import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/repository/history_repository.dart';
+import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/utils/reading_progress.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -70,7 +68,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Color(0xff63B865)),
+          icon: Icon(Icons.arrow_back_ios, color: green),
           onPressed: () {
             Get.back();
           },
