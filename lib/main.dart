@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
               scaffoldBackgroundColor: bg_gray,
               primaryColor: yellow,
               colorScheme:
-                  ColorScheme.fromSwatch(primarySwatch: Colors.green).copyWith(
+                  ColorScheme.fromSwatch(primarySwatch: Colors.yellow).copyWith(
                 secondary: yellow,
               ),
               popupMenuTheme: PopupMenuThemeData(color: bg_gray),
