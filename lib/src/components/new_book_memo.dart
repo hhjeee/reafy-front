@@ -148,6 +148,10 @@ class _newBookMemoState extends State<newBookMemo> {
               margin: EdgeInsets.symmetric(horizontal: 13),
               width: 317,
               child: TextField(
+                onSubmitted: (value) {
+                  // 엔터 버튼을 눌렀을 때 실행될 함수
+                  updateMemoState();
+                },
                 maxLength: 500,
                 maxLines: null,
                 controller: memoController,
@@ -180,9 +184,17 @@ class _newBookMemoState extends State<newBookMemo> {
 
   @override
   Widget build(BuildContext context) {
+    final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
+
     return SafeArea(
-        child: Container(
-      padding: EdgeInsets.symmetric(vertical: 35, horizontal: 23),
+        child: SingleChildScrollView(
+            child: Container(
+      padding: EdgeInsets.only(
+        bottom: bottomPadding + 20, // 키보드 위의 '게시하기' 버튼이 보이도록 추가 여백을 제공합니다.
+        top: 35,
+        left: 23,
+        right: 23,
+      ),
       color: bg_gray,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -223,7 +235,7 @@ class _newBookMemoState extends State<newBookMemo> {
           ),
         ],
       ),
-    ));
+    )));
   }
 }
 

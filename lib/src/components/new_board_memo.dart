@@ -267,9 +267,17 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
 
   @override
   Widget build(BuildContext context) {
+    final bottomPadding = MediaQuery.of(context).viewInsets.bottom;
+
     return SafeArea(
-        child: Container(
-      padding: EdgeInsets.symmetric(vertical: 35, horizontal: 23),
+        child: SingleChildScrollView(
+            child: Container(
+      padding: EdgeInsets.only(
+        bottom: bottomPadding + 20, // 키보드 위의 '게시하기' 버튼이 보이도록 추가 여백을 제공합니다.
+        top: 35,
+        left: 23,
+        right: 23,
+      ),
       color: bg_gray,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -311,7 +319,7 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
           ),
         ],
       ),
-    ));
+    )));
   }
 }
 

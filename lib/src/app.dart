@@ -27,6 +27,7 @@ class App extends StatelessWidget {
         ),
         // BottomNavigationBar를 정의합니다.
         bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: bg_gray,
           type: BottomNavigationBarType.fixed,
           currentIndex: bottomNavController.pageIndex.value,
           onTap: (index) {

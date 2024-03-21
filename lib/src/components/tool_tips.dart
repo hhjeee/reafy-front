@@ -136,3 +136,76 @@ class _CustomTooltipButtonState extends State<CustomTooltipButton> {
     );
   }
 }
+
+class TooltipButton extends StatefulWidget {
+  const TooltipButton({Key? key}) : super(key: key);
+
+  @override
+  _TooltipButtonState createState() => _TooltipButtonState();
+}
+
+class _TooltipButtonState extends State<TooltipButton> {
+  OverlayEntry? _overlayEntry;
+  Timer? _timer;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _showOverlay(BuildContext context) {
+    _timer?.cancel();
+    final overlay = Overlay.of(context);
+    final renderBox = context.findRenderObject() as RenderBox;
+    var size = renderBox.size;
+    var offset = renderBox.localToGlobal(Offset.zero);
+    _overlayEntry = OverlayEntry(
+        builder: (context) => Positioned(
+            right: offset.dx + 20,
+            top: offset.dy + 20,
+            child: Material(
+              color: Colors.transparent,
+              child: GestureDetector(
+                  onTap: _hideOverlay, // 툴팁을 탭하면 숨김
+                  child: ImageData(
+                    IconsPath.toolkit2,
+                    isSvg: false,
+                    height: 72,
+                    width: 247,
+                  )),
+            )));
+
+    overlay?.insert(_overlayEntry!);
+    _starttimer();
+  }
+
+  void _starttimer() {
+    _timer = Timer(Duration(seconds: 2), () {
+      _hideOverlay();
+    });
+  }
+
+  void _hideOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          if (_overlayEntry != null) {
+            _hideOverlay();
+          } else {
+            _showOverlay(context);
+          }
+        },
+        child: ImageData(
+          IconsPath.toolkit,
+          isSvg: true,
+          width: 12,
+          height: 12,
+        ));
+  }
+}

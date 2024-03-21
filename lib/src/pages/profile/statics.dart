@@ -56,8 +56,9 @@ class _StaticsState extends State<Statics> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color(0xffFAF9F7),
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(0xffFAF9F7),
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios, color: Colors.black54),

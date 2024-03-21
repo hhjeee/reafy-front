@@ -157,6 +157,8 @@ class IconsPath {
   static String get menu => 'assets/svg/dots.svg';
   static String get information => 'assets/svg/information.svg';
   static String get toolkit => 'assets/svg/toolkit.svg';
+  static String get toolkit2 => 'assets/images/toolkit2.png';
+  static String get exitbutton => 'assets/images/exit.png';
 
   // 아이템
   static String get crying => 'assets/images/crying.png';
