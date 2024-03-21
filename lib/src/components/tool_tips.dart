@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -20,43 +21,82 @@ class CustomTooltipButton extends StatefulWidget {
 
 class _CustomTooltipButtonState extends State<CustomTooltipButton> {
   OverlayEntry? _overlayEntry;
+  Timer? _timer;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   void _showOverlay(BuildContext context) {
+    _timer?.cancel();
     final overlay = Overlay.of(context);
     final renderBox = context.findRenderObject() as RenderBox;
     var size = renderBox.size;
     var offset = renderBox.localToGlobal(Offset.zero);
     _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        left: offset.dx - 135,
-        top: offset.dy - size.height - 40,
-        child: Material(
-          color: Colors.transparent,
-          child: GestureDetector(
-            onTap: _hideOverlay, // 툴팁을 탭하면 숨김
-            child: Container(
-                padding: EdgeInsets.fromLTRB(6, 6, 12, 8),
-                decoration: BoxDecoration(
-                  color: widget.backgroundColor,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    ImageData(IconsPath.bambooicon, width: 42, height: 42),
-                    SizedBox(width: 6),
-                    Text(widget.message,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700)),
-                  ],
-                )),
-          ),
-        ),
-      ),
-    );
+        builder: (context) => Positioned(
+            left: offset.dx - 135,
+            top: offset.dy - size.height - 40,
+            child: Material(
+              color: Colors.transparent,
+              child: GestureDetector(
+                onTap: _hideOverlay, // 툴팁을 탭하면 숨김
+                child: Column(children: [
+                  Container(
+                      padding: EdgeInsets.fromLTRB(6, 8, 12, 8),
+                      decoration: BoxDecoration(
+                        color: widget.backgroundColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          ImageData(IconsPath.bambooicon,
+                              width: 42, height: 42),
+                          SizedBox(width: 6),
+                          Text(widget.message,
+                              style: TextStyle(
+                                  color: Color(0xffFAF9F7),
+                                  fontSize: 12,
+                                  letterSpacing: 0,
+                                  fontWeight: FontWeight.w600)),
+                        ],
+                      )),
+                  Stack(children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 113),
+                      width: 20,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: widget.backgroundColor,
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 113, bottom: 0),
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: green,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                          child: Icon(Icons.question_mark_sharp,
+                              color: Colors.white, size: 15, weight: 0.5)),
+                    ),
+                  ]),
+                ]),
+              ),
+            )));
 
     overlay?.insert(_overlayEntry!);
+    _starttimer();
+  }
+
+  void _starttimer() {
+    _timer = Timer(Duration(seconds: 2), () {
+      _hideOverlay();
+    });
   }
 
   void _hideOverlay() {

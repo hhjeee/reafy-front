@@ -6,7 +6,7 @@ enum PageName { LIBRARY, HOME, MYPAGE }
 class BottomNavController extends GetxController {
   static BottomNavController get to => Get.find();
   RxInt pageIndex = 1.obs;
-  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  //GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   List<int> bottomHistory = [1];
   void changeBottomNav(int value, {bool hasGesture = true}) {
