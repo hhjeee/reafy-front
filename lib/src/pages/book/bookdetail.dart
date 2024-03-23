@@ -51,7 +51,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
       dynamic tmpRecentHistory =
           await getBookshelfBookRecentHistory(widget.bookshelfBookId);
 
-      recentHistory = tmpRecentHistory;
+      recentHistory = tmpRecentHistory!;
       int readPages = calculateTotalPagesRead(historyList);
 
       setState(() {
@@ -497,7 +497,7 @@ class ProgressIndicator extends StatelessWidget {
                   fontWeight: FontWeight.w800,
                   color: Color(0xff63b865),
                 ),
-              ), //변경
+              ),
             ],
           ),
           Container(
@@ -528,7 +528,7 @@ class ProgressIndicator extends StatelessWidget {
                   )
                 ],
               )),
-          recentHistory.isNotEmpty
+          recentHistory != {}
               ? Row(
                   children: [
                     ImageData(IconsPath.information,
@@ -538,7 +538,7 @@ class ProgressIndicator extends StatelessWidget {
                       '마지막으로 ${recentHistory['startPage']}p-${recentHistory['endPage']}p만큼 읽었어요',
                       style: TextStyle(
                         fontSize: 10,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w700,
                         color: Color(0xff63b865),
                       ),
                     )
