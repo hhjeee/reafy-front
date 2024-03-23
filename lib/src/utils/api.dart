@@ -106,7 +106,7 @@ class authDio {
         final newAccessToken = refreshResponse.data['accessToken'];
         await prefs.setString('token', newAccessToken);
         print(
-            "[***] Token refresh successful "); //with newAccessToken: $newAccessToken");
+            "[***] Token refresh successful with newAccessToken: $newAccessToken"); //with newAccessToken: $newAccessToken");
         return newAccessToken;
       } else {
         print(
@@ -170,7 +170,8 @@ Future<void> _showLoginExpiredDialog(BuildContext context) async {
             Center(
               child: ElevatedButton(
                   onPressed: () {
-                    Provider.of<AuthProvider>(context, listen: false).logout();
+                    Provider.of<AuthProvider>(context, listen: false)
+                        .logout(context);
                     //prefs.clear();
                     Get.off(() => LoginPage());
                     //Navigator.pop(context);

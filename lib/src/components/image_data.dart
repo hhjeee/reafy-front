@@ -61,6 +61,8 @@ class IconsPath {
   static String get runningbutton => 'assets/images/runningbutton.png';
   // 홈화면
   static String get home_bubble => 'assets/images/home_bubble.png';
+  static String get home_bubble_yellow =>
+      'assets/images/home_bubble_yellow.png';
 
   //프로필
   static String get statistic => 'assets/svg/statistic.svg';

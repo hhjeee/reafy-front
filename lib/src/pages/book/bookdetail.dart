@@ -27,8 +27,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
   late Future<BookshelfBookDetailsDto> bookDetailsFuture;
   bool isFavorite = false;
   int totalPagesRead = 0;
-  dynamic recentHistory;
   int currentPage = 1;
+  dynamic recentHistory;
 
   @override
   void initState() {
@@ -48,12 +48,14 @@ class _BookDetailPageState extends State<BookDetailPage> {
     try {
       List<dynamic> historyList =
           await getBookshelfBookHistory(widget.bookshelfBookId);
+      dynamic tmpRecentHistory =
+          await getBookshelfBookRecentHistory(widget.bookshelfBookId);
+
+      recentHistory = tmpRecentHistory!;
       int readPages = calculateTotalPagesRead(historyList);
+
       setState(() {
         totalPagesRead = readPages;
-        historyList.isNotEmpty
-            ? recentHistory = historyList[0]
-            : recentHistory = {};
       });
     } catch (e) {
       print('Error fetching book history: $e');
@@ -171,8 +173,10 @@ class _BookDetailPageState extends State<BookDetailPage> {
                     _book_info(bookDetails),
                     SizedBox(height: 27.0),
                     ProgressIndicator(
-                        totalPages: bookDetails.pages,
-                        pagesRead: totalPagesRead),
+                      totalPages: bookDetails.pages,
+                      pagesRead: totalPagesRead,
+                      recentHistory: recentHistory,
+                    ),
                     SizedBox(height: 21.0),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 26),
@@ -188,7 +192,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                     SizedBox(height: 11),
                     MemoSection(bookshelfBookId: widget.bookshelfBookId),
                     SizedBox(height: 9.0),
-                    //AddMemoButton(bookshelfBookId: widget.bookshelfBookId),
+                    // //AddMemoButton(bookshelfBookId: widget.bookshelfBookId),
                     SizedBox(height: 17.0),
                     Align(
                       alignment: Alignment.centerRight,
@@ -204,7 +208,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
                         ),
                       ),
                     ),
-                    Spacer()
+                    SizedBox(height: 50),
+                    //Spacer()
                   ],
                 ),
               );
@@ -469,7 +474,6 @@ class ProgressIndicator extends StatelessWidget {
     final double progressPercent =
         totalPages > 0 ? (pagesRead / totalPages * 100).clamp(0, 100) : 0;
     String progressImagePath = getProgressImage(progressPercent);
-
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 26),
       child: Column(
@@ -493,7 +497,7 @@ class ProgressIndicator extends StatelessWidget {
                   fontWeight: FontWeight.w800,
                   color: Color(0xff63b865),
                 ),
-              ), //변경
+              ),
             ],
           ),
           Container(
@@ -524,7 +528,7 @@ class ProgressIndicator extends StatelessWidget {
                   )
                 ],
               )),
-          recentHistory.isNotEmpty
+          recentHistory != {}
               ? Row(
                   children: [
                     ImageData(IconsPath.information,
@@ -534,7 +538,7 @@ class ProgressIndicator extends StatelessWidget {
                       '마지막으로 ${recentHistory['startPage']}p-${recentHistory['endPage']}p만큼 읽었어요',
                       style: TextStyle(
                         fontSize: 10,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w700,
                         color: Color(0xff63b865),
                       ),
                     )

@@ -17,6 +17,7 @@ class _StopDialogState extends State<StopDialog> {
   int? selectedBookId;
   bool _isStartPageValid = true;
   bool _isEndPageValid = true;
+  int? lastReadPage;
 
   TextEditingController textController1 = TextEditingController();
   TextEditingController textController2 = TextEditingController();
@@ -40,7 +41,31 @@ class _StopDialogState extends State<StopDialog> {
         if (books.isNotEmpty) {
           selectedBookId = books[0].bookshelfBookId;
         }
+        fetchLastReadingHistory(selectedBookId!);
       });
+    });
+  }
+
+  void fetchLastReadingHistory(int bookId) async {
+    var history = await getBookshelfBookRecentHistory(bookId);
+    if (history != null && history.isNotEmpty) {
+      setState(() {
+        textController1.text =
+            (history['endPage'] + 1).toString(); // endPage 다음 페이지로 설정
+      });
+    } else {
+      setState(() {
+        textController1.text = '';
+      });
+    }
+    _validatePageInput();
+  }
+
+  void _onBookChanged(int? newValue) {
+    if (newValue == null) return;
+    setState(() {
+      selectedBookId = newValue;
+      fetchLastReadingHistory(newValue);
     });
   }
 
@@ -121,24 +146,21 @@ class _StopDialogState extends State<StopDialog> {
                         ],
                       ),
                       child: DropdownButton<int>(
-                          isExpanded: true,
-                          underline: Container(),
-                          value: selectedBookId,
-                          //icon: ImageData(IconsPath.dropdown),
-                          items: books.map((ReadingBookInfo book) {
-                            return DropdownMenuItem<int>(
-                              value: book.bookshelfBookId,
-                              child: Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: Text(book.title),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (int? newValue) {
-                            setState(() {
-                              selectedBookId = newValue;
-                            });
-                          }),
+                        isExpanded: true,
+                        underline: Container(),
+                        value: selectedBookId,
+                        //icon: ImageData(IconsPath.dropdown),
+                        items: books.map((ReadingBookInfo book) {
+                          return DropdownMenuItem<int>(
+                            value: book.bookshelfBookId,
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(book.title),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: _onBookChanged,
+                      ),
                     ),
                   ],
                 ),

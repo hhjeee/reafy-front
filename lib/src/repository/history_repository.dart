@@ -29,6 +29,31 @@ Future<List<dynamic>> getBookshelfBookHistory(int bookshelfbookid) async {
   }
 }
 
+// 가장 최근 독서 기록 조회
+Future<dynamic> getBookshelfBookRecentHistory(int bookshelfbookid) async {
+  //var dio = await authDio();
+  try {
+    final res =
+        await authdio.get('${baseUrl}/history/recently', queryParameters: {
+      'bookshelfbookid': bookshelfbookid,
+    });
+
+    if (res.statusCode == 200) {
+      final dynamic recentHistory = res.data;
+      return recentHistory;
+    } else {
+      throw Exception('Failed to load bookshelf book history');
+    }
+  } catch (e) {
+    if (e is DioError) {
+      if (e.response?.statusCode == 404) {
+        return {};
+      }
+    }
+    throw e;
+  }
+}
+
 // 독서 기록 저장
 class CreateUserBookHistoryDto {
   int? bookshelfBookId;

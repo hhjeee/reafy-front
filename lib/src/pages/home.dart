@@ -29,6 +29,7 @@ class _HomeState extends State<Home>
   late StopwatchProvider stopwatch;
 
   int? userCoin;
+  bool _isBambooSelected = false;
 
   @override
   void initState() {
@@ -113,6 +114,50 @@ class _HomeState extends State<Home>
                       frameRate: FrameRate(10000000),
                     ),
                   )))
+            ]))
+      ]);
+    }
+
+    Widget _get_bamboo({required VoidCallback onSelected}) {
+      return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        GestureDetector(
+            onTap: () {
+              onSelected();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BambooMap()),
+              ).then((_) {
+                setState(() {
+                  _isBambooSelected = false;
+                  print(_isBambooSelected);
+                });
+              });
+            },
+            child: Stack(children: [
+              ImageData(
+                IconsPath.home_bubble_yellow,
+                width: 170,
+                height: 130,
+              ),
+              Container(
+                  padding: EdgeInsets.only(top: 25),
+                  width: 170,
+                  height: 110,
+                  child: Center(
+                      child: Column(children: [
+                    ImageData(
+                      IconsPath.bambooicon,
+                      width: 45,
+                      height: 45,
+                    ),
+                    Text(
+                      '대나무가 자랐어요',
+                      style: TextStyle(
+                          color: Color(0xff333333),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ])))
             ]))
       ]);
     }
@@ -381,7 +426,20 @@ class _HomeState extends State<Home>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Spacer(),
-                      _memo(),
+                      Consumer<StopwatchProvider>(
+                        builder: (context, stopwatchProvider, child) {
+                          if (stopwatchProvider.itemCnt > 0 &&
+                              !_isBambooSelected) {
+                            return _get_bamboo(onSelected: () {
+                              setState(() {
+                                _isBambooSelected = true;
+                              });
+                            });
+                          } else {
+                            return _memo();
+                          }
+                        },
+                      ),
                       Consumer<ItemPlacementProvider>(
                           builder: (context, itemPlacementProvider, child) {
                         return Container(
