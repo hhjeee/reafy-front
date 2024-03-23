@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:provider/provider.dart';
+import 'package:reafy_front/src/provider/stopwatch_provider.dart';
+import 'package:reafy_front/src/provider/time_provider.dart';
 import 'package:reafy_front/src/utils/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -113,11 +116,21 @@ class AuthProvider extends ChangeNotifier {
   }
 
   @override
-  Future<void> logout() async {
+  Future<void> logout(BuildContext context) async {
     try {
+      final stopwatchProvider =
+          Provider.of<StopwatchProvider>(context, listen: false);
+
+      if (stopwatchProvider.status == Status.running) {
+        stopwatchProvider.pause();
+        // await sendTimeToServer(stopwatchProvider.elapsedTimeString);
+      }
+
       await UserApi.instance.logout(); // Kakao SDK logout
       final prefs = await SharedPreferences.getInstance();
-      await prefs.clear(); // Clears all data in SharedPreferences
+      await prefs.clear();
+      //late StopwatchProvider stopwatch;// Clears all data in SharedPreferences
+      //final timeProvider = Provider.of<TimeProvider>(context);
 
       print('[*] LOGOUT SUCCESSFUL');
       setLoginStatus(false); // Update login status and notify listeners
