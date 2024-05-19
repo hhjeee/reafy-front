@@ -7,6 +7,7 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/tool_tips.dart';
 import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
+import 'package:reafy_front/src/repository/quest_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/repository/coin_repository.dart';
 
@@ -43,6 +44,16 @@ class _BambooMapState extends State<BambooMap>
     Offset(15, 138),
   ];
 
+  final GlobalKey<CustomTooltipButtonState> _customTooltipKey =
+      GlobalKey<CustomTooltipButtonState>();
+  final GlobalKey<TooltipButtonState> _tooltipKey =
+      GlobalKey<TooltipButtonState>();
+
+  void _hideTooltip() {
+    _customTooltipKey.currentState?.hideOverlay();
+    _tooltipKey.currentState?.hideOverlay();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -67,6 +78,22 @@ class _BambooMapState extends State<BambooMap>
     loadUserCoin();
     Future.microtask(
         () => Provider.of<CoinProvider>(context, listen: false).updateCoins());
+
+    fetchQuestList();
+  }
+
+  List<String> questList = [];
+  Future<void> fetchQuestList() async {
+    try {
+      List<String> fetchedQuestList = await postDefaultQuest();
+      setState(() {
+        questList = fetchedQuestList;
+      });
+      print(questList);
+    } catch (error) {
+      print('Error fetching quest list: $error');
+      setState(() {});
+    }
   }
 
   @override
@@ -165,19 +192,25 @@ class _BambooMapState extends State<BambooMap>
                 image: AssetImage(IconsPath.bamboomap), fit: BoxFit.cover),
           ),
         ),
-        TopBarWidget(selectedNumber: 5),
+        TopBarWidget(
+          selectedNumber: 5,
+          tooltipKey: _tooltipKey,
+        ),
         BubbleWidget(),
         Positioned(
           top: 212,
           left: 275,
-          child: CustomTooltipButton(message: "15분 읽으면\n대나무 한 개가 자라요!"),
+          child: CustomTooltipButton(
+            key: _customTooltipKey,
+            message: "15분 읽으면\n대나무 한 개가 자라요!",
+          ),
         ),
         Positioned(
           bottom: 0,
           child: Container(
               width: size.width, height: 500, child: bamboo_collect(context)),
         ),
-        BottomBarWidget(userCoin: userCoin)
+        BottomBarWidget(userCoin: userCoin, hideTooltip: _hideTooltip)
       ],
     ));
   }
@@ -282,8 +315,10 @@ class BambooBubbleRunningContent extends StatelessWidget {
 
 class BottomBarWidget extends StatelessWidget {
   final int? userCoin;
+  final VoidCallback hideTooltip;
 
-  BottomBarWidget({Key? key, required this.userCoin}) : super(key: key);
+  BottomBarWidget({Key? key, required this.userCoin, required this.hideTooltip})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -296,6 +331,7 @@ class BottomBarWidget extends StatelessWidget {
           width: 60,
           child: FloatingActionButton(
             onPressed: () {
+              hideTooltip();
               Get.back();
             },
             shape: RoundedRectangleBorder(
@@ -438,7 +474,9 @@ class BambooDialog extends StatelessWidget {
 
 class TopBarWidget extends StatelessWidget {
   final int selectedNumber;
-  TopBarWidget({required this.selectedNumber});
+  final GlobalKey<TooltipButtonState> tooltipKey;
+
+  TopBarWidget({required this.selectedNumber, required this.tooltipKey});
 
   @override
   Widget build(BuildContext context) {
@@ -466,7 +504,9 @@ class TopBarWidget extends StatelessWidget {
                     color: black, fontSize: 12, fontWeight: FontWeight.w800),
               ),
               SizedBox(width: 4),
-              TooltipButton(),
+              TooltipButton(
+                key: tooltipKey,
+              ),
               SizedBox(width: 14),
               ...numbers.map((number) => Expanded(
                       child: Container(

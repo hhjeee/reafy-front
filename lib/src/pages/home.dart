@@ -10,6 +10,7 @@ import 'package:reafy_front/src/pages/map.dart';
 import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/provider/time_provider.dart';
+import 'package:reafy_front/src/repository/timer_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
@@ -30,6 +31,7 @@ class _HomeState extends State<Home>
 
   int? userCoin;
   bool _isBambooSelected = false;
+  bool showBambooNotification = false;
 
   @override
   void initState() {
@@ -128,9 +130,12 @@ class _HomeState extends State<Home>
                 MaterialPageRoute(builder: (context) => BambooMap()),
               ).then((_) {
                 setState(() {
+                  final stopwatchProvider =
+                      Provider.of<StopwatchProvider>(context, listen: false);
                   _isBambooSelected = false;
-                  print(_isBambooSelected);
+                  stopwatchProvider.showBambooNotification = false;
                 });
+                print(_isBambooSelected);
               });
             },
             child: Stack(children: [
@@ -365,183 +370,191 @@ class _HomeState extends State<Home>
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xfffaf9f7),
-        elevation: 0,
-        leadingWidth: 90,
-        toolbarHeight: 44,
-        leading: Container(
-            padding: EdgeInsets.only(left: 16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ImageData(IconsPath.bamboo, isSvg: true, width: 44, height: 44),
-                Text(
-                  Provider.of<CoinProvider>(context).coins.toString(),
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: green,
-                    fontWeight: FontWeight.w700,
+        appBar: AppBar(
+          backgroundColor: Color(0xfffaf9f7),
+          elevation: 0,
+          leadingWidth: 90,
+          toolbarHeight: 44,
+          leading: Container(
+              padding: EdgeInsets.only(left: 16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ImageData(IconsPath.bamboo,
+                      isSvg: true, width: 44, height: 44),
+                  Text(
+                    Provider.of<CoinProvider>(context).coins.toString(),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: green,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              )),
+          actions: [
+            IconButton(
+              iconSize: 44,
+              padding: EdgeInsets.only(right: 0),
+              icon: ImageData(IconsPath.map_icon, isSvg: true),
+              onPressed: () {
+                Get.to(() => BambooMap());
+              },
+            ),
+            IconButton(
+              padding: EdgeInsets.only(right: 16),
+              iconSize: 44,
+              icon: ImageData(IconsPath.item, isSvg: true),
+              onPressed: () {
+                Get.to(() => ItemShop());
+              },
+            ),
+          ],
+        ),
+        body: Center(
+          child: Container(
+              width: size.width,
+              decoration: BoxDecoration(color: Color(0xfffff9c1)),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xFFFAF9F7),
+                      Color.fromRGBO(250, 249, 247, 0.0),
+                    ],
                   ),
                 ),
-              ],
-            )),
-        actions: [
-          IconButton(
-            iconSize: 44,
-            padding: EdgeInsets.only(right: 0),
-            icon: ImageData(IconsPath.map_icon, isSvg: true),
-            onPressed: () {
-              Get.to(() => BambooMap());
-            },
-          ),
-          IconButton(
-            padding: EdgeInsets.only(right: 16),
-            iconSize: 44,
-            icon: ImageData(IconsPath.item, isSvg: true),
-            onPressed: () {
-              Get.to(() => ItemShop());
-            },
-          ),
-        ],
-      ),
-      body: Container(
-          width: size.width,
-          decoration: BoxDecoration(color: Color(0xfffff9c1)),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFFFAF9F7),
-                  Color.fromRGBO(250, 249, 247, 0.0),
-                ],
-              ),
-            ),
-            child: AnimatedBuilder(
-                animation: _floatingAnimation!,
-                builder: (context, _) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Spacer(),
-                      Consumer<StopwatchProvider>(
-                        builder: (context, stopwatchProvider, child) {
-                          if (stopwatchProvider.itemCnt > 0 &&
-                              !_isBambooSelected) {
-                            return _get_bamboo(onSelected: () {
-                              setState(() {
-                                _isBambooSelected = true;
-                              });
-                            });
-                          } else {
-                            return _memo();
-                          }
-                        },
-                      ),
-                      Consumer<ItemPlacementProvider>(
-                          builder: (context, itemPlacementProvider, child) {
-                        return Container(
-                            width: size.width,
-                            height: 332,
-                            child: Stack(
-                              children: [
-                                //// Rug
-                                Positioned(
-                                  top: 276,
-                                  left: 104,
-                                  child: Container(
-                                    width: 186,
-                                    height: 36,
-                                    child: ImageData(
-                                        itemPlacementProvider.rug.imagePath,
-                                        width: 186,
-                                        height: 36),
-                                  ),
-                                ),
-                                // Shadow
-                                Positioned(
-                                  top:
-                                      190, // Adjust position based on the animation value
-                                  left: 102,
-                                  child: _shadow(),
-                                ),
+                child: AnimatedBuilder(
+                    animation: _floatingAnimation!,
+                    builder: (context, _) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Spacer(),
+                          Consumer<StopwatchProvider>(
+                            builder: (context, stopwatchProvider, child) {
+                              if (stopwatchProvider.itemCnt > 0 &&
+                                  !_isBambooSelected &&
+                                  stopwatchProvider.showBambooNotification) {
+                                return _get_bamboo(onSelected: () {
+                                  setState(() {
+                                    _isBambooSelected = true;
+                                  });
+                                });
+                              } else {
+                                return _memo();
+                              }
+                            },
+                          ),
+                          Consumer<ItemPlacementProvider>(
+                              builder: (context, itemPlacementProvider, child) {
+                            return Center(
+                                child: Container(
+                                    width: size.width,
+                                    height: 332,
+                                    child: Stack(
+                                      children: [
+                                        //// Rug
+                                        Positioned(
+                                          top: 276,
+                                          left: 104,
+                                          child: Container(
+                                            width: 186,
+                                            height: 36,
+                                            child: ImageData(
+                                                itemPlacementProvider
+                                                    .rug.imagePath,
+                                                width: 186,
+                                                height: 36),
+                                          ),
+                                        ),
+                                        // Shadow
+                                        Positioned(
+                                          top:
+                                              190, // Adjust position based on the animation value
+                                          left: 102,
+                                          child: _shadow(),
+                                        ),
 
-                                //// BookShelf
-                                Positioned(
-                                  top: 28,
-                                  left: 13,
-                                  child: Container(
-                                      width: 110,
-                                      height: 230,
-                                      child: ImageData(
-                                          itemPlacementProvider
-                                              .bookshelf.imagePath,
-                                          width: 110,
-                                          height: 230)),
-                                ),
-                                // Character
-                                Positioned(
-                                  top: 64 +
-                                      _floatingAnimation!
-                                          .value, // Adjust position based on the animation value
-                                  left: 102,
-                                  child: _buildCharacter(),
-                                ),
-                                //// Clock
-                                Positioned(
-                                  left: 165,
-                                  top: 0,
-                                  child: Container(
-                                      width: 64,
-                                      height: 64,
-                                      child: ImageData(
-                                          itemPlacementProvider.clock.imagePath,
-                                          width: 64,
-                                          height: 64)),
-                                ),
-                                //// Window
-                                Positioned(
-                                  top: 34,
-                                  right: 13,
-                                  child: Container(
-                                    width: 100,
-                                    height: 100,
-                                    child: ImageData(
-                                      itemPlacementProvider.window.imagePath,
-                                      width: 100,
-                                      height: 100,
-                                    ),
-                                  ),
-                                ),
-                                //// Others
-                                Positioned(
-                                  right: 23,
-                                  top: 148,
-                                  child: Container(
-                                    width: 90,
-                                    height: 110,
-                                    child: ImageData(
-                                        itemPlacementProvider.others.imagePath,
-                                        width: 90,
-                                        height: 110),
-                                  ),
-                                ),
-                              ],
-                            ));
-                      }),
-                      stopwatch.status == Status.running
-                          ? _stopbutton()
-                          : _time(
-                              timeProvider.todayTime, timeProvider.totalTime),
-                      const SizedBox(height: 15),
-                      Center(child: StopwatchWidget()),
-                      Spacer()
-                    ],
-                  );
-                }),
-          )),
-    );
+                                        //// BookShelf
+                                        Positioned(
+                                          top: 28,
+                                          left: 13,
+                                          child: Container(
+                                              width: 110,
+                                              height: 230,
+                                              child: ImageData(
+                                                  itemPlacementProvider
+                                                      .bookshelf.imagePath,
+                                                  width: 110,
+                                                  height: 230)),
+                                        ),
+                                        // Character
+                                        Positioned(
+                                          top: 64 +
+                                              _floatingAnimation!
+                                                  .value, // Adjust position based on the animation value
+                                          left: 102,
+                                          child: _buildCharacter(),
+                                        ),
+                                        //// Clock
+                                        Positioned(
+                                          left: 165,
+                                          top: 0,
+                                          child: Container(
+                                              width: 64,
+                                              height: 64,
+                                              child: ImageData(
+                                                  itemPlacementProvider
+                                                      .clock.imagePath,
+                                                  width: 64,
+                                                  height: 64)),
+                                        ),
+                                        //// Window
+                                        Positioned(
+                                          top: 34,
+                                          right: 13,
+                                          child: Container(
+                                            width: 100,
+                                            height: 100,
+                                            child: ImageData(
+                                              itemPlacementProvider
+                                                  .window.imagePath,
+                                              width: 100,
+                                              height: 100,
+                                            ),
+                                          ),
+                                        ),
+                                        //// Others
+                                        Positioned(
+                                          right: 23,
+                                          top: 148,
+                                          child: Container(
+                                            width: 90,
+                                            height: 110,
+                                            child: ImageData(
+                                                itemPlacementProvider
+                                                    .others.imagePath,
+                                                width: 90,
+                                                height: 110),
+                                          ),
+                                        ),
+                                      ],
+                                    )));
+                          }),
+                          stopwatch.status == Status.running
+                              ? _stopbutton()
+                              : _time(timeProvider.todayTime,
+                                  timeProvider.totalTime),
+                          const SizedBox(height: 15),
+                          Center(child: StopwatchWidget()),
+                          Spacer()
+                        ],
+                      );
+                    }),
+              )),
+        ));
   }
 }

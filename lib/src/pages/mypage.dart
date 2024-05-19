@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
@@ -66,7 +65,6 @@ class MyPage extends StatelessWidget {
                       const Padding(
                         padding: EdgeInsets.only(left: 17),
                         child: Text(
-                          //padding left 14.26
                           "팀 소개",
                           style: TextStyle(
                             fontSize: 16,
@@ -79,37 +77,6 @@ class MyPage extends StatelessWidget {
                   ),
                 ),
               ),
-              /*Container(
-                margin: EdgeInsets.symmetric(vertical: 16),
-                height: 4.0,
-                color: Color(0xfff5f5f5),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 27.0), //25
-                child: GestureDetector(
-                  onTap: () {
-                    Get.to(Rating());
-                  },
-                  child: Row(
-                    children: [
-                      ImageData(IconsPath.star,
-                          isSvg: true, width: 26, height: 26),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 15), //13
-                        child: Text(
-                          "평점 남기기",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xff666666),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-             */
               Container(
                 margin: EdgeInsets.symmetric(vertical: 16),
                 height: 4.0,

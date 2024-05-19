@@ -86,6 +86,11 @@ class _StopDialogState extends State<StopDialog> {
   @override
   Widget build(BuildContext context) {
     StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
+    int calculateRemainedTimer(int readingTime) {
+      int multipleOfFifteenMinutes = (readingTime / 900).ceil() * 900;
+      int remainedTimer = multipleOfFifteenMinutes - readingTime;
+      return remainedTimer;
+    }
 
     return AlertDialog(
         shape: RoundedRectangleBorder(
@@ -337,6 +342,8 @@ class _StopDialogState extends State<StopDialog> {
                               startPage: startPage,
                               endPage: endPage,
                               duration: readingTime,
+                              remainedTimer:
+                                  calculateRemainedTimer(readingTime),
                             );
                             await createUserBookHistory(historyDto);
 

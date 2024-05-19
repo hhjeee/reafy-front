@@ -90,6 +90,9 @@ class IconsPath {
   static String get done => 'assets/svg/done_button.svg';
   static String get favorite => 'assets/svg/book_favorite.svg';
   static String get nonFavorite => 'assets/svg/book_nonFavorite.svg';
+  static String get progressPage => 'assets/svg/progressPage.svg';
+  static String get progressPageImg => 'assets/images/progressPage.png';
+  static String get historyButton => 'assets/svg/history_button.svg';
 
   // 온보딩
   static String get state_1 => 'assets/images/state_1.png';
@@ -124,18 +127,6 @@ class IconsPath {
   static String get total => 'assets/svg/total_time.svg';
 
   static String get add_back => 'assets/images/addbook_background.png';
-
-  static String get progress0 => 'assets/images/progress/progress0.png';
-  static String get progress1 => 'assets/images/progress/progress1.png';
-  static String get progress2 => 'assets/images/progress/progress2.png';
-  static String get progress3 => 'assets/images/progress/progress3.png';
-  static String get progress4 => 'assets/images/progress/progress4.png';
-  static String get progress5 => 'assets/images/progress/progress5.png';
-  static String get progress6 => 'assets/images/progress/progress6.png';
-  static String get progress7 => 'assets/images/progress/progress7.png';
-  static String get progress8 => 'assets/images/progress/progress8.png';
-  static String get progress9 => 'assets/images/progress/progress9.png';
-  static String get progress10 => 'assets/images/progress/progress10.png';
 
   // 맵
   static String get bamboomap => 'assets/images/bamboo_map.png';

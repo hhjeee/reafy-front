@@ -1,15 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
+import 'package:reafy_front/src/repository/timer_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
-class StopwatchWidget extends StatelessWidget {
+class StopwatchWidget extends StatefulWidget {
   const StopwatchWidget({super.key});
+
+  @override
+  State<StopwatchWidget> createState() => _StopwatchWidgetState();
+}
+
+class _StopwatchWidgetState extends State<StopwatchWidget> {
+  Map<String, dynamic>? RemainingTimerData;
+  bool isTimerUpdating = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    fetchTimerData();
+  }
+
+  Future<void> fetchTimerData() async {
+    try {
+      final data = await getRemainingTime();
+      setState(() {
+        RemainingTimerData = data;
+      });
+    } catch (e) {
+      print('Error fetching user timer data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
-    stopwatch.setTimer(15 * 60); // 시간설정
+
+    stopwatch.setTimer(RemainingTimerData?['timer'] as int? ?? 15 * 60); // 시간설정
 
     void _tapStopwatch(Status status) async {
       switch (status) {

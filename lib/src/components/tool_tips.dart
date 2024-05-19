@@ -16,10 +16,10 @@ class CustomTooltipButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CustomTooltipButtonState createState() => _CustomTooltipButtonState();
+  CustomTooltipButtonState createState() => CustomTooltipButtonState();
 }
 
-class _CustomTooltipButtonState extends State<CustomTooltipButton> {
+class CustomTooltipButtonState extends State<CustomTooltipButton> {
   OverlayEntry? _overlayEntry;
   Timer? _timer;
 
@@ -42,7 +42,7 @@ class _CustomTooltipButtonState extends State<CustomTooltipButton> {
             child: Material(
               color: Colors.transparent,
               child: GestureDetector(
-                onTap: _hideOverlay, // 툴팁을 탭하면 숨김
+                onTap: hideOverlay, // 툴팁을 탭하면 숨김
                 child: Column(children: [
                   Container(
                       padding: EdgeInsets.fromLTRB(6, 8, 12, 8),
@@ -95,11 +95,11 @@ class _CustomTooltipButtonState extends State<CustomTooltipButton> {
 
   void _starttimer() {
     _timer = Timer(Duration(seconds: 2), () {
-      _hideOverlay();
+      hideOverlay();
     });
   }
 
-  void _hideOverlay() {
+  void hideOverlay() {
     _overlayEntry?.remove();
     _overlayEntry = null;
   }
@@ -109,7 +109,7 @@ class _CustomTooltipButtonState extends State<CustomTooltipButton> {
     return GestureDetector(
       onTap: () {
         if (_overlayEntry != null) {
-          _hideOverlay();
+          hideOverlay();
         } else {
           _showOverlay(context);
         }
@@ -141,10 +141,10 @@ class TooltipButton extends StatefulWidget {
   const TooltipButton({Key? key}) : super(key: key);
 
   @override
-  _TooltipButtonState createState() => _TooltipButtonState();
+  TooltipButtonState createState() => TooltipButtonState();
 }
 
-class _TooltipButtonState extends State<TooltipButton> {
+class TooltipButtonState extends State<TooltipButton> {
   OverlayEntry? _overlayEntry;
   Timer? _timer;
 
@@ -167,7 +167,7 @@ class _TooltipButtonState extends State<TooltipButton> {
             child: Material(
               color: Colors.transparent,
               child: GestureDetector(
-                  onTap: _hideOverlay, // 툴팁을 탭하면 숨김
+                  onTap: hideOverlay, // 툴팁을 탭하면 숨김
                   child: ImageData(
                     IconsPath.toolkit2,
                     isSvg: false,
@@ -182,11 +182,11 @@ class _TooltipButtonState extends State<TooltipButton> {
 
   void _starttimer() {
     _timer = Timer(Duration(seconds: 2), () {
-      _hideOverlay();
+      hideOverlay();
     });
   }
 
-  void _hideOverlay() {
+  void hideOverlay() {
     _overlayEntry?.remove();
     _overlayEntry = null;
   }
@@ -196,7 +196,7 @@ class _TooltipButtonState extends State<TooltipButton> {
     return GestureDetector(
         onTap: () {
           if (_overlayEntry != null) {
-            _hideOverlay();
+            hideOverlay();
           } else {
             _showOverlay(context);
           }

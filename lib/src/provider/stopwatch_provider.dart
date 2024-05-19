@@ -13,6 +13,7 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   bool _addBamboo = false;
   String _elapsedTime = '00:00:00';
   String _remainingTime = '00:00';
+  bool showBambooNotification = false;
 
   Status get status => _status;
   int get remainingSec => _remainingsec;
@@ -161,6 +162,9 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
     if (_itemCnt < 6) {
       _itemCnt += 1;
       print("[*] 대나무 생김 : $_itemCnt");
+
+      showBambooNotification = true;
+
       notifyListeners();
       return true;
     } else {

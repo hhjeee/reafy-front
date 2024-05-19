@@ -85,12 +85,14 @@ class _ProfileNameState extends State<ProfileName> {
             ),
           ],
         ),
-        Text(
-          _displayText,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-            color: Color(0xff000000),
+        Center(
+          child: Text(
+            _displayText,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+              color: Color(0xff000000),
+            ),
           ),
         ),
       ],
