@@ -3,7 +3,7 @@ import 'package:reafy_front/src/utils/api.dart';
 
 final Dio authdio = authDio().getDio();
 
-const url = 'https://dev.reafydevkor.xyz';
+const url = 'https://dev.reafy.devkor.club';
 
 //책 검색
 class SearchBookDto {
@@ -336,7 +336,6 @@ Future<BookshelfBookDetailsDto> getBookshelfBookDetails(
       final Map<String, dynamic> data = res.data;
       final BookshelfBookDetailsDto bookshelfBookDetails =
           BookshelfBookDetailsDto.fromJson(data);
-
       return bookshelfBookDetails;
     } else {
       throw Exception('Failed to load bookshelf book details');

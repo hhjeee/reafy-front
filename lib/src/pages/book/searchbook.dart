@@ -31,7 +31,6 @@ class _SearchBookState extends State<SearchBook> {
   List<Book> displayList = [];
   TextEditingController _searchController = TextEditingController();
   final Random _random = Random();
-  //final ApiClient apiClient = ApiClient();
 
   bool isSearching = true;
   int currentPage = 1;
@@ -59,9 +58,6 @@ class _SearchBookState extends State<SearchBook> {
 
   Future<SearchBookResDto> searchBooks(String query, int page) async {
     var auth = context.read<AuthProvider>();
-    //await auth.performAuthenticatedAction();
-    //var dio = await authDio();\
-
     final Dio authdio = authDio().getDio();
 
     try {
@@ -85,6 +81,15 @@ class _SearchBookState extends State<SearchBook> {
   }
 
   void _performSearch(String query, [int page = 1]) {
+    if (query.trim().isEmpty) {
+      setState(() {
+        isSearching = false;
+        displayList = [];
+        totalPages = 0;
+      });
+      return;
+    }
+
     setState(() {
       isSearching = true;
       currentPage = page;
@@ -100,7 +105,6 @@ class _SearchBookState extends State<SearchBook> {
 
   Widget _search() {
     return Container(
-      //padding: EdgeInsets.symmetric(horizontal: 25),
       width: 341,
       height: 40,
       child: TextField(

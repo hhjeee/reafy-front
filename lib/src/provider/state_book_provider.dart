@@ -20,8 +20,6 @@ class BookShelfProvider extends ChangeNotifier {
 
   Future<void> fetchFavoriteThumbnailList() async {
     thumbnailsForIsFavorite = await fetchBookshelfThumbnailsByFavorite();
-    print('aa');
-    print(thumbnailsForIsFavorite);
     notifyListeners();
   }
 }

@@ -3,7 +3,7 @@ import 'package:reafy_front/src/utils/api.dart';
 
 final Dio authdio = authDio().getDio();
 
-const url = 'https://dev.reafydevkor.xyz';
+const url = 'https://dev.reafy.devkor.club';
 
 class ItemDto {
   final int itemId;

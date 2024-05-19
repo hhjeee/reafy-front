@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/book_memo.dart';
@@ -6,11 +7,11 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/delete_book.dart';
 import 'package:reafy_front/src/components/modify_book.dart';
 import 'package:reafy_front/src/components/new_book_memo.dart';
+import 'package:reafy_front/src/pages/book/bookhistory.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/repository/history_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
-import 'package:reafy_front/src/utils/reading_progress.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BookDetailPage extends StatefulWidget {
@@ -26,7 +27,6 @@ class BookDetailPage extends StatefulWidget {
 class _BookDetailPageState extends State<BookDetailPage> {
   late Future<BookshelfBookDetailsDto> bookDetailsFuture;
   bool isFavorite = false;
-  int totalPagesRead = 0;
   int currentPage = 1;
   dynamic recentHistory;
 
@@ -46,16 +46,10 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   void CalculateTotalPagesRead() async {
     try {
-      List<dynamic> historyList =
-          await getBookshelfBookHistory(widget.bookshelfBookId);
       dynamic tmpRecentHistory =
           await getBookshelfBookRecentHistory(widget.bookshelfBookId);
-
-      recentHistory = tmpRecentHistory!;
-      int readPages = calculateTotalPagesRead(historyList);
-
       setState(() {
-        totalPagesRead = readPages;
+        recentHistory = tmpRecentHistory!;
       });
     } catch (e) {
       print('Error fetching book history: $e');
@@ -174,7 +168,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                     SizedBox(height: 27.0),
                     ProgressIndicator(
                       totalPages: bookDetails.pages,
-                      pagesRead: totalPagesRead,
+                      pagesRead: bookDetails.totalPagesRead,
                       recentHistory: recentHistory,
                     ),
                     SizedBox(height: 21.0),
@@ -215,33 +209,70 @@ class _BookDetailPageState extends State<BookDetailPage> {
               );
             }
           }),
-      floatingActionButton: Container(
-        width: size.width - 40, // Width of the button
-        height: 33, // Height of the button
-        decoration: BoxDecoration(
-          color: Color(0xffB3B3B3), // Background color of the button
-          borderRadius: BorderRadius.circular(10), // Corner radius
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1), // Shadow color
-              spreadRadius: 0,
-              blurRadius: 10, // Shadow blur radius
-              offset: Offset(0, 0), // Shadow position
+      floatingActionButton: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Get.to(
+                    () => BookHistory(bookshelfBookId: widget.bookshelfBookId));
+              },
+              child: Container(
+                width: 33,
+                height: 33,
+                decoration: BoxDecoration(
+                  color: Color(0xff63B865),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 0,
+                      blurRadius: 10,
+                      offset: Offset(0, 0),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                    padding: EdgeInsets.all(4.5),
+                    child: ImageData(
+                      IconsPath.historyButton,
+                      isSvg: true,
+                    )),
+              ),
+            ),
+            SizedBox(width: 10),
+            Container(
+              width: size.width - 90,
+              height: 33,
+              decoration: BoxDecoration(
+                color: Color(0xffB3B3B3),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    spreadRadius: 0,
+                    blurRadius: 10,
+                    offset: Offset(0, 0),
+                  ),
+                ],
+              ),
+              child: FloatingActionButton(
+                onPressed: () {
+                  showAddBookMemoBottomSheet(context, widget.bookshelfBookId);
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(10), // Making the FAB rectangular
+                ),
+                backgroundColor:
+                    Colors.transparent, // Making FAB's background transparent
+                elevation: 0, // Removing any additional shadow or elevation
+                child: Icon(Icons.add, color: Colors.white), // Button icon
+              ),
             ),
           ],
-        ),
-        child: FloatingActionButton(
-          onPressed: () {
-            showAddBookMemoBottomSheet(context, widget.bookshelfBookId);
-          },
-          shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(10), // Making the FAB rectangular
-          ),
-          backgroundColor:
-              Colors.transparent, // Making FAB's background transparent
-          elevation: 0, // Removing any additional shadow or elevation
-          child: Icon(Icons.add, color: Colors.white), // Button icon
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -257,7 +288,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
           Text(
             (bookDetails.title.length ?? 0) > 20
                 ? '${bookDetails.title.substring(0, 20)}\n${bookDetails.title.substring(
-                    21,
+                    20,
                   )}'
                 : '${bookDetails.title ?? ''}',
             overflow: TextOverflow.clip,
@@ -473,78 +504,186 @@ class ProgressIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final double progressPercent =
         totalPages > 0 ? (pagesRead / totalPages * 100).clamp(0, 100) : 0;
-    String progressImagePath = getProgressImage(progressPercent);
+
+    double balloonLeftPosition(double progressPercent) {
+      int filledBars = (progressPercent / 10).floor();
+      return filledBars * (30 + 4) - 20;
+    }
+
+    int calculateLeftOffset(int pagesRead) {
+      int digits = pagesRead.toString().length;
+
+      if (digits == 1) {
+        return 40;
+      } else if (digits == 2) {
+        return 36;
+      } else if (digits == 3) {
+        return 33;
+      } else {
+        return 30;
+      }
+    }
+
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 26),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Text(
-                "진행 정도",
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xff333333),
+              Padding(
+                padding: EdgeInsets.only(left: 26),
+                child: Text(
+                  "진행 정도",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xff333333),
+                  ),
                 ),
               ),
               Spacer(),
-              Text(
-                "${progressPercent.toStringAsFixed(0)}%",
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xff63b865),
+              Padding(
+                padding: EdgeInsets.only(
+                  right: 26,
+                ),
+                child: Text(
+                  "${progressPercent.toStringAsFixed(0)}%",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xff63b865),
+                  ),
                 ),
               ),
             ],
           ),
-          Container(
-            width: MediaQuery.of(context).size.width - 50,
-            height: 46,
-            child: ImageData(progressImagePath),
+          // Container(
+          //   width: MediaQuery.of(context).size.width - 50,
+          //   height: 46,
+          //   child: ImageData(progressImagePath),
+          // ),
+          Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 25,
+                  bottom: 8,
+                  left: 26,
+                  right: 26,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(10, (index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: SvgPicture.asset(
+                        'assets/svg/progress.svg',
+                        color: index < (progressPercent / 10).floor()
+                            ? Color(0xff63B865)
+                            : Color(0xff63B865).withOpacity(0.3),
+                        width: 35,
+                        height: 13,
+                      ),
+                    );
+                  }),
+                ),
+              ),
+              if (progressPercent > 0)
+                Stack(
+                  children: [
+                    Container(width: double.infinity, height: 35),
+                    Positioned(
+                      left: balloonLeftPosition(progressPercent) + 26,
+                      bottom: 8,
+                      child: ImageData(
+                        IconsPath.progressPageImg,
+                        width: 40,
+                        height: 30,
+                      ),
+                    ),
+                    Positioned(
+                      left: balloonLeftPosition(progressPercent) +
+                          calculateLeftOffset(pagesRead),
+                      top: 3,
+                      child: Center(
+                        child: Text(
+                          '$pagesRead' + 'p',
+                          style: TextStyle(
+                              color: Color(0xff333333),
+                              fontWeight: FontWeight.w800,
+                              fontSize: 10),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+            ],
           ),
+
           Padding(
               padding: EdgeInsets.symmetric(horizontal: 3),
               child: Row(
                 children: [
-                  Text(
-                    '0p',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xff333333),
+                  Padding(
+                    padding: EdgeInsets.only(left: 26),
+                    child: Text(
+                      '0p',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xff333333),
+                      ),
                     ),
                   ),
                   Spacer(),
-                  Text(
-                    "${totalPages}p",
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xff333333),
-                    ),
-                  )
+                  Padding(
+                      padding: EdgeInsets.only(right: 26),
+                      child: Text(
+                        "${totalPages}p",
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xff333333),
+                        ),
+                      )),
                 ],
               )),
-          recentHistory != {}
-              ? Row(
-                  children: [
-                    ImageData(IconsPath.information,
-                        isSvg: true, width: 10, height: 10),
-                    SizedBox(width: 2),
-                    Text(
-                      '마지막으로 ${recentHistory['startPage']}p-${recentHistory['endPage']}p만큼 읽었어요',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xff63b865),
+          (recentHistory?.length ?? 0) != 0
+              ? Padding(
+                  padding: EdgeInsets.only(left: 26),
+                  child: Row(
+                    children: [
+                      ImageData(IconsPath.information,
+                          isSvg: true, width: 10, height: 10),
+                      SizedBox(width: 2),
+                      Text(
+                        '마지막으로 ${recentHistory['startPage']}p-${recentHistory['endPage']}p만큼 읽었어요',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff63b865),
+                        ),
                       ),
-                    )
-                  ],
+                    ],
+                  ))
+              : Padding(
+                  padding: EdgeInsets.only(left: 26),
+                  child: Row(
+                    children: [
+                      ImageData(IconsPath.information,
+                          isSvg: true, width: 10, height: 10),
+                      SizedBox(width: 2),
+                      Text(
+                        '독서 기록이 없어요',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xff63b865),
+                        ),
+                      )
+                    ],
+                  ),
                 )
-              : Container(),
         ],
       ),
     );

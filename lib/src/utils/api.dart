@@ -17,7 +17,7 @@ class authDio {
   }
 
   Dio getDio() {
-    final baseUrl = dotenv.env['BASE_URL'] ?? 'https://dev.reafydevkor.xyz';
+    final baseUrl = dotenv.env['BASE_URL'] ?? 'https://dev.reafy.devkor.club';
     Dio dio = Dio(BaseOptions(
         baseUrl: baseUrl,
         connectTimeout: Duration(milliseconds: 5000),
@@ -88,7 +88,7 @@ class authDio {
     final prefs = await SharedPreferences.getInstance();
     final refreshToken = prefs.getString('refreshToken');
 
-    final baseUrl = dotenv.env['BASE_URL'] ?? 'https://dev.reafydevkor.xyz';
+    final baseUrl = dotenv.env['BASE_URL'] ?? 'https://dev.reafy.devkor.club';
 
     print("[***] Starting token refresh");
 
@@ -127,15 +127,15 @@ class authDio {
 class CustomLogInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    print('REQUEST[${options.method}] => PATH: ${options.path}');
+    // print('REQUEST[${options.method}] => PATH: ${options.path}');
     super.onRequest(options, handler);
   }
 
   @override
   void onResponse(
       Response<dynamic> response, ResponseInterceptorHandler handler) {
-    print(
-        'RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
+    // print(
+    //     'RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
     super.onResponse(response, handler);
   }
 

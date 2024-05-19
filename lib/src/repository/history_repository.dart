@@ -3,26 +3,34 @@ import 'package:reafy_front/src/utils/api.dart';
 
 final Dio authdio = authDio().getDio();
 // 독서 기록 조회
-Future<List<dynamic>> getBookshelfBookHistory(int bookshelfbookid) async {
-  //var dio = await authDio();
+Future<Map<String, dynamic>> getBookshelfBookHistory(int bookshelfbookId,
+    {int? cursorId}) async {
   try {
     final res = await authdio.get('${baseUrl}/history', queryParameters: {
-      'bookshelfbookid': bookshelfbookid,
+      'bookshelfBookId': bookshelfbookId,
+      'cursorId': cursorId,
     });
 
     if (res.statusCode == 200 || res.statusCode == 201) {
-      final List<dynamic> historyList = res.data;
-      return historyList;
+      return res.data as Map<String, dynamic>;
     } else {
       throw Exception('Failed to load bookshelf book history');
     }
   } catch (e) {
     if (e is DioError) {
+      // if (e.response?.statusCode == 404) {
+      //   //404인 경우 빈 리스트 반환
+      //   return [];
+      // }
       if (e.response?.statusCode == 404) {
-        //404인 경우 빈 리스트 반환
-        //////// getBookshelfBookDetails 함수에서 에러 발생: type 'Null' is not a subtype of type 'String'
-        //flutter: Error fetching book details: type 'Null' is not a subtype of type 'String'
-        return [];
+        // 404인 경우 빈 리스트와 기본 메타 데이터 반환
+        return {
+          'data': [],
+          'meta': {
+            'cursorId': 0,
+            'hasNextData': false,
+          },
+        };
       }
     }
     throw e;
@@ -30,14 +38,12 @@ Future<List<dynamic>> getBookshelfBookHistory(int bookshelfbookid) async {
 }
 
 // 가장 최근 독서 기록 조회
-Future<dynamic> getBookshelfBookRecentHistory(int bookshelfbookid) async {
-  //var dio = await authDio();
+Future<dynamic> getBookshelfBookRecentHistory(int bookshelfbookId) async {
   try {
     final res =
         await authdio.get('${baseUrl}/history/recently', queryParameters: {
-      'bookshelfbookid': bookshelfbookid,
+      'bookshelfBookId': bookshelfbookId,
     });
-
     if (res.statusCode == 200) {
       final dynamic recentHistory = res.data;
       return recentHistory;
@@ -60,13 +66,14 @@ class CreateUserBookHistoryDto {
   int? startPage;
   int? endPage;
   int duration;
+  int remainedTimer;
 
-  CreateUserBookHistoryDto({
-    required this.bookshelfBookId,
-    required this.startPage,
-    required this.endPage,
-    required this.duration,
-  });
+  CreateUserBookHistoryDto(
+      {required this.bookshelfBookId,
+      required this.startPage,
+      required this.endPage,
+      required this.duration,
+      required this.remainedTimer});
 
   Map<String, dynamic> toJson() {
     return {
@@ -74,6 +81,7 @@ class CreateUserBookHistoryDto {
       'startPage': startPage,
       'endPage': endPage,
       'duration': duration,
+      'remainedTimer': remainedTimer,
     };
   }
 }
