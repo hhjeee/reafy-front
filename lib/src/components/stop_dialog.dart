@@ -6,6 +6,7 @@ import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/provider/time_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/repository/history_repository.dart';
+import 'package:reafy_front/src/repository/timer_repository.dart';
 
 class StopDialog extends StatefulWidget {
   @override
@@ -22,6 +23,7 @@ class _StopDialogState extends State<StopDialog> {
   TextEditingController textController1 = TextEditingController();
   TextEditingController textController2 = TextEditingController();
   bool isButtonEnabled = false;
+  Map<String, dynamic>? remainedTimer;
 
   void updateButtonState() {
     setState(() {
@@ -44,6 +46,7 @@ class _StopDialogState extends State<StopDialog> {
         fetchLastReadingHistory(selectedBookId!);
       });
     });
+    fetchTimerData();
   }
 
   void fetchLastReadingHistory(int bookId) async {
@@ -83,14 +86,36 @@ class _StopDialogState extends State<StopDialog> {
     updateButtonState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
-    int calculateRemainedTimer(int readingTime) {
+  Future<void> fetchTimerData() async {
+    try {
+      final data = await getRemainingTime();
+      setState(() {
+        remainedTimer = data;
+      });
+    } catch (e) {
+      print('Error fetching user timer data: $e');
+    }
+  }
+
+  int calculateRemainedTimer(int readingTime, {int? remainedTimer}) {
+    if (remainedTimer != null) {
+      // remainedTimer가 존재할 경우
+      int newRemainedTimer = remainedTimer - readingTime;
+      while (newRemainedTimer <= 0) {
+        newRemainedTimer += 900;
+      }
+      return newRemainedTimer == 0 ? 900 : newRemainedTimer;
+    } else {
+      // remainedTimer가 존재하지 않을 경우
       int multipleOfFifteenMinutes = (readingTime / 900).ceil() * 900;
       int remainedTimer = multipleOfFifteenMinutes - readingTime;
       return remainedTimer;
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
 
     return AlertDialog(
         shape: RoundedRectangleBorder(
@@ -342,8 +367,9 @@ class _StopDialogState extends State<StopDialog> {
                               startPage: startPage,
                               endPage: endPage,
                               duration: readingTime,
-                              remainedTimer:
-                                  calculateRemainedTimer(readingTime),
+                              remainedTimer: calculateRemainedTimer(readingTime,
+                                  remainedTimer:
+                                      remainedTimer?['timer'] as int),
                             );
                             await createUserBookHistory(historyDto);
 

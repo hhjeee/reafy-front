@@ -79,22 +79,22 @@ class _BambooMapState extends State<BambooMap>
     Future.microtask(
         () => Provider.of<CoinProvider>(context, listen: false).updateCoins());
 
-    fetchQuestList();
+    //fetchQuestList();
   }
 
-  List<String> questList = [];
-  Future<void> fetchQuestList() async {
-    try {
-      List<String> fetchedQuestList = await postDefaultQuest();
-      setState(() {
-        questList = fetchedQuestList;
-      });
-      print(questList);
-    } catch (error) {
-      print('Error fetching quest list: $error');
-      setState(() {});
-    }
-  }
+  // List<String> questList = [];
+  // Future<void> fetchQuestList() async {
+  //   try {
+  //     List<String> fetchedQuestList = await postDefaultQuest();
+  //     setState(() {
+  //       questList = fetchedQuestList;
+  //     });
+  //     print(questList);
+  //   } catch (error) {
+  //     print('Error fetching quest list: $error');
+  //     setState(() {});
+  //   }
+  // }
 
   @override
   void dispose() {

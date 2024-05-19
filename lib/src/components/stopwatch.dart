@@ -16,8 +16,8 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
   bool isTimerUpdating = false;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  initState() {
+    super.initState();
     fetchTimerData();
   }
 
@@ -35,21 +35,29 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
   @override
   Widget build(BuildContext context) {
     StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
+    int defaultTime = 15 * 60;
+    int timer = RemainingTimerData?['timer'] as int? ?? defaultTime;
 
-    stopwatch.setTimer(RemainingTimerData?['timer'] as int? ?? 15 * 60); // 시간설정
+    if (timer == 0) {
+      timer = defaultTime;
+    }
+    stopwatch.setTimer(timer);
 
     void _tapStopwatch(Status status) async {
       switch (status) {
         case Status.paused:
           stopwatch.resume();
+          fetchTimerData();
           break;
 
         case Status.running:
           stopwatch.pause();
+          fetchTimerData();
           break;
 
         case Status.stopped:
           stopwatch.run();
+          fetchTimerData();
           break;
       }
     }
