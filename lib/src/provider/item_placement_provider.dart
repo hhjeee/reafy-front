@@ -380,7 +380,7 @@ List<ItemData> itemDataList = [
   ItemData(
       itemId: 2,
       imagePath: 'assets/images/items/bookshelf2.png',
-      text: '트리 책장',
+      text: '크리스마스 책장',
       index: 2),
   ItemData(
       itemId: 3,
@@ -390,17 +390,17 @@ List<ItemData> itemDataList = [
   ItemData(
       itemId: 4,
       imagePath: 'assets/images/items/bookshelf4.png',
-      text: '책장',
+      text: '무지개 책장',
       index: 4),
   ItemData(
       itemId: 5,
       imagePath: 'assets/images/items/bookshelf5.png',
-      text: '책장',
+      text: '아이스크림 책장',
       index: 5),
   ItemData(
       itemId: 6,
       imagePath: 'assets/images/items/bookshelf6.png',
-      text: '책장',
+      text: '나무 책장',
       index: 6),
   ItemData(
       itemId: 7,

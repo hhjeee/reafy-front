@@ -34,7 +34,7 @@ List<ItemData> itemDataList = [
   ItemData(
       itemId: 2,
       imagePath: 'assets/images/items/bookshelf2.png',
-      text: '크리스마스 책장',
+      text: '크리스마스 \n책장',
       price: 40),
   ItemData(
       itemId: 3,
@@ -49,7 +49,7 @@ List<ItemData> itemDataList = [
   ItemData(
       itemId: 5,
       imagePath: 'assets/images/items/bookshelf5.png',
-      text: '아이스크림 책장',
+      text: '아이스크림 \n책장',
       price: 100),
   ItemData(
       itemId: 6,

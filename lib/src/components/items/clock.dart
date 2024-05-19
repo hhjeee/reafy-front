@@ -53,7 +53,7 @@ List<ItemData> itemDataList = [
   ItemData(
       itemId: 26,
       imagePath: 'assets/images/items/clock_clover.png',
-      text: '네잎클로버 시계',
+      text: '네잎클로버 \n시계',
       price: 30),
   ItemData(
       itemId: 27,

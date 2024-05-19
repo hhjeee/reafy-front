@@ -20,6 +20,7 @@ import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/time_provider.dart';
 import 'dart:async';
 import 'package:reafy_front/src/utils/constants.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 Future main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -56,34 +57,37 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (c) => MemoProvider()),
           ChangeNotifierProvider(create: (c) => TimeProvider()),
         ],
-        child: GetMaterialApp(
-            builder: (context, child) {
-              return MediaQuery(
-                child: child!,
-                data: MediaQuery.of(context)
-                    .copyWith(textScaler: TextScaler.linear(1.0)),
-              );
-            },
-            title: 'reafy',
-            debugShowCheckedModeBanner: false,
-            themeMode: ThemeMode.light,
-            theme: new ThemeData(
-              scaffoldBackgroundColor: bg_gray,
-              primaryColor: yellow,
-              colorScheme:
-                  ColorScheme.fromSwatch(primarySwatch: Colors.yellow).copyWith(
-                secondary: yellow,
-              ),
-              popupMenuTheme: PopupMenuThemeData(color: bg_gray),
-              brightness: Brightness.light,
-              dialogBackgroundColor: Color(0xffFAF9F7),
-              progressIndicatorTheme: ProgressIndicatorThemeData(
-                circularTrackColor: Colors.transparent,
-                color: Colors.transparent, // 여기서 원하는 색상으로 변경
-              ),
-              fontFamily: 'NanumSquareRound',
-            ),
-            initialBinding: InitBinding(),
-            home: SplashScreen()));
+        child: ShowCaseWidget(
+            builder: Builder(
+                builder: (context) => GetMaterialApp(
+                    builder: (context, child) {
+                      return MediaQuery(
+                        child: child!,
+                        data: MediaQuery.of(context)
+                            .copyWith(textScaler: TextScaler.linear(1.0)),
+                      );
+                    },
+                    title: 'reafy',
+                    debugShowCheckedModeBanner: false,
+                    themeMode: ThemeMode.light,
+                    theme: new ThemeData(
+                      scaffoldBackgroundColor: bg_gray,
+                      primaryColor: yellow,
+                      colorScheme:
+                          ColorScheme.fromSwatch(primarySwatch: Colors.yellow)
+                              .copyWith(
+                        secondary: yellow,
+                      ),
+                      popupMenuTheme: PopupMenuThemeData(color: bg_gray),
+                      brightness: Brightness.light,
+                      dialogBackgroundColor: Color(0xffFAF9F7),
+                      progressIndicatorTheme: ProgressIndicatorThemeData(
+                        circularTrackColor: Colors.transparent,
+                        color: Colors.transparent, // 여기서 원하는 색상으로 변경
+                      ),
+                      fontFamily: 'NanumSquareRound',
+                    ),
+                    initialBinding: InitBinding(),
+                    home: SplashScreen()))));
   }
 }

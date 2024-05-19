@@ -97,7 +97,12 @@ class OnBoardingPage extends StatelessWidget {
         )
       ])),
       onDone: () {
-        Get.off(() => TutorialScreen()); //
+        //Get.off(() => TutorialScreen()); //
+
+        final BottomNavController bottomNavController =
+            Get.find<BottomNavController>();
+        bottomNavController.pageIndex.value = 1;
+        Get.off(() => App()); //
       },
 
       next: Container(
