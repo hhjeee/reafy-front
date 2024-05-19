@@ -15,6 +15,9 @@ import 'package:reafy_front/src/utils/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
 import 'package:reafy_front/src/repository/coin_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -33,9 +36,20 @@ class _HomeState extends State<Home>
   bool _isBambooSelected = false;
   bool showBambooNotification = false;
 
+  final GlobalKey keyBambooIcon = GlobalKey();
+  final GlobalKey keyMapIcon = GlobalKey();
+  final GlobalKey keyItemIcon = GlobalKey();
+  final GlobalKey keyStartComponent = GlobalKey();
+  late TutorialCoachMark tutorialCoachMark;
+
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await checkIfFirstLaunch();
+    });
+
     stopwatch = StopwatchProvider();
     WidgetsBinding.instance.addObserver(stopwatch);
 
@@ -72,6 +86,21 @@ class _HomeState extends State<Home>
     WidgetsBinding.instance.removeObserver(stopwatch);
     stopwatch.dispose();
     super.dispose();
+  }
+
+  Future<void> checkIfFirstLaunch() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
+
+    if (isFirstLaunch) {
+      ShowCaseWidget.of(context).startShowCase([
+        keyBambooIcon,
+        keyMapIcon,
+        keyItemIcon,
+        keyStartComponent,
+      ]);
+      prefs.setBool('isFirstLaunch', false);
+    }
   }
 
   Future<void> loadUserCoin() async {
@@ -377,37 +406,76 @@ class _HomeState extends State<Home>
           toolbarHeight: 44,
           leading: Container(
               padding: EdgeInsets.only(left: 16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ImageData(IconsPath.bamboo,
-                      isSvg: true, width: 44, height: 44),
-                  Text(
-                    Provider.of<CoinProvider>(context).coins.toString(),
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: green,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              )),
+              child: Showcase(
+                  key: keyBambooIcon,
+                  description: '대나무 개수를 확인할 수 있어요',
+                  tooltipBackgroundColor: Colors.transparent,
+                  textColor: Colors.white,
+                  targetBorderRadius: BorderRadius.circular(100),
+                  descTextStyle: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xffffffff),
+                      fontWeight: FontWeight.w800),
+                  showArrow: false,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ImageData(IconsPath.bamboo,
+                          isSvg: true, width: 44, height: 44),
+                      Text(
+                        Provider.of<CoinProvider>(context).coins.toString(),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: green,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ))),
           actions: [
-            IconButton(
-              iconSize: 44,
-              padding: EdgeInsets.only(right: 0),
-              icon: ImageData(IconsPath.map_icon, isSvg: true),
-              onPressed: () {
-                Get.to(() => BambooMap());
-              },
+            Showcase(
+              key: keyMapIcon,
+              description: "대나무를 획득하고 \n남은 시간을 확인할 수 있어요",
+              tooltipBackgroundColor: Colors.transparent,
+              textColor: Colors.white,
+              targetBorderRadius: BorderRadius.circular(100),
+              descTextStyle: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xffffffff),
+                  fontWeight: FontWeight.w800),
+              descriptionAlignment: TextAlign.center,
+              showArrow: false,
+              child: IconButton(
+                iconSize: 44,
+                padding: EdgeInsets.only(right: 0),
+                icon: ImageData(IconsPath.map_icon, isSvg: true),
+                onPressed: () {
+                  Get.to(() => BambooMap());
+                },
+              ),
             ),
-            IconButton(
-              padding: EdgeInsets.only(right: 16),
-              iconSize: 44,
-              icon: ImageData(IconsPath.item, isSvg: true),
-              onPressed: () {
-                Get.to(() => ItemShop());
-              },
+            Container(
+              margin: EdgeInsets.only(right: 16),
+              child: Showcase(
+                key: keyItemIcon,
+                description: '아이템을 구매하고 관리할 수 있어요',
+                tooltipBackgroundColor: Colors.transparent,
+                textColor: Colors.white,
+                targetBorderRadius: BorderRadius.circular(100),
+                descTextStyle: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xffffffff),
+                    fontWeight: FontWeight.w800),
+                showArrow: false,
+                child: IconButton(
+                  iconSize: 44,
+                  padding: EdgeInsets.only(right: 0),
+                  icon: ImageData(IconsPath.item, isSvg: true),
+                  onPressed: () {
+                    Get.to(() => ItemShop());
+                  },
+                ),
+              ),
             ),
           ],
         ),
@@ -544,12 +612,32 @@ class _HomeState extends State<Home>
                                       ],
                                     )));
                           }),
-                          stopwatch.status == Status.running
-                              ? _stopbutton()
-                              : _time(timeProvider.todayTime,
-                                  timeProvider.totalTime),
-                          const SizedBox(height: 15),
-                          Center(child: StopwatchWidget()),
+                          Showcase(
+                            key: keyStartComponent,
+                            description: '타이머 시작 버튼을 클릭하면 \n 시간이 자동으로 측정돼요',
+                            targetPadding: EdgeInsets.symmetric(
+                                vertical: 10, horizontal: -15),
+                            tooltipBackgroundColor: Colors.transparent,
+                            textColor: Colors.white,
+                            descTextStyle: TextStyle(
+                                fontSize: 14,
+                                color: Color(0xffffffff),
+                                fontWeight: FontWeight.w800),
+                            showArrow: false,
+                            descriptionAlignment: TextAlign.center,
+                            tooltipPosition: TooltipPosition.top,
+                            targetBorderRadius: BorderRadius.circular(20),
+                            child: Column(
+                              children: [
+                                stopwatch.status == Status.running
+                                    ? _stopbutton()
+                                    : _time(timeProvider.todayTime,
+                                        timeProvider.totalTime),
+                                const SizedBox(height: 15),
+                                Center(child: StopwatchWidget()),
+                              ],
+                            ),
+                          ),
                           Spacer()
                         ],
                       );
