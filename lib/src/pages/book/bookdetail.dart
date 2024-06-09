@@ -286,17 +286,15 @@ class _BookDetailPageState extends State<BookDetailPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            (bookDetails.title.length ?? 0) > 20
-                ? '${bookDetails.title.substring(0, 20)}\n${bookDetails.title.substring(
-                    20,
-                  )}'
-                : '${bookDetails.title ?? ''}',
+            bookDetails.title ?? '',
             overflow: TextOverflow.clip,
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w800,
               color: Color(0xff333333),
             ),
+            maxLines: null,
+            softWrap: true,
           ),
           SizedBox(height: 11),
           Row(
@@ -311,18 +309,16 @@ class _BookDetailPageState extends State<BookDetailPage> {
               ),
               SizedBox(width: 5),
               Text(
-                (bookDetails.author.length ?? 0) > 26
-                    ? '${bookDetails.author.substring(0, 26)}\n${bookDetails.author.substring(
-                        26,
-                      )}'
-                    : '${bookDetails.author ?? ''}',
-                overflow: TextOverflow.clip, // 길이 초과 시 '...'로 표시
+                bookDetails.author ?? '',
+                overflow: TextOverflow.clip,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                   color: Color(0xff333333),
                 ),
-              ),
+                maxLines: null,
+                softWrap: true,
+              )
             ],
           ),
           SizedBox(height: 7),
@@ -338,48 +334,19 @@ class _BookDetailPageState extends State<BookDetailPage> {
               ),
               SizedBox(width: 5),
               Text(
-                (bookDetails.publisher.length ?? 0) > 25
-                    ? '${bookDetails.publisher.substring(0, 25)}\n${bookDetails.publisher.substring(
-                        25,
-                      )}'
-                    : '${bookDetails.publisher ?? ''}',
-                overflow: TextOverflow.clip, // 길이 초과 시 '...'로 표시
+                bookDetails.publisher ?? '',
+                overflow: TextOverflow.clip,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
                   color: Color(0xff333333),
                 ),
-              ),
+                maxLines: null,
+                softWrap: true,
+              )
             ],
           ),
           SizedBox(height: 7),
-          /* Row(
-            children: [
-              Text(
-                "카테고리",
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xff333333),
-                ),
-              ),
-              SizedBox(width: 5),
-              Text(
-                (bookDetails.category.length ?? 0) > 25
-                    ? '${bookDetails.category.substring(0, 25)}\n${bookDetails.category.substring(
-                        25,
-                      )}'
-                    : '${bookDetails.category ?? ''}',
-                overflow: TextOverflow.clip, // 길이 초과 시 '...'로 표시
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xff333333),
-                ),
-              ),
-            ],
-          ),
-       */
           hyperlinkText(bookDetails.link),
         ],
       ),

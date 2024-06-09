@@ -164,7 +164,6 @@ class _HomeState extends State<Home>
                   _isBambooSelected = false;
                   stopwatchProvider.showBambooNotification = false;
                 });
-                print(_isBambooSelected);
               });
             },
             child: Stack(children: [
@@ -402,36 +401,38 @@ class _HomeState extends State<Home>
         appBar: AppBar(
           backgroundColor: Color(0xfffaf9f7),
           elevation: 0,
-          leadingWidth: 90,
+          leadingWidth: 110,
           toolbarHeight: 44,
           leading: Container(
-              padding: EdgeInsets.only(left: 16),
-              child: Showcase(
-                  key: keyBambooIcon,
-                  description: '대나무 개수를 확인할 수 있어요',
-                  tooltipBackgroundColor: Colors.transparent,
-                  textColor: Colors.white,
-                  targetBorderRadius: BorderRadius.circular(100),
-                  descTextStyle: TextStyle(
-                      fontSize: 14,
-                      color: Color(0xffffffff),
-                      fontWeight: FontWeight.w800),
-                  showArrow: false,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ImageData(IconsPath.bamboo,
-                          isSvg: true, width: 44, height: 44),
-                      Text(
-                        Provider.of<CoinProvider>(context).coins.toString(),
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: green,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ))),
+            padding: EdgeInsets.only(left: 16),
+            child: Showcase(
+              key: keyBambooIcon,
+              description: '대나무 개수를 확인할 수 있어요',
+              tooltipBackgroundColor: Colors.transparent,
+              textColor: Colors.white,
+              targetBorderRadius: BorderRadius.circular(100),
+              descTextStyle: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xffffffff),
+                  fontWeight: FontWeight.w800),
+              showArrow: false,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ImageData(IconsPath.bamboo,
+                      isSvg: true, width: 44, height: 44),
+                  Text(
+                    Provider.of<CoinProvider>(context).coins.toString(),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: green,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           actions: [
             Showcase(
               key: keyMapIcon,

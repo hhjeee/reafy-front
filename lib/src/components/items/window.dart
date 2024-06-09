@@ -81,6 +81,13 @@ class _ItemWindowState extends State<ItemWindow> {
             .getSelectedWindowIndex();
   }
 
+  void resetSelection() {
+    setState(() {
+      selectedGridIndex = 0;
+      selectedImagePath = '';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final itemPlacementProvider =
@@ -130,7 +137,11 @@ class _ItemWindowState extends State<ItemWindow> {
                           itemPrice: itemIndex.price,
                         );
                       },
-                    );
+                    ).then((value) {
+                      if (value == true) {
+                        resetSelection();
+                      }
+                    });
                   }
                 },
                 child: GridItem(

@@ -81,6 +81,13 @@ class _ItemClockState extends State<ItemClock> {
             .getSelectedClockIndex();
   }
 
+  void resetSelection() {
+    setState(() {
+      selectedGridIndex = 0;
+      selectedImagePath = '';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final itemPlacementProvider =
@@ -131,7 +138,11 @@ class _ItemClockState extends State<ItemClock> {
                           itemPrice: itemIndex.price,
                         );
                       },
-                    );
+                    ).then((value) {
+                      if (value == true) {
+                        resetSelection();
+                      }
+                    });
                   }
                 },
                 child: GridItem(
