@@ -2,14 +2,17 @@ import 'dart:ffi' hide Size;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/tool_tips.dart';
 import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/repository/quest_repository.dart';
+import 'package:reafy_front/src/repository/statics_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/repository/coin_repository.dart';
+import 'package:toastification/toastification.dart';
 
 class BambooState {
   bool isVisible;
@@ -23,6 +26,8 @@ class BambooMap extends StatefulWidget {
   @override
   State<BambooMap> createState() => _BambooMapState();
 }
+
+enum QuestStatus { defaultStatus, achievable, completed }
 
 class _BambooMapState extends State<BambooMap>
     with TickerProviderStateMixin, WidgetsBindingObserver {
@@ -79,22 +84,38 @@ class _BambooMapState extends State<BambooMap>
     Future.microtask(
         () => Provider.of<CoinProvider>(context, listen: false).updateCoins());
 
-    //fetchQuestList();
+    getQuestsStatus();
   }
 
-  // List<String> questList = [];
-  // Future<void> fetchQuestList() async {
-  //   try {
-  //     List<String> fetchedQuestList = await postDefaultQuest();
-  //     setState(() {
-  //       questList = fetchedQuestList;
-  //     });
-  //     print(questList);
-  //   } catch (error) {
-  //     print('Error fetching quest list: $error');
-  //     setState(() {});
-  //   }
-  // }
+  List<int> hours = [5, 10, 15, 20];
+  Set<int> achievedQuests = Set<int>();
+  Map<int, QuestStatus> questStatus = {};
+
+  void getQuestsStatus() async {
+    int totalTimes = await getWeeklyTimeStatistics();
+    List<int> achievedQuestsIds = await getAchievedQuests();
+    setState(() {
+      achievedQuests = Set<int>.from(achievedQuestsIds);
+      questStatus = {
+        5: determineStatus(5, totalTimes, achievedQuests),
+        10: determineStatus(10, totalTimes, achievedQuests),
+        15: determineStatus(15, totalTimes, achievedQuests),
+        20: determineStatus(20, totalTimes, achievedQuests),
+      };
+    });
+  }
+
+  QuestStatus determineStatus(
+      int hours, int totalTimes, Set<int> achievedQuests) {
+    int questId = hours ~/ 5; // 각 시간에 대한 퀘스트 id 매핑
+    if (achievedQuests.contains(questId)) {
+      return QuestStatus.completed;
+    } else if (totalTimes >= hours * 3600) {
+      return QuestStatus.achievable;
+    } else {
+      return QuestStatus.defaultStatus;
+    }
+  }
 
   @override
   void dispose() {
@@ -193,8 +214,9 @@ class _BambooMapState extends State<BambooMap>
           ),
         ),
         TopBarWidget(
-          selectedNumber: 5,
           tooltipKey: _tooltipKey,
+          questStatus: questStatus,
+          context: context,
         ),
         BubbleWidget(),
         Positioned(
@@ -472,19 +494,59 @@ class BambooDialog extends StatelessWidget {
   }
 }
 
-class TopBarWidget extends StatelessWidget {
-  final int selectedNumber;
+class TopBarWidget extends StatefulWidget {
   final GlobalKey<TooltipButtonState> tooltipKey;
+  final Map<int, QuestStatus> questStatus;
+  final BuildContext context;
 
-  TopBarWidget({required this.selectedNumber, required this.tooltipKey});
+  TopBarWidget({
+    required this.tooltipKey,
+    required this.questStatus,
+    required this.context,
+  });
+
+  @override
+  _TopBarWidgetState createState() => _TopBarWidgetState();
+}
+
+class _TopBarWidgetState extends State<TopBarWidget> {
+  void _onQuestTap(int hours, QuestStatus status) async {
+    if (status == QuestStatus.achievable) {
+      int questId = hours ~/ 5;
+
+      try {
+        await postQuestAchieve(questId);
+        toastification.show(
+          context: context,
+          type: ToastificationType.success,
+          style: ToastificationStyle.fillColored,
+          title: Text('퀘스트를 달성하여 대나무를 획득했어요!'),
+          autoCloseDuration: const Duration(seconds: 3),
+          showProgressBar: false,
+        );
+
+        //코인 업데이트
+        int currentCoin =
+            Provider.of<CoinProvider>(context, listen: false).coins;
+        Provider.of<CoinProvider>(context, listen: false)
+            .setCoins(currentCoin + hours);
+
+        setState(() {
+          widget.questStatus[hours] = QuestStatus.completed;
+
+          // var newQuestStatus = Map<int, QuestStatus>.from(widget.questStatus);
+          // newQuestStatus[hours] = QuestStatus.completed;
+          // widget.questStatus = newQuestStatus;
+        });
+      } catch (e) {
+        print(e);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    List<int> numbers = [5, 10, 15, 20]; // List of numbers
-    final int userCoins = Provider.of<CoinProvider>(context).coins; // 현재 코인 수
-
-    final int selected = (userCoins ~/ 5) * 5;
     return Positioned(
         top: 60,
         left: 20,
@@ -505,39 +567,54 @@ class TopBarWidget extends StatelessWidget {
               ),
               SizedBox(width: 4),
               TooltipButton(
-                key: tooltipKey,
+                key: widget.tooltipKey,
               ),
-              ...numbers.map((number) => Expanded(
-                      child: Container(
-                    //padding: EdgeInsets.symmetric(horizontal: 10),
-                    margin: EdgeInsets.only(right: 8),
-                    alignment: Alignment.center,
-                    width: 50,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(11),
-                      color: number == selected
-                          ? Colors.green
-                          : number < selected
-                              ? Color(0xff808080)
-                              : null,
-                    ),
-                    // Highlight if selected
-                    child: Text(
-                      '${number}시간\n(${number}개)',
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.1,
-                          color: number == selected
-                              ? bg_gray
-                              : number < selected
-                                  ? Color(0xff666666)
-                                  : Color.fromRGBO(51, 51, 51, 0.40)),
-                    ),
-                  ))),
+              ...widget.questStatus.entries.map((quest) {
+                int hours = quest.key;
+                QuestStatus status = quest.value;
+                return Expanded(
+                    child: GestureDetector(
+                        onTap: () => _onQuestTap(hours, status),
+                        child: Container(
+                          margin: EdgeInsets.only(right: 8),
+                          alignment: Alignment.center,
+                          width: 50,
+                          height: 44,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(11),
+                              color: _getColorForStatus(status)),
+                          child: Text('${hours}시간\n(${hours}개)',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.1,
+                                  color: _getTextColorForStatus(status))),
+                        )));
+              })
             ],
           ),
         ));
+  }
+
+  Color _getColorForStatus(QuestStatus status) {
+    switch (status) {
+      case QuestStatus.completed:
+        return Color(0xff808080);
+      case QuestStatus.achievable:
+        return Colors.green;
+      default:
+        return Colors.transparent;
+    }
+  }
+
+  Color _getTextColorForStatus(QuestStatus status) {
+    switch (status) {
+      case QuestStatus.completed:
+        return Color(0xff666666);
+      case QuestStatus.achievable:
+        return Colors.white;
+      default:
+        return Color(0xff333333).withOpacity(0.4);
+    }
   }
 }

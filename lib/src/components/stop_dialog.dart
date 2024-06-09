@@ -7,6 +7,7 @@ import 'package:reafy_front/src/provider/time_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/repository/history_repository.dart';
 import 'package:reafy_front/src/repository/timer_repository.dart';
+import 'package:toastification/toastification.dart';
 
 class StopDialog extends StatefulWidget {
   @override
@@ -361,32 +362,44 @@ class _StopDialogState extends State<StopDialog> {
                             int? startPage = int.tryParse(textController1.text);
                             int? endPage = int.tryParse(textController2.text);
 
-                            CreateUserBookHistoryDto historyDto =
-                                CreateUserBookHistoryDto(
-                              bookshelfBookId: selectedBookId,
-                              startPage: startPage,
-                              endPage: endPage,
-                              duration: readingTime,
-                              remainedTimer: calculateRemainedTimer(readingTime,
-                                  remainedTimer:
-                                      remainedTimer?['timer'] as int),
-                            );
-                            await createUserBookHistory(historyDto);
+                            if (startPage! > endPage!) {
+                              toastification.show(
+                                context: context,
+                                type: ToastificationType.error,
+                                style: ToastificationStyle.minimal,
+                                title: Text('정확한 페이지를 입력해주세요'),
+                                autoCloseDuration: const Duration(seconds: 2),
+                                showProgressBar: false,
+                              );
+                            } else {
+                              CreateUserBookHistoryDto historyDto =
+                                  CreateUserBookHistoryDto(
+                                bookshelfBookId: selectedBookId,
+                                startPage: startPage,
+                                endPage: endPage,
+                                duration: readingTime,
+                                remainedTimer: calculateRemainedTimer(
+                                    readingTime,
+                                    remainedTimer:
+                                        remainedTimer?['timer'] as int),
+                              );
+                              await createUserBookHistory(historyDto);
 
-                            context.read<StopwatchProvider>().stop();
-                            context
-                                .read<StopwatchProvider>()
-                                .updateElapsedTime('00:00:00');
-                            await Provider.of<TimeProvider>(context,
-                                    listen: false)
-                                .getTimes();
-                            Get.back();
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return DoneDialog(onDone: () {});
-                              },
-                            );
+                              context.read<StopwatchProvider>().stop();
+                              context
+                                  .read<StopwatchProvider>()
+                                  .updateElapsedTime('00:00:00');
+                              await Provider.of<TimeProvider>(context,
+                                      listen: false)
+                                  .getTimes();
+                              Get.back();
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return DoneDialog(onDone: () {});
+                                },
+                              );
+                            }
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
