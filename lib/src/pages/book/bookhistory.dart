@@ -71,18 +71,14 @@ class _BookHistory extends State<BookHistory> {
           },
         ),
         title: Text(
-          (bookTitle.length ?? 0) > 25
-              ? '${bookTitle.substring(0, 25)}\n${bookTitle.substring(
-                  25,
-                )}'
-              : '${bookTitle ?? ''}',
+          bookTitle ?? '',
           style: TextStyle(
               color: Color(0xff333333),
               fontWeight: FontWeight.w700,
               fontSize: 16),
+          overflow: TextOverflow.clip,
+          maxLines: null,
           softWrap: true,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
         ),
       ),
       body: Center(

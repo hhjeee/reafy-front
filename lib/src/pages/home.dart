@@ -241,8 +241,7 @@ class _HomeState extends State<Home>
           // 1시간 이상일 경우
           int hours = todayTime ~/ 3600;
           int minutes = (todayTime % 3600) ~/ 60;
-          int seconds = todayTime % 60;
-          displayTodayTime = '$hours시간 $minutes분 $seconds초';
+          displayTodayTime = '$hours시간 $minutes분';
         } else if (todayTime >= 60) {
           // 1분 이상 1시간 미만일 경우
           int minutes = todayTime ~/ 60;
