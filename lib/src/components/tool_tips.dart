@@ -162,8 +162,8 @@ class TooltipButtonState extends State<TooltipButton> {
     var offset = renderBox.localToGlobal(Offset.zero);
     _overlayEntry = OverlayEntry(
         builder: (context) => Positioned(
-            right: offset.dx + 20,
-            top: offset.dy + 20,
+            right: offset.dx + 22,
+            top: offset.dy + 30,
             child: Material(
               color: Colors.transparent,
               child: GestureDetector(
@@ -193,6 +193,7 @@ class TooltipButtonState extends State<TooltipButton> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return GestureDetector(
         onTap: () {
           if (_overlayEntry != null) {
@@ -202,21 +203,23 @@ class TooltipButtonState extends State<TooltipButton> {
           }
         },
         child: Container(
-          width: 12,
-          height: 12,
-          decoration: BoxDecoration(
-            color: green,
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-              child: Icon(Icons.question_mark_sharp,
-                  color: Colors.white, size: 10, weight: 0.5)),
-        ));
-    // ImageData(
-    //   IconsPath.toolkit,
-    //   isSvg: true,
-    //   width: 12,
-    //   height: 12,
-    // ));
+            width: size.width - 360,
+            height: 56,
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+            ),
+            child: Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  width: 15,
+                  height: 15,
+                  decoration: BoxDecoration(
+                    color: green,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                      child: Icon(Icons.question_mark_sharp,
+                          color: Colors.white, size: 10, weight: 0.5)),
+                ))));
   }
 }

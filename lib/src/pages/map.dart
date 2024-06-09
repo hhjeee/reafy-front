@@ -507,7 +507,6 @@ class TopBarWidget extends StatelessWidget {
               TooltipButton(
                 key: tooltipKey,
               ),
-              SizedBox(width: 14),
               ...numbers.map((number) => Expanded(
                       child: Container(
                     //padding: EdgeInsets.symmetric(horizontal: 10),
