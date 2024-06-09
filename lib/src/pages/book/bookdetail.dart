@@ -117,27 +117,27 @@ class _BookDetailPageState extends State<BookDetailPage> {
                     Stack(
                       children: <Widget>[
                         Container(
-                          width: size.width,
+                          width: SizeConfig.screenWidth,
                           height: 397, //442
                           color: Color(0xfffff7da),
                         ),
                         Positioned(
                           top: 310,
-                          child: HillImage(width: size.width),
+                          child: HillImage(width: SizeConfig.screenWidth),
                         ),
                         Positioned(
                           top: 116,
-                          left: 28,
+                          left: (SizeConfig.screenWidth-332)/2,//28,
                           child: LeafImage(),
                         ),
                         Positioned(
                           top: 107,
-                          left: (size.width - 178) / 2,
+                          left: (SizeConfig.screenWidth - 178) / 2,
                           child: BookImage(bookDetails: bookDetails),
                         ),
                         Positioned(
-                          top: 220,
-                          left: size.width / 2 + 35,
+                          bottom:10,//: 220,
+                          left: SizeConfig.screenWidth / 2 + 35,
                           child: PoobaoImage(),
                         ),
                       ],
@@ -435,7 +435,7 @@ class BookImage extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(5.0),
+        borderRadius: BorderRadius.circular(10.0),
         child: bookDetails.thumbnailURL != null
             ? Image.network(
                 bookDetails.thumbnailURL,
@@ -468,9 +468,14 @@ class HillImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: width,
+      width: SizeConfig.screenWidth,
       height: 90,
-      child: ImageData(IconsPath.hill),
+      child: 
+    Image.asset(IconsPath.hill,
+          width: SizeConfig.screenWidth,
+          height: 90,
+          fit:  BoxFit.fill, // Ensure the image fills the available space
+  ),
     );
   }
 }

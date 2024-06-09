@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/pages/login_page.dart';
+import 'package:reafy_front/src/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -21,7 +22,6 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void showSplashScreen() async {
-    // Changed from 2000 to 4000
     await Future.delayed(Duration(seconds: 2));
     checkLoginStatus();
   }
@@ -29,9 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLogin') ?? false;
-
     if (isLoggedIn) {
-      //await Future.delayed(Duration(seconds: 2));
       FlutterNativeSplash.remove();
       Get.off(() => App());
     } else {
@@ -44,9 +42,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
+        body: Container(
+        width:SizeConfig.screenWidth,//double.infinity,
+        height: SizeConfig.screenHeight,
+        child: Center(
             child: Lottie.asset(
-      'assets/lottie/SplashScreen.json',
-    )));
+      'assets/lottie/SplashScreen.json',fit: BoxFit.fill, 
+    ))));
   }
 }

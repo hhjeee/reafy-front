@@ -58,8 +58,9 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (c) => TimeProvider()),
         ],
         child: ShowCaseWidget(
-            builder: Builder(
-                builder: (context) => GetMaterialApp(
+                builder: (context) {
+                
+                return GetMaterialApp(
                     builder: (context, child) {
                       return MediaQuery(
                         child: child!,
@@ -88,6 +89,7 @@ class MyApp extends StatelessWidget {
                       fontFamily: 'NanumSquareRound',
                     ),
                     initialBinding: InitBinding(),
-                    home: SplashScreen()))));
+                    home: SplashScreen());}
+                    ));
   }
 }

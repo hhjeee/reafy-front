@@ -57,7 +57,6 @@ class isFavorite_BookShelfWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     List<String> thumbnailList =
         Provider.of<BookShelfProvider>(context).thumbnailsForIsFavorite;
 

@@ -564,7 +564,7 @@ class _HomeState extends State<Home>
                                           top: 64 +
                                               _floatingAnimation!
                                                   .value, // Adjust position based on the animation value
-                                          left: 102,
+                                          left: (SizeConfig.screenWidth-186) /2,//102,
                                           child: _buildCharacter(),
                                         ),
                                         //// Clock
@@ -616,7 +616,7 @@ class _HomeState extends State<Home>
                             key: keyStartComponent,
                             description: '타이머 시작 버튼을 클릭하면 \n 시간이 자동으로 측정돼요',
                             targetPadding: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: -15),
+                                vertical: 10, horizontal: 15),
                             tooltipBackgroundColor: Colors.transparent,
                             textColor: Colors.white,
                             descTextStyle: TextStyle(

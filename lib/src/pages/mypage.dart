@@ -26,7 +26,7 @@ class MyPage extends StatelessWidget {
                 margin: EdgeInsets.only(top: 30, left: 29.0),
                 child: GestureDetector(
                   onTap: () {
-                    Get.to(Statics());
+                    Get.to(() => Statics());
                   },
                   child: Row(
                     children: [
@@ -56,7 +56,7 @@ class MyPage extends StatelessWidget {
                 margin: EdgeInsets.only(left: 29.0),
                 child: GestureDetector(
                   onTap: () {
-                    Get.to(Team());
+                    Get.to(() => Team());
                   },
                   child: Row(
                     children: [

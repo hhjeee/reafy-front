@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileName extends StatefulWidget {
@@ -28,12 +29,14 @@ class _ProfileNameState extends State<ProfileName> {
     setNickname();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+
       children: [
         Stack(
           children: <Widget>[
             Container(
               alignment: Alignment.center,
-              width: 395,
+              width: SizeConfig.screenWidth,
               height: 166,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -48,7 +51,7 @@ class _ProfileNameState extends State<ProfileName> {
             ),
             Container(
               alignment: Alignment.center,
-              margin: EdgeInsets.only(top: 92.0, left: 119.0, bottom: 21.53),
+              margin: EdgeInsets.only(top: 92.0, left: (SizeConfig.screenWidth - 153)/2.0, bottom: 21.53),
               width: 153.47,
               height: 153.47,
               decoration: BoxDecoration(

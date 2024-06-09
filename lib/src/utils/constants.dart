@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 /// screen size, color
@@ -41,6 +43,25 @@ class SizeConfig {
     orientation = _mediaQueryData.orientation;
   }
 }
+
+/*
+class WidgetSize {
+  static Future<Size> getSize(GlobalKey key) async {
+    Completer<Size> completer = Completer<Size>();
+    await WidgetsBinding.instance!.addPostFrameCallback((_) {
+      try {
+        RenderBox renderBox = key.currentContext!.findRenderObject() as RenderBox;
+        Size size = renderBox.size;
+        completer.complete(size);
+      } catch (e) {
+        completer.completeError(e);
+      }
+    });
+    return completer.future;
+  }
+}
+*/
+
 
 // Get the proportionate height as per screen size
 double getProportionateScreenHeight(double inputHeight) {

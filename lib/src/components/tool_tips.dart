@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/utils/constants.dart';
@@ -37,7 +35,7 @@ class CustomTooltipButtonState extends State<CustomTooltipButton> {
     var offset = renderBox.localToGlobal(Offset.zero);
     _overlayEntry = OverlayEntry(
         builder: (context) => Positioned(
-            left: offset.dx - 135,
+            left: offset.dx - 135 ,
             top: offset.dy - size.height - 40,
             child: Material(
               color: Colors.transparent,
@@ -94,7 +92,7 @@ class CustomTooltipButtonState extends State<CustomTooltipButton> {
   }
 
   void _starttimer() {
-    _timer = Timer(Duration(seconds: 2), () {
+    _timer = Timer(Duration(seconds: 5), () {
       hideOverlay();
     });
   }
@@ -162,7 +160,7 @@ class TooltipButtonState extends State<TooltipButton> {
     var offset = renderBox.localToGlobal(Offset.zero);
     _overlayEntry = OverlayEntry(
         builder: (context) => Positioned(
-            right: offset.dx + 20,
+            //right: offset.dx ,
             top: offset.dy + 20,
             child: Material(
               color: Colors.transparent,
@@ -171,8 +169,8 @@ class TooltipButtonState extends State<TooltipButton> {
                   child: ImageData(
                     IconsPath.toolkit2,
                     isSvg: false,
-                    height: 72,
-                    width: 247,
+                    height: 85,
+                    width: 300//SizeConfig.screenWidth,
                   )),
             )));
 
@@ -181,7 +179,7 @@ class TooltipButtonState extends State<TooltipButton> {
   }
 
   void _starttimer() {
-    _timer = Timer(Duration(seconds: 2), () {
+    _timer = Timer(Duration(seconds: 5), () {
       hideOverlay();
     });
   }
