@@ -24,6 +24,7 @@ dependencies:
   flutter_spinkit: ^5.1.0
   tutorial_coach_mark: ^1.2.11
   showcaseview: ^2.1.1
+  toastification: ^2.0.0
 
   expandable_text: ^2.2.0
   timeago: ^3.2.2

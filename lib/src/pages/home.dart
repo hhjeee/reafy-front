@@ -164,7 +164,6 @@ class _HomeState extends State<Home>
                   _isBambooSelected = false;
                   stopwatchProvider.showBambooNotification = false;
                 });
-                print(_isBambooSelected);
               });
             },
             child: Stack(children: [

@@ -3,7 +3,9 @@ import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/existing_item.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:provider/provider.dart';
+import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:reafy_front/src/provider/coin_provider.dart';
+import 'package:reafy_front/src/provider/item_provider.dart';
 import 'package:reafy_front/src/repository/item_repository.dart';
 
 class PurchaseDialog extends StatefulWidget {
@@ -112,7 +114,8 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
                   if (currentCoin >= widget.itemPrice) {
                     bool success =
                         await postItem(widget.itemId, false, widget.itemPrice);
-                    Navigator.pop(context);
+                    Provider.of<ItemProvider>(context, listen: false)
+                        .fetchUserItems();
 
                     if (success) {
                       Provider.of<CoinProvider>(context, listen: false)
@@ -121,17 +124,14 @@ class _PurchaseDialogState extends State<PurchaseDialog> {
                         context: context,
                         builder: (BuildContext context) {
                           return DoneDialog(onDone: () {
-                            //BottomNavController.to.goToHome();
-                            Navigator.pop(context);
-                            ; // Navigate to Home
+                            Navigator.pop(context, true);
                           });
-                          //return DoneDialog();
                         },
                       );
                     }
                   } else {
                     //코인 부족
-                    Navigator.pop(context);
+                    Navigator.pop(context, false);
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {

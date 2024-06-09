@@ -18,7 +18,8 @@ class MemoProvider with ChangeNotifier {
       _memos = [];
       notifyListeners();
       MemoResDto memoRes = await getMemoListByBookId(bookId, page);
-      _memos = memoRes.items;
+      //_memos = memoRes.items;
+      _memos = List<Memo>.from(memoRes.items);
       _totalPages = memoRes.totalPages;
       notifyListeners();
     } catch (e) {
@@ -29,7 +30,8 @@ class MemoProvider with ChangeNotifier {
   Future<void> loadAllMemos(int page) async {
     try {
       MemoResDto memoRes = await getMemoList(page);
-      _memoList = memoRes.items;
+      //_memoList = memoRes.items;
+      _memoList = List<Memo>.from(memoRes.items);
       _totalPages = memoRes.totalPages;
       notifyListeners();
     } catch (e) {
@@ -46,12 +48,14 @@ class MemoProvider with ChangeNotifier {
   }
 
   void addBookMemo(Memo memo) {
-    _memos.insert(0, memo);
+    //_memos.insert(0, memo);
+    _memos = [memo, ..._memos];
     notifyListeners();
   }
 
   void addBoardMemo(Memo memo) {
-    _memoList.insert(0, memo);
+    //_memoList.insert(0, memo);
+    _memoList = [memo, ..._memoList];
     notifyListeners();
   }
 
@@ -85,11 +89,13 @@ class MemoProvider with ChangeNotifier {
       bool isUpdated = false;
 
       if (indexInMemos != -1) {
-        _memos[indexInMemos] = updatedMemo;
+        //_memos[indexInMemos] = updatedMemo;
+        _memos = List.from(_memos)..[indexInMemos] = updatedMemo;
         isUpdated = true;
       }
       if (indexInList != -1) {
-        _memoList[indexInList] = updatedMemo;
+        // _memoList[indexInList] = updatedMemo;
+        _memoList = List.from(_memoList)..[indexInList] = updatedMemo;
         isUpdated = true;
       }
 

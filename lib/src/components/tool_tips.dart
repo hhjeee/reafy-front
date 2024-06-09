@@ -94,7 +94,7 @@ class CustomTooltipButtonState extends State<CustomTooltipButton> {
   }
 
   void _starttimer() {
-    _timer = Timer(Duration(seconds: 2), () {
+    _timer = Timer(Duration(seconds: 5), () {
       hideOverlay();
     });
   }
@@ -181,7 +181,7 @@ class TooltipButtonState extends State<TooltipButton> {
   }
 
   void _starttimer() {
-    _timer = Timer(Duration(seconds: 2), () {
+    _timer = Timer(Duration(seconds: 5), () {
       hideOverlay();
     });
   }
@@ -201,11 +201,22 @@ class TooltipButtonState extends State<TooltipButton> {
             _showOverlay(context);
           }
         },
-        child: ImageData(
-          IconsPath.toolkit,
-          isSvg: true,
+        child: Container(
           width: 12,
           height: 12,
+          decoration: BoxDecoration(
+            color: green,
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+              child: Icon(Icons.question_mark_sharp,
+                  color: Colors.white, size: 10, weight: 0.5)),
         ));
+    // ImageData(
+    //   IconsPath.toolkit,
+    //   isSvg: true,
+    //   width: 12,
+    //   height: 12,
+    // ));
   }
 }

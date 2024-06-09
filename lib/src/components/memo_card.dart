@@ -24,7 +24,6 @@ class _MemoCardState extends State<MemoCard> {
   Widget build(BuildContext context) {
     final validHashtags =
         widget.memo.hashtag.where((tag) => tag.isNotEmpty).toList();
-
     return Consumer<MemoProvider>(builder: (context, memoProvider, child) {
       Memo? memo;
       if (widget.type == 'board')
@@ -69,19 +68,22 @@ class _MemoCardState extends State<MemoCard> {
             MemoDescription(content: widget.memo.content),
             const SizedBox(height: 10),
             if (validHashtags.isNotEmpty)
-              Wrap(
-                spacing: 5.0,
-                runSpacing: 5.0,
-                children: widget.memo.hashtag
-                    .map((tag) => Hashtag(label: "#$tag"))
-                    .toList(),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 6),
+                child: Wrap(
+                  spacing: 5.0,
+                  runSpacing: 5.0,
+                  children: widget.memo.hashtag
+                      .map((tag) => Hashtag(label: "#$tag"))
+                      .toList(),
+                ),
               ),
             const SizedBox(height: 5),
             Row(
               children: [
                 Spacer(),
                 Text(
-                  DateFormat('yyyy.MM.dd kk:mm').format(widget.memo.updatedAt),
+                  widget.memo.updatedAt.toString(),
                   style: TextStyle(
                     color: Color(0xffb3b3b3),
                     fontSize: 10,
@@ -140,7 +142,7 @@ class _MemoTitleState extends State<MemoTitle> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.only(left: 6.0),
+        padding: const EdgeInsets.symmetric(horizontal: 6.0),
         margin: EdgeInsets.only(bottom: 9),
         child: Row(children: [
           Container(
@@ -150,6 +152,8 @@ class _MemoTitleState extends State<MemoTitle> {
               style: const TextStyle(
                   fontWeight: FontWeight.w800, color: black, fontSize: 12),
               overflow: TextOverflow.clip,
+              maxLines: null,
+              softWrap: true,
             ),
           ),
           Spacer(),
@@ -250,7 +254,7 @@ class MemoDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 6.0),
       child: ExpandableText(
         content ?? '',
         prefixStyle: const TextStyle(

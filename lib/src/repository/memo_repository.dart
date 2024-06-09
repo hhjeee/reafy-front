@@ -4,6 +4,7 @@ import 'package:reafy_front/src/utils/api.dart';
 import 'package:path/path.dart' as path;
 
 final Dio authdio = authDio().getDio();
+
 class MemoResDto {
   final int totalItems;
   final int currentItems;
