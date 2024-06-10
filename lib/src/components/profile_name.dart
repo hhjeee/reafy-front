@@ -37,11 +37,7 @@ class _ProfileNameState extends State<ProfileName> {
           children: <Widget>[
             Container(
               alignment: Alignment.center,
-<<<<<<< HEAD
               width: SizeConfig.screenWidth,
-=======
-              width: size.width,
->>>>>>> refs/remotes/origin/main
               height: 166,
               decoration: BoxDecoration(
                 gradient: LinearGradient(

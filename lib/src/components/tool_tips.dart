@@ -87,7 +87,7 @@ class CustomTooltipButtonState extends State<CustomTooltipButton> {
               ),
             )));
 
-    overlay?.insert(_overlayEntry!);
+    overlay.insert(_overlayEntry!);
     _starttimer();
   }
 
@@ -156,7 +156,7 @@ class TooltipButtonState extends State<TooltipButton> {
     _timer?.cancel();
     final overlay = Overlay.of(context);
     final renderBox = context.findRenderObject() as RenderBox;
-    var size = renderBox.size;
+    //var size = renderBox.size;
     var offset = renderBox.localToGlobal(Offset.zero);
     _overlayEntry = OverlayEntry(
         builder: (context) => Positioned(
@@ -177,7 +177,7 @@ class TooltipButtonState extends State<TooltipButton> {
                   )),
             )));
 
-    overlay?.insert(_overlayEntry!);
+    overlay.insert(_overlayEntry!);
     _starttimer();
   }
 
@@ -204,7 +204,7 @@ class TooltipButtonState extends State<TooltipButton> {
           }
         },
         child: Container(
-            width: size.width - 360,
+            width: SizeConfig.screenWidth - 360,
             height: 56,
             decoration: BoxDecoration(
               color: Colors.transparent,
