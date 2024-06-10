@@ -81,6 +81,13 @@ class _ItemOthersState extends State<ItemOthers> {
             .getSelectedOthersIndex();
   }
 
+  void resetSelection() {
+    setState(() {
+      selectedGridIndex = 0;
+      selectedImagePath = '';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final itemPlacementProvider =
@@ -121,16 +128,19 @@ class _ItemOthersState extends State<ItemOthers> {
                   });
                   if (!isButtonEnabled) {
                     showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return PurchaseDialog(
-                          itemId: itemIndex.itemId,
-                          itemName: itemIndex.text,
-                          itemImagePath: itemIndex.imagePath,
-                          itemPrice: itemIndex.price,
-                        );
-                      },
-                    );
+                        context: context,
+                        builder: (BuildContext context) {
+                          return PurchaseDialog(
+                            itemId: itemIndex.itemId,
+                            itemName: itemIndex.text,
+                            itemImagePath: itemIndex.imagePath,
+                            itemPrice: itemIndex.price,
+                          );
+                        }).then((value) {
+                      if (value == true) {
+                        resetSelection();
+                      }
+                    });
                   }
                 },
                 child: GridItem(

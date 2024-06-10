@@ -9,6 +9,8 @@ import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/utils/api.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:toastification/toastification.dart';
+import 'package:reafy_front/src/utils/constants.dart';
 
 class Quote {
   final String author;
@@ -36,6 +38,7 @@ class _SearchBookState extends State<SearchBook> {
   int currentPage = 1;
   int totalPages = 1;
   late Quote randomQuote;
+  var searchResults;
 
   @override
   void initState() {
@@ -65,8 +68,13 @@ class _SearchBookState extends State<SearchBook> {
           .get('/book/search', queryParameters: {'query': query, 'page': page});
 
       if (res.statusCode == 200) {
-        var searchResults = SearchBookResDto.fromJson(res.data);
+        var results = SearchBookResDto.fromJson(res.data);
+        setState(() {
+          searchResults = results;
+        });
         return searchResults;
+        //var searchResults = SearchBookResDto.fromJson(res.data);
+        //return searchResults;
       } else {
         throw Exception('Failed to load search results');
       }
@@ -305,22 +313,40 @@ class _SearchBookState extends State<SearchBook> {
           stops: [0, 0.1, 0.9, 1],
           transform: GradientRotation(1.5708),
         )),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: displayList.length,
-                itemBuilder: (context, index) => BookCard(
-                  book: displayList[index],
-                  isbn13: displayList[index].isbn13,
+        child: searchResults == null || searchResults.totalPages == 0
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ImageData(IconsPath.character_empty,
+                        width: 104, height: 94),
+                    Text(
+                      "검색 결과가 없어요!",
+                      style: TextStyle(
+                        color: gray,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
                 ),
+              )
+            : Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: displayList.length,
+                      itemBuilder: (context, index) => BookCard(
+                        book: displayList[index],
+                        isbn13: displayList[index].isbn13,
+                      ),
+                    ),
+                  ),
+                  _buildPageNumbers(totalPages),
+                  SizedBox(height: 10),
+                ],
               ),
-            ),
-            _buildPageNumbers(totalPages),
-            SizedBox(height: 10),
-          ],
-        ),
       );
     }
   }

@@ -83,6 +83,13 @@ class _ItemBookshelfState extends State<ItemBookshelf> {
             .getSelectedBookshelfIndex();
   }
 
+  void resetSelection() {
+    setState(() {
+      selectedGridIndex = 0;
+      selectedImagePath = '';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final itemPlacementProvider =
@@ -133,7 +140,12 @@ class _ItemBookshelfState extends State<ItemBookshelf> {
                           itemPrice: itemIndex.price,
                         );
                       },
-                    );
+                    ).then((value) {
+                      // 구매가 성공하면 선택 상태 초기화
+                      if (value == true) {
+                        resetSelection();
+                      }
+                    });
                   }
                 },
                 child: GridItem(

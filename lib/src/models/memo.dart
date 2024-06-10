@@ -6,8 +6,8 @@ class Memo {
   final int page;
   final String? imageURL;
   final List<String> hashtag;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String createdAt;
+  final String updatedAt;
 
   Memo({
     required this.memoId,
@@ -30,8 +30,8 @@ class Memo {
       page: json['page'],
       imageURL: json['imageURL'],
       hashtag: List<String>.from(json['hashtag']),
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
   }
 }

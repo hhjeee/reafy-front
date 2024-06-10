@@ -8,6 +8,7 @@ import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/tag_input.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
+import 'package:toastification/toastification.dart';
 
 class newBookMemo extends StatefulWidget {
   final int bookshelfBookId;
@@ -82,18 +83,31 @@ class _newBookMemoState extends State<newBookMemo> {
 
     try {
       if (widget.memo == null) {
-        //메모 생성
-        Memo newMemo = await createMemo(
-            selectedBookId!, memoController.text, 0, tags, selectedImagePath);
-        Provider.of<MemoProvider>(context, listen: false).addBookMemo(newMemo);
+        if (memoController.text == '') {
+          toastification.show(
+            context: context,
+            type: ToastificationType.error,
+            style: ToastificationStyle.minimal,
+            title: Text('내용을 입력해주세요'),
+            autoCloseDuration: const Duration(seconds: 2),
+            showProgressBar: false,
+          );
+        } else {
+          //메모 생성
+          Memo newMemo = await createMemo(
+              selectedBookId!, memoController.text, 0, tags, selectedImagePath);
+          Provider.of<MemoProvider>(context, listen: false)
+              .addBookMemo(newMemo);
+          Navigator.pop(context);
+        }
       } else {
         //메모 수정
         Memo updatedMemo = await updateMemo(widget.memo!.memoId,
             memoController.text, 0, tags, selectedImagePath);
         Provider.of<MemoProvider>(context, listen: false)
             .updateBookMemo(updatedMemo);
+        Navigator.pop(context);
       }
-      Navigator.pop(context); // 성공적으로 업데이트한 후 모달을 닫습니다.
     } catch (e) {
       print('메모 생성 또는 업데이트 실패: $e');
     }

@@ -27,6 +27,7 @@ class _ProfileNameState extends State<ProfileName> {
   @override
   Widget build(BuildContext context) {
     setNickname();
+    final size = MediaQuery.of(context).size;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -36,7 +37,11 @@ class _ProfileNameState extends State<ProfileName> {
           children: <Widget>[
             Container(
               alignment: Alignment.center,
+<<<<<<< HEAD
               width: SizeConfig.screenWidth,
+=======
+              width: size.width,
+>>>>>>> refs/remotes/origin/main
               height: 166,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
