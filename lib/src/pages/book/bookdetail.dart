@@ -61,8 +61,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: yellow_bg,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: green),
           onPressed: () {
@@ -127,7 +126,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                         ),
                         Positioned(
                           top: 116,
-                          left: (SizeConfig.screenWidth-332)/2,//28,
+                          left: (SizeConfig.screenWidth - 332) / 2, //28,
                           child: LeafImage(),
                         ),
                         Positioned(
@@ -136,7 +135,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                           child: BookImage(bookDetails: bookDetails),
                         ),
                         Positioned(
-                          bottom:10,//: 220,
+                          bottom: 10, //: 220,
                           left: SizeConfig.screenWidth / 2 + 35,
                           child: PoobaoImage(),
                         ),
@@ -437,12 +436,12 @@ class HillImage extends StatelessWidget {
     return Container(
       width: SizeConfig.screenWidth,
       height: 90,
-      child: 
-    Image.asset(IconsPath.hill,
-          width: SizeConfig.screenWidth,
-          height: 90,
-          fit:  BoxFit.fill, // Ensure the image fills the available space
-  ),
+      child: Image.asset(
+        IconsPath.hill,
+        width: SizeConfig.screenWidth,
+        height: 90,
+        fit: BoxFit.fill, // Ensure the image fills the available space
+      ),
     );
   }
 }
@@ -561,43 +560,45 @@ class ProgressIndicator extends StatelessWidget {
                 ),
               ),
               if (progressPercent > 0)
-                Stack(
-                  children: [
-                    Container(width: double.infinity, height: 35),
-                    Positioned(
-                      left: balloonLeftPosition(progressPercent) + 26,
-                      bottom: 8,
-                      child: ImageData(
-                        IconsPath.progressPageImg,
-                        width: 40,
-                        height: 30,
-                      ),
-                    ),
-                    Positioned(
-                      left: balloonLeftPosition(progressPercent) +
-                          calculateLeftOffset(pagesRead),
-                      top: 3,
-                      child: Center(
-                        child: Text(
-                          '$pagesRead' + 'p',
-                          style: TextStyle(
-                              color: Color(0xff333333),
-                              fontWeight: FontWeight.w800,
-                              fontSize: 10),
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 26),
+                    child: Stack(
+                      children: [
+                        Container(width: double.infinity, height: 35),
+                        Positioned(
+                          left: balloonLeftPosition(progressPercent) + 26,
+                          bottom: 8,
+                          child: ImageData(
+                            IconsPath.progressPageImg,
+                            width: 40,
+                            height: 30,
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                )
+                        Positioned(
+                          left: balloonLeftPosition(progressPercent) +
+                              calculateLeftOffset(pagesRead),
+                          top: 3,
+                          child: Center(
+                            child: Text(
+                              '$pagesRead' + 'p',
+                              style: TextStyle(
+                                  color: Color(0xff333333),
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 10),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ))
             ],
           ),
 
           Padding(
-              padding: EdgeInsets.symmetric(horizontal: 3),
+              padding: EdgeInsets.symmetric(horizontal: 26),
               child: Row(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 26),
+                    padding: EdgeInsets.symmetric(horizontal: 26),
                     child: Text(
                       '0p',
                       style: TextStyle(
@@ -609,7 +610,7 @@ class ProgressIndicator extends StatelessWidget {
                   ),
                   Spacer(),
                   Padding(
-                      padding: EdgeInsets.only(right: 26),
+                      padding: EdgeInsets.symmetric(horizontal: 26),
                       child: Text(
                         "${totalPages}p",
                         style: TextStyle(
@@ -622,12 +623,12 @@ class ProgressIndicator extends StatelessWidget {
               )),
           (recentHistory?.length ?? 0) != 0
               ? Padding(
-                  padding: EdgeInsets.only(left: 26),
+                  padding: EdgeInsets.symmetric(horizontal: 26, vertical: 2),
                   child: Row(
                     children: [
                       ImageData(IconsPath.information,
                           isSvg: true, width: 10, height: 10),
-                      SizedBox(width: 2),
+                      SizedBox(width: 3),
                       Text(
                         '마지막으로 ${recentHistory['startPage']}p-${recentHistory['endPage']}p만큼 읽었어요',
                         style: TextStyle(
