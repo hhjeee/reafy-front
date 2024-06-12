@@ -1,11 +1,10 @@
-import 'dart:ffi' hide Size;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
+import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/tool_tips.dart';
+import 'package:reafy_front/src/pages/home.dart';
 import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/repository/quest_repository.dart';
@@ -533,7 +532,6 @@ class _TopBarWidgetState extends State<TopBarWidget> {
 
         setState(() {
           widget.questStatus[hours] = QuestStatus.completed;
-
           // var newQuestStatus = Map<int, QuestStatus>.from(widget.questStatus);
           // newQuestStatus[hours] = QuestStatus.completed;
           // widget.questStatus = newQuestStatus;
