@@ -18,6 +18,7 @@ import 'package:reafy_front/src/provider/item_provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
 import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/time_provider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:async';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -27,22 +28,57 @@ Future main() async {
   await dotenv.load(fileName: ".env"); // env 파일 초기화
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent, // 상태 표시줄 배경색을 투명하게 설정
-    statusBarIconBrightness: Brightness.dark, // 상단바 아이콘을 밝게 설정 (어두운 배경에 적합)
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarBrightness: Brightness.light));
 
   initializeDateFormatting('ko_KR', null);
   KakaoSdk.init(nativeAppKey: dotenv.env['KAKAO_NATIVE_APP_KEY']);
-
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   initializeDateFormatting().then((_) => runApp(MyApp()));
 }
 
-class MyApp extends StatelessWidget {
-  Widget build(BuildContext context) {
-    //authDio.instance.setBuildContext(context);
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
 
+class _MyAppState extends State<MyApp> {
+  late StreamSubscription<ConnectivityResult> subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    StreamSubscription<List<ConnectivityResult>> subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((List<ConnectivityResult> result) {
+      if (result == ConnectivityResult.none) {
+        //_showNoConnectivityDialog();
+        print(result);
+      } else if (result == ConnectivityResult.wifi) {
+        print("Wifi connected");
+        _showNoConnectivityDialog();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
+
+  void _showNoConnectivityDialog() {
+    Get.snackbar(
+      'No Internet Connection',
+      'Please check your network settings.',
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     SizeConfig().init(context);
     return MultiProvider(
         providers: [
@@ -57,39 +93,42 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (c) => MemoProvider()),
           ChangeNotifierProvider(create: (c) => TimeProvider()),
         ],
-        child: ShowCaseWidget(
-                builder: (context) {
-                
-                return GetMaterialApp(
-                    builder: (context, child) {
-                      return MediaQuery(
-                        child: child!,
-                        data: MediaQuery.of(context)
-                            .copyWith(textScaler: TextScaler.linear(1.0)),
-                      );
-                    },
-                    title: 'reafy',
-                    debugShowCheckedModeBanner: false,
-                    themeMode: ThemeMode.light,
-                    theme: new ThemeData(
-                      scaffoldBackgroundColor: bg_gray,
-                      primaryColor: yellow,
-                      colorScheme:
-                          ColorScheme.fromSwatch(primarySwatch: Colors.yellow)
-                              .copyWith(
-                        secondary: yellow,
-                      ),
-                      popupMenuTheme: PopupMenuThemeData(color: bg_gray),
-                      brightness: Brightness.light,
-                      dialogBackgroundColor: Color(0xffFAF9F7),
-                      progressIndicatorTheme: ProgressIndicatorThemeData(
-                        circularTrackColor: Colors.transparent,
-                        color: Colors.transparent, // 여기서 원하는 색상으로 변경
-                      ),
-                      fontFamily: 'NanumSquareRound',
-                    ),
-                    initialBinding: InitBinding(),
-                    home: SplashScreen());}
-                    ));
+        child: ShowCaseWidget(builder: (context) {
+          return GetMaterialApp(
+              builder: (context, child) {
+                return MediaQuery(
+                  child: child!,
+                  data: MediaQuery.of(context)
+                      .copyWith(textScaler: TextScaler.linear(1.0)),
+                );
+              },
+              title: 'reafy',
+              debugShowCheckedModeBanner: false,
+              themeMode: ThemeMode.light,
+              theme: new ThemeData(
+                scaffoldBackgroundColor: bg_gray,
+                primaryColor: yellow,
+                colorScheme: ColorScheme(
+                    brightness: Brightness.light,
+                    primary: yellow_bg,
+                    onPrimary: yellow,
+                    secondary: yellow_bg,
+                    onSecondary: yellow,
+                    error: disabled_box,
+                    onError: dark_gray,
+                    surface: bg_gray,
+                    onSurface: black),
+                popupMenuTheme: PopupMenuThemeData(color: bg_gray),
+                brightness: Brightness.light,
+                dialogBackgroundColor: Color(0xffFAF9F7),
+                progressIndicatorTheme: ProgressIndicatorThemeData(
+                  circularTrackColor: Colors.transparent,
+                  color: Colors.transparent,
+                ),
+                fontFamily: 'NanumSquareRound',
+              ),
+              initialBinding: InitBinding(),
+              home: SplashScreen());
+        }));
   }
 }

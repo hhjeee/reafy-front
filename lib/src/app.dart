@@ -13,69 +13,9 @@ class App extends StatelessWidget {
     final BottomNavController bottomNavController =
         Get.put(BottomNavController());
 
-    // Obx를 사용하여 bottomNavController의 pageIndex 변화를 감지합니다.
-    return Obx(() {
-      return Scaffold(
-        // IndexedStack을 사용하여 각 페이지의 상태를 유지합니다.
-        body: IndexedStack(
-          index: bottomNavController.pageIndex.value,
-          children: <Widget>[
-            BookShelf(), // Your Library Page
-            Home(), // Your Home Page
-            MyPage(), // Your My Page
-          ],
-        ),
-        // BottomNavigationBar를 정의합니다.
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: bg_gray,
-          type: BottomNavigationBarType.fixed,
-          currentIndex: bottomNavController.pageIndex.value,
-          onTap: (index) {
-            bottomNavController.changeBottomNav(index);
-          },
-          elevation: 0,
-          selectedLabelStyle: TextStyle(fontSize: 12, color: black),
-          unselectedLabelStyle: TextStyle(fontSize: 12, color: gray),
-          selectedItemColor: black,
-          items: [
-            BottomNavigationBarItem(
-              icon: ImageData(IconsPath.bookOff,
-                  isSvg: true, width: 44, height: 44),
-              activeIcon: ImageData(IconsPath.bookOn,
-                  isSvg: true, width: 44, height: 44),
-              label: '서재',
-            ),
-            BottomNavigationBarItem(
-              icon: ImageData(IconsPath.homeOff,
-                  isSvg: true, width: 44, height: 44),
-              activeIcon: ImageData(IconsPath.homeOn,
-                  isSvg: true, width: 44, height: 44),
-              label: '홈',
-            ),
-            BottomNavigationBarItem(
-              icon: ImageData(IconsPath.mypageOff,
-                  isSvg: true, width: 44, height: 44),
-              activeIcon: ImageData(IconsPath.mypageOn,
-                  isSvg: true, width: 44, height: 44),
-              label: '프로필',
-            ),
-          ],
-        ),
-      );
-    });
-  }
-}
-
-/*
-class App extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final BottomNavController bottomNavController =
-        Get.put(BottomNavController());
-
     return Obx(() => Scaffold(
           body: Navigator(
-            key: bottomNavController.navigatorKey,
+            //key: bottomNavController.navigatorKey,
             onGenerateRoute: (settings) {
               return MaterialPageRoute(
                 builder: (context) {
@@ -130,4 +70,3 @@ class App extends StatelessWidget {
         ));
   }
 }
-*/
