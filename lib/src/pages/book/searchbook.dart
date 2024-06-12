@@ -9,7 +9,6 @@ import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/utils/api.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:toastification/toastification.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
 class Quote {
