@@ -93,8 +93,7 @@ class _BoardState extends State<Board> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: Color.fromRGBO(99, 184, 101, 250),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Color(0xff63B865)),
           onPressed: () {
@@ -121,7 +120,7 @@ class _BoardState extends State<Board> {
         width: size.width,
         height: size.height,
         child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: (size.width - 343) / 2),
+            padding: EdgeInsets.symmetric(horizontal: 26),
             child: Column(
               children: [
                 Expanded(

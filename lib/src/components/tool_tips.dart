@@ -35,7 +35,7 @@ class CustomTooltipButtonState extends State<CustomTooltipButton> {
     var offset = renderBox.localToGlobal(Offset.zero);
     _overlayEntry = OverlayEntry(
         builder: (context) => Positioned(
-            left: offset.dx - 135 ,
+            left: offset.dx - 135,
             top: offset.dy - size.height - 40,
             child: Material(
               color: Colors.transparent,
@@ -160,21 +160,17 @@ class TooltipButtonState extends State<TooltipButton> {
     var offset = renderBox.localToGlobal(Offset.zero);
     _overlayEntry = OverlayEntry(
         builder: (context) => Positioned(
-
             //right: offset.dx ,
-            top: offset.dy + 20,
-       //     right: offset.dx + 22,
-       //     top: offset.dy + 30,
+            top: offset.dy + 30,
             child: Material(
               color: Colors.transparent,
               child: GestureDetector(
-                  onTap: hideOverlay, // 툴팁을 탭하면 숨김
-                  child: ImageData(
-                    IconsPath.toolkit2,
-                    isSvg: false,
-                    height: 85,
-                    width: 300//SizeConfig.screenWidth,
-                  )),
+                  onTap: hideOverlay,
+                  child: ImageData(IconsPath.toolkit2,
+                      isSvg: false,
+                      height: 85,
+                      width: 300 //SizeConfig.screenWidth,
+                      )),
             )));
 
     overlay.insert(_overlayEntry!);
@@ -194,7 +190,6 @@ class TooltipButtonState extends State<TooltipButton> {
 
   @override
   Widget build(BuildContext context) {
-    //final size = MediaQuery.of(context).size;
     return GestureDetector(
         onTap: () {
           if (_overlayEntry != null) {
@@ -215,12 +210,15 @@ class TooltipButtonState extends State<TooltipButton> {
                   width: 15,
                   height: 15,
                   decoration: BoxDecoration(
-                    color: green,
                     shape: BoxShape.circle,
+                    border: Border.all(
+                      color: black,
+                      width: 1,
+                    ),
                   ),
                   child: Center(
                       child: Icon(Icons.question_mark_sharp,
-                          color: Colors.white, size: 10, weight: 0.5)),
+                          color: black, size: 10)),
                 ))));
   }
 }
