@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/models/memo.dart';
-import 'package:collection/collection.dart';
 
 class MemoProvider with ChangeNotifier {
   List<Memo> _memos = [];
