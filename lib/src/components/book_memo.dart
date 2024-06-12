@@ -113,6 +113,8 @@ class _MemoSectionState extends State<MemoSection> {
             ),
           )
         : Center(
+            child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 26),
             child: Column(
               children: [
                 Column(
@@ -124,6 +126,6 @@ class _MemoSectionState extends State<MemoSection> {
                 _buildPageNumbers(memoProvider.totalPages),
               ],
             ),
-          );
+          ));
   }
 }
