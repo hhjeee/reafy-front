@@ -7,6 +7,7 @@ import 'package:reafy_front/src/provider/time_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/repository/history_repository.dart';
 import 'package:reafy_front/src/repository/timer_repository.dart';
+import 'package:reafy_front/src/utils/constants.dart';
 import 'package:toastification/toastification.dart';
 
 class StopDialog extends StatefulWidget {
@@ -19,6 +20,7 @@ class _StopDialogState extends State<StopDialog> {
   int? selectedBookId;
   bool _isStartPageValid = true;
   bool _isEndPageValid = true;
+  bool _isShelfEmpty = false;
   int? lastReadPage;
 
   TextEditingController textController1 = TextEditingController();
@@ -43,8 +45,10 @@ class _StopDialogState extends State<StopDialog> {
         books = fetchedBooks;
         if (books.isNotEmpty) {
           selectedBookId = books[0].bookshelfBookId;
+          fetchLastReadingHistory(selectedBookId!);
+        } else {
+          _isShelfEmpty = true;
         }
-        fetchLastReadingHistory(selectedBookId!);
       });
     });
     fetchTimerData();
@@ -125,7 +129,8 @@ class _StopDialogState extends State<StopDialog> {
         content: SingleChildScrollView(
             child: Container(
           width: 320,
-          height: 470,
+          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          //height: 470,
           child: Column(
             children: <Widget>[
               SizedBox(height: 30.0),
@@ -151,13 +156,27 @@ class _StopDialogState extends State<StopDialog> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "읽은 책:",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xff666666),
-                      ),
+                    Row(
+                      children: [
+                        const Text(
+                          "읽은 책:",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xff666666),
+                          ),
+                        ),
+                        Spacer(),
+                        if (_isShelfEmpty)
+                          Text(
+                            '책장에 책을 추가해보세요 ',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700),
+                          ),
+                      ],
                     ),
                     SizedBox(height: 8.0),
                     Container(
@@ -214,16 +233,13 @@ class _StopDialogState extends State<StopDialog> {
                         ),
                         Spacer(),
                         if (!_isStartPageValid || !_isEndPageValid)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              '숫자를 입력해주세요',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700),
-                            ),
+                          Text(
+                            '숫자를 입력해주세요',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700),
                           ),
                       ],
                     ),
