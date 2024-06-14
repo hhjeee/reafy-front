@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/tool_tips.dart';
-import 'package:reafy_front/src/pages/home.dart';
 import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/repository/quest_repository.dart';
@@ -353,7 +352,7 @@ class BottomBarWidget extends StatelessWidget {
           child: FloatingActionButton(
             onPressed: () {
               hideTooltip();
-              Get.back();
+              Get.to(() => App());
             },
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
