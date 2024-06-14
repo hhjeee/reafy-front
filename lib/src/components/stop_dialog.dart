@@ -7,7 +7,6 @@ import 'package:reafy_front/src/provider/time_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/repository/history_repository.dart';
 import 'package:reafy_front/src/repository/timer_repository.dart';
-import 'package:reafy_front/src/utils/constants.dart';
 import 'package:toastification/toastification.dart';
 
 class StopDialog extends StatefulWidget {
@@ -128,10 +127,10 @@ class _StopDialogState extends State<StopDialog> {
         ),
         content: SingleChildScrollView(
             child: Container(
-          width: 320,
-          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-          //height: 470,
+          //width: 320,
+          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 10),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               SizedBox(height: 30.0),
               Text(
@@ -181,7 +180,7 @@ class _StopDialogState extends State<StopDialog> {
                     SizedBox(height: 8.0),
                     Container(
                       padding: EdgeInsets.all(2.0),
-                      width: 266,
+                      //width: 266,
                       height: 42,
                       decoration: BoxDecoration(
                         color: Color(0xffffffff),
@@ -247,120 +246,125 @@ class _StopDialogState extends State<StopDialog> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          width: 120,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: Color(0xffffffff),
-                            borderRadius: BorderRadius.circular(4),
-                            border: !_isStartPageValid
-                                ? Border.all(color: Colors.red, width: 2)
-                                : null,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                spreadRadius: 1.0,
-                                blurRadius: 7.0,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 12.0),
-                                child: Text(
-                                  '시작',
-                                  style: TextStyle(
-                                      color: Color(0xff666666), fontSize: 13),
+                        Expanded(
+                          child: Container(
+                            //width: 120,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: Color(0xffffffff),
+                              borderRadius: BorderRadius.circular(4),
+                              border: !_isStartPageValid
+                                  ? Border.all(color: Colors.red, width: 2)
+                                  : null,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 1.0,
+                                  blurRadius: 7.0,
+                                  offset: Offset(0, 2),
                                 ),
-                              ),
-                              Expanded(
-                                child: TextField(
-                                  controller: textController1,
-                                  onChanged: (_) {
-                                    updateButtonState();
-                                    _validatePageInput();
-                                  },
-                                  textAlign: TextAlign.right,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    contentPadding:
-                                        EdgeInsets.symmetric(vertical: 14),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 12.0),
+                                  child: Text(
+                                    '시작',
+                                    style: TextStyle(
+                                        color: Color(0xff666666), fontSize: 13),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 12.0),
-                                child: Text(
-                                  'p',
-                                  style: TextStyle(
-                                      color: textController1.text.isNotEmpty
-                                          ? Color(0xff333333)
-                                          : Color(0xff666666),
-                                      fontSize: 16),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: 120,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: Color(0xffffffff),
-                            borderRadius: BorderRadius.circular(4),
-                            border: !_isEndPageValid
-                                ? Border.all(color: Colors.red, width: 2)
-                                : null,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                spreadRadius: 1.0,
-                                blurRadius: 7.0,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 12.0),
-                                child: Text(
-                                  '끝',
-                                  style: TextStyle(
-                                      color: Color(0xff666666), fontSize: 13),
-                                ),
-                              ),
-                              Expanded(
-                                child: TextField(
-                                  controller: textController2,
-                                  onChanged: (_) {
-                                    updateButtonState();
-                                    _validatePageInput();
-                                  },
-                                  textAlign: TextAlign.right,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    contentPadding:
-                                        EdgeInsets.symmetric(vertical: 14),
+                                Expanded(
+                                  child: TextField(
+                                    controller: textController1,
+                                    onChanged: (_) {
+                                      updateButtonState();
+                                      _validatePageInput();
+                                    },
+                                    textAlign: TextAlign.right,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      contentPadding:
+                                          EdgeInsets.symmetric(vertical: 14),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 12.0),
-                                child: Text(
-                                  'p',
-                                  style: TextStyle(
-                                      color: textController2.text.isNotEmpty
-                                          ? Color(0xff333333)
-                                          : Color(0xff666666),
-                                      fontSize: 16),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  child: Text(
+                                    'p',
+                                    style: TextStyle(
+                                        color: textController1.text.isNotEmpty
+                                            ? Color(0xff333333)
+                                            : Color(0xff666666),
+                                        fontSize: 16),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Container(
+                            width: 120,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: Color(0xffffffff),
+                              borderRadius: BorderRadius.circular(4),
+                              border: !_isEndPageValid
+                                  ? Border.all(color: Colors.red, width: 2)
+                                  : null,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 1.0,
+                                  blurRadius: 7.0,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 12.0),
+                                  child: Text(
+                                    '끝',
+                                    style: TextStyle(
+                                        color: Color(0xff666666), fontSize: 13),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    controller: textController2,
+                                    onChanged: (_) {
+                                      updateButtonState();
+                                      _validatePageInput();
+                                    },
+                                    textAlign: TextAlign.right,
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      contentPadding:
+                                          EdgeInsets.symmetric(vertical: 14),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  child: Text(
+                                    'p',
+                                    style: TextStyle(
+                                        color: textController2.text.isNotEmpty
+                                            ? Color(0xff333333)
+                                            : Color(0xff666666),
+                                        fontSize: 16),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ],
