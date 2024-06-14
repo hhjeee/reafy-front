@@ -143,19 +143,22 @@ class _MemoTitleState extends State<MemoTitle> {
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 6.0),
         margin: EdgeInsets.only(bottom: 9),
-        child: Row(children: [
-          Container(
-            width: 280,
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Flexible(
             child: Text(
               _title,
               style: const TextStyle(
-                  fontWeight: FontWeight.w800, color: black, fontSize: 12),
-              overflow: TextOverflow.clip,
-              maxLines: null,
+                fontWeight: FontWeight.w800,
+                color: black,
+                fontSize: 12,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
               softWrap: true,
             ),
           ),
-          Spacer(),
+          //Spacer(),
           Container(
               width: 25,
               child: PopupMenuButton<String>(
@@ -311,17 +314,17 @@ void _showDeleteDialog(BuildContext context, int memoId, int bookId) {
           contentPadding: EdgeInsets.zero,
           content: Container(
             width: 320,
-            height: 180,
-            child: Column(children: [
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
               SizedBox(height: 40.0),
               Text(
                 "정말 삭제하시겠어요? \n 작성한 메모는 영구적으로 사라져요!",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                    color: Color(0xff333333),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    height: 1.2),
+                  color: Color(0xff333333),
+                  fontSize: 14,
+                  height: 1.5,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               SizedBox(height: 40.0),
               Row(
