@@ -528,11 +528,7 @@ class ProgressIndicator extends StatelessWidget {
               ),
             ],
           ),
-          // Container(
-          //   width: MediaQuery.of(context).size.width - 50,
-          //   height: 46,
-          //   child: ImageData(progressImagePath),
-          // ),
+
           Stack(
             children: [
               Padding(
@@ -561,7 +557,7 @@ class ProgressIndicator extends StatelessWidget {
               ),
               if (progressPercent > 0)
                 Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 26),
+                    padding: EdgeInsets.only(left: 5),
                     child: Stack(
                       children: [
                         Container(width: double.infinity, height: 35),
@@ -593,34 +589,35 @@ class ProgressIndicator extends StatelessWidget {
             ],
           ),
 
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: 26),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 26),
-                    child: Text(
-                      '0p',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xff333333),
-                      ),
-                    ),
+          //Padding(
+          //    padding: EdgeInsets.symmetric(horizontal: 26),
+          //    child:
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 26),
+                child: Text(
+                  '0p',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xff333333),
                   ),
-                  Spacer(),
-                  Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 26),
-                      child: Text(
-                        "${totalPages}p",
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xff333333),
-                        ),
-                      )),
-                ],
-              )),
+                ),
+              ),
+              Spacer(),
+              Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 26),
+                  child: Text(
+                    "${totalPages}p",
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xff333333),
+                    ),
+                  )),
+            ],
+          ),
           (recentHistory?.length ?? 0) != 0
               ? Padding(
                   padding: EdgeInsets.symmetric(horizontal: 26, vertical: 2),
