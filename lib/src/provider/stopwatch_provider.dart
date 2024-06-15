@@ -6,7 +6,7 @@ enum Status { running, paused, stopped }
 class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   late Status _status = Status.stopped;
   late int _seconds = 0;
-  int _countdownsec = 30 * 60;
+  int _countdownsec = 15 * 60;
   int _remainingsec = 0;
   int _itemCnt = 0;
   bool _isfull = false;
@@ -126,7 +126,6 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   String formatTime(int seconds, bool shortversion) {
-    //int seconds = (milliseconds / 1000).truncate();
     int minutes = (seconds / 60).truncate();
     int hours = (minutes / 60).truncate();
     String hoursStr = (hours % 60).toString().padLeft(2, '0');

@@ -1,6 +1,7 @@
 import 'package:reafy_front/src/controller/books_controller.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:get/get.dart';
+import 'package:reafy_front/src/controller/connectivity_controller.dart';
 import 'package:reafy_front/src/controller/intro_controller.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 
@@ -12,5 +13,6 @@ class InitBinding extends Bindings {
     Get.lazyPut(() => BookshelfController());
     Get.put(IntroController(), permanent: true);
     Get.put(StopwatchProvider(), permanent: true);
+    Get.put(ConnectivityController(), permanent: true);
   }
 }
