@@ -9,14 +9,14 @@ import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:reafy_front/src/utils/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
@@ -64,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (isLoggedIn && await authProvider.performAuthenticatedAction()) {
         Get.off(() => authProvider.isNewUser ? OnBoardingPage() : App());
       } else {
-        Get.off(() => LoginScreen());
+        Get.off(() => LoginPage());
       }
     } else {
       //showErrorDialog(context, "Network Error", "네트워크 연결 후 다시 시도해 주세요.");
