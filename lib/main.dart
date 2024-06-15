@@ -6,6 +6,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:reafy_front/src/binding/init_bindings.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:reafy_front/src/controller/connectivity_controller.dart';
 import 'package:reafy_front/src/models/bookcount.dart';
 import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
@@ -22,6 +23,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'dart:async';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:toastification/toastification.dart';
 
 Future main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -43,38 +45,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late StreamSubscription<ConnectivityResult> subscription;
+  StreamSubscription<ConnectivityResult>? _networkListener;
 
   @override
   void initState() {
     super.initState();
-    StreamSubscription<List<ConnectivityResult>> subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((List<ConnectivityResult> result) {
-      if (result == ConnectivityResult.none) {
-        //_showNoConnectivityDialog();
-        print(result);
-      } else if (result == ConnectivityResult.wifi) {
-        print("Wifi connected");
-        _showNoConnectivityDialog();
-      }
-    });
   }
 
   @override
   void dispose() {
-    subscription.cancel();
     super.dispose();
-  }
-
-  void _showNoConnectivityDialog() {
-    Get.snackbar(
-      'No Internet Connection',
-      'Please check your network settings.',
-      snackPosition: SnackPosition.TOP,
-      backgroundColor: Colors.red,
-      colorText: Colors.white,
-    );
   }
 
   @override
@@ -92,6 +72,8 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (c) => CoinProvider()),
           ChangeNotifierProvider(create: (c) => MemoProvider()),
           ChangeNotifierProvider(create: (c) => TimeProvider()),
+          ChangeNotifierProvider(
+              create: (c) => ConnectivityController()..init()),
         ],
         child: ShowCaseWidget(builder: (context) {
           return GetMaterialApp(
@@ -110,7 +92,7 @@ class _MyAppState extends State<MyApp> {
                 primaryColor: yellow,
                 colorScheme: ColorScheme(
                     brightness: Brightness.light,
-                    primary: yellow_bg,
+                    primary: yellow,
                     onPrimary: yellow,
                     secondary: yellow_bg,
                     onSecondary: yellow,

@@ -3,12 +3,24 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/components/image_data.dart';
+import 'package:reafy_front/src/controller/connectivity_controller.dart';
 import 'package:reafy_front/src/pages/intro.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
+import 'package:reafy_front/src/utils/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +42,7 @@ class LoginPage extends StatelessWidget {
             Character(width: size.width, height: size.height),
             SizedBox(height: 10),
             LoginButton(
-              onTap: () => _handleLogin(context),
+              onTap: () => _loginbuttonClick(context),
             ),
             Spacer(),
           ],
@@ -39,16 +51,23 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  void _handleLogin(BuildContext context) async {
-    final authProvider = context.read<AuthProvider>();
-    await authProvider.login();
-    final isLoggedIn =
-        (await SharedPreferences.getInstance()).getBool('isLogin') ?? false;
+  void _loginbuttonClick(BuildContext context) async {
+    final connectivityController = context.read<ConnectivityController>();
 
-    if (isLoggedIn && await authProvider.performAuthenticatedAction()) {
-      Get.off(() => authProvider.isNewUser ? OnBoardingPage() : App());
+    if (connectivityController.isConnected) {
+      final authProvider = context.read<AuthProvider>();
+      await authProvider.login();
+
+      final isLoggedIn =
+          (await SharedPreferences.getInstance()).getBool('isLogin') ?? false;
+
+      if (isLoggedIn && await authProvider.performAuthenticatedAction()) {
+        Get.off(() => authProvider.isNewUser ? OnBoardingPage() : App());
+      } else {
+        Get.off(() => LoginScreen());
+      }
     } else {
-      Get.off(() => LoginPage());
+      //showErrorDialog(context, "Network Error", "네트워크 연결 후 다시 시도해 주세요.");
     }
   }
 }
