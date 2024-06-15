@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -31,6 +32,7 @@ class _PickImageState extends State<PickImage> {
 
   Future getImage(ImageSource imageSource) async {
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
+
     if (pickedFile != null) {
       String? compressedImagePath = await compressImage(pickedFile.path);
       if (compressedImagePath != null) {
@@ -44,17 +46,26 @@ class _PickImageState extends State<PickImage> {
 
   Future<String?> compressImage(String path) async {
     final filePath = path;
-    final lastIndex = filePath.lastIndexOf(new RegExp(r'.jp'));
+    final lastIndex = filePath.lastIndexOf(new RegExp(r'.png|.jp'));
     final splitted = filePath.substring(0, (lastIndex));
     final outPath = "${splitted}_out${filePath.substring(lastIndex)}";
 
-    var compressedImage = await FlutterImageCompress.compressAndGetFile(
-      filePath,
-      outPath,
-      quality: 50, // 압축 품질 설정
-    );
-
-    return compressedImage?.path;
+    if (lastIndex == filePath.lastIndexOf(RegExp(r'.png'))) {
+      final compressedImage = await FlutterImageCompress.compressAndGetFile(
+        filePath,
+        outPath,
+        quality: 80,
+        format: CompressFormat.png,
+      );
+      return compressedImage?.path;
+    } else {
+      final compressedImage = await FlutterImageCompress.compressAndGetFile(
+        filePath,
+        outPath,
+        quality: 80,
+      );
+      return compressedImage?.path;
+    }
   }
 
   @override
@@ -137,9 +148,10 @@ class _PickImageState extends State<PickImage> {
         builder: (builder) {
           return Padding(
             padding: const EdgeInsets.all(18.0),
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 4.5,
+            child: Container(
+              margin: EdgeInsets.only(
+                bottom: 30,
+              ),
               child: Row(
                 children: [
                   Expanded(
@@ -149,9 +161,15 @@ class _PickImageState extends State<PickImage> {
                       },
                       child: const SizedBox(
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.image, size: 70, color: yellow),
-                            Text("Gallery")
+                            Text(
+                              "Gallery",
+                              style: TextStyle(
+                                  color: dark_gray,
+                                  fontWeight: FontWeight.w700),
+                            )
                           ],
                         ),
                       ),
@@ -164,9 +182,15 @@ class _PickImageState extends State<PickImage> {
                       },
                       child: const SizedBox(
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.camera_alt, size: 70, color: yellow),
-                            Text("Camera")
+                            Text(
+                              "Camera",
+                              style: TextStyle(
+                                  color: dark_gray,
+                                  fontWeight: FontWeight.w700),
+                            )
                           ],
                         ),
                       ),
