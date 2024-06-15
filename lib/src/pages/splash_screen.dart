@@ -22,16 +22,18 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void showSplashScreen() async {
-    await Future.delayed(Duration(seconds: 2));
     checkLoginStatus();
   }
 
   void checkLoginStatus() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    //await Future.delayed(Duration(seconds: 3));
     if (authProvider.isLoggedIn) {
+      await Future.delayed(Duration(seconds: 2));
       FlutterNativeSplash.remove();
       Get.off(() => App());
     } else {
+      await Future.delayed(Duration(seconds: 2));
       FlutterNativeSplash.remove();
       Get.off(() => LoginPage());
     }
@@ -44,9 +46,11 @@ class _SplashScreenState extends State<SplashScreen> {
             width: double.infinity,
             height: double.infinity,
             child: Center(
-                child: Lottie.asset(
-              'assets/lottie/SplashScreen.json',
-              fit: BoxFit.fill,
-            ))));
+                child: Column(children: [
+              Lottie.asset(
+                'assets/lottie/SplashScreen.json',
+                fit: BoxFit.fill,
+              )
+            ]))));
   }
 }
