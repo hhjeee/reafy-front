@@ -87,7 +87,7 @@ class _newBookMemoState extends State<newBookMemo> {
           toastification.show(
             context: context,
             type: ToastificationType.error,
-            style: ToastificationStyle.minimal,
+            style: ToastificationStyle.flatColored,
             title: Text('내용을 입력해주세요'),
             autoCloseDuration: const Duration(seconds: 2),
             showProgressBar: false,

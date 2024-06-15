@@ -25,6 +25,7 @@ class NewBoardMemo extends StatefulWidget {
 class _NewBoardMemoState extends State<NewBoardMemo> {
   DateTime selectedDate = DateTime.now();
   int currentLength = 0;
+  ValueNotifier<bool> isLoading = ValueNotifier(false);
 
   List<ReadingBookInfo> books = [];
   int? selectedBookId;
@@ -101,14 +102,14 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
       if (widget.memo == null) {
         if (memoController.text == '') {
           toastification.show(
-            context: context,
-            type: ToastificationType.error,
-            style: ToastificationStyle.minimal,
-            title: Text('내용을 입력해주세요'),
-            autoCloseDuration: const Duration(seconds: 2),
-            showProgressBar: false,
-          );
+              context: context,
+              type: ToastificationType.error,
+              style: ToastificationStyle.flatColored,
+              title: Text('내용을 입력해주세요'),
+              autoCloseDuration: const Duration(seconds: 2),
+              showProgressBar: false);
         } else {
+          isLoading.value = true;
           //메모 생성
           Memo newMemo = await createMemo(
               selectedBookId!, memoController.text, 0, tags, selectedImagePath);
@@ -123,9 +124,11 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
             memoController.text, 0, tags, selectedImagePath);
         Provider.of<MemoProvider>(context, listen: false)
             .updateBookMemo(updatedMemo);
+        isLoading.value = false;
         Navigator.pop(context);
       }
     } catch (e) {
+      isLoading.value = false;
       print('메모 생성 또는 업데이트 실패: $e');
     }
   }
@@ -235,47 +238,47 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
 
   Widget _memoeditor() {
     return Container(
-      width: 343,
-      height: 201,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: white,
-      ),
-      child: Column(
-        children: [
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 13),
-              width: 317,
-              child: TextField(
-                maxLength: 500,
-                maxLines: null,
-                controller: memoController,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: '메모를 입력해 주세요.',
-                  hintStyle: TextStyle(
-                    color: Color(0xffb3b3b3),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
+        width: 343,
+        constraints: BoxConstraints(maxHeight: 190),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: white,
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 13),
+                width: 317,
+                child: TextField(
+                  maxLength: 500,
+                  maxLines: null,
+                  minLines: 1,
+                  controller: memoController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: '메모를 입력해 주세요.',
+                    hintStyle: TextStyle(
+                      color: Color(0xffb3b3b3),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
+                  style: TextStyle(
+                      color: dark_gray,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      height: 1.3),
+                  onChanged: (text) {
+                    setState(() {
+                      currentLength = text.length;
+                    });
+                  },
                 ),
-                style: TextStyle(
-                    color: dark_gray,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    height: 1.3),
-                onChanged: (text) {
-                  setState(() {
-                    currentLength = text.length;
-                  });
-                },
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ));
   }
 
   @override
@@ -284,16 +287,16 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
 
     return SafeArea(
         child: SingleChildScrollView(
-            child: Container(
+      //child: Container(
       padding: EdgeInsets.only(
-        bottom: bottomPadding + 20, // 키보드 위의 '게시하기' 버튼이 보이도록 추가 여백을 제공합니다.
+        bottom: bottomPadding + 25, // 키보드 위의 '게시하기' 버튼이 보이도록 추가 여백을 제공합니다.
         top: 35,
         left: 23,
         right: 23,
       ),
-      color: bg_gray,
+      //color: bg_gray,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        //mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           PickImage(
@@ -311,28 +314,38 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
               onReset: resetTags,
               initialTags: memoTags),
           SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: () => updateMemoState(),
-            style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                backgroundColor: Color(0xFFFFD747),
-                shadowColor: Colors.black.withOpacity(0.1),
-                elevation: 5,
-                fixedSize: Size(343, 38)),
-            child: Text(
-              '게시하기',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: Color(0xffffffff),
-              ),
-            ),
-          ),
+          ValueListenableBuilder<bool>(
+              valueListenable: isLoading,
+              builder: (context, loading, child) {
+                return ElevatedButton(
+                  onPressed: () => updateMemoState(),
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      backgroundColor: Color(0xFFFFD747),
+                      shadowColor: Colors.black.withOpacity(0.1),
+                      elevation: 5,
+                      fixedSize: Size(343, 38)),
+                  child: loading
+                      ? CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            white,
+                          ),
+                        )
+                      : Text(
+                          '게시하기',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xffffffff),
+                          ),
+                        ),
+                );
+              })
         ],
       ),
-    )));
+    ));
   }
 }
 
