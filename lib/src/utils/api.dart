@@ -185,15 +185,6 @@ Future<void> showErrorDialog(BuildContext context, String title, String message,
   );
 }
 
-void showNetworkErrorDialog(BuildContext context) {
-  showErrorDialog(
-    context,
-    "Network Disconnected",
-    "Please check your internet connection.",
-    buttonColor: yellow,
-  );
-}
-
 void showCircularProgressDialog(BuildContext context) {
   final width = MediaQuery.of(context).size.width;
 
