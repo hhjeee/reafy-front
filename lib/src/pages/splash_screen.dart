@@ -6,6 +6,7 @@ import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/pages/login_page.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -18,22 +19,52 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
     showSplashScreen();
   }
 
   void showSplashScreen() async {
+    FlutterNativeSplash.remove();
     checkLoginStatus();
   }
 
   void checkLoginStatus() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     await Future.delayed(Duration(seconds: 2));
-    FlutterNativeSplash.remove();
 
-    debugPrint("[*] is Loginned?  ${authProvider.isLoggedIn}");
-    if (authProvider.isLoggedIn) {
-      Get.off(() => App());
-    } else {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+/////// USER TOKEN EXISTS
+    if (token != null) {
+      // Token exists, validate it
+      if (await authProvider.isTokenValid()) {
+        // Token is valid
+        debugPrint("[checkLoginStatus] Valid Token Exists");
+
+        Get.off(() => App());
+      } else {
+        debugPrint("[checkLoginStatus] Invalid Token Exists.");
+        // Token is not valid, try to refresh it
+        if (await authProvider.refreshToken()) {
+          // Token refreshed successfully
+          debugPrint("[checkLoginStatus] Refreshed successfully.");
+          Get.off(() => App());
+        } else {
+          debugPrint(
+              "[checkLoginStatus] Token refresh failed. DELETE ALL TOKENS");
+
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.clear();
+
+          Get.off(() => LoginPage());
+        }
+      }
+    }
+
+////// NEW USER : NO TOKEN
+    else {
+      debugPrint("[checkLoginStatus] No token found.");
+      authProvider.setNewUser(true);
       Get.off(() => LoginPage());
     }
   }
