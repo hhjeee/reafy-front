@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,7 @@ import 'package:reafy_front/src/utils/api.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:toastification/toastification.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -74,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
         Get.off(() => LoginPage());
       }
     } else {
-      showNetworkErrorDialog(context);
+      showNetworkErrorSnackbar(context);
     }
   }
 
@@ -91,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
         Get.off(() => LoginPage());
       }
     } else {
-      showNetworkErrorDialog(context);
+      showNetworkErrorSnackbar(context);
       //Get.off(() => LoginPage());
     }
   }
@@ -140,4 +142,14 @@ class Character extends StatelessWidget {
           ),
         ));
   }
+}
+
+void showNetworkErrorSnackbar(BuildContext context) {
+  toastification.show(
+      context: context,
+      type: ToastificationType.warning,
+      style: ToastificationStyle.flatColored,
+      title: Text('네트워크 연결 상태를 확인해주세요.'),
+      autoCloseDuration: const Duration(seconds: 2),
+      showProgressBar: false);
 }
