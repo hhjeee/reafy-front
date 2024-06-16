@@ -1,7 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -10,7 +10,6 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 class PickImage extends StatefulWidget {
   final Function(String?) onImagePicked;
   final String? imagePath;
-
   const PickImage({Key? key, required this.onImagePicked, this.imagePath})
       : super(key: key);
 
@@ -20,26 +19,52 @@ class PickImage extends StatefulWidget {
 
 class _PickImageState extends State<PickImage> {
   final ImagePicker picker = ImagePicker();
-  XFile? _image;
+  XFile? _imageFile;
+  CroppedFile? _croppedFile;
 
-  @override
-  void initState() {
-    super.initState();
-    if (widget.imagePath != null) {
-      _image = XFile(widget.imagePath!);
+  Future<void> getImage(ImageSource imageSource) async {
+    try {
+      final XFile? pickedFile = await picker.pickImage(source: imageSource);
+
+      if (pickedFile != null) {
+        _imageFile = pickedFile;
+        await cropImage();
+      }
+    } catch (e) {
+      print("디버깅용 이미지 호출 에러 : $e");
     }
   }
 
-  Future getImage(ImageSource imageSource) async {
-    final XFile? pickedFile = await picker.pickImage(source: imageSource);
+  Future<void> cropImage() async {
+    if (_imageFile != null) {
+      final croppedFile = await ImageCropper().cropImage(
+          sourcePath: _imageFile!.path, // 사용할 이미지 경로
+          compressFormat: ImageCompressFormat.jpg, // 저장할 이미지 확장자(jpg/png)
+          compressQuality: 50, // 저장할 이미지의 퀄리티
+          uiSettings: [
+            AndroidUiSettings(
+                toolbarTitle: '이미지 자르기/회전하기', // 타이틀바 제목
+                toolbarColor: Colors.deepOrange, // 타이틀바 배경색
+                toolbarWidgetColor: Colors.white, // 타이틀바 단추색
+                initAspectRatio:
+                    CropAspectRatioPreset.original, // 이미지 크로퍼 시작 시 원하는 가로 세로 비율
+                lockAspectRatio: false), // 고정 값으로 자르기 (기본값 : 사용안함)
 
-    if (pickedFile != null) {
-      String? compressedImagePath = await compressImage(pickedFile.path);
-      if (compressedImagePath != null) {
-        setState(() {
-          _image = XFile(compressedImagePath);
-        });
-        widget.onImagePicked(compressedImagePath);
+            // iOS UI 설정
+            IOSUiSettings(
+              title: '이미지 자르기/회전하기', // 보기 컨트롤러의 맨 위에 나타나는 제목
+            )
+          ]);
+
+      if (croppedFile != null) {
+        final String? compressedImagePath =
+            await compressImage(croppedFile.path);
+        if (compressedImagePath != null) {
+          setState(() {
+            _croppedFile = CroppedFile(compressedImagePath);
+          });
+          widget.onImagePicked(compressedImagePath);
+        }
       }
     }
   }
@@ -54,7 +79,7 @@ class _PickImageState extends State<PickImage> {
       final compressedImage = await FlutterImageCompress.compressAndGetFile(
         filePath,
         outPath,
-        quality: 80,
+        quality: 50,
         format: CompressFormat.png,
       );
       return compressedImage?.path;
@@ -62,34 +87,22 @@ class _PickImageState extends State<PickImage> {
       final compressedImage = await FlutterImageCompress.compressAndGetFile(
         filePath,
         outPath,
-        quality: 80,
+        quality: 50,
       );
       return compressedImage?.path;
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-        child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _buildPhotoArea(),
-                ])));
-  }
-
   Widget _buildPhotoArea() {
     return Stack(
       children: [
-        _image != null
+        _imageFile != null
             ? Container(
                 width: double.infinity,
                 height: 200,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: FileImage(File(_image!.path)),
+                    image: FileImage(File(_croppedFile!.path)),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(10),
@@ -123,14 +136,14 @@ class _PickImageState extends State<PickImage> {
                           )
                         ])),
               ),
-        if (_image != null)
+        if (_croppedFile != null)
           Positioned(
             right: 10,
             top: 10,
             child: InkWell(
               onTap: () {
                 setState(() {
-                  _image = null;
+                  _croppedFile = null;
                 });
                 widget.onImagePicked(null);
               },
@@ -201,5 +214,25 @@ class _PickImageState extends State<PickImage> {
             ),
           );
         });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.imagePath != null) {
+      _imageFile = XFile(widget.imagePath!);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildPhotoArea(),
+                ])));
   }
 }

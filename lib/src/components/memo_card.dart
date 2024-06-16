@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/components/new_book_memo.dart';
@@ -209,7 +211,7 @@ class MemoImage extends StatelessWidget {
               color: Color(0xffFAF9F7),
               elevation: 0,
               child: Container(
-                width: 319,
+                width: double.maxFinite,
                 height: 270,
                 decoration: BoxDecoration(
                     image: DecorationImage(
@@ -228,22 +230,26 @@ class MemoImage extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          clipBehavior: Clip.antiAlias,
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.network(imageUrl),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  "뒤로가기",
-                  style: TextStyle(color: gray, fontWeight: FontWeight.w700),
-                ),
-              ),
-            ],
-          ),
-        );
+            backgroundColor: Colors.transparent,
+            content: Container(
+                color: Colors.transparent,
+                width: SizeConfig.screenWidth * 0.9,
+                height: SizeConfig.screenHeight * 0.6,
+                child: Stack(clipBehavior: Clip.hardEdge, children: [
+                  PhotoView(
+                    imageProvider: NetworkImage(imageUrl),
+                    backgroundDecoration:
+                        BoxDecoration(color: Colors.transparent),
+                  ),
+                  Positioned(
+                      top: 10,
+                      right: 10,
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Icon(Icons.cancel,
+                            color: Color(0xFFFFD747), size: 24),
+                      )),
+                ])));
       },
     );
   }
