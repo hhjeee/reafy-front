@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
 AnsiPen info = AnsiPen()..blue(bold: true);
 AnsiPen success = AnsiPen()..green(bold: true);
@@ -22,7 +23,24 @@ class authDio {
   }
 
   Dio getDio() {
-    Dio dio = Dio(BaseOptions(baseUrl: baseUrl));
+    Dio dio = Dio(BaseOptions(
+      baseUrl: baseUrl,
+      headers: {
+        'Connection': 'keep-alive',
+      },
+    ));
+/*
+    final options = CacheOptions(
+      store: MemCacheStore(),
+      policy: CachePolicy.request,
+      maxStale: const Duration(days: 1),
+      priority: CachePriority.normal,
+      cipher: null,
+      keyBuilder: CacheOptions.defaultCacheKeyBuilder,
+      allowPostMethod: false,
+    );*/
+
+    //dio.interceptors.add(DioCacheInterceptor(options: cacheOptions));
 
     dio.interceptors.clear();
     dio.interceptors.add(CustomLogInterceptor());
@@ -138,8 +156,8 @@ class CustomLogInterceptor extends Interceptor {
   }
 }
 
-Future<void> showErrorDialog(
-    BuildContext context, String title, String message) async {
+Future<void> showErrorDialog(BuildContext context, String title, String message,
+    {Color buttonColor = gray}) async {
   await showDialog(
     context: context,
     builder: (context) => AlertDialog(
@@ -155,7 +173,7 @@ Future<void> showErrorDialog(
           Center(
               child: TextButton(
             style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all<Color>(gray),
+              backgroundColor: WidgetStateProperty.all<Color>(buttonColor),
             ),
             child: Text('확인', style: TextStyle(fontSize: 13, color: white)),
             onPressed: () {
@@ -164,6 +182,15 @@ Future<void> showErrorDialog(
           )),
         ],
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+  );
+}
+
+void showNetworkErrorDialog(BuildContext context) {
+  showErrorDialog(
+    context,
+    "Network Disconnected",
+    "Please check your internet connection.",
+    buttonColor: yellow,
   );
 }
 

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +8,9 @@ import 'package:reafy_front/src/controller/connectivity_controller.dart';
 import 'package:reafy_front/src/pages/intro.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:reafy_front/src/utils/api.dart';
+import 'package:reafy_front/src/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -41,8 +44,14 @@ class _LoginPageState extends State<LoginPage> {
             Spacer(),
             Character(width: size.width, height: size.height),
             SizedBox(height: 10),
-            LoginButton(
-              onTap: () => _loginbuttonClick(context),
+            KaKaoLoginButton(
+              onTap: () => _KaKaologinbuttonClick(context),
+            ),
+            Container(
+              width: 300,
+              child: SignInWithAppleButton(
+                onPressed: () => _AppleloginbuttonClick(context),
+              ),
             ),
             Spacer(),
           ],
@@ -51,31 +60,46 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _loginbuttonClick(BuildContext context) async {
+  void _KaKaologinbuttonClick(BuildContext context) async {
     final connectivityController = context.read<ConnectivityController>();
 
     if (connectivityController.isConnected) {
       final authProvider = context.read<AuthProvider>();
-      await authProvider.login();
+      await authProvider.loginWithKaKao();
 
-      final isLoggedIn =
-          (await SharedPreferences.getInstance()).getBool('isLogin') ?? false;
-
-      if (isLoggedIn && await authProvider.performAuthenticatedAction()) {
+      if (await authProvider.performAuthenticatedAction()) {
+        print("isNewUser :${authProvider.isNewUser}");
         Get.off(() => authProvider.isNewUser ? OnBoardingPage() : App());
       } else {
         Get.off(() => LoginPage());
       }
     } else {
-      //showErrorDialog(context, "Network Error", "네트워크 연결 후 다시 시도해 주세요.");
+      showNetworkErrorDialog(context);
+    }
+  }
+
+  void _AppleloginbuttonClick(BuildContext context) async {
+    final connectivityController = context.read<ConnectivityController>();
+
+    if (connectivityController.isConnected) {
+      final authProvider = context.read<AuthProvider>();
+      await authProvider.loginWithApple();
+
+      if (await authProvider.performAuthenticatedAction()) {
+        Get.off(() => authProvider.isNewUser ? OnBoardingPage() : App());
+      } else {
+        Get.off(() => LoginPage());
+      }
+    } else {
+      showNetworkErrorDialog(context);
+      //Get.off(() => LoginPage());
     }
   }
 }
 
-class LoginButton extends StatelessWidget {
+class KaKaoLoginButton extends StatelessWidget {
   final VoidCallback onTap;
-
-  const LoginButton({Key? key, required this.onTap}) : super(key: key);
+  const KaKaoLoginButton({Key? key, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
