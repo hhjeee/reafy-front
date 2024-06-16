@@ -27,14 +27,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void checkLoginStatus() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    //await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 2));
+    FlutterNativeSplash.remove();
+
+    debugPrint("[*] is Loginned?  ${authProvider.isLoggedIn}");
     if (authProvider.isLoggedIn) {
-      await Future.delayed(Duration(seconds: 2));
-      FlutterNativeSplash.remove();
       Get.off(() => App());
     } else {
-      await Future.delayed(Duration(seconds: 2));
-      FlutterNativeSplash.remove();
       Get.off(() => LoginPage());
     }
   }
