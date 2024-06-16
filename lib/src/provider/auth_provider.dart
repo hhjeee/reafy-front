@@ -1,28 +1,32 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart' hide Response;
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:provider/provider.dart';
-import 'package:reafy_front/src/provider/stopwatch_provider.dart';
+import 'package:reafy_front/src/pages/login_page.dart';
 import 'package:reafy_front/src/utils/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthProvider extends ChangeNotifier {
   late User _userInfo;
   bool _newUser = true;
-  bool _isLoggedIn = false;
+  //bool _isLoggedIn = false;
   String _nickname = "Reafy";
 
   User get userInfo => _userInfo;
   bool get isNewUser => _newUser;
-  bool get isLoggedIn => _isLoggedIn;
-
+  //bool get isLoggedIn => _isLoggedIn;
   String get nickname => _nickname;
-
+  /*
   Future<void> setLoginStatus(bool loginStatus) async {
     _isLoggedIn = loginStatus;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLogin', loginStatus);
+    notifyListeners();
+  }*/
+
+  Future<void> setNewUser(bool isnewUser) async {
+    _newUser = isnewUser;
     notifyListeners();
   }
 
@@ -70,29 +74,42 @@ class AuthProvider extends ChangeNotifier {
     final dio = authDio().getDio();
     try {
       final res = await dio.post('${baseUrl}/authentication/accesstokenTest');
-      //debugPrint("[*] Token validation response: ${res.statusCode}");
       return res.statusCode == 200 || res.statusCode == 201;
     } catch (e) {
-      //debugPrint("[*] Token validation error: $e");
       return false;
     }
   }
 
   Future<bool> performAuthenticatedAction() async {
+    //// 1. Check if NewUser (see if token exists)
+    //// 2. If New User >> FALSE >> Login 화면으로 연결 >> 로그인 화면에서 체크 후 연결
+    //// 3. If Existing User >> 기존 토큰 유효성 검사 후 >>
+    /// 토큰 만료 시 갱신해서 유효하게 만들어줌
+    /// 유효한 토큰이면 통과
+    /// >>> VALID TOKEN 여부
+    /// FALSE 이면 로그인 화면으로 연결 - 로그인 오류 팝업?
+    /// TRUE 면 앱으로 연결
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    if (await isTokenValid()) {
-      debugPrint(
-          "[*] VALID TOKEN : ${token.toString().substring(token.toString().length - 3)}");
 
-      return true;
+    if (token != null) {
+      setNewUser(false);
+      if (await isTokenValid()) {
+        debugPrint(
+            "[*] VALID TOKEN : ${token.toString().substring(token.toString().length - 3)}");
+        return true;
+      } else {
+        debugPrint("[*] Expired token! Attempting to refresh.");
+        return await refreshToken();
+      }
     } else {
-      debugPrint("[*] Expired token! Attempting to refresh.");
-      return await refreshToken();
+      setNewUser(true);
+      debugPrint("[*] New User");
+      return false;
     }
   }
 
-  Future<void> login() async {
+  Future<void> loginWithKaKao() async {
     final dio = authDio().getDio();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
@@ -101,7 +118,6 @@ class AuthProvider extends ChangeNotifier {
           ? await UserApi.instance.loginWithKakaoTalk()
           : await UserApi.instance.loginWithKakaoAccount();
 
-      setLoginStatus(true);
       _userInfo = await UserApi.instance.me();
       _nickname = _userInfo.kakaoAccount?.profile?.nickname ?? "Reafy";
       await prefs.setString('nickname', _nickname);
@@ -115,35 +131,85 @@ class AuthProvider extends ChangeNotifier {
         if (refreshToken != null) {
           await setRefreshToken(refreshToken);
         }
-
-        if (prefs.getString('token') != null) {
-          _newUser = false;
-        }
-
         await setToken(res.data["accessToken"]);
-        notifyListeners();
       }
     } catch (e) {
-      setLoginStatus(false);
       debugPrint('[*] LOGIN FAILED : $e');
     }
   }
 
   Future<void> logout(BuildContext context) async {
     try {
-      /*
-      final stopwatchProvider =
-          Provider.of<StopwatchProvider>(context, listen: false);
-
-      if (stopwatchProvider.status == Status.running) {
-        stopwatchProvider.pause();
-      }*/
       await UserApi.instance.logout(); // Kakao SDK logout
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
-      setLoginStatus(false);
+      debugPrint('[*] LOGOUT SUCCESS');
     } catch (e) {
       debugPrint('[*] LOGOUT FAILED:  $e');
+    }
+  }
+
+  Future<void> loginWithApple() async {
+    final dio = authDio().getDio();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    try {
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        //TODO : 백 완료되면 채워넣기
+        //webAuthenticationOptions: WebAuthenticationOptions(
+        //    clientId: "kAppleOAuthClientId",
+        //    redirectUri: Uri.parse('${baseUrl}/auth/apple'))
+      );
+      /*
+      debugPrint("userIdentifier : ${appleCredential.userIdentifier}");
+      debugPrint("givenName : ${appleCredential.givenName}");
+      debugPrint("familyName : ${appleCredential.familyName}");
+      debugPrint("authorizationCode : ${appleCredential.authorizationCode}");
+      debugPrint("email : ${appleCredential.email}");
+      debugPrint("identityToken : ${appleCredential.identityToken}");
+      debugPrint("state : ${appleCredential.state}");
+      */
+      // TODO Prepare the data to send to your backend server
+      final data = {
+        'userIdentifier': appleCredential.userIdentifier,
+        'authorizationCode': appleCredential.authorizationCode,
+        'identityToken': appleCredential.identityToken,
+        //'email': appleCredential.email,
+        //'fullName': appleCredential.givenName + ' ' + appleCredential.familyName,
+        "vendor": "apple"
+      };
+
+      final res = await Dio().post(
+        '${baseUrl}/authentication/apple', //TODO
+        data: data,
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+        }),
+      );
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        // TODO : 백 응답 방식에 따라 파싱
+        var refreshToken =
+            res.headers.value('set-cookie')?.split(';').first.split('=').last;
+
+        if (refreshToken != null) {
+          await setRefreshToken(refreshToken);
+        }
+        await setToken(res.data["accessToken"]);
+        //notifyListeners();
+        //setLoginStatus(true);
+        // TODO nickname 설정
+        prefs.setString('nickname', appleCredential.email!);
+      } else {
+        // Handle sign-in failure
+        debugPrint('[**] Sign-in failed: ${res.data}');
+      }
+    } catch (error) {
+      debugPrint('[*] LOGIN FAILED : $error');
+      Get.off(() => LoginPage());
     }
   }
 }
