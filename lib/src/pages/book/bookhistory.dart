@@ -22,19 +22,50 @@ class _BookHistory extends State<BookHistory> {
   Map<String, dynamic> historyList = {};
   String bookTitle = '';
   bool isLoading = true;
+  Map<String, dynamic> metaData = {};
+  bool hasNextData = true;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    getBookHistory();
+    fetchBookHistory();
     getBookTitle();
+    _scrollController.addListener(_scrollListener);
   }
 
-  void getBookHistory() async {
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      if (hasNextData && !isLoading) {
+        fetchBookHistory(cursorId: metaData['cursorId']);
+      }
+    }
+  }
+
+  void fetchBookHistory({int? cursorId}) async {
+    if (!hasNextData) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
     try {
-      final response = await getBookshelfBookHistory(widget.bookshelfBookId);
+      final response = await getBookshelfBookHistory(widget.bookshelfBookId,
+          cursorId: cursorId);
+      final newHistory = response['data'] as Map<String, dynamic>;
+      metaData = response['meta'];
+
       setState(() {
-        historyList = response['data'] as Map<String, dynamic>;
+        historyList.addAll(newHistory);
+        //historyList = response['data'] as Map<String, dynamic>;
+        hasNextData = metaData['hasNextData'];
         isLoading = false;
       });
     } catch (e) {
@@ -108,7 +139,9 @@ class _BookHistory extends State<BookHistory> {
                       ),
                     )
                   : ListView.builder(
-                      itemCount: historyList.keys.length,
+                      key: PageStorageKey<String>('book-history-list'),
+                      controller: _scrollController,
+                      itemCount: historyList.length,
                       itemBuilder: (context, index) {
                         String date = historyList.keys.elementAt(index);
                         List<dynamic> records = historyList[date];

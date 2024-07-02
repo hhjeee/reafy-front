@@ -32,6 +32,7 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> setToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
+    print(token);
     await prefs.setString('token', token);
     notifyListeners();
   }
