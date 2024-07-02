@@ -113,7 +113,6 @@ Future<List<String>> fetchBookshelfThumbnailsByFavorite() async {
       final List<dynamic> resData = res.data as List<dynamic>;
       final List<String> thumbnails = List<String>.from(
           resData.map<String>((item) => item['thumbnail_url'] as String));
-
       return thumbnails;
     } else {
       throw Exception('Failed to load bookshelf thumbnails');
@@ -355,7 +354,7 @@ Future<void> updateBookshelfBookFavorite(
 
     if (res.statusCode == 200) {
       final Map<String, dynamic> data = res.data;
-      final bool isCurrentlyFavorite = data['is_favorite'] == 1 ? true : false;
+      final bool isCurrentlyFavorite = data['isFavorite'] == 1 ? true : false;
       final Map<String, dynamic> reqBody = {
         'isFavorite': isCurrentlyFavorite ? 0 : 1,
       };
