@@ -65,6 +65,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: green),
           onPressed: () {
+            Provider.of<BookShelfProvider>(context, listen: false).fetchData();
             Get.back();
           },
         ),

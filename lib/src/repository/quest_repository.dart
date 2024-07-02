@@ -13,7 +13,7 @@ Future<List<int>> getAchievedQuests() async {
 
     if (res.statusCode == 200) {
       final Map<String, dynamic> questData = res.data;
-
+      print(res.data);
       List<dynamic> questHistoryList = questData['questHistoryList'];
       List<int> questIds =
           questHistoryList.map((item) => item['questId'] as int).toList();
