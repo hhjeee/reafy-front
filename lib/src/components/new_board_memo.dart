@@ -207,6 +207,25 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
                   isExpanded: true,
                   underline: Container(),
                   value: selectedBookId,
+                  selectedItemBuilder: (BuildContext context) {
+                    return books.map<Widget>((ReadingBookInfo book) {
+                      return Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 2.0, horizontal: 10.0),
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                book.title,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xff666666),
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              )));
+                    }).toList();
+                  },
                   items: books.map((ReadingBookInfo book) {
                     return DropdownMenuItem<int>(
                       value: book.bookshelfBookId,
@@ -217,8 +236,11 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
-                            color: black,
+                            color: Color(0xff666666),
                           ),
+                          overflow: TextOverflow.clip,
+                          maxLines: null,
+                          softWrap: true,
                         ),
                       ),
                       //child: Text(item),

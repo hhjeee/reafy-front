@@ -21,6 +21,7 @@ class _StopDialogState extends State<StopDialog> {
   bool _isEndPageValid = true;
   bool _isShelfEmpty = false;
   int? lastReadPage;
+  int? limitedEndPage;
 
   TextEditingController textController1 = TextEditingController();
   TextEditingController textController2 = TextEditingController();
@@ -45,12 +46,20 @@ class _StopDialogState extends State<StopDialog> {
         if (books.isNotEmpty) {
           selectedBookId = books[0].bookshelfBookId;
           fetchLastReadingHistory(selectedBookId!);
+          getBookEndPage(selectedBookId!);
         } else {
           _isShelfEmpty = true;
         }
       });
     });
     fetchTimerData();
+  }
+
+  void getBookEndPage(int bookId) async {
+    var data = await getBookshelfBookDetails(bookId);
+    setState(() {
+      limitedEndPage = data.pages;
+    });
   }
 
   void fetchLastReadingHistory(int bookId) async {
@@ -73,6 +82,7 @@ class _StopDialogState extends State<StopDialog> {
     setState(() {
       selectedBookId = newValue;
       fetchLastReadingHistory(newValue);
+      getBookEndPage(newValue);
     });
   }
 
@@ -198,13 +208,43 @@ class _StopDialogState extends State<StopDialog> {
                         isExpanded: true,
                         underline: Container(),
                         value: selectedBookId,
-                        //icon: ImageData(IconsPath.dropdown),
+                        selectedItemBuilder: (BuildContext context) {
+                          return books.map<Widget>((ReadingBookInfo book) {
+                            return Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 2.0, horizontal: 10.0),
+                                child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      book.title,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xff666666),
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    )));
+                          }).toList();
+                        },
                         items: books.map((ReadingBookInfo book) {
                           return DropdownMenuItem<int>(
                             value: book.bookshelfBookId,
                             child: Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Text(book.title),
+                              padding: const EdgeInsets.all(
+                                2.0,
+                              ),
+                              child: Text(
+                                book.title,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff666666),
+                                ),
+                                overflow: TextOverflow.clip,
+                                maxLines: null,
+                                softWrap: true,
+                              ),
                             ),
                           );
                         }).toList(),
@@ -388,6 +428,16 @@ class _StopDialogState extends State<StopDialog> {
                                 type: ToastificationType.error,
                                 style: ToastificationStyle.flatColored,
                                 title: Text('정확한 페이지를 입력해주세요'),
+                                autoCloseDuration: const Duration(seconds: 2),
+                                showProgressBar: false,
+                              );
+                            } else if (startPage > limitedEndPage! ||
+                                endPage > limitedEndPage!) {
+                              toastification.show(
+                                context: context,
+                                type: ToastificationType.error,
+                                style: ToastificationStyle.flatColored,
+                                title: Text('책의 전체 페이지수를 초과할수 없어요'),
                                 autoCloseDuration: const Duration(seconds: 2),
                                 showProgressBar: false,
                               );

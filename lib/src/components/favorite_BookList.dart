@@ -74,14 +74,16 @@ class isFavorite_BookShelfWidgetState
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 25),
-                    child: Text(
-                      widget.title,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xff333333),
-                        fontWeight: FontWeight.w800,
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 25),
+                      child: Text(
+                        widget.title,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Color(0xff333333),
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
                   ),
