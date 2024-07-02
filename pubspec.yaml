@@ -52,6 +52,11 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#63b865"
+  android: true
+  ios: true
+  android_gravity: center
+  ios_content_mode: scaleAspectFill
+  fullscreen: true
 
 flutter:
   uses-material-design: true

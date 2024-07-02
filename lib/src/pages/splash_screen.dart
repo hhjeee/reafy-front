@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -6,7 +8,9 @@ import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/pages/login_page.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:reafy_front/src/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -19,21 +23,23 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
     showSplashScreen();
   }
 
   void showSplashScreen() async {
+    var key = await KakaoSdk.origin;
+    print(key);
+    await Future.delayed(Duration(seconds: 2));
     FlutterNativeSplash.remove();
     checkLoginStatus();
   }
 
   void checkLoginStatus() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    await Future.delayed(Duration(seconds: 2));
-
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
+
+    await Future.delayed(Duration(seconds: 2));
 /////// USER TOKEN EXISTS
     if (token != null) {
       // Token exists, validate it
@@ -73,6 +79,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
+            color: green,
             width: double.infinity,
             height: double.infinity,
             child: Center(

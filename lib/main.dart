@@ -60,6 +60,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (c) => AuthProvider()),
