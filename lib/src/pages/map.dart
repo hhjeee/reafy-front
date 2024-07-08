@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:reafy_front/src/components/stop_dialog.dart';
+import 'package:reafy_front/src/components/stopwatch.dart';
+import 'package:reafy_front/src/pages/home.dart';
 import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/tool_tips.dart';
 import 'package:reafy_front/src/provider/coin_provider.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
+import 'package:reafy_front/src/provider/time_provider.dart';
 import 'package:reafy_front/src/repository/quest_repository.dart';
 import 'package:reafy_front/src/repository/statics_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
@@ -47,15 +53,17 @@ class _BambooMapState extends State<BambooMap>
     Offset(15, 138),
   ];
 
-  final GlobalKey<CustomTooltipButtonState> _customTooltipKey =
-      GlobalKey<CustomTooltipButtonState>();
+  //final GlobalKey<CustomTooltipButtonState> _customTooltipKey =
+  //    GlobalKey<CustomTooltipButtonState>();
   final GlobalKey<TooltipButtonState> _tooltipKey =
       GlobalKey<TooltipButtonState>();
 
   void _hideTooltip() {
-    _customTooltipKey.currentState?.hideOverlay();
+    //_customTooltipKey.currentState?.hideOverlay();
     _tooltipKey.currentState?.hideOverlay();
   }
+
+  bool showTopBar = false;
 
   @override
   void initState() {
@@ -81,6 +89,10 @@ class _BambooMapState extends State<BambooMap>
     loadUserCoin();
     Future.microtask(
         () => Provider.of<CoinProvider>(context, listen: false).updateCoins());
+    Future.microtask(() {
+      final timeProvider = Provider.of<TimeProvider>(context, listen: false);
+      timeProvider.getTimes();
+    });
 
     getQuestsStatus();
   }
@@ -199,64 +211,129 @@ class _BambooMapState extends State<BambooMap>
 
   @override
   Widget build(BuildContext context) {
+    Widget stopbutton() {
+      return Center(
+          child: GestureDetector(
+              onTap: () {
+                stopwatch.pause();
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return StopDialog();
+                  },
+                );
+              },
+              child: Container(
+                  width: 338,
+                  height: 50,
+                  margin: EdgeInsets.only(top: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25.0),
+                    color: yellow,
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 0),
+                        blurRadius: 10.0,
+                        color: Color.fromRGBO(0, 0, 0, 0.10),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      "이제 그만 읽을래요",
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                        color: black,
+                      ),
+                    ),
+                  ))));
+    }
+
+    Widget TitleByStatus() {
+      var status = 1;
+      String content = "책을 읽는 동안\n15분에 1개씩 대나무가 자라요";
+
+      return Consumer<StopwatchProvider>(builder: (context, stopwatch, child) {
+        return Text(
+          stopwatch.status == Status.running
+              ? "책을 읽는 동안\n15분에 1개씩 대나무가 자라요"
+              : stopwatch.isFull
+                  ? "대나무가 다 자랐어요!\n주워볼까요?"
+                  : "잠시 쉬는중이에요 :)",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              height: 1.5,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: white),
+        );
+      });
+    }
+
     final size = MediaQuery.of(context).size;
     return Scaffold(
-        body: Stack(
-      children: [
-        Container(
-          width: size.width,
-          height: size.height,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(IconsPath.bamboomap), fit: BoxFit.cover),
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          title: TitleByStatus(),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: white),
+            onPressed: () {
+              Get.to(() => App(), transition: Transition.leftToRight);
+            },
           ),
-        ),
-        TopBarWidget(
-          tooltipKey: _tooltipKey,
-          questStatus: questStatus,
-          context: context,
-        ),
-        BubbleWidget(),
-        Positioned(
-          top: 212,
-          left: 275,
-          child: CustomTooltipButton(
-            key: _customTooltipKey,
-            message: "15분 읽으면\n대나무 한 개가 자라요!",
-          ),
-        ),
-        Positioned(
-          bottom: 0,
-          child: Container(
-              width: size.width, height: 500, child: bamboo_collect(context)),
-        ),
-        BottomBarWidget(userCoin: userCoin, hideTooltip: _hideTooltip)
-      ],
-    ));
-  }
-}
-
-class BubbleWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-        top: 221,
-        left: 176,
-        child: Stack(
-          children: [
-            ImageData(
-              IconsPath.map_bubble,
-              width: 112,
-              height: 77,
-              isSvg: true,
-            ),
+          actions: [
             Container(
-              width: 112,
-              height: 63,
-              child: Consumer<StopwatchProvider>(
-                builder: (context, stopwatch, child) {
-                  return BambooBubbleContent(stopwatch);
-                },
+              margin: EdgeInsets.only(right: 16),
+              child: IconButton(
+                  iconSize: 44,
+                  padding: EdgeInsets.only(right: 0),
+                  icon: ImageData(IconsPath.bamboo_white, isSvg: true),
+                  onPressed: () {
+                    debugPrint("Pressed");
+                    setState(() {
+                      showTopBar = !showTopBar;
+                    });
+                  }),
+            ),
+          ],
+        ),
+        body: Stack(
+          children: [
+            Container(
+              width: size.width,
+              height: size.height,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(IconsPath.bamboomap), fit: BoxFit.cover),
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              child: Container(
+                  width: size.width,
+                  height: 500,
+                  child: bamboo_collect(context)),
+            ),
+            Visibility(
+              visible: showTopBar,
+              child: TopBarWidget(
+                tooltipKey: _tooltipKey,
+                questStatus: questStatus,
+                context: context,
+              ),
+            ),
+            Positioned(
+              bottom: 51,
+              left: 34,
+              child: Column(
+                children: [
+                  stopbutton(),
+                  const SizedBox(height: 15),
+                  Center(child: StopwatchWidget()),
+                ],
               ),
             ),
           ],
@@ -264,147 +341,55 @@ class BubbleWidget extends StatelessWidget {
   }
 }
 
-class BambooBubbleContent extends StatelessWidget {
-  final StopwatchProvider stopwatch;
+class InfoWidget extends StatelessWidget {
+  final String title;
+  final String content;
 
-  BambooBubbleContent(this.stopwatch);
-
-  @override
-  Widget build(BuildContext context) {
-    if (stopwatch.itemCnt >= 6) {
-      return Center(
-        child: Text(
-          "꼬르륵~",
-          style: TextStyle(
-            color: black,
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      );
-    } else if (stopwatch.status == Status.running && !stopwatch.isFull) {
-      return BambooBubbleRunningContent(stopwatch);
-    } else {
-      return Center(
-        child: Text(
-          "쉬고 있어요 :)",
-          style: TextStyle(
-            color: black,
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      );
-    }
-  }
-}
-
-class BambooBubbleRunningContent extends StatelessWidget {
-  final StopwatchProvider stopwatch;
-
-  BambooBubbleRunningContent(this.stopwatch);
+  InfoWidget({required this.title, required this.content});
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          "다음 대나무까지",
-          style: TextStyle(
-            color: black,
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        SizedBox(height: 3),
-        Text(
-          stopwatch.remainTimeString,
-          style: TextStyle(
-            color: black,
-            fontSize: 16,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 2,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class BottomBarWidget extends StatelessWidget {
-  final int? userCoin;
-  final VoidCallback hideTooltip;
-
-  BottomBarWidget({Key? key, required this.userCoin, required this.hideTooltip})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      bottom: 51,
-      left: 34,
-      child: Row(children: [
-        SizedBox(
-          height: 60,
-          width: 60,
-          child: FloatingActionButton(
-            onPressed: () {
-              hideTooltip();
-              Get.to(() => App());
-            },
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+  Widget build(
+    BuildContext context,
+  ) {
+    return Container(
+        width: 166,
+        height: 62,
+        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: Color.fromRGBO(250, 249, 247, 0.6),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              offset: Offset(0, 0),
+              blurRadius: 10,
+              spreadRadius: 0,
             ),
-            backgroundColor: green,
-            child: ImageData(
-              IconsPath.back_arrow,
-              isSvg: true,
-            ),
-          ),
+          ],
         ),
-        const SizedBox(width: 16),
-        Container(
-          width: 245,
-          height: 60,
-          padding: EdgeInsets.symmetric(horizontal: 54, vertical: 14),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            color: Color(0xfffaf9f7),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                offset: Offset(0, 0),
-                blurRadius: 10,
-                spreadRadius: 0,
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "내가 가진 대나무",
+                title, //"다음 대나무까지",
                 style: TextStyle(
-                  color: dark_gray,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              Text(
-                Provider.of<CoinProvider>(context).coins.toString(),
-                style: TextStyle(
-                  color: Color(0xff333333),
-                  fontSize: 16,
+                  color: black,
+                  fontSize: 12,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-            ],
-          ),
-        )
-      ]),
-    );
+              SizedBox(height: 5),
+              Text(
+                content, //stopwatch.remainTimeString,
+                style: TextStyle(
+                  color: black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 2,
+                ),
+              ),
+            ]));
   }
 }
 
@@ -543,54 +528,81 @@ class _TopBarWidgetState extends State<TopBarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Positioned(
-        top: 60,
-        left: 20,
+        top: 120,
         child: Container(
-          width: size.width - 40,
-          height: 56,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            color: Color.fromARGB(120, 250, 249, 247),
-          ),
-          padding: EdgeInsets.fromLTRB(19, 6, 3, 6),
-          child: Row(
-            children: [
-              Text(
-                "주간 대나무",
-                style: TextStyle(
-                    color: black, fontSize: 12, fontWeight: FontWeight.w800),
-              ),
-              SizedBox(width: 4),
-              TooltipButton(
-                key: widget.tooltipKey,
-              ),
-              ...widget.questStatus.entries.map((quest) {
-                int hours = quest.key;
-                QuestStatus status = quest.value;
-                return Expanded(
-                    child: GestureDetector(
-                        onTap: () => _onQuestTap(hours, status),
-                        child: Container(
-                          margin: EdgeInsets.only(right: 8),
-                          alignment: Alignment.center,
-                          width: 50,
-                          height: 44,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(11),
-                              color: _getColorForStatus(status)),
-                          child: Text('${hours}시간\n(${hours}개)',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 0.1,
-                                  color: _getTextColorForStatus(status))),
-                        )));
-              })
-            ],
-          ),
-        ));
+            width: SizeConfig.screenWidth,
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Consumer<StopwatchProvider>(
+                    builder: (context, stopwatch, child) {
+                  return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        InfoWidget(
+                            title: "내가 가진 대나무",
+                            content: Provider.of<CoinProvider>(context)
+                                    .coins
+                                    .toString() +
+                                "개"),
+                        SizedBox(width: 8),
+                        InfoWidget(
+                            title: "다음 대나무까지",
+                            content: stopwatch.remainTimeString),
+                      ]);
+                }),
+                SizedBox(height: 8),
+                Container(
+                  //width: size.width - 40,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    color: Color.fromRGBO(250, 249, 247, 0.6),
+                  ),
+                  padding: EdgeInsets.fromLTRB(19, 6, 3, 6),
+                  child: Row(
+                    children: [
+                      Text(
+                        "주간 대나무",
+                        style: TextStyle(
+                            color: black,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800),
+                      ),
+                      SizedBox(width: 4),
+                      TooltipButton(
+                        key: widget.tooltipKey,
+                      ),
+                      ...widget.questStatus.entries.map((quest) {
+                        int hours = quest.key;
+                        QuestStatus status = quest.value;
+                        return Expanded(
+                            child: GestureDetector(
+                                onTap: () => _onQuestTap(hours, status),
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 8),
+                                  alignment: Alignment.center,
+                                  width: 50,
+                                  height: 44,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(11),
+                                      color: _getColorForStatus(status)),
+                                  child: Text('${hours}시간\n(${hours}개)',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                          letterSpacing: 0.1,
+                                          color:
+                                              _getTextColorForStatus(status))),
+                                )));
+                      })
+                    ],
+                  ),
+                ),
+              ],
+            )));
   }
 
   Color _getColorForStatus(QuestStatus status) {
@@ -615,3 +627,79 @@ class _TopBarWidgetState extends State<TopBarWidget> {
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+/*
+class BubbleWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+        top: 221,
+        left: 176,
+        child: Stack(
+          children: [
+            ImageData(
+              IconsPath.map_bubble,
+              width: 112,
+              height: 77,
+              isSvg: true,
+            ),
+            Container(
+              width: 112,
+              height: 63,
+              child: Consumer<StopwatchProvider>(
+                builder: (context, stopwatch, child) {
+                  return BambooBubbleRunningContent(stopwatch);
+                },
+              ),
+            ),
+          ],
+        ));
+  }
+}*/
+/*
+class BambooBubbleContent extends StatelessWidget {
+  final StopwatchProvider stopwatch;
+
+  BambooBubbleContent(this.stopwatch);
+
+  @override
+  Widget build(BuildContext context) {
+    return BambooBubbleRunningContent(stopwatch);
+    /*
+
+    if (stopwatch.itemCnt >= 6) {
+      return Center(
+        child: Text(
+          "꼬르륵~",
+          style: TextStyle(
+            color: black,
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      );
+    } else if (stopwatch.status == Status.running && !stopwatch.isFull) {
+      return BambooBubbleRunningContent(stopwatch);
+    } else {
+      return Center(
+        child: Text(
+          "쉬고 있어요 :)",
+          style: TextStyle(
+            color: black,
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      );
+    }*/
+  }
+}*/

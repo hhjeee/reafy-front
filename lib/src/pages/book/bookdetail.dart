@@ -60,8 +60,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: yellow_bg,
+        backgroundColor: Colors.transparent, //yellow_bg,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: green),
           onPressed: () {
@@ -98,8 +99,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
           ),
         ],
       ),
-      extendBodyBehindAppBar: true, //appbar, body 겹치기
-
       body: FutureBuilder<BookshelfBookDetailsDto>(
           future: bookDetailsFuture,
           builder: (context, snapshot) {
@@ -247,7 +246,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
               width: size.width - 90,
               height: 33,
               decoration: BoxDecoration(
-                color: Color(0xffB3B3B3),
+                color: Color(0xffB3B3B3), //TODO
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(

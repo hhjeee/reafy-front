@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/components/done.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/provider/time_provider.dart';
@@ -462,11 +463,14 @@ class _StopDialogState extends State<StopDialog> {
                               await Provider.of<TimeProvider>(context,
                                       listen: false)
                                   .getTimes();
-                              Get.back();
+                              Get.back(closeOverlays: true);
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return DoneDialog(onDone: () {});
+                                  return DoneDialog(onDone: () {
+                                    Get.to(() => App(),
+                                        transition: Transition.leftToRight);
+                                  });
                                 },
                               );
                             }

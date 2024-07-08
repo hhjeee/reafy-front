@@ -52,6 +52,7 @@ class IconsPath {
   static String get bamboo => 'assets/svg/bamboo.svg';
   static String get map_icon => 'assets/svg/map.svg';
   static String get item => 'assets/svg/item.svg';
+  static String get bamboo_white => 'assets/svg/bamboo_white.svg';
 
   // 스탑워치
   static String get play => 'assets/svg/play.svg';

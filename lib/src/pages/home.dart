@@ -563,7 +563,8 @@ class _HomeState extends State<Home>
                                           top: 64 +
                                               _floatingAnimation!
                                                   .value, // Adjust position based on the animation value
-                                          left: (SizeConfig.screenWidth-186) /2,//102,
+                                          left: (SizeConfig.screenWidth - 186) /
+                                              2, //102,
                                           child: _buildCharacter(),
                                         ),
                                         //// Clock

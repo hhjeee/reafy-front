@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:reafy_front/src/app.dart';
+import 'package:reafy_front/src/pages/map.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/repository/timer_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
@@ -208,6 +211,9 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
                 GestureDetector(
                     onTap: () {
                       _tapStopwatch(stopwatch.status);
+                      if (stopwatch.status == Status.running) {
+                        Get.to(() => BambooMap());
+                      }
                     },
                     child: _displayButton(stopwatch.status))
               ]),
