@@ -5,8 +5,8 @@ enum Status { running, paused, stopped }
 
 class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   late Status _status = Status.stopped;
-  late int _seconds = 0;
-  int _countdownsec = 15 * 60;
+  int _seconds = 0;
+  int _countdownsec = 10;
   int _remainingsec = 0;
   int _itemCnt = 0;
   bool _isfull = false;
@@ -24,33 +24,55 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   String get elapsedTimeString => _elapsedTime;
   String get remainTimeString => _remainingTime;
 
+  DateTime? _pausedTime;
+
   @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    late int stoppedsec = _seconds;
     super.didChangeAppLifecycleState(state);
+    //print('AppLifecycleState changed to: $state');
 
-    if (state == AppLifecycleState.paused) {
-      pauseStopwatchIfNeeded();
-    } else if (state == AppLifecycleState.resumed) {
-      resumeStopwatchIfNeeded();
+    switch (state) {
+      case AppLifecycleState.detached:
+        pause();
+        // SEnd data to SERVER?
+        break;
+      case AppLifecycleState.inactive:
+        break;
+      case AppLifecycleState.hidden:
+        break;
+
+      case AppLifecycleState.paused:
+        late int stoppedsec = _seconds;
+        _pausedTime = DateTime.now();
+        stoppedsec = _seconds;
+
+        notifyListeners();
+        print("_pausedTime: $_pausedTime (${formatTime(stoppedsec, true)})");
+        break;
+
+      case AppLifecycleState.resumed:
+        if (_pausedTime != null) {
+          final DateTime now = DateTime.now();
+          final int elapsedPausedTime = now.difference(_pausedTime!).inSeconds;
+          _seconds = stoppedsec + elapsedPausedTime;
+          _pausedTime = null;
+          updateElapsedTime(_seconds);
+          notifyListeners();
+          print("resumed : $elapsedPausedTime (${formatTime(_seconds, true)})");
+        }
+
+        break;
+
+      default:
     }
-  }
-
-  void pauseStopwatchIfNeeded() {
-    if (_status == Status.running) {
-      pause();
-    }
-  }
-
-  void resumeStopwatchIfNeeded() {
-    if (_status == Status.paused) {
-      resume();
-    }
-  }
-
-  void setTimer(int sec) {
-    _countdownsec = sec;
-    //notifyListeners();
+    notifyListeners();
   }
 
   void runStopWatch() async {
@@ -67,13 +89,12 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
         case Status.running:
           _seconds++;
           updateRemainingTime();
-          _elapsedTime = formatTime(_seconds, false);
+          updateElapsedTime(_seconds);
 
           if (_remainingsec <= 0) {
             bool added = incrementItemCount();
             if (added) {
-//call `regenerateBamboo` from here
-
+              //call `regenerateBamboo` from here
               //incrementItemCount();
             }
             notifyListeners();
@@ -96,7 +117,6 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   void run() {
     // stopped -> running
     _status = Status.running;
-    //print("RUN ! : $_seconds");
     runStopWatch();
     notifyListeners();
   }
@@ -113,7 +133,7 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   void stop() {
     _status = Status.stopped;
     print("STOPPED ! : $_seconds");
-    _remainingsec = _countdownsec;
+    //_remainingsec = _countdownsec;
     _seconds = 0;
     updateRemainingTime();
     notifyListeners();
@@ -138,22 +158,18 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   void updateRemainingTime() {
-    //if (_isRunning) {
     _remainingsec = _countdownsec - _seconds % _countdownsec;
     //print("$_remainingsec");
     if (_remainingsec == 1) {
       incrementItemCount();
       _remainingsec = _countdownsec;
-      notifyListeners();
-      //print("$_remainingsec  updated");
     }
-
     _remainingTime = formatTime(_remainingsec, true);
     notifyListeners();
   }
 
-  void updateElapsedTime(String value) {
-    _elapsedTime = value;
+  void updateElapsedTime(int sec) {
+    _elapsedTime = formatTime(sec, false);
     notifyListeners();
   }
 
@@ -161,17 +177,13 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
     if (_itemCnt < 6) {
       _itemCnt += 1;
       print("[*] 대나무 생김 : $_itemCnt");
-
       showBambooNotification = true;
-
       notifyListeners();
       return true;
     } else {
       _isfull = true;
     }
-
     notifyListeners();
-
     return false;
   }
 

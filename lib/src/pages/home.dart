@@ -153,16 +153,19 @@ class _HomeState extends State<Home>
         GestureDetector(
             onTap: () {
               onSelected();
+
+              Get.to(() => BambooMap());
+
+/*
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => BambooMap()),
-              ).then((_) {
-                setState(() {
-                  final stopwatchProvider =
-                      Provider.of<StopwatchProvider>(context, listen: false);
-                  _isBambooSelected = false;
-                  stopwatchProvider.showBambooNotification = false;
-                });
+              ).then((_) {*/
+              setState(() {
+                final stopwatchProvider =
+                    Provider.of<StopwatchProvider>(context, listen: false);
+                _isBambooSelected = false;
+                stopwatchProvider.showBambooNotification = false;
               });
             },
             child: Stack(children: [
@@ -223,7 +226,7 @@ class _HomeState extends State<Home>
                   ),
                   child: Center(
                     child: Text(
-                      "이제 그만 읽을래요",
+                      "독서 마치기", //"이제 그만 읽을래요",
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w700,

@@ -459,7 +459,7 @@ class _StopDialogState extends State<StopDialog> {
                               context.read<StopwatchProvider>().stop();
                               context
                                   .read<StopwatchProvider>()
-                                  .updateElapsedTime('00:00:00');
+                                  .updateElapsedTime(0);
                               await Provider.of<TimeProvider>(context,
                                       listen: false)
                                   .getTimes();
