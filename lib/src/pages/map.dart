@@ -37,7 +37,7 @@ class _BambooMapState extends State<BambooMap>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   late List<AnimationController> _bambooController;
   late List<Animation<double>> _bambooAnimation;
-  late StopwatchProvider stopwatch;
+  //StopwatchProvider stopwatch;
 
   int? userCoin;
 
@@ -68,8 +68,8 @@ class _BambooMapState extends State<BambooMap>
   @override
   void initState() {
     super.initState();
-    stopwatch = StopwatchProvider();
-    WidgetsBinding.instance.addObserver(stopwatch);
+    //stopwatch = StopwatchProvider();
+    //WidgetsBinding.instance.addObserver(stopwatch);
 
     _bambooController = List.generate(
         6,
@@ -132,8 +132,8 @@ class _BambooMapState extends State<BambooMap>
     for (var controller in _bambooController) {
       controller.dispose();
     }
-    WidgetsBinding.instance.removeObserver(stopwatch);
-    stopwatch.dispose();
+    //WidgetsBinding.instance.removeObserver(stopwatch);
+    //stopwatch.dispose();
     super.dispose();
   }
 
@@ -149,10 +149,10 @@ class _BambooMapState extends State<BambooMap>
   }
 
   Widget bamboo_collect(BuildContext context) {
-    StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
-
+    //StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
     for (int i = 0; i < bambooStates.length; i++) {
-      bambooStates[i] = BambooState(i < stopwatch.itemCnt, bambooPositions[i]);
+      bambooStates[i] = BambooState(
+          i < context.watch<StopwatchProvider>().itemCnt, bambooPositions[i]);
     } //stopwatch.itemCnt
 
     return Stack(
@@ -199,7 +199,7 @@ class _BambooMapState extends State<BambooMap>
                       state.isVisible = false;
                     });
 
-                    stopwatch.decreaseItemCount();
+                    context.read<StopwatchProvider>().decreaseItemCount(); //
                   },
                   child: ImageData(IconsPath.bambooicon, width: 90, height: 90),
                 ),
@@ -215,7 +215,7 @@ class _BambooMapState extends State<BambooMap>
       return Center(
           child: GestureDetector(
               onTap: () {
-                stopwatch.pause();
+                context.read<StopwatchProvider>().pause();
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -240,7 +240,7 @@ class _BambooMapState extends State<BambooMap>
                   ),
                   child: Center(
                     child: Text(
-                      "이제 그만 읽을래요",
+                      "독서 마치기", //"이제 그만 읽을래요",
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
@@ -252,12 +252,12 @@ class _BambooMapState extends State<BambooMap>
 
     Widget TitleByStatus() {
       var status = 1;
-      String content = "책을 읽는 동안\n15분에 1개씩 대나무가 자라요";
+      String content = "책을 읽는 동안\n15분마다 대나무 한 그루가 자라요.";
 
       return Consumer<StopwatchProvider>(builder: (context, stopwatch, child) {
         return Text(
           stopwatch.status == Status.running
-              ? "책을 읽는 동안\n15분에 1개씩 대나무가 자라요"
+              ? "책을 읽는 동안\n15분마다 대나무 한 그루가 자라요."
               : stopwatch.isFull
                   ? "대나무가 다 자랐어요!\n주워볼까요?"
                   : "잠시 쉬는중이에요 :)",
@@ -412,10 +412,10 @@ class BambooDialog extends StatelessWidget {
           child: Column(children: [
             //SizedBox(height: 30.0),
             Text(
-              "냠~ 대나무를 주웠어요",
+              "대나무를 성공적으로 주웠어요!",
               textAlign: TextAlign.center,
               style: const TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -627,15 +627,6 @@ class _TopBarWidgetState extends State<TopBarWidget> {
     }
   }
 }
-
-
-
-
-
-
-
-
-
 
 /*
 class BubbleWidget extends StatelessWidget {
