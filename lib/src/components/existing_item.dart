@@ -15,16 +15,16 @@ class ExistingItem extends StatelessWidget {
         child: Column(children: [
           SizedBox(height: 30.0),
           Text(
-            '헉!',
+            '대나무가 부족해요.',
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.w700,
             ),
           ),
           SizedBox(height: 5),
           Text(
-            '대나무가 부족해요!',
+            '독서를 통해 더 모아보세요!',
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 14,

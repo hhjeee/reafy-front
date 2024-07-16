@@ -87,7 +87,7 @@ class _BookShelfState extends State<BookShelf> {
                       Consumer<BookShelfProvider>(
                         builder: (context, bookShelfProvider, child) {
                           return isFavorite_BookShelfWidget(
-                            title: 'My Favorite',
+                            title: '즐겨찾기',
                           );
                         },
                       ),
