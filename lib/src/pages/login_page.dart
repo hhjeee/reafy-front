@@ -88,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
         Get.off(() => LoginPage());
       }
     } else {
-      showNetworkErrorSnackbar(context);
+      //showNetworkErrorSnackbar(context);
       //Get.off(() => LoginPage());
     }
   }
