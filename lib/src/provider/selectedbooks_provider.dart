@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reafy_front/src/repository/bookshelf_repository.dart';
+import 'package:reafy_front/src/dto/bookshelf_dto.dart';
 
 class SelectedBooksProvider with ChangeNotifier {
   List<BookshelfBookInfo> _selectedBooks = [];

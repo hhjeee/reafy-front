@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:reafy_front/src/dto/bookshelf_dto.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/components/delete_book2.dart';
+import 'package:reafy_front/src/components/dialog/delete_book2.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
@@ -61,7 +62,7 @@ class _C_BookShelfState extends State<Category_BookShelf>
           onPressed: () {
             selectedBooksProvider.clearBooks();
             Provider.of<BookShelfProvider>(context, listen: false).fetchData();
-            Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
+            Get.back();
           },
         ),
         title: Text(
@@ -80,16 +81,24 @@ class _C_BookShelfState extends State<Category_BookShelf>
                     isSvg: true, width: 44, height: 44)
                 : ImageData(IconsPath.trash_can, isSvg: true),
             onPressed: () {
-              setState(() {
-                isEditMode = !isEditMode;
-              });
-              if (!isEditMode) {
+              if (isEditMode &&
+                  selectedBooksProvider.selectedBooks.length > 0) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return DeleteDialog();
+                    return DeleteDialog(
+                      onConfirmDelete: () {
+                        setState(() {
+                          isEditMode = false;
+                        });
+                      },
+                    );
                   },
                 );
+              } else {
+                setState(() {
+                  isEditMode = !isEditMode;
+                });
               }
             },
           ),

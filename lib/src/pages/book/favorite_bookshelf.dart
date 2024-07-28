@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/components/delete_book2.dart';
+import 'package:reafy_front/src/components/dialog/delete_book2.dart';
+import 'package:reafy_front/src/dto/bookshelf_dto.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:provider/provider.dart';
@@ -64,7 +65,7 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
           onPressed: () {
             selectedBooksProvider.clearBooks();
             Provider.of<BookShelfProvider>(context, listen: false).fetchData();
-            Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
+            Get.back();
           },
         ),
         title: Text(
@@ -81,16 +82,24 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
                 ? ImageData(IconsPath.check_green, isSvg: true, width: 44)
                 : ImageData(IconsPath.trash_can, isSvg: true, width: 20),
             onPressed: () {
-              setState(() {
-                isEditMode = !isEditMode;
-              });
-              if (!isEditMode) {
+              if (isEditMode &&
+                  selectedBooksProvider.selectedBooks.length > 0) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return DeleteDialog();
+                    return DeleteDialog(
+                      onConfirmDelete: () {
+                        setState(() {
+                          isEditMode = false; // 삭제 모드 비활성화
+                        });
+                      },
+                    );
                   },
                 );
+              } else {
+                setState(() {
+                  isEditMode = !isEditMode;
+                });
               }
             },
           ),

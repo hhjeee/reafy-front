@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reafy_front/src/components/add_book.dart';
-import 'package:reafy_front/src/models/book.dart';
+import 'package:reafy_front/src/components/dialog/add_book.dart';
+import 'package:reafy_front/src/dto/bookshelf_dto.dart';
 
 class BookCard extends StatelessWidget {
   final Book book;

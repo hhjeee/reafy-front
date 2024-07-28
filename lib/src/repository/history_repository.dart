@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:reafy_front/src/dto/history_dto.dart';
 import 'package:reafy_front/src/utils/api.dart';
 
 final Dio authdio = authDio().getDio();
+
 // 독서 기록 조회
 Future<Map<String, dynamic>> getBookshelfBookHistory(int bookshelfbookId,
     {int? cursorId}) async {
@@ -18,10 +20,6 @@ Future<Map<String, dynamic>> getBookshelfBookHistory(int bookshelfbookId,
     }
   } catch (e) {
     if (e is DioError) {
-      // if (e.response?.statusCode == 404) {
-      //   //404인 경우 빈 리스트 반환
-      //   return [];
-      // }
       if (e.response?.statusCode == 404) {
         // 404인 경우 빈 리스트와 기본 메타 데이터 반환
         return {
@@ -57,32 +55,6 @@ Future<dynamic> getBookshelfBookRecentHistory(int bookshelfbookId) async {
       }
     }
     throw e;
-  }
-}
-
-// 독서 기록 저장
-class CreateUserBookHistoryDto {
-  int? bookshelfBookId;
-  int? startPage;
-  int? endPage;
-  int duration;
-  int remainedTimer;
-
-  CreateUserBookHistoryDto(
-      {required this.bookshelfBookId,
-      required this.startPage,
-      required this.endPage,
-      required this.duration,
-      required this.remainedTimer});
-
-  Map<String, dynamic> toJson() {
-    return {
-      'bookshelfBookId': bookshelfBookId,
-      'startPage': startPage,
-      'endPage': endPage,
-      'duration': duration,
-      'remainedTimer': remainedTimer,
-    };
   }
 }
 

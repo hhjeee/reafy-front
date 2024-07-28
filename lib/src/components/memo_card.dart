@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
-import 'package:reafy_front/src/components/done.dart';
+import 'package:reafy_front/src/components/dialog/done.dart';
 import 'package:reafy_front/src/components/new_book_memo.dart';
-import 'package:reafy_front/src/models/memo.dart';
+import 'package:reafy_front/src/dto/bookshelf_dto.dart';
+import 'package:reafy_front/src/dto/memo_dto.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';

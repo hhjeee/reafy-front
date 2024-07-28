@@ -1,4 +1,9 @@
-import 'package:reafy_front/src/models/bar.dart';
+class IndividualBar {
+  final int x;
+  final double y;
+
+  IndividualBar({required this.x, required this.y});
+}
 
 class BarData {
   final double janAmount;

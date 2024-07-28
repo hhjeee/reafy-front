@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/book_card.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/models/book.dart';
+import 'package:reafy_front/src/dto/bookshelf_dto.dart';
 import 'dart:math';
 import 'package:lottie/lottie.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';

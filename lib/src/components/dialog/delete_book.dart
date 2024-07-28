@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:reafy_front/src/components/done.dart';
 import 'package:provider/provider.dart';
+import 'package:reafy_front/src/components/dialog/done.dart';
+import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
-import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 
 class DeleteDialog extends StatefulWidget {
+  final int bookId;
+  DeleteDialog({required this.bookId});
   @override
   _DeleteDialogState createState() => _DeleteDialogState();
 }
@@ -24,21 +26,17 @@ class _DeleteDialogState extends State<DeleteDialog> {
       contentPadding: EdgeInsets.zero,
       content: Container(
         width: 320,
-        height: 180,
+        height: 170,
         child: Column(children: [
           SizedBox(height: 40.0),
-          Consumer<SelectedBooksProvider>(
-            builder: (context, selectedBooksProvider, _) {
-              return Text(
-                "총 ${selectedBooksProvider.selectedBooks.length}권을 정말 삭제하시겠어요? \n 등록한 책이 사라져요!",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Color(0xff333333),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                ),
-              );
-            },
+          Text(
+            "정말 삭제하시겠어요? \n 등록한 책이 사라져요!",
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+                color: Color(0xff333333),
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                height: 1.2),
           ),
           SizedBox(height: 40.0),
           Row(
@@ -46,7 +44,6 @@ class _DeleteDialogState extends State<DeleteDialog> {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  selectedBooksProvider.clearBooks();
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
@@ -70,19 +67,12 @@ class _DeleteDialogState extends State<DeleteDialog> {
               ElevatedButton(
                 onPressed: () async {
                   try {
-                    List<int> bookshelfBookIds = selectedBooksProvider
-                        .selectedBooks
-                        .map((book) => book.bookshelfBookId)
-                        .toList();
-
-                    for (int bookshelfBookId in bookshelfBookIds) {
-                      await deleteBookshelfBook(bookshelfBookId);
-                    }
+                    await deleteBookshelfBook(widget.bookId);
                     selectedBooksProvider.clearBooks();
                     Provider.of<BookShelfProvider>(context, listen: false)
                         .fetchData();
-
                     Navigator.pop(context);
+
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {

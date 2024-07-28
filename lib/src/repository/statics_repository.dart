@@ -3,6 +3,7 @@ import 'package:reafy_front/src/utils/api.dart';
 import 'package:intl/intl.dart';
 
 final Dio authdio = authDio().getDio();
+
 Future<List<Map<String, dynamic>>> getMonthlyPageStatistics(int year) async {
   try {
     final res = await authdio.get('${baseUrl}/statistics/monthly/pages',
@@ -22,7 +23,6 @@ Future<List<Map<String, dynamic>>> getMonthlyPageStatistics(int year) async {
 }
 
 Future<List<Map<String, dynamic>>> getMonthlyTimeStatistics(int year) async {
-  //var dio = await authDio();
   try {
     final res = await authdio.get('${baseUrl}/statistics/monthly/times',
         queryParameters: {'year': year});
@@ -41,7 +41,6 @@ Future<List<Map<String, dynamic>>> getMonthlyTimeStatistics(int year) async {
 }
 
 Future<Map<String, dynamic>> getTodayTimeStatistics() async {
-  //var dio = await authDio();
   try {
     final res = await authdio.get('${baseUrl}/statistics/today');
 

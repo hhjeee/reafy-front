@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:provider/provider.dart';
-import 'package:reafy_front/src/components/purchase_dialog.dart';
+import 'package:reafy_front/src/components/dialog/purchase_dialog.dart';
 import 'package:reafy_front/src/provider/item_provider.dart';
 import 'package:reafy_front/src/provider/item_placement_provider.dart';
 

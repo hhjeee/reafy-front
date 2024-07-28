@@ -7,7 +7,6 @@ import 'package:reafy_front/src/binding/init_bindings.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:reafy_front/src/controller/connectivity_controller.dart';
-import 'package:reafy_front/src/models/bookcount.dart';
 import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/provider/auth_provider.dart';
@@ -65,7 +64,6 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (c) => AuthProvider()),
           ChangeNotifierProvider(create: (c) => SelectedBooksProvider()),
           ChangeNotifierProvider(create: (c) => BookShelfProvider()),
-          ChangeNotifierProvider(create: (c) => BookModel()),
           ChangeNotifierProvider(create: (c) => ItemProvider()),
           ChangeNotifierProvider(create: (c) => ItemPlacementProvider()),
           ChangeNotifierProvider(create: (c) => StopwatchProvider()),

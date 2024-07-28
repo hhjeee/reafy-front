@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:reafy_front/src/components/stop_dialog.dart';
+import 'package:reafy_front/src/components/dialog/stop_dialog.dart';
 import 'package:reafy_front/src/components/stopwatch.dart';
 import 'package:reafy_front/src/pages/home.dart';
 import 'package:reafy_front/src/app.dart';
@@ -211,6 +211,8 @@ class _BambooMapState extends State<BambooMap>
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     Widget stopbutton() {
       return Center(
           child: GestureDetector(
@@ -224,8 +226,8 @@ class _BambooMapState extends State<BambooMap>
                 );
               },
               child: Container(
-                  width: 338,
-                  height: 50,
+                  width: size.width * 0.87,
+                  height: size.height * 0.06,
                   margin: EdgeInsets.only(top: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25.0),
@@ -240,9 +242,9 @@ class _BambooMapState extends State<BambooMap>
                   ),
                   child: Center(
                     child: Text(
-                      "독서 마치기", //"이제 그만 읽을래요",
+                      "이제 그만 읽을래요!", //"독서 마치기"
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: 14,
                         fontWeight: FontWeight.w700,
                         color: black,
                       ),
@@ -271,7 +273,7 @@ class _BambooMapState extends State<BambooMap>
       });
     }
 
-    final size = MediaQuery.of(context).size;
+    StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -330,7 +332,9 @@ class _BambooMapState extends State<BambooMap>
               left: 34,
               child: Column(
                 children: [
-                  stopbutton(),
+                  if (stopwatch.status == Status.running ||
+                      stopwatch.status == Status.paused)
+                    stopbutton(),
                   const SizedBox(height: 15),
                   Center(child: StopwatchWidget()),
                 ],

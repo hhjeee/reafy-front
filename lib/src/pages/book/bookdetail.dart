@@ -4,9 +4,10 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/book_memo.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/components/delete_book.dart';
-import 'package:reafy_front/src/components/modify_book.dart';
+import 'package:reafy_front/src/components/dialog/delete_book.dart';
+import 'package:reafy_front/src/components/dialog/modify_book.dart';
 import 'package:reafy_front/src/components/new_book_memo.dart';
+import 'package:reafy_front/src/dto/bookshelf_dto.dart';
 import 'package:reafy_front/src/pages/book/bookhistory.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
@@ -142,26 +143,29 @@ class _BookDetailPageState extends State<BookDetailPage> {
                       ],
                     ),
                     //SizedBox(height: 18.0),
-                    IconButton(
-                      padding: EdgeInsets.only(left: 26),
-                      icon: isFavorite
-                          ? ImageData(IconsPath.favorite,
-                              isSvg: true, width: 22, height: 22)
-                          : ImageData(IconsPath.nonFavorite,
-                              isSvg: true, width: 22, height: 22),
-                      onPressed: () async {
-                        try {
-                          await updateBookshelfBookFavorite(
-                              bookDetails.bookshelfBookId);
-                          setState(() {
-                            isFavorite = !isFavorite;
-                          });
-                          Provider.of<BookShelfProvider>(context, listen: false)
-                              .fetchData();
-                        } catch (e) {
-                          print('에러 발생: $e');
-                        }
-                      },
+                    Padding(
+                      padding: EdgeInsets.only(left: 13),
+                      child: IconButton(
+                        icon: isFavorite
+                            ? ImageData(IconsPath.favorite,
+                                isSvg: true, width: 22, height: 22)
+                            : ImageData(IconsPath.nonFavorite,
+                                isSvg: true, width: 22, height: 22),
+                        onPressed: () async {
+                          try {
+                            await updateBookshelfBookFavorite(
+                                bookDetails.bookshelfBookId);
+                            setState(() {
+                              isFavorite = !isFavorite;
+                            });
+                            Provider.of<BookShelfProvider>(context,
+                                    listen: false)
+                                .fetchData();
+                          } catch (e) {
+                            print('에러 발생: $e');
+                          }
+                        },
+                      ),
                     ),
                     _book_info(bookDetails),
                     SizedBox(height: 27.0),
@@ -246,7 +250,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
               width: size.width - 90,
               height: 33,
               decoration: BoxDecoration(
-                color: Color(0xffB3B3B3), //TODO
+                color: Color(0xff63B865),
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
@@ -473,7 +477,7 @@ class ProgressIndicator extends StatelessWidget {
 
     double balloonLeftPosition(double progressPercent) {
       int filledBars = (progressPercent / 10).floor();
-      return filledBars * (30 + 4) - 20;
+      return filledBars * (30 + 4) - 23;
     }
 
     int calculateLeftOffset(int pagesRead) {
