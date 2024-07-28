@@ -240,9 +240,9 @@ class _BambooMapState extends State<BambooMap>
                   ),
                   child: Center(
                     child: Text(
-                      "독서 마치기", //"이제 그만 읽을래요",
+                      "이제 그만 읽을래요!", //"독서 마치기"
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: 14,
                         fontWeight: FontWeight.w700,
                         color: black,
                       ),
@@ -272,6 +272,7 @@ class _BambooMapState extends State<BambooMap>
     }
 
     final size = MediaQuery.of(context).size;
+    StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -330,7 +331,9 @@ class _BambooMapState extends State<BambooMap>
               left: 34,
               child: Column(
                 children: [
-                  stopbutton(),
+                  if (stopwatch.status == Status.running ||
+                      stopwatch.status == Status.paused)
+                    stopbutton(),
                   const SizedBox(height: 15),
                   Center(child: StopwatchWidget()),
                 ],

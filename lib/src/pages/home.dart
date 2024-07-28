@@ -226,9 +226,9 @@ class _HomeState extends State<Home>
                   ),
                   child: Center(
                     child: Text(
-                      "독서 마치기", //"이제 그만 읽을래요",
+                      "이제 그만 읽을래요!", //"독서 마치기"
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: 14,
                         fontWeight: FontWeight.w700,
                         color: black,
                       ),
