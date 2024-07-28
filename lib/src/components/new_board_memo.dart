@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_picker.dart';
-import 'package:reafy_front/src/models/memo.dart';
+import 'package:reafy_front/src/dto/bookshelf_dto.dart';
+import 'package:reafy_front/src/dto/memo_dto.dart';
 import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
@@ -27,7 +28,7 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
   int currentLength = 0;
   ValueNotifier<bool> isLoading = ValueNotifier(false);
 
-  List<ReadingBookInfo> books = [];
+  List<ReadingBookInfoDto> books = [];
   int? selectedBookId;
   List<String> memoTags = [];
   String? selectedImagePath;
@@ -208,7 +209,7 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
                   underline: Container(),
                   value: selectedBookId,
                   selectedItemBuilder: (BuildContext context) {
-                    return books.map<Widget>((ReadingBookInfo book) {
+                    return books.map<Widget>((ReadingBookInfoDto book) {
                       return Padding(
                           padding: EdgeInsets.symmetric(
                               vertical: 2.0, horizontal: 10.0),
@@ -226,7 +227,7 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
                               )));
                     }).toList();
                   },
-                  items: books.map((ReadingBookInfo book) {
+                  items: books.map((ReadingBookInfoDto book) {
                     return DropdownMenuItem<int>(
                       value: book.bookshelfBookId,
                       child: Padding(

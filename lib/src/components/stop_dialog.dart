@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/app.dart';
 import 'package:reafy_front/src/components/done.dart';
+import 'package:reafy_front/src/dto/bookshelf_dto.dart';
+import 'package:reafy_front/src/dto/history_dto.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/provider/time_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';
@@ -16,7 +18,7 @@ class StopDialog extends StatefulWidget {
 }
 
 class _StopDialogState extends State<StopDialog> {
-  List<ReadingBookInfo> books = [];
+  List<ReadingBookInfoDto> books = [];
   int? selectedBookId;
   bool _isStartPageValid = true;
   bool _isEndPageValid = true;
@@ -210,7 +212,7 @@ class _StopDialogState extends State<StopDialog> {
                         underline: Container(),
                         value: selectedBookId,
                         selectedItemBuilder: (BuildContext context) {
-                          return books.map<Widget>((ReadingBookInfo book) {
+                          return books.map<Widget>((ReadingBookInfoDto book) {
                             return Padding(
                                 padding: EdgeInsets.symmetric(
                                     vertical: 2.0, horizontal: 10.0),
@@ -228,7 +230,7 @@ class _StopDialogState extends State<StopDialog> {
                                     )));
                           }).toList();
                         },
-                        items: books.map((ReadingBookInfo book) {
+                        items: books.map((ReadingBookInfoDto book) {
                           return DropdownMenuItem<int>(
                             value: book.bookshelfBookId,
                             child: Padding(

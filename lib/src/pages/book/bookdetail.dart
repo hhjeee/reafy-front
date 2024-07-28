@@ -7,6 +7,7 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/components/delete_book.dart';
 import 'package:reafy_front/src/components/modify_book.dart';
 import 'package:reafy_front/src/components/new_book_memo.dart';
+import 'package:reafy_front/src/dto/bookshelf_dto.dart';
 import 'package:reafy_front/src/pages/book/bookhistory.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';

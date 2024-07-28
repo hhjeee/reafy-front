@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/image_picker.dart';
-import 'package:reafy_front/src/models/memo.dart';
+import 'package:reafy_front/src/dto/bookshelf_dto.dart';
+import 'package:reafy_front/src/dto/memo_dto.dart';
 import 'package:reafy_front/src/provider/memo_provider.dart';
 import 'package:reafy_front/src/repository/memo_repository.dart';
 import 'package:reafy_front/src/utils/constants.dart';
@@ -28,7 +29,7 @@ class _newBookMemoState extends State<newBookMemo> {
   DateTime selectedDate = DateTime.now();
   int currentLength = 0;
 
-  List<ReadingBookInfo> books = [];
+  List<ReadingBookInfoDto> books = [];
   int? selectedBookId;
   List<String> memoTags = [];
   // File? imageFile;

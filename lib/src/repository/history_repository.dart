@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:reafy_front/src/dto/history_dto.dart';
 import 'package:reafy_front/src/utils/api.dart';
 
 final Dio authdio = authDio().getDio();
@@ -54,32 +55,6 @@ Future<dynamic> getBookshelfBookRecentHistory(int bookshelfbookId) async {
       }
     }
     throw e;
-  }
-}
-
-// 독서 기록 저장
-class CreateUserBookHistoryDto {
-  int? bookshelfBookId;
-  int? startPage;
-  int? endPage;
-  int duration;
-  int remainedTimer;
-
-  CreateUserBookHistoryDto(
-      {required this.bookshelfBookId,
-      required this.startPage,
-      required this.endPage,
-      required this.duration,
-      required this.remainedTimer});
-
-  Map<String, dynamic> toJson() {
-    return {
-      'bookshelfBookId': bookshelfBookId,
-      'startPage': startPage,
-      'endPage': endPage,
-      'duration': duration,
-      'remainedTimer': remainedTimer,
-    };
   }
 }
 

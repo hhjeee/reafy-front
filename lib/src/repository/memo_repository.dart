@@ -1,44 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:reafy_front/src/models/memo.dart';
+import 'package:reafy_front/src/dto/memo_dto.dart';
+import 'package:reafy_front/src/dto/memo_dto.dart';
 import 'package:reafy_front/src/utils/api.dart';
 import 'package:path/path.dart' as path;
 
 final Dio authdio = authDio().getDio();
-
-class MemoResDto {
-  final int totalItems;
-  final int currentItems;
-  final int totalPages;
-  final int currentPage;
-  final List<Memo> items;
-
-  MemoResDto({
-    required this.totalItems,
-    required this.currentItems,
-    required this.totalPages,
-    required this.currentPage,
-    required this.items,
-  });
-
-  factory MemoResDto.fromJson(Map<String, dynamic> json) {
-    return MemoResDto(
-      totalItems: json['totalItems'],
-      currentItems: json['currentItems'],
-      totalPages: json['totalPages'],
-      currentPage: json['currentPage'],
-      items: List<Memo>.from(json['item'].map((item) => Memo.fromJson(item))),
-    );
-  }
-  factory MemoResDto.empty() {
-    return MemoResDto(
-      totalItems: 0,
-      currentItems: 0,
-      totalPages: 0,
-      currentPage: 0,
-      items: [],
-    );
-  }
-}
 
 //모든 메모 가져오기
 Future<MemoResDto> getMemoList(int page) async {

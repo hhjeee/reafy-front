@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:reafy_front/src/utils/api.dart';
 
 final Dio authdio = authDio().getDio();
+
 Future<List<int>> getAchievedQuests() async {
   DateTime now = DateTime.now();
   String formattedDate = DateFormat('yyyy-MM-dd').format(now);

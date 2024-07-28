@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:reafy_front/src/utils/api.dart';
 
 final Dio authdio = authDio().getDio();
+
 Future<Map<String, dynamic>> getRemainingTime() async {
   try {
     final response = await authdio.get(
