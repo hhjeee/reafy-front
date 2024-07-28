@@ -40,16 +40,16 @@ class Team extends StatelessWidget {
               SizedBox(height: 46.0),
               Container(
                 margin: EdgeInsets.only(left: 36.0),
-                child: _introduction(),
+                child: _introduction(size),
               ),
-              SizedBox(height: 60.0),
-              _member(),
+              SizedBox(height: size.height * 0.05),
+              _member(size),
               Spacer(),
               Align(
                 alignment: Alignment.bottomRight,
                 child: Container(
                     width: size.width,
-                    height: size.height * 0.7,
+                    height: size.height * 0.5,
                     child: Image.asset(
                       IconsPath.team_img,
                       fit: BoxFit.cover,
@@ -63,7 +63,7 @@ class Team extends StatelessWidget {
   }
 }
 
-Widget _introduction() {
+Widget _introduction(Size size) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -71,7 +71,7 @@ Widget _introduction() {
         "안녕하세요,",
         style: TextStyle(
             color: Color(0xff333333),
-            fontSize: 24,
+            fontSize: size.width * 0.05,
             fontWeight: FontWeight.w400),
       ),
       Row(
@@ -81,21 +81,21 @@ Widget _introduction() {
             "저희는 ",
             style: TextStyle(
                 color: Color(0xff333333),
-                fontSize: 24,
+                fontSize: size.width * 0.05,
                 fontWeight: FontWeight.w400),
           ),
           Text(
             "팀 Devkor",
             style: TextStyle(
                 color: Color(0xff333333),
-                fontSize: 24,
+                fontSize: size.width * 0.05,
                 fontWeight: FontWeight.w800),
           ),
           Text(
             "입니다!",
             style: TextStyle(
                 color: Color(0xff333333),
-                fontSize: 24,
+                fontSize: size.width * 0.05,
                 fontWeight: FontWeight.w400),
           ),
         ],
@@ -104,7 +104,7 @@ Widget _introduction() {
   );
 }
 
-Widget _front_dev() {
+Widget _front_dev(Size size) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
@@ -112,7 +112,7 @@ Widget _front_dev() {
         "Front-end",
         style: TextStyle(
             color: Color(0xff333333),
-            fontSize: 14,
+            fontSize: size.width * 0.03,
             fontWeight: FontWeight.w700),
       ),
       SizedBox(height: 8.0),
@@ -120,21 +120,21 @@ Widget _front_dev() {
         "김지호",
         style: TextStyle(
             color: Color(0xff333333),
-            fontSize: 12,
+            fontSize: size.width * 0.03,
             fontWeight: FontWeight.w400),
       ),
       Text(
         "윤현지",
         style: TextStyle(
             color: Color(0xff333333),
-            fontSize: 12,
+            fontSize: size.width * 0.03,
             fontWeight: FontWeight.w400),
       ),
     ],
   );
 }
 
-Widget _back_dev() {
+Widget _back_dev(Size size) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
@@ -142,7 +142,7 @@ Widget _back_dev() {
         "Back-end",
         style: TextStyle(
             color: Color(0xff333333),
-            fontSize: 14,
+            fontSize: size.width * 0.03,
             fontWeight: FontWeight.w700),
       ),
       SizedBox(height: 8.0),
@@ -150,21 +150,21 @@ Widget _back_dev() {
         "박정환",
         style: TextStyle(
             color: Color(0xff333333),
-            fontSize: 12,
+            fontSize: size.width * 0.03,
             fontWeight: FontWeight.w400),
       ),
       Text(
         "황정민",
         style: TextStyle(
             color: Color(0xff333333),
-            fontSize: 12,
+            fontSize: size.width * 0.03,
             fontWeight: FontWeight.w400),
       ),
     ],
   );
 }
 
-Widget _designer() {
+Widget _designer(Size size) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
@@ -172,7 +172,7 @@ Widget _designer() {
         "Designer",
         style: TextStyle(
             color: Color(0xff333333),
-            fontSize: 14,
+            fontSize: size.width * 0.03,
             fontWeight: FontWeight.w700),
       ),
       SizedBox(height: 8.0),
@@ -180,28 +180,28 @@ Widget _designer() {
         "김민채",
         style: TextStyle(
             color: Color(0xff333333),
-            fontSize: 12,
+            fontSize: size.width * 0.03,
             fontWeight: FontWeight.w400),
       ),
       Text(
         "김지유",
         style: TextStyle(
             color: Color(0xff333333),
-            fontSize: 12,
+            fontSize: size.width * 0.03,
             fontWeight: FontWeight.w400),
       ),
     ],
   );
 }
 
-Widget _member() {
+Widget _member(Size size) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Container(
-        width: 98,
-        height: 88,
-        padding: EdgeInsets.only(top: 12.0),
+        width: size.width * 0.25,
+        height: size.width * 0.25,
+        padding: EdgeInsets.symmetric(vertical: size.width * 0.04),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Color(0xFFFAF9F7),
@@ -214,13 +214,13 @@ Widget _member() {
             ),
           ],
         ),
-        child: _front_dev(),
+        child: _front_dev(size),
       ),
       Container(
-        width: 98,
-        height: 88,
-        margin: EdgeInsets.only(left: 12.0, right: 12.0),
-        padding: EdgeInsets.only(top: 12.0),
+        width: size.width * 0.25,
+        height: size.width * 0.25,
+        margin: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+        padding: EdgeInsets.symmetric(vertical: size.width * 0.04),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Color(0xFFFAF9F7),
@@ -233,12 +233,12 @@ Widget _member() {
             ),
           ],
         ),
-        child: _back_dev(),
+        child: _back_dev(size),
       ),
       Container(
-        width: 98,
-        height: 88,
-        padding: EdgeInsets.only(top: 12.0),
+        width: size.width * 0.25,
+        height: size.width * 0.25,
+        padding: EdgeInsets.symmetric(vertical: size.width * 0.04),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Color(0xFFFAF9F7),
@@ -251,7 +251,7 @@ Widget _member() {
             ),
           ],
         ),
-        child: _designer(),
+        child: _designer(size),
       )
     ],
   );

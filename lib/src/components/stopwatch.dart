@@ -90,22 +90,22 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
       }
     }
 
-    Widget _ButtonbyStatus(Status status) {
+    Widget _ButtonbyStatus(Status status, Size size) {
       switch (status) {
         case Status.running:
           return Image.asset('assets/images/runbutton.png',
-              width: 54, height: 54);
+              width: size.width * 0.13, height: size.width * 0.13);
         case Status.paused:
           return Image.asset('assets/images/pausebutton.png',
-              width: 54, height: 54);
+              width: size.width * 0.13, height: size.width * 0.13);
         case Status.stopped:
         default:
           return Image.asset('assets/images/stopbutton.png',
-              width: 54, height: 54);
+              width: size.width * 0.13, height: size.width * 0.13);
       }
     }
 
-    Widget _displayButton(Status status) {
+    Widget _displayButton(Status status, Size size) {
       double leftPosition = 0;
 
       switch (status) {
@@ -120,8 +120,8 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
       }
 
       return Container(
-        width: 78,
-        height: 50,
+        width: size.width * 0.2,
+        height: size.height * 0.06,
         margin: EdgeInsets.fromLTRB(0, 0, 8, 0),
         child: Stack(children: [
           Center(
@@ -129,7 +129,7 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
               borderRadius: BorderRadius.circular(21),
               child: Container(
                 width: 68,
-                height: 26,
+                height: size.height * 0.03,
                 color: disabled_box, // Replace with actual color
               ),
             ),
@@ -139,10 +139,10 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
                 milliseconds: 300), // Set your desired animation duration
             curve: Curves.easeInOut, // Use the curve you prefer
             left: leftPosition,
-            top: -4,
+            top: -5,
             child: Container(
               child: Center(
-                child: _ButtonbyStatus(status),
+                child: _ButtonbyStatus(status, size),
               ),
             ),
           )
@@ -151,10 +151,11 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
     }
 
     return Consumer<StopwatchProvider>(builder: (context, stopwatch, child) {
+      final size = MediaQuery.of(context).size;
       return Container(
           child: Container(
-        width: 338,
-        height: 50,
+        width: size.width * 0.87,
+        height: size.height * 0.06,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25.0),
           color: Color(0xfffaf9f7),
@@ -172,7 +173,7 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(
-                    width: 200,
+                    width: size.width * 0.5,
                     margin: EdgeInsets.only(left: 40.0),
                     child: _TextbyStatus(stopwatch.status)),
                 GestureDetector(
@@ -182,7 +183,7 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
                         Get.to(() => BambooMap());
                       }
                     },
-                    child: _displayButton(stopwatch.status))
+                    child: _displayButton(stopwatch.status, size))
               ]),
         ),
       ));

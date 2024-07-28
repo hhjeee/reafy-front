@@ -211,6 +211,8 @@ class _BambooMapState extends State<BambooMap>
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     Widget stopbutton() {
       return Center(
           child: GestureDetector(
@@ -224,8 +226,8 @@ class _BambooMapState extends State<BambooMap>
                 );
               },
               child: Container(
-                  width: 338,
-                  height: 50,
+                  width: size.width * 0.87,
+                  height: size.height * 0.06,
                   margin: EdgeInsets.only(top: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25.0),
@@ -271,7 +273,6 @@ class _BambooMapState extends State<BambooMap>
       });
     }
 
-    final size = MediaQuery.of(context).size;
     StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
     return Scaffold(
         extendBodyBehindAppBar: true,

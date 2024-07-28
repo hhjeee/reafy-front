@@ -127,16 +127,17 @@ class _HomeState extends State<Home>
             child: Stack(children: [
               ImageData(
                 IconsPath.home_bubble,
-                width: 170,
-                height: 130,
+                width: size.width * 0.43,
+                height: size.height * 0.15,
               ),
               Container(
-                  padding: EdgeInsets.only(left: 20),
-                  width: 170,
-                  height: 110,
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(left: size.width * 0.04),
+                  width: size.width * 0.43,
+                  height: size.height * 0.13,
                   child: Center(
                       child: Transform.scale(
-                    scale: 1.0, // Adjust scale factor as needed
+                    scale: 1.0,
                     child: Lottie.asset(
                       'assets/lottie/Memo.json',
                       width: 70,
@@ -156,11 +157,6 @@ class _HomeState extends State<Home>
 
               Get.to(() => BambooMap());
 
-/*
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => BambooMap()),
-              ).then((_) {*/
               setState(() {
                 final stopwatchProvider =
                     Provider.of<StopwatchProvider>(context, listen: false);
@@ -171,13 +167,13 @@ class _HomeState extends State<Home>
             child: Stack(children: [
               ImageData(
                 IconsPath.home_bubble_yellow,
-                width: 170,
-                height: 130,
+                width: size.width * 0.43,
+                height: size.height * 0.15,
               ),
               Container(
-                  padding: EdgeInsets.only(top: 25),
-                  width: 170,
-                  height: 110,
+                  padding: EdgeInsets.only(top: size.height * 0.03),
+                  width: size.width * 0.43,
+                  height: size.height * 0.13,
                   child: Center(
                       child: Column(children: [
                     ImageData(
@@ -197,7 +193,7 @@ class _HomeState extends State<Home>
       ]);
     }
 
-    Widget _stopbutton() {
+    Widget _stopbutton(Size size) {
       return Center(
           child: GestureDetector(
               onTap: () {
@@ -210,8 +206,8 @@ class _HomeState extends State<Home>
                 );
               },
               child: Container(
-                  width: 338,
-                  height: 50,
+                  width: size.width * 0.87,
+                  height: size.height * 0.06,
                   margin: EdgeInsets.only(top: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25.0),
@@ -236,7 +232,7 @@ class _HomeState extends State<Home>
                   ))));
     }
 
-    Widget _time(todayTime, totalTime) {
+    Widget _time(todayTime, totalTime, size) {
       String displayTodayTime;
       if (todayTime != null) {
         if (todayTime >= 3600) {
@@ -276,9 +272,9 @@ class _HomeState extends State<Home>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 166,
-              height: 60,
-              padding: EdgeInsets.only(left: 10.0),
+              width: size.width * 0.425,
+              height: size.height * 0.07,
+              padding: EdgeInsets.only(left: size.width * 0.025),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
                 color: Color(0xfffaf9f7),
@@ -294,8 +290,10 @@ class _HomeState extends State<Home>
               child: Row(
                 children: [
                   ImageData(IconsPath.today,
-                      isSvg: true, width: 44, height: 44),
-                  SizedBox(width: 10.0),
+                      isSvg: true,
+                      width: size.width * 0.1,
+                      height: size.width * 0.1),
+                  SizedBox(width: size.width * 0.025),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -319,11 +317,11 @@ class _HomeState extends State<Home>
                 ],
               ),
             ),
-            SizedBox(width: 6),
+            SizedBox(width: size.width * 0.02),
             Container(
-              width: 166,
-              height: 60,
-              padding: EdgeInsets.only(left: 10.0),
+              width: size.width * 0.425,
+              height: size.height * 0.07,
+              padding: EdgeInsets.only(left: size.width * 0.025),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
                 color: Color(0xfffaf9f7),
@@ -339,8 +337,10 @@ class _HomeState extends State<Home>
               child: Row(
                 children: [
                   ImageData(IconsPath.total,
-                      isSvg: true, width: 44, height: 44),
-                  SizedBox(width: 10.0),
+                      isSvg: true,
+                      width: size.width * 0.1,
+                      height: size.width * 0.1),
+                  SizedBox(width: size.width * 0.025),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -388,10 +388,9 @@ class _HomeState extends State<Home>
     }
 
     Widget _buildCharacter() {
-      // Replace with your character widget
       return Container(
-        width: 186,
-        height: 248,
+        width: size.width * 0.47,
+        height: size.height * 0.3,
         child: ImageData(stopwatch.status == Status.running
             ? IconsPath.character_reading
             : IconsPath.character),
@@ -523,93 +522,92 @@ class _HomeState extends State<Home>
                             return Center(
                                 child: Container(
                                     width: size.width,
-                                    height: 332,
+                                    height: size.height * 0.4,
                                     child: Stack(
                                       children: [
                                         //// Rug
                                         Positioned(
-                                          top: 276,
-                                          left: 104,
+                                          top: size.height * 0.34,
+                                          left: size.width * 0.25,
                                           child: Container(
-                                            width: 186,
-                                            height: 36,
+                                            width: size.width * 0.5,
+                                            height: size.height * 0.04,
                                             child: ImageData(
                                                 itemPlacementProvider
                                                     .rug.imagePath,
-                                                width: 186,
-                                                height: 36),
+                                                width: size.width * 0.5,
+                                                height: size.height * 0.04),
                                           ),
                                         ),
                                         // Shadow
                                         Positioned(
-                                          top:
-                                              190, // Adjust position based on the animation value
-                                          left: 102,
+                                          top: size.height * 0.22,
+                                          left: size.width * 0.26,
                                           child: _shadow(),
                                         ),
 
                                         //// BookShelf
                                         Positioned(
-                                          top: 28,
-                                          left: 13,
+                                          top: size.height * 0.032,
+                                          left: size.width * 0.03,
                                           child: Container(
-                                              width: 110,
-                                              height: 230,
+                                              width: size.width * 0.28,
+                                              height: size.height * 0.27,
                                               child: ImageData(
                                                   itemPlacementProvider
                                                       .bookshelf.imagePath,
-                                                  width: 110,
-                                                  height: 230)),
+                                                  width: size.width * 0.28,
+                                                  height: size.height * 0.27)),
                                         ),
                                         // Character
                                         Positioned(
-                                          top: 64 +
-                                              _floatingAnimation!
-                                                  .value, // Adjust position based on the animation value
-                                          left: (SizeConfig.screenWidth - 186) /
-                                              2, //102,
+                                          top: size.height * 0.075 +
+                                              _floatingAnimation!.value,
+                                          left: (SizeConfig.screenWidth -
+                                                  size.width * 0.47) /
+                                              2,
                                           child: _buildCharacter(),
                                         ),
                                         //// Clock
                                         Positioned(
-                                          left: 165,
+                                          left: size.width * 0.42,
                                           top: 0,
                                           child: Container(
-                                              width: 64,
-                                              height: 64,
+                                              width: size.width * 0.16,
+                                              height: size.height * 0.075,
                                               child: ImageData(
                                                   itemPlacementProvider
                                                       .clock.imagePath,
-                                                  width: 64,
-                                                  height: 64)),
+                                                  width: size.width * 0.16,
+                                                  height: size.height * 0.075)),
                                         ),
                                         //// Window
                                         Positioned(
-                                          top: 34,
-                                          right: 13,
+                                          top: size.height * 0.04,
+                                          right: size.width * 0.03,
                                           child: Container(
-                                            width: 100,
-                                            height: 100,
+                                            width: size.width * 0.25,
+                                            height: size.height * 0.12,
                                             child: ImageData(
                                               itemPlacementProvider
                                                   .window.imagePath,
-                                              width: 100,
-                                              height: 100,
+                                              width: size.width * 0.25,
+                                              height: size.height * 0.12,
                                             ),
                                           ),
                                         ),
                                         //// Others
                                         Positioned(
-                                          right: 23,
-                                          top: 148,
+                                          right: size.width * 0.058,
+                                          top: size.height * 0.18,
                                           child: Container(
-                                            width: 90,
-                                            height: 110,
+                                            width: size.width * 0.23,
+                                            height: size.height * 0.13,
                                             child: ImageData(
                                                 itemPlacementProvider
                                                     .others.imagePath,
-                                                width: 90,
-                                                height: 110),
+                                                width: size.width * 0.23,
+                                                height: size.height * 0.13),
                                           ),
                                         ),
                                       ],
@@ -633,9 +631,9 @@ class _HomeState extends State<Home>
                             child: Column(
                               children: [
                                 stopwatch.status == Status.running
-                                    ? _stopbutton()
+                                    ? _stopbutton(size)
                                     : _time(timeProvider.todayTime,
-                                        timeProvider.totalTime),
+                                        timeProvider.totalTime, size),
                                 const SizedBox(height: 15),
                                 Center(child: StopwatchWidget()),
                               ],
