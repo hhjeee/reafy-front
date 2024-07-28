@@ -81,16 +81,24 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
                 ? ImageData(IconsPath.check_green, isSvg: true, width: 44)
                 : ImageData(IconsPath.trash_can, isSvg: true, width: 20),
             onPressed: () {
-              setState(() {
-                isEditMode = !isEditMode;
-              });
-              if (!isEditMode) {
+              if (isEditMode &&
+                  selectedBooksProvider.selectedBooks.length > 0) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return DeleteDialog();
+                    return DeleteDialog(
+                      onConfirmDelete: () {
+                        setState(() {
+                          isEditMode = false; // 삭제 모드 비활성화
+                        });
+                      },
+                    );
                   },
                 );
+              } else {
+                setState(() {
+                  isEditMode = !isEditMode;
+                });
               }
             },
           ),

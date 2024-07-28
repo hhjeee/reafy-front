@@ -80,16 +80,24 @@ class _C_BookShelfState extends State<Category_BookShelf>
                     isSvg: true, width: 44, height: 44)
                 : ImageData(IconsPath.trash_can, isSvg: true),
             onPressed: () {
-              setState(() {
-                isEditMode = !isEditMode;
-              });
-              if (!isEditMode) {
+              if (isEditMode &&
+                  selectedBooksProvider.selectedBooks.length > 0) {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return DeleteDialog();
+                    return DeleteDialog(
+                      onConfirmDelete: () {
+                        setState(() {
+                          isEditMode = false;
+                        });
+                      },
+                    );
                   },
                 );
+              } else {
+                setState(() {
+                  isEditMode = !isEditMode;
+                });
               }
             },
           ),

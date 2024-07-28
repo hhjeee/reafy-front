@@ -7,6 +7,11 @@ import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 
 class DeleteDialog extends StatefulWidget {
+  final Function onConfirmDelete;
+
+  const DeleteDialog({Key? key, required this.onConfirmDelete})
+      : super(key: key);
+
   @override
   _DeleteDialogState createState() => _DeleteDialogState();
 }
@@ -83,13 +88,11 @@ class _DeleteDialogState extends State<DeleteDialog> {
                         .fetchData();
 
                     Navigator.pop(context);
+                    widget.onConfirmDelete();
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return DoneDialog(onDone: () {
-                          BottomNavController.to.goToBookShelf();
-                          Navigator.pop(context);
-                        });
+                        return DoneDialog(onDone: () {});
                       },
                     );
                   } catch (e) {
