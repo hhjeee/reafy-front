@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:reafy_front/src/components/done.dart';
+import 'package:reafy_front/src/components/dialog/done.dart';
 import 'package:reafy_front/src/controller/bottom_nav_controller.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 import 'package:reafy_front/src/repository/bookshelf_repository.dart';

@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:reafy_front/src/components/stop_dialog.dart';
+import 'package:reafy_front/src/components/dialog/stop_dialog.dart';
 import 'package:reafy_front/src/components/stopwatch.dart';
 import 'package:reafy_front/src/pages/home.dart';
 import 'package:reafy_front/src/app.dart';

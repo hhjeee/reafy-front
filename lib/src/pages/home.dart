@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:lottie/lottie.dart';
 import 'package:reafy_front/src/components/image_data.dart';
-import 'package:reafy_front/src/components/stop_dialog.dart';
+import 'package:reafy_front/src/components/dialog/stop_dialog.dart';
 import 'package:reafy_front/src/pages/board.dart';
 import 'package:reafy_front/src/pages/itemshop.dart';
 import 'package:reafy_front/src/components/stopwatch.dart';

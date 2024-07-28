@@ -8,7 +8,7 @@ class Team extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    //final bottomPadding = MediaQuery.of(context).padding.bottom;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xfffaf9f7),
@@ -44,13 +44,12 @@ class Team extends StatelessWidget {
               ),
               SizedBox(height: 60.0),
               _member(),
-              // SizedBox(height: 80.0),
               Spacer(),
               Align(
                 alignment: Alignment.bottomRight,
                 child: Container(
                     width: size.width,
-                    height: 365,
+                    height: size.height * 0.7,
                     child: Image.asset(
                       IconsPath.team_img,
                       fit: BoxFit.cover,
@@ -131,55 +130,6 @@ Widget _front_dev() {
             fontSize: 12,
             fontWeight: FontWeight.w400),
       ),
-      /*
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            "김지호",
-            style: TextStyle(
-                color: Color(0xff333333),
-                fontSize: 12,
-                fontWeight: FontWeight.w400),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: ImageData(
-              IconsPath.team_link,
-              isSvg: true,
-              width: 14,
-              height: 13.646,
-            ),
-            padding: EdgeInsets.only(left: 10.0),
-            constraints: BoxConstraints(),
-          ),
-        ],
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "윤현지",
-            style: TextStyle(
-                color: Color(0xff333333),
-                fontSize: 12,
-                fontWeight: FontWeight.w400),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: ImageData(
-              IconsPath.team_link,
-              isSvg: true,
-              width: 14,
-              height: 13.646,
-            ),
-            padding: EdgeInsets.only(left: 10.0),
-            constraints: BoxConstraints(),
-          ),
-        ],
-      ),
-   */
     ],
   );
 }
@@ -210,54 +160,6 @@ Widget _back_dev() {
             fontSize: 12,
             fontWeight: FontWeight.w400),
       ),
-      /*
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "박정환",
-            style: TextStyle(
-                color: Color(0xff333333),
-                fontSize: 12,
-                fontWeight: FontWeight.w400),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: ImageData(
-              IconsPath.team_link,
-              isSvg: true,
-              width: 14,
-              height: 13.646,
-            ),
-            padding: EdgeInsets.only(left: 10.0),
-            constraints: BoxConstraints(),
-          ),
-        ],
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "황정민",
-            style: TextStyle(
-                color: Color(0xff333333),
-                fontSize: 12,
-                fontWeight: FontWeight.w400),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: ImageData(
-              IconsPath.team_link,
-              isSvg: true,
-              width: 14,
-              height: 13.646,
-            ),
-            padding: EdgeInsets.only(left: 10.0),
-            constraints: BoxConstraints(),
-          ),
-        ],
-      ),
-  */
     ],
   );
 }
@@ -288,54 +190,6 @@ Widget _designer() {
             fontSize: 12,
             fontWeight: FontWeight.w400),
       ),
-      /*
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "김민채",
-            style: TextStyle(
-                color: Color(0xff333333),
-                fontSize: 12,
-                fontWeight: FontWeight.w400),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: ImageData(
-              IconsPath.team_link,
-              isSvg: true,
-              width: 14,
-              height: 13.646,
-            ),
-            padding: EdgeInsets.only(left: 10.0),
-            constraints: BoxConstraints(),
-          ),
-        ],
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "김지유",
-            style: TextStyle(
-                color: Color(0xff333333),
-                fontSize: 12,
-                fontWeight: FontWeight.w400),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: ImageData(
-              IconsPath.team_link,
-              isSvg: true,
-              width: 14,
-              height: 13.646,
-            ),
-            padding: EdgeInsets.only(left: 10.0),
-            constraints: BoxConstraints(),
-          ),
-        ],
-      ),
-   */
     ],
   );
 }

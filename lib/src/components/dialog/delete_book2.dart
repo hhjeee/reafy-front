@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reafy_front/src/components/done.dart';
+import 'package:reafy_front/src/components/dialog/done.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/provider/selectedbooks_provider.dart';
 import 'package:reafy_front/src/provider/state_book_provider.dart';

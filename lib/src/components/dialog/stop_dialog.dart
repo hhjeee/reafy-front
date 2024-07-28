@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/app.dart';
-import 'package:reafy_front/src/components/done.dart';
+import 'package:reafy_front/src/components/dialog/done.dart';
 import 'package:reafy_front/src/dto/bookshelf_dto.dart';
 import 'package:reafy_front/src/dto/history_dto.dart';
 import 'package:reafy_front/src/provider/stopwatch_provider.dart';

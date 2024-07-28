@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reafy_front/src/components/done.dart';
+import 'package:reafy_front/src/components/dialog/done.dart';
 import 'package:reafy_front/src/components/image_data.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
