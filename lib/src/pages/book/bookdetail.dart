@@ -246,7 +246,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
               width: size.width - 90,
               height: 33,
               decoration: BoxDecoration(
-                color: Color(0xffB3B3B3), //TODO
+                color: Color(0xff63B865),
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
@@ -473,7 +473,7 @@ class ProgressIndicator extends StatelessWidget {
 
     double balloonLeftPosition(double progressPercent) {
       int filledBars = (progressPercent / 10).floor();
-      return filledBars * (30 + 4) - 20;
+      return filledBars * (30 + 4) - 23;
     }
 
     int calculateLeftOffset(int pagesRead) {
