@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:reafy_front/src/utils/api.dart';
 
 final Dio authdio = authDio().getDio();
+
 // 독서 기록 조회
 Future<Map<String, dynamic>> getBookshelfBookHistory(int bookshelfbookId,
     {int? cursorId}) async {
@@ -18,10 +19,6 @@ Future<Map<String, dynamic>> getBookshelfBookHistory(int bookshelfbookId,
     }
   } catch (e) {
     if (e is DioError) {
-      // if (e.response?.statusCode == 404) {
-      //   //404인 경우 빈 리스트 반환
-      //   return [];
-      // }
       if (e.response?.statusCode == 404) {
         // 404인 경우 빈 리스트와 기본 메타 데이터 반환
         return {

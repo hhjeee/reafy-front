@@ -42,18 +42,8 @@ class MemoResDto {
 
 //모든 메모 가져오기
 Future<MemoResDto> getMemoList(int page) async {
-  //final ApiClient apiClient = ApiClient();
-  //final dio = Dio();
-  //SharedPreferences prefs = await SharedPreferences.getInstance();
-  //final String? userToken = prefs.getString('token');
-  ////var dio = await authDio();
   try {
-    final response = await authdio.get('${baseUrl}/memo?page=$page'
-        //options: Options(headers: {
-        //  'Authorization': 'Bearer $userToken',
-        //  'Content-Type': 'application/json'
-        //})
-        );
+    final response = await authdio.get('${baseUrl}/memo?page=$page');
 
     if (response.statusCode == 200) {
       var memoResults = MemoResDto.fromJson(response.data);
@@ -68,11 +58,6 @@ Future<MemoResDto> getMemoList(int page) async {
 
 //해시태그 메모 가져오기
 Future<List<dynamic>> getMemoListByHashtag(String hashtag, int page) async {
-  //final dio = Dio();
-  //SharedPreferences prefs = await SharedPreferences.getInstance();
-  //final String? userToken = prefs.getString('token');
-  //final ApiClient apiClient = ApiClient();
-  //var dio = await authDio();
   try {
     final response = await authdio.get(
       '${baseUrl}/memo/hashtag',
@@ -80,10 +65,6 @@ Future<List<dynamic>> getMemoListByHashtag(String hashtag, int page) async {
         'hashtag': hashtag,
         'page': page,
       },
-      //options: Options(headers: {
-      //  'Authorization': 'Bearer $userToken',
-      //  'Content-Type': 'application/json',
-      //})
     );
 
     if (response.statusCode == 200) {
@@ -99,21 +80,12 @@ Future<List<dynamic>> getMemoListByHashtag(String hashtag, int page) async {
 
 // 해당 책에 쓰인 모든 메모 가져오기
 Future<MemoResDto> getMemoListByBookId(int bookshelfBookId, int page) async {
-  //final dio = Dio();
-  //SharedPreferences prefs = await SharedPreferences.getInstance();
-  //final String? userToken = prefs.getString('token');
-  //final ApiClient apiClient = ApiClient();
-  //var dio = await authDio();
   try {
     final response =
         await authdio.get('${baseUrl}/memo/bookshelfbook', queryParameters: {
       'bookshelfBookId': bookshelfBookId,
       'page': page,
     }, options: Options(
-      //headers: {
-      //  'Authorization': 'Bearer $userToken',
-      //  'Content-Type': 'application/json',
-      //},
       validateStatus: (status) {
         // 404때 throw 하지 않도록
         return status! < 500;
@@ -135,18 +107,9 @@ Future<MemoResDto> getMemoListByBookId(int bookshelfBookId, int page) async {
 
 // 특정 메모의 정보 받아오기
 Future<Map<String, dynamic>> getMemoDetails(int memoId) async {
-  //final ApiClient apiClient = ApiClient();
-  //final dio = Dio();
-  //SharedPreferences prefs = await SharedPreferences.getInstance();
-  //final String? userToken = prefs.getString('token');
-  //var dio = await authDio();
   try {
     final response = await authdio.get(
       '${baseUrl}/memo/$memoId',
-      //options: Options(headers: {
-      //  'Authorization': 'Bearer $userToken',
-      //  'Content-Type': 'application/json',
-      //})
     );
 
     if (response.statusCode == 200) {
@@ -163,9 +126,6 @@ Future<Map<String, dynamic>> getMemoDetails(int memoId) async {
 // 메모 작성
 Future<Memo> createMemo(int bookshelfBookId, String content, int page,
     String hashtag, String? file) async {
-  //var dio = await authDio();
-  //final ApiClient apiClient = ApiClient();
-
   Map<String, dynamic> formDataMap = {
     'bookshelfBookId': bookshelfBookId,
     'content': content,
@@ -193,11 +153,6 @@ Future<Memo> createMemo(int bookshelfBookId, String content, int page,
     final response = await authdio.post(
       '${baseUrl}/memo',
       data: formData,
-      //options: Options(
-      //   headers: {
-      //    'Authorization': 'Bearer $userToken',
-      //  },
-      //)
     );
 
     if (response.statusCode == 201) {
@@ -214,8 +169,6 @@ Future<Memo> createMemo(int bookshelfBookId, String content, int page,
 // 메모 수정
 Future<Memo> updateMemo(
     int memoId, String content, int page, String hashtag, String? file) async {
-  //final ApiClient apiClient = ApiClient();
-  //var dio = await authDio();
   Map<String, dynamic> formDataMap = {
     'memoId': memoId,
     'content': content,
@@ -243,11 +196,6 @@ Future<Memo> updateMemo(
     final response = await authdio.put(
       '${baseUrl}/memo/$memoId',
       data: formData,
-      //options: Options(
-      //headers: {
-      //  'Authorization': 'Bearer $apiClient.token',
-      //},
-      //)
     );
     if (response.statusCode == 200) {
       final Memo updatedMemo = Memo.fromJson(response.data);
@@ -262,8 +210,6 @@ Future<Memo> updateMemo(
 
 // 메모 삭제
 Future<void> deleteMemoById(int memoid) async {
-  //var dio = await authDio();
-  //final ApiClient apiClient = ApiClient();
   try {
     final response = await authdio.delete(
       '${baseUrl}/memo/$memoid',

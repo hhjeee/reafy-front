@@ -142,26 +142,29 @@ class _BookDetailPageState extends State<BookDetailPage> {
                       ],
                     ),
                     //SizedBox(height: 18.0),
-                    IconButton(
-                      padding: EdgeInsets.only(left: 26),
-                      icon: isFavorite
-                          ? ImageData(IconsPath.favorite,
-                              isSvg: true, width: 22, height: 22)
-                          : ImageData(IconsPath.nonFavorite,
-                              isSvg: true, width: 22, height: 22),
-                      onPressed: () async {
-                        try {
-                          await updateBookshelfBookFavorite(
-                              bookDetails.bookshelfBookId);
-                          setState(() {
-                            isFavorite = !isFavorite;
-                          });
-                          Provider.of<BookShelfProvider>(context, listen: false)
-                              .fetchData();
-                        } catch (e) {
-                          print('에러 발생: $e');
-                        }
-                      },
+                    Padding(
+                      padding: EdgeInsets.only(left: 13),
+                      child: IconButton(
+                        icon: isFavorite
+                            ? ImageData(IconsPath.favorite,
+                                isSvg: true, width: 22, height: 22)
+                            : ImageData(IconsPath.nonFavorite,
+                                isSvg: true, width: 22, height: 22),
+                        onPressed: () async {
+                          try {
+                            await updateBookshelfBookFavorite(
+                                bookDetails.bookshelfBookId);
+                            setState(() {
+                              isFavorite = !isFavorite;
+                            });
+                            Provider.of<BookShelfProvider>(context,
+                                    listen: false)
+                                .fetchData();
+                          } catch (e) {
+                            print('에러 발생: $e');
+                          }
+                        },
+                      ),
                     ),
                     _book_info(bookDetails),
                     SizedBox(height: 27.0),

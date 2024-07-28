@@ -64,7 +64,7 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
           onPressed: () {
             selectedBooksProvider.clearBooks();
             Provider.of<BookShelfProvider>(context, listen: false).fetchData();
-            Get.back(); // Navigator.pop 대신 Get.back()을 사용합니다.
+            Get.back();
           },
         ),
         title: Text(

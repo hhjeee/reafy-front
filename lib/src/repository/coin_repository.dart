@@ -2,9 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:reafy_front/src/utils/api.dart';
 
 final Dio authdio = authDio().getDio();
+
 //coin 조회
 Future<int> getUserCoin() async {
-  //var dio = await authDio();
   try {
     final res = await authdio.get('${baseUrl}/coin');
 
@@ -24,8 +24,6 @@ Future<int> getUserCoin() async {
 
 //coin 증가, 차감
 Future<void> updateCoin(int coin, bool isPlus) async {
-  ////var dio = await authDio();
-  ////final ApiClient apiClient = ApiClient();
   try {
     final Map<String, dynamic> reqData = {
       'coin': coin,
