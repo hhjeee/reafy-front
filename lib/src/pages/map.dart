@@ -329,7 +329,7 @@ class _BambooMapState extends State<BambooMap>
             ),
             Positioned(
               bottom: 51,
-              left: 34,
+              left: (size.width * 0.13) / 2,
               child: Column(
                 children: [
                   if (stopwatch.status == Status.running ||
@@ -355,8 +355,9 @@ class InfoWidget extends StatelessWidget {
   Widget build(
     BuildContext context,
   ) {
+    final size = MediaQuery.of(context).size;
     return Container(
-        width: 166,
+        width: (size.width * 0.87 - 8) / 2,
         height: 62,
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         decoration: BoxDecoration(
@@ -512,7 +513,6 @@ class _TopBarWidgetState extends State<TopBarWidget> {
           showProgressBar: false,
         );
 
-        //코인 업데이트
         int currentCoin =
             Provider.of<CoinProvider>(context, listen: false).coins;
         Provider.of<CoinProvider>(context, listen: false)
@@ -520,9 +520,6 @@ class _TopBarWidgetState extends State<TopBarWidget> {
 
         setState(() {
           widget.questStatus[hours] = QuestStatus.completed;
-          // var newQuestStatus = Map<int, QuestStatus>.from(widget.questStatus);
-          // newQuestStatus[hours] = QuestStatus.completed;
-          // widget.questStatus = newQuestStatus;
         });
       } catch (e) {
         print(e);
@@ -532,8 +529,9 @@ class _TopBarWidgetState extends State<TopBarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Positioned(
-        top: 120,
+        top: size.height * 0.125,
         child: Container(
             width: SizeConfig.screenWidth,
             padding: EdgeInsets.symmetric(horizontal: 24),
@@ -543,7 +541,7 @@ class _TopBarWidgetState extends State<TopBarWidget> {
                 Consumer<StopwatchProvider>(
                     builder: (context, stopwatch, child) {
                   return Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         InfoWidget(
                             title: "내가 가진 대나무",
@@ -559,7 +557,7 @@ class _TopBarWidgetState extends State<TopBarWidget> {
                 }),
                 SizedBox(height: 8),
                 Container(
-                  //width: size.width - 40,
+                  width: size.width * 0.87,
                   height: 56,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
@@ -588,7 +586,7 @@ class _TopBarWidgetState extends State<TopBarWidget> {
                                 child: Container(
                                   margin: EdgeInsets.only(right: 8),
                                   alignment: Alignment.center,
-                                  width: 50,
+                                  width: size.width * 0.2,
                                   height: 44,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(11),

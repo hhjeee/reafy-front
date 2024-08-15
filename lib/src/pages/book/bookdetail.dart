@@ -494,6 +494,7 @@ class ProgressIndicator extends StatelessWidget {
       }
     }
 
+    final size = MediaQuery.of(context).size;
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -547,8 +548,7 @@ class ProgressIndicator extends StatelessWidget {
                         color: index < (progressPercent / 10).floor()
                             ? Color(0xff63B865)
                             : Color(0xff63B865).withOpacity(0.3),
-                        width: 35,
-                        height: 13,
+                        width: (size.width - 52 - 40) / 10,
                       ),
                     );
                   }),

@@ -117,7 +117,7 @@ class _ItemShopState extends State<ItemShop> {
   Widget build(BuildContext context) {
     final itemPlacementProvider =
         Provider.of<ItemPlacementProvider>(context, listen: false);
-
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -196,68 +196,65 @@ class _ItemShopState extends State<ItemShop> {
             Consumer<ItemPlacementProvider>(
                 builder: (context, itemPlacementProvider, child) {
               return Container(
-                width: 281.17,
-                height: 241,
-                //decoration: BoxDecoration(color: Color(0xffd9d9d9)),
+                width: size.width,
+                height: size.height * 0.3,
                 child: Stack(children: [
                   Positioned(
-                    top: 64.89,
-                    left: 84.98,
+                    top: (size.height * 0.3) * 0.15,
+                    left: size.width * 0.5 / 2,
                     child: Container(
-                      width: 114.32,
-                      height: 160.666,
+                      width: size.width * 0.5,
+                      height: (size.height * 0.3) * 0.8,
                       child: ImageData(IconsPath.character),
                     ),
                   ),
                   Positioned(
-                    top: 21.63,
+                    top: (size.height * 0.3) * 0.1,
                     child: Container(
                         //bookshelf
-                        width: 77.243,
-                        height: 177.66,
+                        width: size.width * 0.4,
+                        height: (size.height * 0.3) * 0.7,
                         child: ImageData(
                             itemPlacementProvider.bookshelf.imagePath)),
                   ),
                   Positioned(
                     //clock
-                    left: 117.42,
+                    left: size.width * 0.8 / 2,
                     child: Container(
-                        width: 49.436,
-                        height: 49.436,
+                        width: size.width * 0.2,
+                        height: (size.height * 0.3) * 0.2,
                         child:
                             ImageData(itemPlacementProvider.clock.imagePath)),
                   ),
                   Positioned(
-                    left: 203.93,
-                    top: 26.26,
+                    left: size.width * 0.7,
+                    top: (size.height * 0.3) * 0.1,
                     child: Container(
                       //window
-                      width: 77.243,
-                      height: 77.243,
+                      width: size.width * 0.2,
+                      height: (size.height * 0.3) * 0.3,
                       child: ImageData(itemPlacementProvider.window.imagePath),
                     ),
                   ),
                   Positioned(
-                    left: 203.93,
-                    top: 114.32,
+                    left: size.width * 0.7,
+                    top: (size.height * 0.3) * 0.5,
                     child: Container(
                       //others
-                      width: 69.519,
-                      height: 84.968,
+                      width: size.width * 0.2,
+                      height: (size.height * 0.3) * 0.3,
                       child: ImageData(itemPlacementProvider.others.imagePath),
                     ),
                   ),
                   Positioned(
-                    top: 213.19,
-                    left: 70.29,
+                    top: (size.height * 0.3) * 0.9,
+                    left: size.width * 0.6 / 2,
                     child: Container(
                       //rug
-                      width: 143.637,
-                      height: 27.808,
+                      width: size.width * 0.4,
+                      height: (size.height * 0.3) * 0.1,
                       child: ImageData(
                         itemPlacementProvider.rug.imagePath,
-                        width: 143.637,
-                        height: 27.808,
                       ),
                     ),
                   ),
@@ -265,7 +262,7 @@ class _ItemShopState extends State<ItemShop> {
               );
             }),
             Container(
-              margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
+              margin: EdgeInsets.only(top: 15.0, bottom: 20.0),
               height: 1.0,
               color: Color(0xffd9d9d9),
             ),

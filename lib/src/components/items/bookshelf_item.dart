@@ -94,12 +94,11 @@ class _ItemBookshelfState extends State<ItemBookshelf> {
   Widget build(BuildContext context) {
     final itemPlacementProvider =
         Provider.of<ItemPlacementProvider>(context, listen: false);
-
+    final size = MediaQuery.of(context).size;
     return Container(
       child: SingleChildScrollView(
-        //physics: AlwaysScrollableScrollPhysics(),
         child: Container(
-          height: 400,
+          height: size.height * 0.45,
           padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 16.0),
           child: GridView.builder(
             shrinkWrap: true,
@@ -107,7 +106,7 @@ class _ItemBookshelfState extends State<ItemBookshelf> {
               crossAxisCount: 4, //그리드 열 수
               crossAxisSpacing: 14.0, //가로 간격
               mainAxisSpacing: 16.0, // 세로 간격
-              childAspectRatio: 0.6,
+              childAspectRatio: 0.7,
             ),
             itemCount: itemDataList.length,
             itemBuilder: (context, index) {
@@ -149,6 +148,7 @@ class _ItemBookshelfState extends State<ItemBookshelf> {
                   }
                 },
                 child: GridItem(
+                  context,
                   index,
                   itemIndex,
                   isSelected,
@@ -165,12 +165,14 @@ class _ItemBookshelfState extends State<ItemBookshelf> {
 }
 
 Widget GridItem(
+  BuildContext context,
   int index,
   ItemData itemIndex,
   bool isSelected,
   String selectedImagePath, {
   required bool isButtonEnabled,
 }) {
+  final size = MediaQuery.of(context).size;
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.center,
@@ -179,8 +181,8 @@ Widget GridItem(
         alignment: Alignment.center,
         children: [
           Container(
-            width: 79,
-            height: 79,
+            width: (size.width - 50 - 42) / 4,
+            height: (size.width - 50 - 42) / 4,
             decoration: BoxDecoration(
                 color: isSelected && isButtonEnabled
                     ? Color(0xfffffd747).withOpacity(0.1)
@@ -207,8 +209,8 @@ Widget GridItem(
           ),
           if (!isButtonEnabled)
             Container(
-              width: 79,
-              height: 79,
+              width: (size.width - 50 - 42) / 4,
+              height: (size.width - 50 - 42) / 4,
               decoration: BoxDecoration(
                 color: Color(0xff000000).withOpacity(0.25),
                 borderRadius: BorderRadius.circular(10),
@@ -217,8 +219,8 @@ Widget GridItem(
             ),
           if (index == 0)
             Container(
-              width: 79,
-              height: 79,
+              width: (size.width - 50 - 42) / 4,
+              height: (size.width - 50 - 42) / 4,
               child: ImageData(IconsPath.select_nothing),
             ),
         ],
