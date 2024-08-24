@@ -164,32 +164,27 @@ class AuthProvider extends ChangeNotifier {
         //    clientId: "kAppleOAuthClientId",
         //    redirectUri: Uri.parse('${baseUrl}/auth/apple'))
       );
-      /*
-      debugPrint("userIdentifier : ${appleCredential.userIdentifier}");
+      debugPrint("email : ${appleCredential.email}");
+      debugPrint("givenName : ${appleCredential.givenName}");
+      debugPrint("familyName : ${appleCredential.familyName}");
+      /*debugPrint("userIdentifier : ${appleCredential.userIdentifier}");
       debugPrint("givenName : ${appleCredential.givenName}");
       debugPrint("familyName : ${appleCredential.familyName}");
       debugPrint("authorizationCode : ${appleCredential.authorizationCode}");
       debugPrint("email : ${appleCredential.email}");
       debugPrint("identityToken : ${appleCredential.identityToken}");
-      debugPrint("state : ${appleCredential.state}");
-      */
+      debugPrint("state : ${appleCredential.state}");*/
+
       // TODO Prepare the data to send to your backend server
-      final data = {
-        'userIdentifier': appleCredential.userIdentifier,
-        'authorizationCode': appleCredential.authorizationCode,
-        'identityToken': appleCredential.identityToken,
-        //'email': appleCredential.email,
-        //'fullName': appleCredential.givenName + ' ' + appleCredential.familyName,
-        "vendor": "apple"
-      };
 
       final res = await Dio().post(
-        '${baseUrl}/authentication/apple', //TODO
-        data: data,
+        '${baseUrl}/authentication/login', //TODO
+        data: {"accessToken": appleCredential.identityToken, "vendor": "apple"},
         options: Options(headers: {
           'Content-Type': 'application/json',
         }),
       );
+
       if (res.statusCode == 200 || res.statusCode == 201) {
         // TODO : 백 응답 방식에 따라 파싱
         var refreshToken =
@@ -201,7 +196,7 @@ class AuthProvider extends ChangeNotifier {
         await setToken(res.data["accessToken"]);
         //notifyListeners();
         //setLoginStatus(true);
-        // TODO nickname 설정
+        //TODO nickname 설정
         prefs.setString('nickname', appleCredential.email!);
       } else {
         // Handle sign-in failure

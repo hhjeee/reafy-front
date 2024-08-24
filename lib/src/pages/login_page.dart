@@ -58,39 +58,38 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _KaKaologinbuttonClick(BuildContext context) async {
-    final connectivityController = context.read<ConnectivityController>();
+    //final connectivityController = context.read<ConnectivityController>();
 
-    if (connectivityController.isConnected) {
-      final authProvider = context.read<AuthProvider>();
-      await authProvider.loginWithKaKao();
+    //if (connectivityController.isConnected) {
+    final authProvider = context.read<AuthProvider>();
+    await authProvider.loginWithKaKao();
 
-      if (await authProvider.performAuthenticatedAction()) {
-        print("isNewUser :${authProvider.isNewUser}");
-        Get.off(() => authProvider.isNewUser ? OnBoardingPage() : App());
-      } else {
-        Get.off(() => LoginPage());
-      }
+    if (await authProvider.performAuthenticatedAction()) {
+      print("isNewUser :${authProvider.isNewUser}");
+      Get.off(() => authProvider.isNewUser ? OnBoardingPage() : App());
     } else {
-      showNetworkErrorSnackbar(context);
+      Get.off(() => LoginPage());
     }
+    //} else {
+    //showNetworkErrorSnackbar(context);
+    // }
   }
 
   void _AppleloginbuttonClick(BuildContext context) async {
-    final connectivityController = context.read<ConnectivityController>();
+    //final connectivityController = context.read<ConnectivityController>();
+    //#f (connectivityController.isConnected) {
+    final authProvider = context.read<AuthProvider>();
+    await authProvider.loginWithApple();
 
-    if (connectivityController.isConnected) {
-      final authProvider = context.read<AuthProvider>();
-      await authProvider.loginWithApple();
-
-      if (await authProvider.performAuthenticatedAction()) {
-        Get.off(() => authProvider.isNewUser ? OnBoardingPage() : App());
-      } else {
-        Get.off(() => LoginPage());
-      }
+    if (await authProvider.performAuthenticatedAction()) {
+      Get.off(() => authProvider.isNewUser ? OnBoardingPage() : App());
     } else {
-      //showNetworkErrorSnackbar(context);
-      //Get.off(() => LoginPage());
+      Get.off(() => LoginPage());
     }
+    //} else {
+    //showNetworkErrorSnackbar(context);
+    //Get.off(() => LoginPage());
+    //}
   }
 }
 
