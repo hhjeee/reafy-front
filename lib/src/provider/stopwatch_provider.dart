@@ -93,6 +93,7 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
       _timer?.cancel(); // 기존 타이머가 있다면 취소
       _timer = Timer.periodic(Duration(seconds: 1), (timer) async {
         _currentDuration = _currentDuration + Duration(seconds: 1);
+        updateRemainingTime();
         notifyListeners();
       });
     }
@@ -131,6 +132,7 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
     _currentDuration = Duration.zero;
 
     //TODO:updateRemainingTime();
+    //TODO:
     notifyListeners();
   }
 
@@ -179,6 +181,11 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
     }
     notifyListeners();
     return false;
+  }
+
+  void hideBambooNotification() {
+    showBambooNotification = false;
+    notifyListeners();
   }
 
   void decreaseItemCount() {
