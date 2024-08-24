@@ -5,9 +5,12 @@ import 'package:reafy_front/src/pages/book/bookshelf.dart';
 import 'package:reafy_front/src/pages/home.dart';
 import 'package:reafy_front/src/pages/mypage.dart';
 import 'package:get/get.dart';
+import 'package:reafy_front/src/provider/stopwatch_provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
 class App extends StatelessWidget {
+  //final StopwatchProvider stopwatchProvider = StopwatchProvider();
+
   @override
   Widget build(BuildContext context) {
     final BottomNavController bottomNavController =
