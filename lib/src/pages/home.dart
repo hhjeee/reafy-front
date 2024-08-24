@@ -29,7 +29,7 @@ class _HomeState extends State<Home>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   AnimationController? _floatingController;
   Animation<double>? _floatingAnimation;
-  late StopwatchProvider stopwatch;
+  // late StopwatchProvider stopwatch;
 
   int? userCoin;
   bool _isBambooSelected = false;
@@ -44,13 +44,12 @@ class _HomeState extends State<Home>
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await checkIfFirstLaunch();
     });
 
-    stopwatch = StopwatchProvider();
-    WidgetsBinding.instance.addObserver(stopwatch);
+    // stopwatch = StopwatchProvider();
+    // WidgetsBinding.instance.addObserver(stopwatch);
 
     _floatingController = AnimationController(
       vsync: this,
@@ -82,8 +81,8 @@ class _HomeState extends State<Home>
   @override
   void dispose() {
     _floatingController?.dispose();
-    WidgetsBinding.instance.removeObserver(stopwatch);
-    stopwatch.dispose();
+    // WidgetsBinding.instance.removeObserver(stopwatch);
+    // stopwatch.dispose();
     super.dispose();
   }
 
@@ -115,7 +114,7 @@ class _HomeState extends State<Home>
 
   @override
   Widget build(BuildContext context) {
-    StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
+    // StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
     final timeProvider = Provider.of<TimeProvider>(context);
     final size = MediaQuery.of(context).size;
     Widget _memo() {
@@ -154,14 +153,13 @@ class _HomeState extends State<Home>
         GestureDetector(
             onTap: () {
               onSelected();
-
               Get.to(() => BambooMap());
-
               setState(() {
-                final stopwatchProvider =
-                    Provider.of<StopwatchProvider>(context, listen: false);
+                //   final stopwatchProvider =
+                //       Provider.of<StopwatchProvider>(context, listen: false);
                 _isBambooSelected = false;
-                stopwatchProvider.showBambooNotification = false;
+                Provider.of<StopwatchProvider>(context)
+                    .hideBambooNotification();
               });
             },
             child: Stack(children: [
@@ -197,7 +195,7 @@ class _HomeState extends State<Home>
       return Center(
           child: GestureDetector(
               onTap: () {
-                stopwatch.pause();
+                Provider.of<StopwatchProvider>(context).pause();
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -391,9 +389,10 @@ class _HomeState extends State<Home>
       return Container(
         width: size.width * 0.47,
         height: size.height * 0.3,
-        child: ImageData(stopwatch.status == Status.running
-            ? IconsPath.character_reading
-            : IconsPath.character),
+        child: ImageData(
+            Provider.of<StopwatchProvider>(context).status == Status.running
+                ? IconsPath.character_reading
+                : IconsPath.character),
       );
     }
 
@@ -503,10 +502,10 @@ class _HomeState extends State<Home>
                         children: [
                           Spacer(),
                           Consumer<StopwatchProvider>(
-                            builder: (context, stopwatchProvider, child) {
-                              if (stopwatchProvider.itemCnt > 0 &&
+                            builder: (context, stopwatch, child) {
+                              if (stopwatch.itemCnt > 0 &&
                                   !_isBambooSelected &&
-                                  stopwatchProvider.showBambooNotification) {
+                                  stopwatch.showBambooNotification) {
                                 return _get_bamboo(onSelected: () {
                                   setState(() {
                                     _isBambooSelected = true;
@@ -630,7 +629,9 @@ class _HomeState extends State<Home>
                             targetBorderRadius: BorderRadius.circular(20),
                             child: Column(
                               children: [
-                                stopwatch.status == Status.running
+                                Provider.of<StopwatchProvider>(context)
+                                            .status ==
+                                        Status.running
                                     ? _stopbutton(size)
                                     : _time(timeProvider.todayTime,
                                         timeProvider.totalTime, size),

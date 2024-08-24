@@ -36,8 +36,8 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    StopwatchProvider stopwatch =
-        Provider.of<StopwatchProvider>(context, listen: true);
+    // StopwatchProvider stopwatch =
+    //     Provider.of<StopwatchProvider>(context, listen: true);
 
     int defaultTime = 15 * 60;
     int timer = RemainingTimerData?['timer'] as int? ?? defaultTime;
@@ -46,48 +46,31 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
       timer = defaultTime;
     }
 
-    void _tapStopwatch(Status status) async {
-      switch (status) {
-        case Status.paused:
-          stopwatch.resume();
-          fetchTimerData();
-          break;
-
-        case Status.running:
-          stopwatch.pause();
-          fetchTimerData();
-          break;
-
-        case Status.stopped:
-          stopwatch.run();
-          fetchTimerData();
-          break;
-      }
-    }
-
     Widget _TextbyStatus(Status status) {
-      switch (status) {
-        case Status.running:
-          return Text(
-              "${stopwatch.elapsedTimeString}", //\t ${stopwatch.lifestatus}",
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 2.5,
-                  color: green));
-        case Status.paused:
-          return Text(stopwatch.elapsedTimeString,
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 2.5,
-                  color: green)); // Replace with your desired text
-        case Status.stopped:
-        default:
-          return Text("독서 시작하기",
-              style: TextStyle(
-                  fontSize: 14, fontWeight: FontWeight.w700, color: black));
-      }
+      return Consumer<StopwatchProvider>(builder: (context, stopwatch, child) {
+        switch (status) {
+          case Status.running:
+            return Text(
+                "${stopwatch.elapsedTimeString}", //\t ${stopwatch.lifestatus}",
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 2.5,
+                    color: green));
+          case Status.paused:
+            return Text(stopwatch.elapsedTimeString,
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 2.5,
+                    color: green)); // Replace with your desired text
+          case Status.stopped:
+          default:
+            return Text("독서 시작하기",
+                style: TextStyle(
+                    fontSize: 14, fontWeight: FontWeight.w700, color: black));
+        }
+      });
     }
 
     Widget _ButtonbyStatus(Status status, Size size) {
@@ -178,7 +161,7 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
                     child: _TextbyStatus(stopwatch.status)),
                 GestureDetector(
                     onTap: () {
-                      _tapStopwatch(stopwatch.status);
+                      stopwatch.tapStopwatch(stopwatch.status);
                       if (stopwatch.status == Status.running) {
                         Get.to(() => BambooMap());
                       }
