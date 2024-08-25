@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:reafy_front/src/repository/timer_repository.dart';
 
 enum Status { running, paused, stopped }
 
@@ -8,20 +9,18 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   Duration _currentDuration = Duration.zero;
   Timer? _timer;
   DateTime? _lastTimeRecorded;
-  int _countdownsec = 15 * 60;
-  int _remainingsec = 0;
+  int _defaultTime = 15 * 60;
+  int _remainingsec = 0; //
   int _itemCnt = 0;
   bool _isfull = false;
   bool _addBamboo = false;
-  String _remainingTime = '00:00';
   bool showBambooNotification = false;
 
   int get remainingSec => _remainingsec;
-  int get countdownSec => _countdownsec;
   int get itemCnt => _itemCnt;
   bool get isFull => _isfull;
   bool get addBamboo => _addBamboo;
-  String get remainTimeString => _remainingTime;
+  String get remainTimeString => formatTime(_remainingsec, true);
   String get elapsedPausedTime => elapsedPausedTime;
   Status get status => _status;
   String get elapsedTimeString => formatTime(_currentDuration.inSeconds, false);
@@ -29,6 +28,7 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   StopwatchProvider() {
     print("StopwatchProvider created");
     WidgetsBinding.instance.addObserver(this); // 생명주기 감지자 등록
+    initTimer();
   }
 
   @override
@@ -36,6 +36,19 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this); // 생명주기 감지자 제거
     _timer?.cancel(); // 타이머 정지
     super.dispose();
+  }
+
+  Future<void> initTimer() async {
+    try {
+      // Fetch timer data from server
+      Map<String, dynamic> data = await getRemainingTime();
+      print("data['timer'] ${data['timer']}");
+      _remainingsec = data['timer'] as int? ?? _defaultTime;
+    } catch (e) {
+      print('Error fetching user timer data: $e');
+      _remainingsec = _defaultTime; // Default to 15 minutes if fetching fails
+    }
+    notifyListeners(); // Notify listeners to update UI
   }
 
   @override
@@ -67,11 +80,11 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
         }
         break;
       case AppLifecycleState.detached:
-        pause();
+        stop();
 
-        // fetchTimerData();
-        // stop();
-        //TODO: 종료할 경우 리셋?
+        // 캐시에 남기기
+        // TODO: 백 완료되면 남은 시간 서버로 보내기 ?
+        // 지금까지 읽은 시간 서버로 보내기 ?
         break;
       default:
         break;
@@ -86,7 +99,11 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
       _timer?.cancel(); // 기존 타이머가 있다면 취소
       _timer = Timer.periodic(Duration(seconds: 1), (timer) async {
         _currentDuration = _currentDuration + Duration(seconds: 1);
-        updateRemainingTime();
+        _remainingsec = _remainingsec - Duration(seconds: 1).inSeconds;
+        if (_remainingsec == 1) {
+          incrementItemCount();
+          _remainingsec = _defaultTime; // Reset timer
+        }
         notifyListeners();
       });
     }
@@ -99,9 +116,8 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
       _timer = null;
     }
     _status = Status.stopped;
-
-    //RESET
     _currentDuration = Duration.zero;
+
     //TODO:updateRemainingTime();
     //TODO:
 
@@ -142,15 +158,14 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
     }
   }
 
-  void updateRemainingTime() {
-    _remainingsec = _countdownsec - _currentDuration.inSeconds % _countdownsec;
-    if (_remainingsec == 1) {
-      incrementItemCount();
-      _remainingsec = _countdownsec;
-    }
-    _remainingTime = formatTime(_remainingsec, true);
-    notifyListeners();
-  }
+  // void updateRemainingTime() {
+  //   _remainingsec = _defaultTime - _currentDuration.inSeconds % _defaultTime;
+  //   if (_remainingsec == 1) {
+  //     incrementItemCount();
+  //     _remainingsec = _defaultTime; // Reset timer
+  //   }
+  //   notifyListeners();
+  // }
 
   bool incrementItemCount() {
     if (_itemCnt < 6) {
