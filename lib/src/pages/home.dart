@@ -30,11 +30,9 @@ class _HomeState extends State<Home>
   AnimationController? _floatingController;
   Animation<double>? _floatingAnimation;
   // late StopwatchProvider stopwatch;
-
   int? userCoin;
   bool _isBambooSelected = false;
   bool showBambooNotification = false;
-
   final GlobalKey keyBambooIcon = GlobalKey();
   final GlobalKey keyMapIcon = GlobalKey();
   final GlobalKey keyItemIcon = GlobalKey();

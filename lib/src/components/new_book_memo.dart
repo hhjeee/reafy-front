@@ -151,46 +151,56 @@ class _newBookMemoState extends State<newBookMemo> {
   Widget _memoeditor() {
     return Container(
       width: 343,
-      height: 201,
+      constraints: BoxConstraints(maxHeight: 190),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: white,
+        color: Colors.white,
       ),
-      child: Column(
+      child: Stack(
         children: [
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 13),
-              width: 317,
-              child: TextField(
-                onSubmitted: (value) {
-                  // 엔터 버튼을 눌렀을 때 실행될 함수
-                  updateMemoState();
-                },
-                maxLength: 500,
-                maxLines: null,
-                controller: memoController,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: '메모를 입력해 주세요.',
-                  hintStyle: TextStyle(
-                    color: Color(0xffb3b3b3),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
+          Column(
+            children: [
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 13),
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  width: 317,
+                  child: Scrollbar(
+                    child: SingleChildScrollView(
+                      child: TextField(
+                        maxLines: null, // 무한으로 라인 추가 가능
+                        controller: memoController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: '메모를 입력해 주세요.',
+                          hintStyle: TextStyle(
+                            color: Color(0xffb3b3b3),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        style: TextStyle(
+                            color: gray,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            height: 1.3),
+                        onChanged: (text) {
+                          setState(() {
+                            currentLength = text.length;
+                          });
+                        },
+                      ),
+                    ),
                   ),
                 ),
-                style: TextStyle(
-                    color: dark_gray,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    height: 1.3),
-                onChanged: (text) {
-                  setState(() {
-                    currentLength = text.length;
-                  });
-                },
               ),
-            ),
+            ],
+          ),
+          // 고정된 문자 카운터 위치
+          Positioned(
+            right: 20,
+            bottom: 5,
+            child: Text('$currentLength/500', style: TextStyle(fontSize: 12)),
           ),
         ],
       ),

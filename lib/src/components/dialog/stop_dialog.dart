@@ -459,9 +459,10 @@ class _StopDialogState extends State<StopDialog> {
                               await createUserBookHistory(historyDto);
 
                               context.read<StopwatchProvider>().stop();
-                              context
-                                  .read<StopwatchProvider>()
-                                  .updateElapsedTime(Duration.zero);
+                              // context
+                              //     .read<StopwatchProvider>()
+                              //     .updateElapsedTime(Duration.zero);
+
                               await Provider.of<TimeProvider>(context,
                                       listen: false)
                                   .getTimes();
