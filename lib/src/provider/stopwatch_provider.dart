@@ -4,36 +4,27 @@ import 'package:flutter/material.dart';
 enum Status { running, paused, stopped }
 
 class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
+  Status _status = Status.stopped;
+  Duration _currentDuration = Duration.zero;
+  Timer? _timer;
+  DateTime? _lastTimeRecorded;
   int _countdownsec = 15 * 60;
   int _remainingsec = 0;
   int _itemCnt = 0;
   bool _isfull = false;
   bool _addBamboo = false;
-  String _elapsedTime = '00:00:00';
   String _remainingTime = '00:00';
   bool showBambooNotification = false;
-
-//   DateTime? _pausedTime;
 
   int get remainingSec => _remainingsec;
   int get countdownSec => _countdownsec;
   int get itemCnt => _itemCnt;
   bool get isFull => _isfull;
   bool get addBamboo => _addBamboo;
-  // String get elapsedTimeString => _elapsedTime;
   String get remainTimeString => _remainingTime;
   String get elapsedPausedTime => elapsedPausedTime;
-//   Timer? _timer;
-/////TODO: 필요한 변수만 남기고 지우기
-
-  Status _status = Status.stopped;
-  Duration _currentDuration = Duration.zero;
-  Timer? _timer;
-  DateTime? _lastTimeRecorded;
-
   Status get status => _status;
-  String get elapsedTimeString =>
-      _currentDuration.toString().split('.').first; // 시간을 HH:MM:SS 형식으로 표시
+  String get elapsedTimeString => formatTime(_currentDuration.inSeconds, false);
 
   StopwatchProvider() {
     print("StopwatchProvider created");
@@ -76,8 +67,10 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
         }
         break;
       case AppLifecycleState.detached:
-        //pause();
-        stop();
+        pause();
+
+        // fetchTimerData();
+        // stop();
         //TODO: 종료할 경우 리셋?
         break;
       default:
@@ -106,7 +99,12 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
       _timer = null;
     }
     _status = Status.stopped;
-    reset();
+
+    //RESET
+    _currentDuration = Duration.zero;
+    //TODO:updateRemainingTime();
+    //TODO:
+
     notifyListeners();
   }
 
@@ -126,16 +124,6 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
     }
   }
 
-  void reset() {
-    print("RESET! ");
-    //RESET
-    _currentDuration = Duration.zero;
-
-    //TODO:updateRemainingTime();
-    //TODO:
-    notifyListeners();
-  }
-
   void tapStopwatch(Status status) {
     print("tapStopwatch");
     switch (status) {
@@ -148,8 +136,8 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
         // fetchTimerData();
         break;
       case Status.stopped:
-        run();
         // fetchTimerData();
+        run();
         break;
     }
   }
@@ -161,11 +149,6 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
       _remainingsec = _countdownsec;
     }
     _remainingTime = formatTime(_remainingsec, true);
-    notifyListeners();
-  }
-
-  void updateElapsedTime(Duration duration) {
-    _elapsedTime = formatTime(duration.inSeconds, false);
     notifyListeners();
   }
 
