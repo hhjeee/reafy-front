@@ -134,7 +134,7 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
     }
   }
 
-  Widget _datepicker(context) {
+  Widget datepicker(context) {
     return Container(
       height: 34,
       child: Row(
@@ -168,7 +168,7 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
     );
   }
 
-  Widget _bookselect() {
+  Widget bookselect() {
     return Container(
       height: 40,
       child: Row(
@@ -259,57 +259,116 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
     );
   }
 
-  Widget _memoeditor() {
+  Widget memoeditor() {
     return Container(
-        width: 343,
-        constraints: BoxConstraints(maxHeight: 190),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: white,
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
+      width: 343,
+      constraints: BoxConstraints(maxHeight: 190),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+      ),
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              Expanded(
+                child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 13),
                   padding: EdgeInsets.symmetric(vertical: 5),
                   width: 317,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextField(
-                          //maxLength: 500,
-                          maxLines: null,
-                          minLines: 1,
-                          controller: memoController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: '메모를 입력해 주세요.',
-                            hintStyle: TextStyle(
-                              color: Color(0xffb3b3b3),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
+                  child: Scrollbar(
+                    child: SingleChildScrollView(
+                      child: TextField(
+                        maxLines: null, // 무한으로 라인 추가 가능
+                        controller: memoController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: '메모를 입력해 주세요.',
+                          hintStyle: TextStyle(
+                            color: Color(0xffb3b3b3),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
                           ),
-                          style: TextStyle(
-                              color: dark_gray,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w400,
-                              height: 1.3),
-                          onChanged: (text) {
-                            setState(() {
-                              currentLength = text.length;
-                            });
-                          },
                         ),
-                        Align(
-                            alignment: Alignment.bottomRight,
-                            child: Text(currentLength.toString() + '/500'))
-                      ])),
-            ),
-          ],
-        ));
+                        style: TextStyle(
+                            color: gray,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            height: 1.3),
+                        onChanged: (text) {
+                          setState(() {
+                            currentLength = text.length;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          // 고정된 문자 카운터 위치
+          Positioned(
+            right: 20,
+            bottom: 5,
+            child: Text('$currentLength/500', style: TextStyle(fontSize: 12)),
+          ),
+        ],
+      ),
+    );
   }
+  // Widget _memoeditor() {
+  //   return Container(
+  //       width: 343,
+  //       constraints: BoxConstraints(maxHeight: 190),
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(10),
+  //         color: white,
+  //       ),
+  //       child: Column(
+  //         children: [
+  //           Expanded(
+  //             child: Container(
+  //                 margin: EdgeInsets.symmetric(horizontal: 13),
+  //                 padding: EdgeInsets.symmetric(vertical: 5),
+  //                 width: 317,
+  //                 child: Column(
+  //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                     children: [
+
+  //                       TextField(
+  //                         //maxLength: 500,
+  //                         maxLines: null,
+  //                         minLines: 1,
+  //                         controller: memoController,
+  //                         decoration: InputDecoration(
+  //                           border: InputBorder.none,
+  //                           hintText: '메모를 입력해 주세요.',
+  //                           hintStyle: TextStyle(
+  //                             color: Color(0xffb3b3b3),
+  //                             fontSize: 14,
+  //                             fontWeight: FontWeight.w400,
+  //                           ),
+  //                         ),
+  //                         style: TextStyle(
+  //                             color: dark_gray,
+  //                             fontSize: 15,
+  //                             fontWeight: FontWeight.w400,
+  //                             height: 1.3),
+  //                         onChanged: (text) {
+  //                           setState(() {
+  //                             currentLength = text.length;
+  //                           });
+  //                         },
+  //                       ),
+  //                       Align(
+  //                           alignment: Alignment.bottomRight,
+  //                           child: Text(currentLength.toString() + '/500'))
+  //                     ])),
+  //           ),
+  //         ],
+  //       ));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -334,11 +393,11 @@ class _NewBoardMemoState extends State<NewBoardMemo> {
             imagePath: selectedImagePath,
           ),
           SizedBox(height: 25),
-          _bookselect(),
+          bookselect(),
           SizedBox(height: 6.0),
-          _memoeditor(),
+          memoeditor(),
           SizedBox(height: 16.0),
-          _datepicker(context),
+          datepicker(context),
           TagWidget(
               onTagsUpdated: handleTagUpdate,
               onReset: resetTags,

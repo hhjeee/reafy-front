@@ -15,8 +15,6 @@ class StopwatchWidget extends StatefulWidget {
 
 class _StopwatchWidgetState extends State<StopwatchWidget> {
   Map<String, dynamic>? RemainingTimerData;
-  //bool isTimerUpdating = false;
-
   @override
   initState() {
     super.initState();
@@ -119,10 +117,10 @@ class _StopwatchWidgetState extends State<StopwatchWidget> {
           ),
           AnimatedPositioned(
             duration: Duration(
-                milliseconds: 300), // Set your desired animation duration
+                milliseconds: 50), // Set your desired animation duration
             curve: Curves.easeInOut, // Use the curve you prefer
             left: leftPosition,
-            top: -5,
+            top: -2,
             child: Container(
               child: Center(
                 child: _ButtonbyStatus(status, size),

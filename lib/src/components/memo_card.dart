@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:reafy_front/src/components/dialog/done.dart';
@@ -62,7 +63,15 @@ class _MemoCardState extends State<MemoCard> {
                 memo: widget.memo),
             if (widget.memo.imageURL != null &&
                 widget.memo.imageURL!.isNotEmpty)
-              MemoImage(imageUrl: widget.memo.imageURL!),
+              GestureDetector(
+                onTap: () => Get.to(() => FullScreenImagePage(
+                      imageUrl: widget.memo.imageURL,
+                    )),
+                child: MemoImage(imageUrl: memo.imageURL),
+              ),
+            // if (widget.memo.imageURL != null &&
+            //     widget.memo.imageURL!.isNotEmpty)
+            //   MemoImage(imageUrl: widget.memo.imageURL!),
             const SizedBox(height: 10),
             MemoDescription(content: widget.memo.content),
             const SizedBox(height: 10),
@@ -204,7 +213,11 @@ class MemoImage extends StatelessWidget {
     String fullImageUrl = (imageUrl ?? '');
     return imageUrl != null && imageUrl!.isNotEmpty
         ? GestureDetector(
-            onTap: () => showImageDialog(context, fullImageUrl),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        FullScreenImagePage(imageUrl: fullImageUrl))),
             child: Card(
               color: Color(0xffFAF9F7),
               elevation: 0,
@@ -227,28 +240,96 @@ class MemoImage extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-            backgroundColor: Colors.transparent,
-            content: Container(
-                color: Colors.transparent,
-                width: SizeConfig.screenWidth * 0.9,
-                height: SizeConfig.screenHeight * 0.6,
-                child: Stack(clipBehavior: Clip.hardEdge, children: [
-                  PhotoView(
-                    imageProvider: NetworkImage(imageUrl),
-                    backgroundDecoration:
-                        BoxDecoration(color: Colors.transparent),
-                  ),
-                  Positioned(
-                      top: 10,
-                      right: 10,
-                      child: GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Icon(Icons.cancel,
-                            color: Color(0xFFFFD747), size: 24),
-                      )),
-                ])));
+        return Dialog(
+          insetPadding: EdgeInsets.all(0), // Dialog를 전체 화면으로 확장
+          backgroundColor: Colors.transparent,
+          child: PhotoView(
+            imageProvider: NetworkImage(imageUrl),
+            backgroundDecoration: BoxDecoration(color: Colors.transparent),
+            minScale: PhotoViewComputedScale.contained,
+            maxScale: PhotoViewComputedScale.covered * 2,
+          ),
+        );
       },
+    );
+  }
+}
+
+class FullScreenImagePage extends StatelessWidget {
+  final String? imageUrl;
+  // final String? content; // 책 제목 또는 메모의 제목
+  // final String? date; // 날짜 정보
+
+  const FullScreenImagePage({
+    Key? key,
+    this.imageUrl,
+    // this.content,
+    // this.date,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black.withOpacity(0.5), // 어둡지만 투명한 배경
+      appBar: AppBar(
+        backgroundColor: dark_gray.withOpacity(0.2),
+        elevation: 0, // 앱바의 그림자 제거
+        leading: IconButton(
+          icon: Icon(Icons.close, color: white),
+          onPressed: () => Get.back(),
+        ),
+        title: Text(
+          '이미지 뷰어',
+          style: TextStyle(
+              color: white, fontWeight: FontWeight.w800, fontSize: 16),
+        ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: PhotoView(
+                imageProvider: NetworkImage(imageUrl!),
+                backgroundDecoration: BoxDecoration(
+                  color: Colors.transparent,
+                ),
+                minScale: PhotoViewComputedScale.contained,
+                maxScale: PhotoViewComputedScale.covered * 3,
+              ),
+            ),
+          ),
+          // if (content != null) // 설명 텍스트가 있는 경우만 표시
+          Container(
+              padding: EdgeInsets.all(20),
+              color: dark_gray.withOpacity(0.2), // 텍스트 영역의 배경색
+              width: double.infinity,
+              height: SizeConfig.screenHeight * 0.1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // TextDirection? textDirection,
+                children: [
+                  // Text(
+                  //   content ?? "null", //TODO: 진짜 책제목이 렌더링되도록
+                  //   style: TextStyle(
+                  //       color: Colors.white,
+                  //       fontSize: 16,
+                  //       fontWeight: FontWeight.w700),
+                  //   textAlign: TextAlign.start,
+                  // ),
+                  // SizedBox(height: 5),
+                  // Text(
+                  //   date ?? "null", //TODO: 진짜 날짜가 렌더링되도록
+                  //   style: TextStyle(
+                  //       color: white,
+                  //       fontSize: 12,
+                  //       fontWeight: FontWeight.w300),
+                  //   textAlign: TextAlign.start,
+                  // ),
+                ],
+              )),
+        ],
+      ),
     );
   }
 }
