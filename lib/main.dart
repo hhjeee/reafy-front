@@ -43,7 +43,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  StreamSubscription<ConnectivityResult>? _networkListener;
+  // StreamSubscription<ConnectivityResult>? _networkListener;
 
   @override
   void initState() {
@@ -70,8 +70,8 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (c) => CoinProvider()),
           ChangeNotifierProvider(create: (c) => MemoProvider()),
           ChangeNotifierProvider(create: (c) => TimeProvider()),
-          ChangeNotifierProvider(
-              create: (c) => ConnectivityController()..init()),
+          //   ChangeNotifierProvider(
+          //       create: (c) => ConnectivityController()..init()),
         ],
         child: ShowCaseWidget(builder: (context) {
           return GetMaterialApp(

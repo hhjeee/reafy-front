@@ -58,6 +58,17 @@ class _StopDialogState extends State<StopDialog> {
     fetchTimerData();
   }
 
+  Future<void> fetchTimerData() async {
+    try {
+      final data = await getRemainingTime();
+      setState(() {
+        remainedTimer = data;
+      });
+    } catch (e) {
+      print('Error fetching user timer data: $e');
+    }
+  }
+
   void getBookEndPage(int bookId) async {
     var data = await getBookshelfBookDetails(bookId);
     setState(() {
@@ -103,17 +114,6 @@ class _StopDialogState extends State<StopDialog> {
     updateButtonState();
   }
 
-  Future<void> fetchTimerData() async {
-    try {
-      final data = await getRemainingTime();
-      setState(() {
-        remainedTimer = data;
-      });
-    } catch (e) {
-      print('Error fetching user timer data: $e');
-    }
-  }
-
   int calculateRemainedTimer(int readingTime, {int? remainedTimer}) {
     if (remainedTimer != null) {
       // remainedTimer가 존재할 경우
@@ -132,400 +132,404 @@ class _StopDialogState extends State<StopDialog> {
 
   @override
   Widget build(BuildContext context) {
-    StopwatchProvider stopwatch = Provider.of<StopwatchProvider>(context);
-
-    return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        content: SingleChildScrollView(
-            child: Container(
-          //width: 320,
-          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(height: 30.0),
-              Text(
-                stopwatch.elapsedTimeString,
-                style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w800,
+    return Consumer<StopwatchProvider>(builder: (context, stopwatch, child) {
+      return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          content: SingleChildScrollView(
+              child: Container(
+            //width: 320,
+            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(height: 30.0),
+                Text(
+                  stopwatch.elapsedTimeString,
+                  style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
-              ),
-              SizedBox(height: 14.0),
-              const Text(
-                "독서 내용을 기록해주세요!",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
+                SizedBox(height: 14.0),
+                const Text(
+                  "독서 내용을 기록해주세요!",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-              SizedBox(height: 14.0),
-              Container(
-                alignment: Alignment.topLeft,
-                padding: EdgeInsets.only(top: 36.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Text(
-                          "읽은 책:",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xff666666),
-                          ),
-                        ),
-                        Spacer(),
-                        if (_isShelfEmpty)
-                          Text(
-                            '책장에 책을 추가해보세요 ',
-                            textAlign: TextAlign.center,
+                SizedBox(height: 14.0),
+                Container(
+                  alignment: Alignment.topLeft,
+                  padding: EdgeInsets.only(top: 36.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Text(
+                            "읽은 책:",
                             style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xff666666),
+                            ),
                           ),
-                      ],
-                    ),
-                    SizedBox(height: 8.0),
-                    Container(
-                      padding: EdgeInsets.all(2.0),
-                      //width: 266,
-                      height: 42,
-                      decoration: BoxDecoration(
-                        color: Color(0xffffffff),
-                        borderRadius: BorderRadius.circular(4),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 1.0,
-                            blurRadius: 7.0,
-                            offset: Offset(0, 2),
-                          ),
+                          Spacer(),
+                          if (_isShelfEmpty)
+                            Text(
+                              '책장에 책을 추가해보세요 ',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700),
+                            ),
                         ],
                       ),
-                      child: DropdownButton<int>(
-                        isExpanded: true,
-                        underline: Container(),
-                        value: selectedBookId,
-                        selectedItemBuilder: (BuildContext context) {
-                          return books.map<Widget>((ReadingBookInfoDto book) {
-                            return Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 2.0, horizontal: 10.0),
-                                child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      book.title,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xff666666),
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    )));
-                          }).toList();
-                        },
-                        items: books.map((ReadingBookInfoDto book) {
-                          return DropdownMenuItem<int>(
-                            value: book.bookshelfBookId,
-                            child: Padding(
-                              padding: const EdgeInsets.all(
-                                2.0,
-                              ),
-                              child: Text(
-                                book.title,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xff666666),
-                                ),
-                                overflow: TextOverflow.clip,
-                                maxLines: null,
-                                softWrap: true,
-                              ),
+                      SizedBox(height: 8.0),
+                      Container(
+                        padding: EdgeInsets.all(2.0),
+                        //width: 266,
+                        height: 42,
+                        decoration: BoxDecoration(
+                          color: Color(0xffffffff),
+                          borderRadius: BorderRadius.circular(4),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 1.0,
+                              blurRadius: 7.0,
+                              offset: Offset(0, 2),
                             ),
-                          );
-                        }).toList(),
-                        onChanged: _onBookChanged,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 20.0),
-                alignment: Alignment.topLeft,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Text(
-                          "읽은 페이지:",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xff666666),
-                          ),
+                          ],
                         ),
-                        Spacer(),
-                        if (!_isStartPageValid || !_isEndPageValid)
-                          Text(
-                            '숫자를 입력해주세요',
-                            textAlign: TextAlign.center,
+                        child: DropdownButton<int>(
+                          isExpanded: true,
+                          underline: Container(),
+                          value: selectedBookId,
+                          selectedItemBuilder: (BuildContext context) {
+                            return books.map<Widget>((ReadingBookInfoDto book) {
+                              return Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 2.0, horizontal: 10.0),
+                                  child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        book.title,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: Color(0xff666666),
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      )));
+                            }).toList();
+                          },
+                          items: books.map((ReadingBookInfoDto book) {
+                            return DropdownMenuItem<int>(
+                              value: book.bookshelfBookId,
+                              child: Padding(
+                                padding: const EdgeInsets.all(
+                                  2.0,
+                                ),
+                                child: Text(
+                                  book.title,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Color(0xff666666),
+                                  ),
+                                  overflow: TextOverflow.clip,
+                                  maxLines: null,
+                                  softWrap: true,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: _onBookChanged,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(top: 20.0),
+                  alignment: Alignment.topLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Text(
+                            "읽은 페이지:",
                             style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700),
-                          ),
-                      ],
-                    ),
-                    SizedBox(height: 8.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            //width: 120,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: Color(0xffffffff),
-                              borderRadius: BorderRadius.circular(4),
-                              border: !_isStartPageValid
-                                  ? Border.all(color: Colors.red, width: 2)
-                                  : null,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  spreadRadius: 1.0,
-                                  blurRadius: 7.0,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xff666666),
                             ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 12.0),
-                                  child: Text(
-                                    '시작',
-                                    style: TextStyle(
-                                        color: Color(0xff666666), fontSize: 13),
+                          ),
+                          Spacer(),
+                          if (!_isStartPageValid || !_isEndPageValid)
+                            Text(
+                              '숫자를 입력해주세요',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                        ],
+                      ),
+                      SizedBox(height: 8.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              //width: 120,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: Color(0xffffffff),
+                                borderRadius: BorderRadius.circular(4),
+                                border: !_isStartPageValid
+                                    ? Border.all(color: Colors.red, width: 2)
+                                    : null,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 1.0,
+                                    blurRadius: 7.0,
+                                    offset: Offset(0, 2),
                                   ),
-                                ),
-                                Expanded(
-                                  child: TextField(
-                                    controller: textController1,
-                                    onChanged: (_) {
-                                      updateButtonState();
-                                      _validatePageInput();
-                                    },
-                                    textAlign: TextAlign.right,
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      contentPadding:
-                                          EdgeInsets.symmetric(vertical: 14),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 12.0),
+                                    child: Text(
+                                      '시작',
+                                      style: TextStyle(
+                                          color: Color(0xff666666),
+                                          fontSize: 13),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 12.0),
-                                  child: Text(
-                                    'p',
-                                    style: TextStyle(
-                                        color: textController1.text.isNotEmpty
-                                            ? Color(0xff333333)
-                                            : Color(0xff666666),
-                                        fontSize: 16),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: textController1,
+                                      onChanged: (_) {
+                                        updateButtonState();
+                                        _validatePageInput();
+                                      },
+                                      textAlign: TextAlign.right,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        contentPadding:
+                                            EdgeInsets.symmetric(vertical: 14),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    child: Text(
+                                      'p',
+                                      style: TextStyle(
+                                          color: textController1.text.isNotEmpty
+                                              ? Color(0xff333333)
+                                              : Color(0xff666666),
+                                          fontSize: 16),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Container(
+                              width: 120,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: Color(0xffffffff),
+                                borderRadius: BorderRadius.circular(4),
+                                border: !_isEndPageValid
+                                    ? Border.all(color: Colors.red, width: 2)
+                                    : null,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 1.0,
+                                    blurRadius: 7.0,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 12.0),
+                                    child: Text(
+                                      '끝',
+                                      style: TextStyle(
+                                          color: Color(0xff666666),
+                                          fontSize: 13),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: textController2,
+                                      onChanged: (_) {
+                                        updateButtonState();
+                                        _validatePageInput();
+                                      },
+                                      textAlign: TextAlign.right,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        contentPadding:
+                                            EdgeInsets.symmetric(vertical: 14),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    child: Text(
+                                      'p',
+                                      style: TextStyle(
+                                          color: textController2.text.isNotEmpty
+                                              ? Color(0xff333333)
+                                              : Color(0xff666666),
+                                          fontSize: 16),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30.0),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: isButtonEnabled
+                          ? () async {
+                              int readingTime = parseTimeStringToSeconds(
+                                  stopwatch.elapsedTimeString);
+                              int? startPage =
+                                  int.tryParse(textController1.text);
+                              int? endPage = int.tryParse(textController2.text);
+
+                              if (startPage! > endPage!) {
+                                toastification.show(
+                                  context: context,
+                                  type: ToastificationType.error,
+                                  style: ToastificationStyle.flatColored,
+                                  title: Text('정확한 페이지를 입력해주세요'),
+                                  autoCloseDuration: const Duration(seconds: 2),
+                                  showProgressBar: false,
+                                );
+                              } else if (startPage > limitedEndPage! ||
+                                  endPage > limitedEndPage!) {
+                                toastification.show(
+                                  context: context,
+                                  type: ToastificationType.error,
+                                  style: ToastificationStyle.flatColored,
+                                  title: Text('책의 전체 페이지수를 초과할수 없어요'),
+                                  autoCloseDuration: const Duration(seconds: 2),
+                                  showProgressBar: false,
+                                );
+                              } else {
+                                CreateUserBookHistoryDto historyDto =
+                                    CreateUserBookHistoryDto(
+                                  bookshelfBookId: selectedBookId,
+                                  startPage: startPage,
+                                  endPage: endPage,
+                                  duration: readingTime,
+                                  remainedTimer: calculateRemainedTimer(
+                                      readingTime,
+                                      remainedTimer:
+                                          remainedTimer?['timer'] as int),
+                                );
+                                await createUserBookHistory(historyDto);
+
+                                context.read<StopwatchProvider>().stop();
+                                // context
+                                //     .read<StopwatchProvider>()
+                                //     .updateElapsedTime(Duration.zero);
+
+                                await Provider.of<TimeProvider>(context,
+                                        listen: false)
+                                    .getTimes();
+
+                                Get.back(closeOverlays: true);
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return DoneDialog(onDone: () {
+                                      Get.to(() => App(),
+                                          transition: Transition.leftToRight);
+                                    });
+                                  },
+                                );
+                              }
+                            }
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isButtonEnabled
+                            ? Color(0xffffd747)
+                            : Color(0xffebebeb),
+                        minimumSize: Size(286, 48),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Container(
-                            width: 120,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: Color(0xffffffff),
-                              borderRadius: BorderRadius.circular(4),
-                              border: !_isEndPageValid
-                                  ? Border.all(color: Colors.red, width: 2)
-                                  : null,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  spreadRadius: 1.0,
-                                  blurRadius: 7.0,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 12.0),
-                                  child: Text(
-                                    '끝',
-                                    style: TextStyle(
-                                        color: Color(0xff666666), fontSize: 13),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: TextField(
-                                    controller: textController2,
-                                    onChanged: (_) {
-                                      updateButtonState();
-                                      _validatePageInput();
-                                    },
-                                    textAlign: TextAlign.right,
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      contentPadding:
-                                          EdgeInsets.symmetric(vertical: 14),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 12.0),
-                                  child: Text(
-                                    'p',
-                                    style: TextStyle(
-                                        color: textController2.text.isNotEmpty
-                                            ? Color(0xff333333)
-                                            : Color(0xff666666),
-                                        fontSize: 16),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        '독서 완료하기',
+                        style: const TextStyle(
+                          color: Color(0xff333333),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<StopwatchProvider>().resume();
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xffffffff),
+                        minimumSize: Size(286, 48),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        '계속 읽기',
+                        style: const TextStyle(
+                          color: Color(0xff333333),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-              SizedBox(height: 30.0),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: isButtonEnabled
-                        ? () async {
-                            int readingTime = parseTimeStringToSeconds(
-                                stopwatch.elapsedTimeString);
-                            int? startPage = int.tryParse(textController1.text);
-                            int? endPage = int.tryParse(textController2.text);
-
-                            if (startPage! > endPage!) {
-                              toastification.show(
-                                context: context,
-                                type: ToastificationType.error,
-                                style: ToastificationStyle.flatColored,
-                                title: Text('정확한 페이지를 입력해주세요'),
-                                autoCloseDuration: const Duration(seconds: 2),
-                                showProgressBar: false,
-                              );
-                            } else if (startPage > limitedEndPage! ||
-                                endPage > limitedEndPage!) {
-                              toastification.show(
-                                context: context,
-                                type: ToastificationType.error,
-                                style: ToastificationStyle.flatColored,
-                                title: Text('책의 전체 페이지수를 초과할수 없어요'),
-                                autoCloseDuration: const Duration(seconds: 2),
-                                showProgressBar: false,
-                              );
-                            } else {
-                              CreateUserBookHistoryDto historyDto =
-                                  CreateUserBookHistoryDto(
-                                bookshelfBookId: selectedBookId,
-                                startPage: startPage,
-                                endPage: endPage,
-                                duration: readingTime,
-                                remainedTimer: calculateRemainedTimer(
-                                    readingTime,
-                                    remainedTimer:
-                                        remainedTimer?['timer'] as int),
-                              );
-                              await createUserBookHistory(historyDto);
-
-                              context.read<StopwatchProvider>().stop();
-                              // context
-                              //     .read<StopwatchProvider>()
-                              //     .updateElapsedTime(Duration.zero);
-
-                              await Provider.of<TimeProvider>(context,
-                                      listen: false)
-                                  .getTimes();
-                              Get.back(closeOverlays: true);
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return DoneDialog(onDone: () {
-                                    Get.to(() => App(),
-                                        transition: Transition.leftToRight);
-                                  });
-                                },
-                              );
-                            }
-                          }
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isButtonEnabled
-                          ? Color(0xffffd747)
-                          : Color(0xffebebeb),
-                      minimumSize: Size(286, 48),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: Text(
-                      '독서 완료하기',
-                      style: const TextStyle(
-                        color: Color(0xff333333),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<StopwatchProvider>().resume();
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xffffffff),
-                      minimumSize: Size(286, 48),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: Text(
-                      '계속 읽기',
-                      style: const TextStyle(
-                        color: Color(0xff333333),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        )));
+              ],
+            ),
+          )));
+    });
   }
 }
 
