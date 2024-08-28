@@ -12,7 +12,7 @@ AnsiPen info = AnsiPen()..blue(bold: true);
 AnsiPen success = AnsiPen()..green(bold: true);
 AnsiPen error = AnsiPen()..red(bold: true);
 
-final baseUrl = dotenv.env['BASE_URL'] ?? 'https://dev.reafy.devkor.club';
+final baseUrl = dotenv.env['BASE_URL'] ?? 'https://dev.reafy.steadfastree.xyz';
 
 class authDio {
   authDio._privateConstructor();
@@ -134,7 +134,7 @@ class authDio {
 class CustomLogInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    debugPrint('REQUEST[${options.method}] => ${options.path}');
+    //debugPrint('REQUEST[${options.method}] => ${options.path}');
     super.onRequest(options, handler);
   }
 
