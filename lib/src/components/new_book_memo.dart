@@ -44,9 +44,9 @@ class _newBookMemoState extends State<newBookMemo> {
     selectedDate = DateTime.now();
 
     if (widget.memo != null) {
-      memoController.text = widget.memo!.content;
+      memoController.text = widget.memo?.content ?? '';
       //selectedDate = widget.memo!.createdAt;
-      memoTags = widget.memo!.hashtag;
+      memoTags = widget.memo?.hashtag ?? [];
       selectedImagePath = widget.memo!.imageURL;
     } else {
       selectedDate = DateTime.now();
@@ -103,11 +103,13 @@ class _newBookMemoState extends State<newBookMemo> {
         }
       } else {
         //메모 수정
-        Memo updatedMemo = await updateMemo(widget.memo!.memoId,
-            memoController.text, 0, tags, selectedImagePath);
-        Provider.of<MemoProvider>(context, listen: false)
-            .updateBookMemo(updatedMemo);
-        Navigator.pop(context);
+        if (widget.memo != null) {
+          Memo updatedMemo = await updateMemo(widget.memo!.memoId,
+              memoController.text, 0, tags, selectedImagePath);
+          Provider.of<MemoProvider>(context, listen: false)
+              .updateBookMemo(updatedMemo);
+          Navigator.pop(context);
+        }
       }
     } catch (e) {
       print('메모 생성 또는 업데이트 실패: $e');
@@ -227,7 +229,10 @@ class _newBookMemoState extends State<newBookMemo> {
         children: [
           PickImage(
             onImagePicked: handleImagePicked,
-            imagePath: selectedImagePath,
+            // imagePath: selectedImagePath,
+            imagePath: selectedImagePath?.isNotEmpty == true
+                ? selectedImagePath
+                : null,
           ),
           SizedBox(height: 25),
           SizedBox(height: 6.0),
