@@ -102,7 +102,9 @@ class _PickImageState extends State<PickImage> {
                 height: 200,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: FileImage(File(_croppedFile!.path)),
+                    image: FileImage(File(_croppedFile != null
+                        ? _croppedFile!.path
+                        : _imageFile!.path)),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(10),
