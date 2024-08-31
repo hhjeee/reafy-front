@@ -139,23 +139,26 @@ class _C_BookShelfState extends State<Category_BookShelf>
   }
 
   Widget _buildShakeAnimation(BookshelfBookInfo book, isSelected) {
+    final size = MediaQuery.of(context).size;
+
     return Stack(
       children: [
         RotationTransition(
           turns: _shakeTween.animate(_shakeController),
           child: Container(
-            width: 94,
-            height: 127,
+            width: (size.width - 56 - 50) / 3,
+            height: (size.width - 56 - 50) / 9 * 4,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6.0),
-              color: Color(0xffffffff),
-              border: Border.all(
-                color: isSelected ? Color(0xffffd747) : Colors.transparent,
-                width: 3.0,
-              ),
+              border: isSelected
+                  ? Border.all(
+                      color: Color(0xffffd747),
+                      width: 3.0,
+                    )
+                  : null,
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(6.0),
               child: Image.network(
                 book.thumbnailURL,
                 fit: BoxFit.cover,
@@ -182,6 +185,8 @@ class _C_BookShelfState extends State<Category_BookShelf>
   }
 
   Widget _buildCategoryBookShelfWidget(List<BookshelfBookInfo> books) {
+    final size = MediaQuery.of(context).size;
+
     return ChangeNotifierProvider.value(
       value: Provider.of<SelectedBooksProvider>(context),
       child: Consumer<SelectedBooksProvider>(
@@ -210,7 +215,7 @@ class _C_BookShelfState extends State<Category_BookShelf>
                         crossAxisCount: 3, // 한 행에 표시할 아이템 수
                         crossAxisSpacing: 28.0, // 아이템 간 가로 간격
                         mainAxisSpacing: 10.0, // 아이템 간 세로 간격
-                        childAspectRatio: 0.5,
+                        childAspectRatio: size.width > 768 ? 0.6 : 0.5,
                       ),
                       itemCount: books.length,
                       itemBuilder: (context, index) {
@@ -239,8 +244,8 @@ class _C_BookShelfState extends State<Category_BookShelf>
                               isEditMode
                                   ? _buildShakeAnimation(book, isSelected)
                                   : Container(
-                                      width: 94,
-                                      height: 127,
+                                      width: (size.width - 56 - 50) / 3,
+                                      height: (size.width - 56 - 50) / 9 * 4,
                                       decoration: BoxDecoration(
                                         borderRadius:
                                             BorderRadius.circular(6.0),
@@ -262,9 +267,7 @@ class _C_BookShelfState extends State<Category_BookShelf>
                                     ),
                               SizedBox(height: 5),
                               Text(
-                                book.title.length > 8
-                                    ? '${book.title.substring(0, 8)}'
-                                    : book.title,
+                                book.title,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontSize: 14,

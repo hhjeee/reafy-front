@@ -96,15 +96,15 @@ class _ItemWindowState extends State<ItemWindow> {
     return Container(
       child: SingleChildScrollView(
         child: Container(
-          height: size.height * 0.45,
-          padding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 16.0),
+          height: size.width > 700 ? size.height * 0.55 : size.height * 0.45,
+          padding: EdgeInsets.only(top: 25, left: 16, right: 16),
           child: GridView.builder(
             shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4, //그리드 열 수
               crossAxisSpacing: 14.0, //가로 간격
               mainAxisSpacing: 16.0, // 세로 간격
-              childAspectRatio: 0.7,
+              childAspectRatio: size.width > 700 ? 0.7 : 0.65,
             ),
             itemCount: itemDataList.length,
             itemBuilder: (context, index) {
