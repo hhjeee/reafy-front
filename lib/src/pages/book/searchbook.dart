@@ -5,10 +5,7 @@ import 'package:reafy_front/src/components/image_data.dart';
 import 'package:reafy_front/src/dto/bookshelf_dto.dart';
 import 'dart:math';
 import 'package:lottie/lottie.dart';
-import 'package:reafy_front/src/repository/bookshelf_repository.dart';
 import 'package:reafy_front/src/utils/api.dart';
-import 'package:reafy_front/src/provider/auth_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:reafy_front/src/utils/constants.dart';
 
 class Quote {
@@ -110,8 +107,10 @@ class _SearchBookState extends State<SearchBook> {
   }
 
   Widget _search() {
+    final size = MediaQuery.of(context).size;
+
     return Container(
-      width: 341,
+      width: size.width * 0.8,
       height: 40,
       child: TextField(
         controller: _searchController,
@@ -149,16 +148,21 @@ class _SearchBookState extends State<SearchBook> {
   }
 
   Widget _character() {
+    final size = MediaQuery.of(context).size;
+
     return Container(
-      width: 228,
-      height: 303, // Adjust height as needed
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.1),
+      width: size.width * 0.6, //228,
+      height: size.width * 0.6,
       child: ImageData(IconsPath.character_book),
     );
   }
 
   Widget _quotes() {
+    final size = MediaQuery.of(context).size;
+
     return Positioned(
-        bottom: 15,
+        bottom: size.height * 0.05,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -192,8 +196,8 @@ class _SearchBookState extends State<SearchBook> {
               ),
             ),
             Container(
-              width: 245,
-              height: 43,
+              width: size.width * 0.5,
+              height: 45,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Color(0xFFFAF9F7),
