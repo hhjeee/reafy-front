@@ -148,13 +148,15 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
   }
 
   Widget _buildShakeAnimation(BookshelfBookInfo book, isSelected) {
+    final size = MediaQuery.of(context).size;
+
     return Stack(
       children: [
         RotationTransition(
           turns: _shakeTween.animate(_shakeController),
           child: Container(
-            width: 94,
-            height: 127,
+            width: (size.width - 56 - 50) / 3,
+            height: (size.width - 56 - 50) / 9 * 4,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6.0),
               color: Color(0xffffffff),
@@ -191,6 +193,8 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
   }
 
   Widget _buildFavoriteBookShelfWidget(List<BookshelfBookInfo> books) {
+    final size = MediaQuery.of(context).size;
+
     return ChangeNotifierProvider.value(
       value: Provider.of<SelectedBooksProvider>(context),
       child: Consumer<SelectedBooksProvider>(
@@ -236,8 +240,8 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
                           isEditMode
                               ? _buildShakeAnimation(book, isSelected)
                               : Container(
-                                  width: 94,
-                                  height: 127,
+                                  width: (size.width - 56 - 50) / 3,
+                                  height: (size.width - 56 - 50) / 9 * 4,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(6.0),
                                     color: Color(0xffffffff),
@@ -256,10 +260,8 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
                                 ),
                           SizedBox(height: 5),
                           Text(
-                            book.title.length > 8
-                                ? '${book.title.substring(0, 8)}...'
-                                : book.title,
-                            overflow: TextOverflow.ellipsis,
+                            book.title,
+                            overflow: TextOverflow.clip,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
@@ -267,10 +269,8 @@ class _F_BookShelfState extends State<Favorite_BookShelf>
                             ),
                           ),
                           Text(
-                            book.author.length > 8
-                                ? '${book.author.substring(0, 8)}...'
-                                : book.author,
-                            overflow: TextOverflow.ellipsis,
+                            book.author,
+                            overflow: TextOverflow.clip,
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w400,
