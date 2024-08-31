@@ -150,14 +150,15 @@ class _C_BookShelfState extends State<Category_BookShelf>
             height: (size.width - 56 - 50) / 9 * 4,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6.0),
-              color: Color(0xffffffff),
-              border: Border.all(
-                color: isSelected ? Color(0xffffd747) : Colors.transparent,
-                width: 3.0,
-              ),
+              border: isSelected
+                  ? Border.all(
+                      color: Color(0xffffd747),
+                      width: 3.0,
+                    )
+                  : null,
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(6.0),
               child: Image.network(
                 book.thumbnailURL,
                 fit: BoxFit.cover,
@@ -214,7 +215,7 @@ class _C_BookShelfState extends State<Category_BookShelf>
                         crossAxisCount: 3, // 한 행에 표시할 아이템 수
                         crossAxisSpacing: 28.0, // 아이템 간 가로 간격
                         mainAxisSpacing: 10.0, // 아이템 간 세로 간격
-                        childAspectRatio: 0.6,
+                        childAspectRatio: size.width > 768 ? 0.6 : 0.5,
                       ),
                       itemCount: books.length,
                       itemBuilder: (context, index) {
@@ -267,7 +268,7 @@ class _C_BookShelfState extends State<Category_BookShelf>
                               SizedBox(height: 5),
                               Text(
                                 book.title,
-                                overflow: TextOverflow.clip,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
@@ -276,7 +277,7 @@ class _C_BookShelfState extends State<Category_BookShelf>
                               ),
                               Text(
                                 book.author,
-                                overflow: TextOverflow.clip,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w400,
