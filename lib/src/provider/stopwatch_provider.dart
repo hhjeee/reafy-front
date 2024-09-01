@@ -42,7 +42,7 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
     try {
       // Fetch timer data from server
       Map<String, dynamic> data = await getRemainingTime();
-      print("data['timer'] ${data['timer']}");
+      debugPrint("data['timer'] ${data['timer']}");
       _remainingsec = data['timer'] as int? ?? _defaultTime;
     } catch (e) {
       print('Error fetching user timer data: $e');
@@ -52,7 +52,7 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     debugPrint("Lifecycle state changed to: $state at ${DateTime.now()}");
 
     super.didChangeAppLifecycleState(state);
@@ -80,13 +80,10 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
         }
         break;
       case AppLifecycleState.detached:
-        stop();
-
-        // 캐시에 남기기
-        // TODO: 백 완료되면 남은 시간 서버로 보내기 ?
-        // 지금까지 읽은 시간 서버로 보내기 ?
+        await stop();
         break;
       default:
+        await saveRemainingTime(_remainingsec);
         break;
     }
     notifyListeners();
@@ -109,18 +106,15 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
     }
   }
 
-  void stop() {
+  Future<void> stop() async {
     print("STOP");
     if (_timer != null) {
       _timer!.cancel(); // 타이머를 정지
       _timer = null;
     }
+    await saveRemainingTime(_remainingsec);
     _status = Status.stopped;
     _currentDuration = Duration.zero;
-
-    //TODO:updateRemainingTime();
-    //TODO:
-
     notifyListeners();
   }
 
@@ -130,6 +124,7 @@ class StopwatchProvider extends ChangeNotifier with WidgetsBindingObserver {
       _timer!.cancel(); // 타이머를 일시정지
       _timer = null;
     }
+    saveRemainingTime(_remainingsec);
     _status = Status.paused;
     notifyListeners();
   }
