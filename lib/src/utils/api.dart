@@ -28,18 +28,6 @@ class authDio {
         'Connection': 'keep-alive',
       },
     ));
-/*
-    final options = CacheOptions(
-      store: MemCacheStore(),
-      policy: CachePolicy.request,
-      maxStale: const Duration(days: 1),
-      priority: CachePriority.normal,
-      cipher: null,
-      keyBuilder: CacheOptions.defaultCacheKeyBuilder,
-      allowPostMethod: false,
-    );*/
-
-    //dio.interceptors.add(DioCacheInterceptor(options: cacheOptions));
 
     dio.interceptors.clear();
     dio.interceptors.add(CustomLogInterceptor());
