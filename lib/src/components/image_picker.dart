@@ -17,10 +17,11 @@ class PickImage extends StatefulWidget {
   State<PickImage> createState() => _PickImageState();
 }
 
+//NOTE: picked file > cropped file > compressed file
 class _PickImageState extends State<PickImage> {
   final ImagePicker picker = ImagePicker();
   XFile? _imageFile;
-  CroppedFile? _croppedFile;
+  CroppedFile? _croppedFile; //TODO: 비어있어서
 
   Future<void> getImage(ImageSource imageSource) async {
     try {
@@ -28,10 +29,13 @@ class _PickImageState extends State<PickImage> {
 
       if (pickedFile != null) {
         _imageFile = pickedFile;
+        debugPrint("_imageFile: ${_imageFile}");
+        debugPrint("pickedFile: ${pickedFile}");
+
         await cropImage();
       }
     } catch (e) {
-      print("디버깅용 이미지 호출 에러 : $e");
+      debugPrint("디버깅용 이미지 호출 에러 : $e");
     }
   }
 
@@ -56,12 +60,15 @@ class _PickImageState extends State<PickImage> {
             )
           ]);
 
+      debugPrint("croppedFile: ${croppedFile}");
+
       if (croppedFile != null) {
         final String? compressedImagePath =
             await compressImage(croppedFile.path);
         if (compressedImagePath != null) {
           setState(() {
             _croppedFile = CroppedFile(compressedImagePath);
+            debugPrint("_croppedFile:${_croppedFile}");
           });
           widget.onImagePicked(compressedImagePath);
         }
@@ -96,15 +103,13 @@ class _PickImageState extends State<PickImage> {
   Widget _buildPhotoArea() {
     return Stack(
       children: [
-        _imageFile != null
+        _imageFile != null && _croppedFile != null
             ? Container(
                 width: double.infinity,
                 height: 200,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: FileImage(File(_croppedFile != null
-                        ? _croppedFile!.path
-                        : _imageFile!.path)),
+                    image: FileImage(File(_croppedFile!.path)),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(10),
