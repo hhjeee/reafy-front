@@ -204,9 +204,6 @@ class _MemoTitleState extends State<MemoTitle> {
 
 class MemoImage extends StatelessWidget {
   final String? imageUrl;
-  final String baseUrl = 'https://dev.reafy.steadfastree.xyz';
-  // 'https://dev.reafy.devkor.club/';
-
   const MemoImage({Key? key, this.imageUrl}) : super(key: key);
 
   @override
