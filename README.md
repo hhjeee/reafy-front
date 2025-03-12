@@ -1,3 +1,16 @@
 # reafy_front
 
-A new Flutter project.
+![Image](https://github.com/user-attachments/assets/1b53cbe1-099c-46be-ae4d-0ce3ce2eaee5)
+![Image](https://github.com/user-attachments/assets/c0070c0a-56d0-48df-88bd-fd7b9d04b78e)
+![Image](https://github.com/user-attachments/assets/ae628ba8-4118-4034-b94d-ea0441af9505)
+![Image](https://github.com/user-attachments/assets/0c36525c-0754-4419-bd08-f9a79a7e5fb1)
+![Image](https://github.com/user-attachments/assets/223534e4-2086-4f4e-9f7d-6d962fbf7c6a)
+![Image](https://github.com/user-attachments/assets/af0a6acb-b1af-40e6-938b-f76256b9e3b5)
+![Image](https://github.com/user-attachments/assets/1d34b816-239e-4e12-9551-0c6f57619b6f)
+![Image](https://github.com/user-attachments/assets/667c1b66-86cb-4269-8b5d-723dbe7c6850)
+![Image](https://github.com/user-attachments/assets/a04c4aaa-0290-4871-8d4c-e0a6ded93396)
+![Image](https://github.com/user-attachments/assets/f4b92c71-448c-4de4-80a7-2a0147dda19c)
+![Image](https://github.com/user-attachments/assets/5a7acf51-e4dd-419d-a8cb-a6b4a2af32cf)
+![Image](https://github.com/user-attachments/assets/a69ca5e5-2466-47eb-adc7-608d21eaf345)
+![Image](https://github.com/user-attachments/assets/dbfc2bd8-74b8-4006-a27b-82f6f91f3b6c)
+![Image](https://github.com/user-attachments/assets/1d7bbaf7-246b-46b3-bac4-981fe0e7442e)
